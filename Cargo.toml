@@ -1,0 +1,8 @@
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+members = [
+    "src/notation",
+    "src/notation_guitar",
+    "tools/notation_viewer",
+]

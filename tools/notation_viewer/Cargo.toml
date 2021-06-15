@@ -1,0 +1,17 @@
+[package]
+name = "notation_viewer"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+
+[dependencies]
+notation = { path = "../../src/notation" }
+notation_guitar = { path = "../../src/notation_guitar" }
+
+bevy = { version = "0.5.0", features = ["dynamic"] }
+# bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", features = ["dynamic"]}
+
+bevy_mod_picking = "0.4"
+bevy-inspector-egui = "0.5.1"
