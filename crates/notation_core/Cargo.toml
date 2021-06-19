@@ -1,5 +1,5 @@
 [package]
-name = "notation"
+name = "notation_core"
 version = "0.1.0"
 edition = "2018"
 
@@ -8,3 +8,8 @@ edition = "2018"
 [lib]
 
 [dependencies]
+serde = "1.0.126"
+thiserror = "1.0"
+fehler = "1.0"
+
+notation_base = { path = "../notation_base" }

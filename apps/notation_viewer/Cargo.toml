@@ -7,11 +7,13 @@ edition = "2018"
 [lib]
 
 [dependencies]
-notation = { path = "../../src/notation" }
-notation_guitar = { path = "../../src/notation_guitar" }
+notation_core = { path = "../../crates/notation_core" }
+notation_guitar = { path = "../../crates/notation_guitar" }
 
 bevy = { version = "0.5.0", features = ["dynamic"] }
 # bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", features = ["dynamic"]}
+
+bevy_prototype_lyon = "0.3.1"
 
 bevy_mod_picking = "0.4"
 bevy-inspector-egui = "0.5.1"

@@ -1,5 +1,5 @@
 [package]
-name = "notation_guitar"
+name = "notation_grid"
 version = "0.1.0"
 edition = "2018"
 
@@ -8,4 +8,4 @@ edition = "2018"
 [lib]
 
 [dependencies]
-notation = { path = "../notation" }
+notation_core = { path = "../notation_core" }
