@@ -1,5 +1,5 @@
 [package]
-name = "notation_base"
+name = "notation_proto"
 version = "0.1.0"
 edition = "2018"
 
@@ -8,4 +8,5 @@ edition = "2018"
 [lib]
 
 [dependencies]
-serde = "1.0.126"
+serde = {version = "1.0.126", features = ["derive"]}
+notation_core = { path = "../notation_core" }

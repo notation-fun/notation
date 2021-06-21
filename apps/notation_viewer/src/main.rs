@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use notation_core::prelude::{Unit, Entry, Duration, Line, Solfege, SolfegeEntry};
+use notation_proto::prelude::{Unit, Solfege, ArcLine};
 
-fn make_line() -> Line {
-    Line::from(vec![
+fn make_line() -> ArcLine {
+    vec![
         (Solfege::DO_4, Unit::Quarter),
         (Solfege::RE_4, Unit::Quarter),
         (Solfege::MI_4, Unit::Quarter),
         (Solfege::FA_4, Unit::Quarter),
         (Solfege::SO_4, Unit::Whole),
-    ])
+    ].into()
 }
 
 fn main() {

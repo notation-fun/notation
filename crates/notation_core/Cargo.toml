@@ -8,8 +8,7 @@ edition = "2018"
 [lib]
 
 [dependencies]
-serde = "1.0.126"
+serde = {version = "1.0.126", features = ["derive"]}
 thiserror = "1.0"
 fehler = "1.0"
 
-notation_base = { path = "../notation_base" }

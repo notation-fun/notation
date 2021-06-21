@@ -1,6 +1,5 @@
 use serde::{Serialize, Deserialize};
 
-use crate::prelude::{Entry, EntryWrap, Duration};
 use crate::note::Pitch;
 use crate::solfege::Syllable;
 
@@ -36,27 +35,15 @@ impl Chord {
     }
 }
 
-pub type ChordEntry = EntryWrap<Chord>;
-
-/*
-impl From<(Chord, Duration)> for Rc<dyn Entry> {
-    fn from((content, duration): (Chord, Duration)) -> Self {
-        Box::new(ChordEntry::from((content, duration)))
-    }
-}
- */
-
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Roman {
-    pub pitch: Syllable,
+    pub syllable: Syllable,
     pub quality: ChordQuality,
     pub inversion: ChordInversion,
 }
 
 impl Roman {
-    pub fn new(pitch: Syllable, quality: ChordQuality, inversion: ChordInversion) -> Self {
-        Self {pitch, quality, inversion}
+    pub fn new(syllable: Syllable, quality: ChordQuality, inversion: ChordInversion) -> Self {
+        Self {syllable, quality, inversion}
     }
 }
-
-pub type RomanEntry = EntryWrap<Roman>;

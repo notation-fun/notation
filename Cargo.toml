@@ -2,8 +2,9 @@
 
 [workspace]
 members = [
-    "crates/notation_base",
     "crates/notation_core",
     "crates/notation_guitar",
+    "crates/notation_proto",
+    "crates/notation_bevy",
     "apps/notation_viewer",
 ]

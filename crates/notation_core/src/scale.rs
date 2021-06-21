@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-use crate::prelude::{EntryWrap, PitchName};
+use crate::prelude::{PitchName};
 
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -8,16 +8,12 @@ pub enum Scale {
     Major, Minor,
 }
 
-pub type ScaleEntry = EntryWrap<Scale>;
-
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Key {
     Natural(PitchName),
     Sharp(PitchName),
     Flat(PitchName),
 }
-
-pub type KeyEntry = EntryWrap<Key>;
 
 impl Key {
     pub const A: Self = Self::Natural(PitchName::A);

@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-use crate::prelude::{Unit, Units, Entry, ZeroEntryWrap};
+use crate::prelude::{Unit, Units};
 
 // https://hellomusictheory.com/learn/musical-term-for-slow/
 // https://hellomusictheory.com/learn/musical-term-for-fast/
@@ -74,15 +74,11 @@ impl From<Bpm> for Tempo {
     }
 }
 
-pub type TempoEntry = ZeroEntryWrap<Tempo>;
-
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Signature {
     beat_unit: Unit,
     beats_per_bar: u8,
 }
-
-pub type SignatureEntry = ZeroEntryWrap<Signature>;
 
 #[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
 pub struct Beats(pub f32);

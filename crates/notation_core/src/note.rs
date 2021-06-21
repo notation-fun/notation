@@ -1,7 +1,5 @@
 use serde::{Serialize, Deserialize};
 
-use crate::prelude::{Duration, Entry, EntryWrap};
-
 // https://hellomusictheory.com/learn/
 // http://openmusictheory.com/pitches.html
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -103,10 +101,6 @@ impl From<(Pitch, Octave)> for Note {
         Self::new(pitch, octave)
     }
 }
-
-pub type NoteEntry = EntryWrap<Note>;
-
-pub type RestEntry = EntryWrap<()>;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub struct Semitones(pub i8);

@@ -1,7 +1,9 @@
 use std::rc::Rc;
+use std::sync::Arc;
 use serde::{Serialize, Deserialize};
 
-use crate::entry::{Duration, Entry};
+use notation_core::duration::Duration;
+use crate::entry::Entry;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct EntryWrap<T: Copy + Eq> {
@@ -37,12 +39,6 @@ impl<T: Copy + Eq> From<(T, Duration)> for Box<EntryWrap<T>> {
     }
 }
 
-impl<T: Copy + Eq> From<Box<EntryWrap<T>>> for Rc<dyn Entry> {
-    fn from(val: Box<EntryWrap<T>>) -> Self {
-        val.into()
-    }
-}
-
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct ZeroEntryWrap<T: Copy + Eq> {
     pub content: T,
@@ -57,9 +53,6 @@ impl<T: Copy + Eq> ZeroEntryWrap<T> {
 }
 
 impl<T: Copy + Eq> Entry for ZeroEntryWrap<T> {
-    fn duration(&self) -> Duration {
-        Duration::Zero
-    }
 }
 
 impl<T: Copy + Eq> From<T> for ZeroEntryWrap<T> {
@@ -75,8 +68,20 @@ impl<T: Copy + Eq> From<T> for Box<ZeroEntryWrap<T>> {
     }
 }
 
-impl<T: Copy + Eq> From<Box<ZeroEntryWrap<T>>> for Rc<dyn Entry> {
-    fn from(val: Box<ZeroEntryWrap<T>>) -> Self {
-        val.into()
-    }
+macro_rules! impl_from_ref_for_entry {
+    ($ref_type: ident) => {
+        impl<T: Copy + Eq> From<Box<EntryWrap<T>>> for $ref_type<dyn Entry> {
+            fn from(val: Box<EntryWrap<T>>) -> Self {
+                val.into()
+            }
+        }
+        impl<T: Copy + Eq> From<Box<ZeroEntryWrap<T>>> for $ref_type<dyn Entry> {
+            fn from(val: Box<ZeroEntryWrap<T>>) -> Self {
+                val.into()
+            }
+        }
+    };
 }
+
+impl_from_ref_for_entry!(Rc);
+impl_from_ref_for_entry!(Arc);

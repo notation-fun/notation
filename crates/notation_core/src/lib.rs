@@ -1,29 +1,22 @@
-extern crate notation_base;
-
+pub mod duration;
 pub mod note;
 pub mod scale;
 pub mod solfege;
 pub mod interval;
 pub mod chord;
 pub mod rhythm;
-pub mod form;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use notation_base::entry::{Unit, Units, Duration, Entry};
+    pub use crate::duration::{Unit, Units, Duration};
     #[doc(hidden)]
-    pub use notation_base::line::{Line, Slice};
+    pub use crate::note::{PitchName, PitchSign, Pitch, Octave, Semitones, Note};
     #[doc(hidden)]
-    pub use notation_base::entry_wrap::{EntryWrap, ZeroEntryWrap};
-
+    pub use crate::scale::{Scale, Key};
     #[doc(hidden)]
-    pub use crate::note::{PitchName, PitchSign, Pitch, Octave, Semitones, Note, NoteEntry};
+    pub use crate::solfege::{Syllable, Solfege};
     #[doc(hidden)]
-    pub use crate::scale::{Scale, ScaleEntry, Key, KeyEntry};
-    #[doc(hidden)]
-    pub use crate::solfege::{Syllable, Solfege, SolfegeEntry};
-    #[doc(hidden)]
-    pub use crate::chord::{ChordQuality, ChordInversion, Chord, ChordEntry, Roman, RomanEntry};
+    pub use crate::chord::{ChordQuality, ChordInversion, Chord, Roman};
     #[doc(hidden)]
     pub use crate::rhythm::{Tempo, Bpm, BpmRange, Signature, Beats};
 }

@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use serde::{Serialize, Deserialize};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -39,16 +38,6 @@ impl Default for Duration {
 impl From<Unit> for Duration {
     fn from(val: Unit) -> Self {
         Self::Simple(val)
-    }
-}
-
-pub trait Entry {
-    fn duration(&self) -> Duration;
-}
-
-impl Entry for Rc<dyn Entry> {
-    fn duration(&self) -> Duration {
-        self.as_ref().duration()
     }
 }
 
