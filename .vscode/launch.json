@@ -13,7 +13,8 @@
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
-			//"console": "externalTerminal"
+			"preLaunchTask": "rust: cargo build",
+			//"console": "externalTerminal",
 		}
 	]
 }

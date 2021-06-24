@@ -22,7 +22,7 @@ pub enum ChordQuality {
 }
 //Extended, Altered, Quartal and Quintal not supported
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Chord {
     pub pitch: Pitch,
     pub quality: ChordQuality,
@@ -35,8 +35,10 @@ impl Chord {
     }
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+
+#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Roman {
+
     pub syllable: Syllable,
     pub quality: ChordQuality,
     pub inversion: ChordInversion,

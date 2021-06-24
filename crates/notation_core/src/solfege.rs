@@ -1,14 +1,16 @@
+use serde::{Serialize, Deserialize};
+
 use crate::prelude::{Octave, Semitones};
 
 // https://en.wikipedia.org/wiki/Solf%C3%A8ge
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Syllable {
     Do, Re, Mi, Fa, So, La, Ti,
     Di, Ri, Fi, Si, Li,
     Ra, Me, Se, Le, Te,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Solfege {
     pub syllable: Syllable,
     pub octave: Octave,
@@ -20,12 +22,6 @@ impl Solfege {
             syllable,
             octave,
         }
-    }
-}
-
-impl From<Syllable> for Solfege {
-    fn from(syllable: Syllable) -> Self {
-        Self::new(syllable, Octave::CENTER)
     }
 }
 
@@ -232,8 +228,8 @@ impl Solfege {
 }
 
 impl From<Syllable> for Semitones {
-    fn from(val: Syllable) -> Self {
-        match val {
+    fn from(v: Syllable) -> Self {
+        match v {
             Syllable::Do => 0,
             Syllable::Re => 2,
             Syllable::Mi => 4,
@@ -256,8 +252,8 @@ impl From<Syllable> for Semitones {
 }
 
 impl From<Semitones> for Syllable {
-    fn from(val: Semitones) -> Self {
-        let pos_val = if val.0 > 0 {val.0 % 12 } else {val.0 % 12 + 12};
+    fn from(v: Semitones) -> Self {
+        let pos_val = if v.0 > 0 {v.0 % 12 } else {v.0 % 12 + 12};
         match pos_val {
             0 => Syllable::Do,
             1 => Syllable::Di,
@@ -277,10 +273,22 @@ impl From<Semitones> for Syllable {
 }
 
 impl From<Semitones> for Solfege {
-    fn from(val: Semitones) -> Self {
-        let syllable = Syllable::from(val);
-        let octave = Octave::from(val);
+    fn from(v: Semitones) -> Self {
+        let syllable = Syllable::from(v);
+        let octave = Octave::from(v);
         Solfege::new(syllable, octave)
+    }
+}
+
+impl From<Syllable> for Solfege {
+    fn from(syllable: Syllable) -> Self {
+        Self::new(syllable, Octave::CENTER)
+    }
+}
+
+impl From<Solfege> for Semitones {
+    fn from(v: Solfege) -> Self {
+        Semitones::from(v.syllable) + Semitones::from(v.octave)
     }
 }
 

@@ -1,6 +1,5 @@
 pub use notation_core;
 pub mod entry;
-pub mod entry_wrap;
 pub mod line;
 pub mod form;
 
@@ -10,12 +9,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::{Entry};
     #[doc(hidden)]
-    pub use crate::entry_wrap::{EntryWrap, ZeroEntryWrap};
+    pub use crate::line::{RcLine, RcSlice};
     #[doc(hidden)]
-    pub use crate::line::{RcLine, RcSlice, ArcLine, ArcSlice};
+    pub use crate::line::{ArcLine, ArcSlice};
     #[doc(hidden)]
     pub use crate::form::{TrackKind, Track, Form};
     #[doc(hidden)]
     pub use crate::form::{RcBarLayer, RcBar, RcSection, RcTab};
+    #[doc(hidden)]
     pub use crate::form::{ArcBarLayer, ArcBar, ArcSection, ArcTab};
 }

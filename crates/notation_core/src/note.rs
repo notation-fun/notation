@@ -1,4 +1,8 @@
+use std::ops::{Add, Sub};
+
 use serde::{Serialize, Deserialize};
+
+use crate::prelude::Solfege;
 
 // https://hellomusictheory.com/learn/
 // http://openmusictheory.com/pitches.html
@@ -105,15 +109,31 @@ impl From<(Pitch, Octave)> for Note {
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub struct Semitones(pub i8);
 
+impl Add for Semitones {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Semitones(self.0 + rhs.0)
+    }
+}
+
+impl Sub for Semitones {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Semitones(self.0 - rhs.0)
+    }
+}
+
 impl From<i8> for Semitones {
-    fn from(val: i8) -> Self {
-        Self(val)
+    fn from(v: i8) -> Self {
+        Self(v)
     }
 }
 
 impl From<PitchName> for Semitones {
-    fn from(val: PitchName) -> Self {
-        let v = match val {
+    fn from(v: PitchName) -> Self {
+        let v = match v {
             PitchName::C => 0,
             PitchName::D => 2,
             PitchName::E => 4,
@@ -127,8 +147,8 @@ impl From<PitchName> for Semitones {
 }
 
 impl From<PitchSign> for Semitones {
-    fn from(val: PitchSign) -> Self {
-        let v = match val {
+    fn from(v: PitchSign) -> Self {
+        let v = match v {
             PitchSign::Natural => 0,
             PitchSign::Sharp => 1,
             PitchSign::Flat => -1,
@@ -140,16 +160,16 @@ impl From<PitchSign> for Semitones {
 }
 
 impl From<Pitch> for Semitones {
-    fn from(val: Pitch) -> Self {
-        let name_val = Semitones::from(val.name).0;
-        let sign_val = Semitones::from(val.sign).0;
+    fn from(v: Pitch) -> Self {
+        let name_val = Semitones::from(v.name).0;
+        let sign_val = Semitones::from(v.sign).0;
         Self::from(name_val + sign_val)
     }
 }
 
 impl From<Octave> for Semitones {
-    fn from(val: Octave) -> Self {
-        let v = match val {
+    fn from(v: Octave) -> Self {
+        let v = match v {
             Octave::N1 => 12 * -1,
             Octave::P0 => 12 * 0,
             Octave::P1 => 12 * 1,
@@ -168,19 +188,19 @@ impl From<Octave> for Semitones {
 }
 
 impl From<Note> for Semitones {
-    fn from(val: Note) -> Self {
-        let pitch_val = Semitones::from(val.pitch).0;
-        let octave_val = Semitones::from(val.octave).0;
+    fn from(v: Note) -> Self {
+        let pitch_val = Semitones::from(v.pitch).0;
+        let octave_val = Semitones::from(v.octave).0;
         Self::from(pitch_val + octave_val)
     }
 }
 
 impl From<Semitones> for Octave {
-    fn from(val: Semitones) -> Self {
-        if val.0 < 0 {
+    fn from(v: Semitones) -> Self {
+        if v.0 < 0 {
             return Octave::N1;
         }
-        match val.0 / 12 {
+        match v.0 / 12 {
             0 => Octave::P0,
             1 => Octave::P1,
             2 => Octave::P2,
@@ -197,8 +217,8 @@ impl From<Semitones> for Octave {
 }
 
 impl From<Semitones> for Pitch {
-    fn from(val: Semitones) -> Self {
-        let pos_val = if val.0 > 0 {val.0 % 12 } else {val.0 % 12 + 12};
+    fn from(v: Semitones) -> Self {
+        let pos_val = if v.0 > 0 {v.0 % 12 } else {v.0 % 12 + 12};
         match pos_val {
             0 => Pitch::C,
             1 => Pitch::C_SHARP,
@@ -218,9 +238,21 @@ impl From<Semitones> for Pitch {
 }
 
 impl From<Semitones> for Note {
-    fn from(val: Semitones) -> Self {
-        let pitch = Pitch::from(val);
-        let octave = Octave::from(val);
+    fn from(v: Semitones) -> Self {
+        let pitch = Pitch::from(v);
+        let octave = Octave::from(v);
         Note::new(pitch, octave)
+    }
+}
+
+impl From<Solfege> for Note {
+    fn from(v: Solfege) -> Self {
+        Semitones::from(v).into()
+    }
+}
+
+impl From<Note> for Solfege {
+    fn from(v: Note) -> Self {
+        Semitones::from(v).into()
     }
 }

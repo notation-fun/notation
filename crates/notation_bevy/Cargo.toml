@@ -11,4 +11,9 @@ edition = "2018"
 notation_core = { path = "../notation_core" }
 notation_proto = { path = "../notation_proto" }
 notation_guitar = { path = "../notation_guitar" }
+
+serde = {version = "1.0.126", features = ["derive"]}
 bevy = "0.5.0"
+bevy_prototype_lyon = "0.3.1"
+bevy-inspector-egui = "0.5.1"
+

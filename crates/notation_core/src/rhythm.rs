@@ -34,8 +34,8 @@ pub type BpmRange = (u8, u8);
 pub type Bpm = u8;
 
 impl From<Tempo> for BpmRange {
-    fn from(val: Tempo) -> Self {
-        match val {
+    fn from(v: Tempo) -> Self {
+        match v {
             Tempo::Larghissimo => (1, 24),
             Tempo::Adagissimo => (20, 40),
             Tempo::Grave => (25, 45),
@@ -62,15 +62,15 @@ impl From<Tempo> for BpmRange {
 }
 
 impl From<Tempo> for Bpm {
-    fn from(val: Tempo) -> Self {
-        let range = BpmRange::from(val);
+    fn from(v: Tempo) -> Self {
+        let range = BpmRange::from(v);
         (range.0 + range.1) / 2
     }
 }
 
 impl From<Bpm> for Tempo {
-    fn from(val: Bpm) -> Self {
-        Self::Bpm(val)
+    fn from(v: Bpm) -> Self {
+        Self::Bpm(v)
     }
 }
 
@@ -105,8 +105,8 @@ impl Signature {
 }
 
 impl From<f32> for Beats {
-    fn from(val: f32) -> Self {
-        Self(val)
+    fn from(v: f32) -> Self {
+        Self(v)
     }
 }
 

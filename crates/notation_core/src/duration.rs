@@ -1,3 +1,5 @@
+use std::ops::{Add, Sub};
+
 use serde::{Serialize, Deserialize};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -19,6 +21,21 @@ impl Default for Unit {
 #[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
 pub struct Units(pub f32);
 
+impl Add for Units {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Units(self.0 + rhs.0)
+    }
+}
+
+impl Sub for Units {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Units(self.0 - rhs.0)
+    }
+}
 // https://hellomusictheory.com/learn/tuplets/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Duration {
@@ -36,20 +53,20 @@ impl Default for Duration {
 }
 
 impl From<Unit> for Duration {
-    fn from(val: Unit) -> Self {
-        Self::Simple(val)
+    fn from(v: Unit) -> Self {
+        Self::Simple(v)
     }
 }
 
 impl From<f32> for Units {
-    fn from(val: f32) -> Self {
-        Self(val)
+    fn from(v: f32) -> Self {
+        Self(v)
     }
 }
 
 impl From<Unit> for Units {
-    fn from(val: Unit) -> Self {
-        match val {
+    fn from(v: Unit) -> Self {
+        match v {
             Unit::Whole => 1.0,
             Unit::Half => 1.0 / 2.0,
             Unit::Quarter => 1.0 / 4.0,
@@ -61,8 +78,8 @@ impl From<Unit> for Units {
 }
 
 impl From<Duration> for Units {
-    fn from(val: Duration) -> Self {
-        match val {
+    fn from(v: Duration) -> Self {
+        match v {
             Duration::Zero => 0.0,
             Duration::Simple(v) => Units::from(v).0,
             Duration::Dotted(v) => Units::from(v).0 * 1.5,

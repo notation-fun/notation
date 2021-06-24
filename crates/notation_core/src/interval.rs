@@ -25,8 +25,8 @@ pub enum Interval {
 }
 
 impl From<Interval> for Semitones {
-    fn from(val: Interval) -> Self {
-        match val {
+    fn from(v: Interval) -> Self {
+        match v {
             Interval::Unison => 0,
             Interval::Minor2nd => 1,
             Interval::Major2nd => 2,
@@ -49,11 +49,11 @@ impl From<Interval> for Semitones {
 }
 
 impl From<Semitones> for Interval {
-    fn from(val: Semitones) -> Self {
-        if val.0 == 0 {
+    fn from(v: Semitones) -> Self {
+        if v.0 == 0 {
             return Self::Unison;
         }
-        match val.0.abs() % 12 {
+        match v.0.abs() % 12 {
             0 => Self::Perfect8ve,
             1 => Self::Minor2nd,
             2 => Self::Major2nd,
