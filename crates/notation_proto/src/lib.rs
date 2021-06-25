@@ -7,7 +7,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use notation_core::prelude::*;
     #[doc(hidden)]
-    pub use crate::entry::{Entry};
+    pub use crate::entry::{ProtoEntry};
     #[doc(hidden)]
     pub use crate::line::{RcLine, RcSlice};
     #[doc(hidden)]

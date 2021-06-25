@@ -6,7 +6,7 @@ use bevy::render::camera::OrthographicProjection;
 use bevy_inspector_egui::egui;
 use bevy_inspector_egui::bevy_egui;
 
-use notation_proto::prelude::{Unit, Solfege, Duration, Entry, ArcLine};
+use notation_proto::prelude::{Unit, Solfege, Duration, CoreEntry, ProtoEntry, ArcLine};
 use notation_bevy::prelude::{AddLineEvent, NotationPlugins, NotationDevPlugins};
 
 fn make_line() -> ArcLine {
@@ -18,8 +18,10 @@ fn make_line() -> ArcLine {
         (Solfege::FA_4, Unit::Quarter),
         (Solfege::SO_4, Unit::Whole),
     ].into_iter().map(
-        |v| Entry::from((v.0, Duration::from(v.1)))
-    ).collect::<Vec<Entry>>()
+        |v| CoreEntry::from((v.0, Duration::from(v.1)))
+    ).map(
+        |e| ProtoEntry::Core(e)
+    ).collect::<Vec<ProtoEntry>>()
     .into()
 }
 

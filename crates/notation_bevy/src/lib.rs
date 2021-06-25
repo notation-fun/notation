@@ -1,4 +1,6 @@
 pub use notation_core;
+pub use notation_fretted;
+pub use notation_guitar;
 
 pub mod entry;
 pub mod note;

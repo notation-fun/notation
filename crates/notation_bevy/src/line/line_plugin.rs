@@ -29,7 +29,7 @@ fn on_add_line(mut commands: Commands,
             .id();
         let mut position = Units(0.0);
         for entry in line.entries {
-            let duration = entry.duration();
+            let duration = entry.as_ref().duration();
             add_entry_evts.send(AddEntryEvent(line_entity, entry, position));
             position = position + Units::from(duration);
         }

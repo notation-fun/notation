@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use bevy::prelude::*;
 
-use notation_proto::prelude::{Units, Entry};
+use notation_proto::prelude::{CoreEntry, ProtoEntry};
 use crate::prelude::{EntryBundle, AddEntryEvent, NoteBundle};
 
 pub struct EntryPlugin;
@@ -31,27 +31,35 @@ fn on_add_entry(mut commands: Commands,
 }
 
 impl EntryPlugin {
-    pub fn insert_extra_bundle(commands: &mut bevy::ecs::system::EntityCommands,
-            entry: Arc<Entry>) {
-        match entry.as_ref() {
-            Entry::Rest(_) =>
+    pub fn insert_extra_core_bundle(commands: &mut bevy::ecs::system::EntityCommands,
+            entry: &CoreEntry) {
+        match entry {
+            CoreEntry::Rest(_) =>
                 (),
-            Entry::Note(note, _) => {
+            CoreEntry::Note(note, _) => {
                 commands.insert_bundle(NoteBundle::from(*note));
                 ()
             }
-            Entry::Solfege(solfege, _) => {
+            CoreEntry::Solfege(solfege, _) => {
                 commands.insert_bundle(NoteBundle::from(*solfege));
                 ()
             }
-            Entry::Chord(_, _) =>
+            CoreEntry::Chord(_, _) =>
                 (),
-            Entry::Roman(_, _) =>
+            CoreEntry::Roman(_, _) =>
                 (),
-            Entry::Signature(_) =>
+            CoreEntry::Signature(_) =>
                 (),
-            Entry::Tempo(_) =>
+            CoreEntry::Tempo(_) =>
                 (),
         };
+    }
+
+    pub fn insert_extra_bundle(commands: &mut bevy::ecs::system::EntityCommands,
+            entry: Arc<ProtoEntry>) {
+        match entry.as_ref() {
+            ProtoEntry::Core(entry) => Self::insert_extra_core_bundle(commands, entry),
+            ProtoEntry::Guitar(_) => (),
+        }
     }
 }

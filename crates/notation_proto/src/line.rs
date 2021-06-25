@@ -2,13 +2,13 @@ use std::rc::Rc;
 use std::sync::Arc;
 use std::iter::Iterator;
 
-use crate::prelude::{Entry};
+use crate::prelude::{ProtoEntry};
 
 macro_rules! impl_line_slice {
     ($ref_type:ident, $line_name:ident, $slice_name:ident) => {
         #[derive(Clone)]
         pub struct $line_name {
-            pub entries: Vec<$ref_type<Entry>>,
+            pub entries: Vec<$ref_type<ProtoEntry>>,
         }
  
         #[derive(Clone)]
@@ -19,7 +19,7 @@ macro_rules! impl_line_slice {
         }
 
         impl $line_name {
-            pub fn new(entries: Vec<$ref_type<Entry>>) -> Self {
+            pub fn new(entries: Vec<$ref_type<ProtoEntry>>) -> Self {
                 Self {entries}
             }
 
@@ -32,9 +32,9 @@ macro_rules! impl_line_slice {
             }
         }
 
-        impl From<Vec<Entry>> for $line_name {
-            fn from(v: Vec<Entry>) -> Self {
-                let entries : Vec<$ref_type<Entry>> = v.into_iter().map(
+        impl From<Vec<ProtoEntry>> for $line_name {
+            fn from(v: Vec<ProtoEntry>) -> Self {
+                let entries : Vec<$ref_type<ProtoEntry>> = v.into_iter().map(
                     |entry| {
                         $ref_type::new(entry)
                     }
@@ -43,24 +43,24 @@ macro_rules! impl_line_slice {
             }
         }
 
-        impl From<Vec<$ref_type<Entry>>> for $line_name {
-            fn from(v: Vec<$ref_type<Entry>>) -> Self {
+        impl From<Vec<$ref_type<ProtoEntry>>> for $line_name {
+            fn from(v: Vec<$ref_type<ProtoEntry>>) -> Self {
                 Self::new(v)
             }
         }
 
         impl $line_name {
-            pub fn from_iterator(iter: impl Iterator<Item=Entry>) -> Self {
-                iter.collect::<Vec<Entry>>().into()
+            pub fn from_iterator(iter: impl Iterator<Item=ProtoEntry>) -> Self {
+                iter.collect::<Vec<ProtoEntry>>().into()
             }
-            pub fn from_entries(iter: impl Iterator<Item=$ref_type<Entry>>) -> Self {
-                iter.collect::<Vec<$ref_type<Entry>>>().into()
+            pub fn from_entries(iter: impl Iterator<Item=$ref_type<ProtoEntry>>) -> Self {
+                iter.collect::<Vec<$ref_type<ProtoEntry>>>().into()
             }
         }
 
         impl From<Vec<$line_name>> for $line_name {
             fn from(v: Vec<$line_name>) -> Self {
-                let mut entries = Vec::<$ref_type<Entry>>::new();
+                let mut entries = Vec::<$ref_type<ProtoEntry>>::new();
                 for x in v {
                     entries.append(&mut x.entries.clone());
                 }

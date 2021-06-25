@@ -5,6 +5,7 @@ pub mod solfege;
 pub mod interval;
 pub mod chord;
 pub mod rhythm;
+pub mod entry;
 
 pub mod prelude {
     #[doc(hidden)]
@@ -19,4 +20,6 @@ pub mod prelude {
     pub use crate::chord::{ChordQuality, ChordInversion, Chord, Roman};
     #[doc(hidden)]
     pub use crate::rhythm::{Tempo, Bpm, BpmRange, Signature, Beats};
+    #[doc(hidden)]
+    pub use crate::entry::{Entry, CoreEntry};
 }
