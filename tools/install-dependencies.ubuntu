@@ -2,7 +2,7 @@
 
 sudo apt install build-essential lld clang
 
-# sudo apt install libxcb-shape2-dev libxcb-xfixes0-dev libxcb-render0-dev
+sudo apt install libxcb-shape0-dev libxcb-xfixes0-dev libxcb-render0-dev
 sudo apt install librust-cairo-rs+xcb-dev
 
 sudo apt install librust-libudev-sys-dev librust-alsa-sys-dev
