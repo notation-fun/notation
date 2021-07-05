@@ -42,7 +42,7 @@ fn create_note_block(
             .entity(entity)
             .insert_bundle(GeometryBuilder::build_as(
                 &shape,
-                ShapeColors::outlined(fill_color, config.theme.outline_color),
+                ShapeColors::outlined(fill_color, config.theme.core.outline_color),
                 DrawMode::Outlined {
                     fill_options: FillOptions::default(),
                     outline_options: StrokeOptions::default()

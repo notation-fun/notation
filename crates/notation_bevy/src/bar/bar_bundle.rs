@@ -21,7 +21,7 @@ impl BarBundle {
         let ordinal_ = bar.bar_ordinal - 1;
         let row = GridRow(ordinal_ / config.bars_in_row as usize);
         let col = GridCol(ordinal_ % config.bars_in_row as usize);
-        let x = config.unit_size * bar.units().0 * col.0 as f32;
+        let x = config.unit_size * bar.bar_units().0 * col.0 as f32;
         let y = config.semitone_size * 18.0 * row.0 as f32;
         let name = Name::from(bar.to_string().as_str());
         Self {

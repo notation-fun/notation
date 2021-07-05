@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::bevy_theme::BevyTheme;
 use super::grid_config::GridConfig;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
+#[derive(PartialEq, Serialize, Deserialize, Debug, Inspectable)]
 pub struct BevyConfig {
     pub grid: GridConfig,
     pub theme: BevyTheme,

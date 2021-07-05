@@ -38,7 +38,7 @@ impl<const S: usize> FrettedGrid<S> {
         entity: Entity,
         tab_bar: &Arc<TabBar>,
     ) -> () {
-        let width = tab_bar.units();
+        let width = tab_bar.bar_units();
         for string_index in 0..S {
             Self::add_string(commands, config, entity, width, string_index);
         }

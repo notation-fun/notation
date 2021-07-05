@@ -77,12 +77,30 @@ impl Display for Tab {
     }
 }
 impl TabBar {
-    pub fn units(&self) -> Units {
+    pub fn bar_units(&self) -> Units {
         match self.tab.upgrade() {
             Some(tab) => Units::from(tab.meta.signature),
             None => {
-                println!("<{}>.units() tab missing: {}", stringify!(TabBar), self);
+                println!("<{}>.bar_units() tab missing: {}", stringify!(TabBar), self);
                 Units::from(Unit::Whole)
+            }
+        }
+    }
+    pub fn signature(&self) -> Signature {
+        match self.tab.upgrade() {
+            Some(tab) => tab.meta.signature.clone(),
+            None => {
+                println!("<{}>.signature() tab missing: {}", stringify!(TabBar), self);
+                Signature::_4_4
+            }
+        }
+    }
+    pub fn beat_unit(&self) -> Unit {
+        match self.tab.upgrade() {
+            Some(tab) => tab.meta.signature.beat_unit,
+            None => {
+                println!("<{}>.beat_unit() tab missing: {}", stringify!(TabBar), self);
+                Unit::Quarter
             }
         }
     }

@@ -16,8 +16,8 @@ impl Default for FrettedTheme {
         Self {
             string_color: Color::hex("D3B59C").unwrap(),
             string_space: 20.0,
-            string_z: 0.0,
-            pick_z: 1.0,
+            string_z: 1.0,
+            pick_z: 10.0,
         }
     }
 }

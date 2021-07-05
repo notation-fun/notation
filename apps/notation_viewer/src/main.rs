@@ -199,8 +199,8 @@ fn setup_ui(
     mut commands: Commands,
     egui_context: ResMut<bevy_egui::EguiContext>,
     mut camera_panning: ResMut<CameraPanning>,
-    tab_query: Query<Entity, With<Tab>>,
-    line_query: Query<Entity, With<Line>>,
+    tab_query: Query<Entity, With<Arc<Tab>>>,
+    line_query: Query<Entity, With<Arc<Line>>>,
     tab_evts: EventWriter<AddTabEvent>,
     line_evts: EventWriter<AddLineEvent>,
 ) {

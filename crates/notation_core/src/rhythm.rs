@@ -78,8 +78,8 @@ impl From<Bpm> for Tempo {
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Signature {
-    beat_unit: Unit,
-    beats_per_bar: u8,
+    pub beat_unit: Unit,
+    pub beats_per_bar: u8,
 }
 impl Display for Signature {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
