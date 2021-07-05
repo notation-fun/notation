@@ -1,11 +1,18 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
-use crate::prelude::{PitchName};
+use crate::prelude::{Note, PitchName, Semitones, Syllable};
 
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Scale {
-    Major, Minor,
+    Major,
+    Minor,
+}
+impl Display for Scale {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -13,6 +20,15 @@ pub enum Key {
     Natural(PitchName),
     Sharp(PitchName),
     Flat(PitchName),
+}
+impl Display for Key {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Key::Natural(p) => write!(f, "{}", p),
+            Key::Sharp(p) => write!(f, "{}#", p),
+            Key::Flat(p) => write!(f, "{}b", p),
+        }
+    }
 }
 
 impl Key {
@@ -35,4 +51,31 @@ impl Key {
     pub const D_FLAT: Self = Self::Flat(PitchName::D);
     pub const E_FLAT: Self = Self::Flat(PitchName::E);
     pub const G_FLAT: Self = Self::Flat(PitchName::G);
+}
+
+impl From<Key> for Semitones {
+    fn from(v: Key) -> Self {
+        match v {
+            Key::Natural(x) => x.into(),
+            Key::Sharp(x) => Semitones(1) + x.into(),
+            Key::Flat(x) => Semitones(-1) + x.into(),
+        }
+    }
+}
+
+impl Scale {
+    pub fn calc_do_semitones(&self, key: &Key) -> Semitones {
+        let mut semitones = Semitones::from(*key).0
+            + match self {
+                Scale::Major => 0,
+                Scale::Minor => -3,
+            };
+        if semitones < 0 {
+            semitones += 12
+        }
+        Semitones(semitones)
+    }
+    pub fn calc_syllable(&self, key: &Key, note: &Note) -> Syllable {
+        (Semitones::from(*note) - self.calc_do_semitones(key)).into()
+    }
 }

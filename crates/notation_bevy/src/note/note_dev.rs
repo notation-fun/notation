@@ -1,6 +1,5 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::{Context, InspectableRegistry};
-use bevy_inspector_egui::egui;
+use bevy_inspector_egui::{egui, Context, InspectableRegistry};
 
 use notation_core::prelude::Syllable;
 

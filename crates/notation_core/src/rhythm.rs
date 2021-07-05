@@ -1,4 +1,6 @@
-use serde::{Serialize, Deserialize};
+use std::fmt::Display;
+
+use serde::{Deserialize, Serialize};
 
 use crate::prelude::{Unit, Units};
 
@@ -27,7 +29,7 @@ pub enum Tempo {
     Allegrissimo,
     Presto,
     Prestissimo,
-    Bpm (u8),
+    Bpm(u8),
 }
 
 pub type BpmRange = (u8, u8);
@@ -79,6 +81,18 @@ pub struct Signature {
     beat_unit: Unit,
     beats_per_bar: u8,
 }
+impl Display for Signature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}/{}", self.beats_per_bar, match self.beat_unit {
+            Unit::Whole => 1,
+            Unit::Half => 2,
+            Unit::Quarter => 4,
+            Unit::Eighth => 8,
+            Unit::Sixteenth => 16,
+            Unit::ThirtySecondth => 32,
+        })
+    }
+}
 
 #[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
 pub struct Beats(pub f32);
@@ -90,18 +104,22 @@ impl Signature {
             beats_per_bar,
         }
     }
-    pub fn new_4_4() -> Self {
-        Self::new(Unit::Quarter, 4)
-    }
-    pub fn new_3_4() -> Self {
-        Self::new(Unit::Quarter, 3)
-    }
-    pub fn new_2_4() -> Self {
-        Self::new(Unit::Quarter, 2)
-    }
-    pub fn new_6_8() -> Self {
-        Self::new(Unit::Eighth, 6)
-    }
+    pub const _4_4: Self = Self {
+        beat_unit: Unit::Quarter,
+        beats_per_bar: 4,
+    };
+    pub const _3_4: Self = Self {
+        beat_unit: Unit::Quarter,
+        beats_per_bar: 3,
+    };
+    pub const _2_4: Self = Self {
+        beat_unit: Unit::Quarter,
+        beats_per_bar: 2,
+    };
+    pub const _6_8: Self = Self {
+        beat_unit: Unit::Eighth,
+        beats_per_bar: 6,
+    };
 }
 
 impl From<f32> for Beats {

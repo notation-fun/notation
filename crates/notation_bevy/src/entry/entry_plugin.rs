@@ -1,65 +1,68 @@
-use std::sync::Arc;
 use bevy::prelude::*;
+use std::sync::Arc;
 
+use crate::prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, NoteBundle};
 use notation_proto::prelude::{CoreEntry, ProtoEntry};
-use crate::prelude::{EntryBundle, AddEntryEvent, NoteBundle};
 
 pub struct EntryPlugin;
 
 impl Plugin for EntryPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app
-            .add_event::<AddEntryEvent>()
+        app.add_event::<AddEntryEvent>()
             .add_system(on_add_entry.system())
-            .add_system_set(crate::note::note_systems::new_system_set())
-        ;
+            .add_system_set(crate::note::note_systems::new_system_set());
     }
 }
 
-fn on_add_entry(mut commands: Commands,
-        mut evts: EventReader<AddEntryEvent>) {
+fn on_add_entry(mut commands: Commands, mut evts: EventReader<AddEntryEvent>) {
     for evt in evts.iter() {
-        let line = evt.0.clone();
+        let parent = evt.0.clone();
         let entry = evt.1.clone();
         let position = evt.2;
         let entry_bundle = EntryBundle::from((entry.clone(), position));
         let mut entry_commands = commands.spawn_bundle(entry_bundle);
-        EntryPlugin::insert_extra_bundle(&mut entry_commands, entry);
+        EntryPlugin::insert_entry_extra(&mut entry_commands, entry);
         let entry_entity = entry_commands.id();
-        commands.entity(line).push_children(&[entry_entity]);
+        commands.entity(parent).push_children(&[entry_entity]);
     }
 }
 
 impl EntryPlugin {
-    pub fn insert_extra_core_bundle(commands: &mut bevy::ecs::system::EntityCommands,
-            entry: &CoreEntry) {
+    pub fn insert_core_entry_extra(
+        commands: &mut bevy::ecs::system::EntityCommands,
+        entry: &CoreEntry,
+    ) {
         match entry {
-            CoreEntry::Rest(_) =>
-                (),
+            CoreEntry::Rest(_) => (),
             CoreEntry::Note(note, _) => {
                 commands.insert_bundle(NoteBundle::from(*note));
                 ()
             }
+            CoreEntry::Notes(_notes, _) => (),
             CoreEntry::Solfege(solfege, _) => {
                 commands.insert_bundle(NoteBundle::from(*solfege));
                 ()
             }
-            CoreEntry::Chord(_, _) =>
-                (),
-            CoreEntry::Roman(_, _) =>
-                (),
-            CoreEntry::Signature(_) =>
-                (),
-            CoreEntry::Tempo(_) =>
-                (),
+            CoreEntry::Solfeges(_solfeges, _) => (),
+            CoreEntry::Chord(_, _) => (),
+            CoreEntry::Roman(_, _) => (),
+            CoreEntry::Signature(_) => (),
+            CoreEntry::Tempo(_) => (),
         };
     }
 
-    pub fn insert_extra_bundle(commands: &mut bevy::ecs::system::EntityCommands,
-            entry: Arc<ProtoEntry>) {
+    pub fn insert_entry_extra(
+        commands: &mut bevy::ecs::system::EntityCommands,
+        entry: Arc<ProtoEntry>,
+    ) {
         match entry.as_ref() {
-            ProtoEntry::Core(entry) => Self::insert_extra_core_bundle(commands, entry),
-            ProtoEntry::Guitar(_) => (),
+            ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
+            ProtoEntry::FrettedSix(entry) => {
+                FrettedPlugin::insert_fretted_entry_extra(commands, entry)
+            }
+            ProtoEntry::FrettedFour(entry) => {
+                FrettedPlugin::insert_fretted_entry_extra(commands, entry)
+            }
         }
     }
 }

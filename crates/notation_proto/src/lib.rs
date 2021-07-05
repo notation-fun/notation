@@ -1,21 +1,32 @@
-pub use notation_core;
+#![feature(arc_new_cyclic)]
+
+pub use {notation_core, notation_fretted, notation_guitar};
+
+pub mod bar;
 pub mod entry;
 pub mod line;
-pub mod form;
+pub mod section;
+pub mod tab;
+pub mod track;
+pub mod util;
 
 pub mod prelude {
     #[doc(hidden)]
+    pub use crate::bar::{Bar, BarLayer};
+    #[doc(hidden)]
+    pub use crate::entry::ProtoEntry;
+    #[doc(hidden)]
+    pub use crate::line::{Line, Slice};
+    #[doc(hidden)]
+    pub use crate::section::{Section, SectionKind};
+    #[doc(hidden)]
+    pub use crate::tab::{Tab, TabBar, TabMeta};
+    #[doc(hidden)]
+    pub use crate::track::{Track, TrackKind};
+    #[doc(hidden)]
     pub use notation_core::prelude::*;
     #[doc(hidden)]
-    pub use crate::entry::{ProtoEntry};
+    pub use notation_fretted::prelude::*;
     #[doc(hidden)]
-    pub use crate::line::{RcLine, RcSlice};
-    #[doc(hidden)]
-    pub use crate::line::{ArcLine, ArcSlice};
-    #[doc(hidden)]
-    pub use crate::form::{TrackKind, Track, Form};
-    #[doc(hidden)]
-    pub use crate::form::{RcBarLayer, RcBar, RcSection, RcTab};
-    #[doc(hidden)]
-    pub use crate::form::{ArcBarLayer, ArcBar, ArcSection, ArcTab};
+    pub use notation_guitar::prelude::*;
 }

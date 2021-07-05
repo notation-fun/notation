@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use bevy::prelude::*;
+use std::sync::Arc;
 
 use notation_core::prelude::Duration;
 use notation_proto::prelude::*;
@@ -13,9 +13,10 @@ pub struct EntryBundle {
 
 impl From<(Arc<ProtoEntry>, Units)> for EntryBundle {
     fn from(v: (Arc<ProtoEntry>, Units)) -> Self {
+        let duration = v.0.duration().clone();
         EntryBundle {
-            entry: v.0.clone(),
-            duration: v.0.duration(),
+            entry: v.0,
+            duration: duration,
             position: v.1,
         }
     }

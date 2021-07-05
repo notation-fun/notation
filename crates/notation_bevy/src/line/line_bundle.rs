@@ -1,21 +1,23 @@
+use bevy::prelude::*;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-
-use notation_proto::prelude::{Units, ArcLine};
+use notation_proto::prelude::{Line, Units};
 
 #[derive(Bundle)]
 pub struct LineBundle {
-    pub line: Arc<ArcLine>,
+    pub line: Arc<Line>,
+    pub name: Name,
     pub length: Units,
     pub transform: Transform,
     pub global_cransform: GlobalTransform,
 }
 
-impl From<ArcLine> for LineBundle {
-    fn from(v: ArcLine) -> Self {
+impl From<Arc<Line>> for LineBundle {
+    fn from(v: Arc<Line>) -> Self {
+        let name = Name::from(v.name.clone().as_str());
         Self {
-            line: Arc::new(v),
+            line: v,
+            name,
             length: Units(0.0),
             transform: Transform::default(),
             global_cransform: GlobalTransform::default(),

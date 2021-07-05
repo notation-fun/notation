@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
-use crate::prelude::{Duration, Note, Solfege, Chord, Roman, Signature, Tempo};
+use crate::prelude::{Chord, Duration, Note, Notes, Roman, Signature, Solfege, Solfeges, Tempo};
 
 pub trait Entry {
     fn duration(&self) -> Duration {
@@ -10,13 +10,15 @@ pub trait Entry {
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum CoreEntry {
-    Rest (Duration),
-    Note (Note, Duration),
-    Solfege (Solfege, Duration),
-    Chord (Chord, Duration),
-    Roman (Roman, Duration),
-    Signature (Signature),
-    Tempo (Tempo),
+    Rest(Duration),
+    Note(Note, Duration),
+    Notes(Notes, Duration),
+    Solfege(Solfege, Duration),
+    Solfeges(Solfeges, Duration),
+    Chord(Chord, Duration),
+    Roman(Roman, Duration),
+    Signature(Signature),
+    Tempo(Tempo),
 }
 
 impl CoreEntry {
@@ -24,7 +26,9 @@ impl CoreEntry {
         match self {
             CoreEntry::Rest(duration) => *duration,
             CoreEntry::Note(_, duration) => *duration,
+            CoreEntry::Notes(_, duration) => *duration,
             CoreEntry::Solfege(_, duration) => *duration,
+            CoreEntry::Solfeges(_, duration) => *duration,
             CoreEntry::Chord(_, duration) => *duration,
             CoreEntry::Roman(_, duration) => *duration,
             CoreEntry::Signature(_) => Duration::Zero,
@@ -50,9 +54,19 @@ impl CoreEntry {
         matches!(self, Self::Note(..))
     }
 
+    /// Returns `true` if the entry is [`Notes`].
+    pub fn is_notes(&self) -> bool {
+        matches!(self, Self::Notes(..))
+    }
+
     /// Returns `true` if the entry is [`Solfege`].
     pub fn is_solfege(&self) -> bool {
         matches!(self, Self::Solfege(..))
+    }
+
+    /// Returns `true` if the entry is [`Solfeges`].
+    pub fn is_solfeges(&self) -> bool {
+        matches!(self, Self::Solfeges(..))
     }
 
     /// Returns `true` if the entry is [`Chord`].
@@ -93,8 +107,24 @@ impl CoreEntry {
         }
     }
 
+    pub fn as_notes(&self) -> Option<&Notes> {
+        if let Self::Notes(v, _) = self {
+            Some(v)
+        } else {
+            None
+        }
+    }
+
     pub fn as_solfege(&self) -> Option<&Solfege> {
         if let Self::Solfege(v, _) = self {
+            Some(v)
+        } else {
+            None
+        }
+    }
+
+    pub fn as_solfeges(&self) -> Option<&Solfeges> {
+        if let Self::Solfeges(v, _) = self {
             Some(v)
         } else {
             None
@@ -130,9 +160,21 @@ impl From<(Note, Duration)> for CoreEntry {
     }
 }
 
+impl From<(Notes, Duration)> for CoreEntry {
+    fn from(v: (Notes, Duration)) -> Self {
+        Self::Notes(v.0, v.1)
+    }
+}
+
 impl From<(Solfege, Duration)> for CoreEntry {
     fn from(v: (Solfege, Duration)) -> Self {
         Self::Solfege(v.0, v.1)
+    }
+}
+
+impl From<(Solfeges, Duration)> for CoreEntry {
+    fn from(v: (Solfeges, Duration)) -> Self {
+        Self::Solfeges(v.0, v.1)
     }
 }
 

@@ -1,9 +1,10 @@
-use notation_core::prelude::{Semitones, Syllable, Octave, Solfege};
-use serde::{Serialize, Deserialize};
+use notation_core::prelude::{Octave, Semitones, Solfege, Syllable};
+use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
+use bevy_inspector_egui::Inspectable;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
 pub struct SyllableTheme {
     pub colors: [Color; 12],
 }
@@ -23,15 +24,15 @@ impl Default for SyllableTheme {
                 Color::hex("333333").unwrap(), // Si, Le
                 Color::hex("A3DC5B").unwrap(), // La
                 Color::hex("333333").unwrap(), // Li, Te
-                Color::hex("A3DC5B").unwrap(), // Ti
+                Color::hex("7C87E8").unwrap(), // Ti
             ],
         }
     }
 }
 
 impl SyllableTheme {
-    pub fn from_semitones(&self, v: Semitones) -> Color {
-        let pos_val = if v.0 > 0 {v.0 % 12 } else {v.0 % 12 + 12};
+    pub fn color_of_semitones(&self, v: Semitones) -> Color {
+        let pos_val = if v.0 >= 0 { v.0 % 12 } else { v.0 % 12 + 12 };
         match pos_val {
             0 => self.colors[0],
             1 => self.colors[1],
@@ -49,33 +50,15 @@ impl SyllableTheme {
         }
     }
 
-    pub fn from_syllable(&self, v: Syllable) -> Color {
-        self.from_semitones(Semitones::from(v))
+    pub fn color_of_syllable(&self, v: Syllable) -> Color {
+        self.color_of_semitones(Semitones::from(v))
     }
 
-    pub fn from_syllable_octave(&self, v: Syllable, o: Octave) -> Color {
-        self.from_semitones(Semitones::from(v) + Semitones::from(o))
+    pub fn color_of_syllable_octave(&self, v: Syllable, _o: Octave) -> Color {
+        self.color_of_semitones(Semitones::from(v))
     }
 
-    pub fn from_solfege(&self, v: Solfege) -> Color {
-        self.from_semitones(Semitones::from(v))
-    }
-}
-
-
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-pub struct Theme {
-    pub background_color: Color,
-    pub outline_color: Color,
-    pub syllable: SyllableTheme,
-}
-
-impl Default for Theme {
-    fn default() -> Self {
-        Self {
-            background_color: Color::hex("D3B59C").unwrap(),
-            outline_color: Color::BLACK,
-            syllable: SyllableTheme::default(),
-        }
+    pub fn color_of_solfege(&self, v: Solfege) -> Color {
+        self.color_of_syllable_octave(v.syllable, v.octave)
     }
 }

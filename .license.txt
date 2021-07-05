@@ -1,0 +1,1 @@
+// Copyright {\d+} edger.dev, all rights reserved.

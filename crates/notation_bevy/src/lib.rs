@@ -1,43 +1,65 @@
-pub use notation_core;
-pub use notation_fretted;
-pub use notation_guitar;
+pub use {notation_core, notation_fretted, notation_guitar};
 
+pub mod chord;
 pub mod entry;
 pub mod note;
-pub mod chord;
 
+pub mod bar;
 pub mod line;
+pub mod tab;
 
-pub mod grid;
-pub mod art;
+pub mod fretted;
+pub mod guitar;
+
+pub mod config;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::entry::entry_bundle::{EntryBundle};
+    pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
-    pub use crate::entry::entry_events::{AddEntryEvent};
+    pub use crate::bar::bar_plugin::BarPlugin;
     #[doc(hidden)]
-    pub use crate::entry::entry_plugin::{EntryPlugin};
+    pub use crate::bar::layer_bundle::LayerBundle;
     #[doc(hidden)]
-    pub use crate::entry::entry_dev::{EntryDevPlugin};
+    pub use crate::chord::chord_bundle::ChordBundle;
     #[doc(hidden)]
-    pub use crate::note::note_bundle::{NoteBundle};
+    pub use crate::config::bevy_config::BevyConfig;
     #[doc(hidden)]
-    pub use crate::chord::chord_bundle::{ChordBundle};
+    pub use crate::config::bevy_theme::BevyTheme;
     #[doc(hidden)]
-    pub use crate::line::line_bundle::{LineBundle};
+    pub use crate::config::config_plugin::ConfigPlugin;
     #[doc(hidden)]
-    pub use crate::line::line_events::{AddLineEvent};
+    pub use crate::config::grid_config::{GridCol, GridConfig, GridRow};
     #[doc(hidden)]
-    pub use crate::line::line_plugin::{LinePlugin};
+    pub use crate::entry::entry_bundle::EntryBundle;
     #[doc(hidden)]
-    pub use crate::grid::grid_config::{GridConfig};
+    pub use crate::entry::entry_dev::EntryDevPlugin;
     #[doc(hidden)]
-    pub use crate::grid::grid_plugin::{GridPlugin};
+    pub use crate::entry::entry_events::AddEntryEvent;
     #[doc(hidden)]
-    pub use crate::art::theme::{Theme};
+    pub use crate::entry::entry_plugin::EntryPlugin;
     #[doc(hidden)]
-    pub use crate::art::art_plugin::{ArtPlugin};
+    pub use crate::fretted::fretted_grid::FrettedGrid;
+    #[doc(hidden)]
+    pub use crate::fretted::fretted_plugin::FrettedPlugin;
+    #[doc(hidden)]
+    pub use crate::guitar::guitar_layer_bundle::GuitarLayerBundle;
+    #[doc(hidden)]
+    pub use crate::guitar::guitar_plugin::GuitarPlugin;
+    #[doc(hidden)]
+    pub use crate::line::line_bundle::LineBundle;
+    #[doc(hidden)]
+    pub use crate::line::line_events::AddLineEvent;
+    #[doc(hidden)]
+    pub use crate::line::line_plugin::LinePlugin;
+    #[doc(hidden)]
+    pub use crate::note::note_bundle::NoteBundle;
+    #[doc(hidden)]
+    pub use crate::tab::tab_bundle::TabBundle;
+    #[doc(hidden)]
+    pub use crate::tab::tab_events::AddTabEvent;
+    #[doc(hidden)]
+    pub use crate::tab::tab_plugin::TabPlugin;
 
     use bevy::app::{PluginGroup, PluginGroupBuilder};
     use bevy_prototype_lyon::prelude::*;
@@ -45,10 +67,13 @@ pub mod prelude {
     pub struct NotationPlugins;
     impl PluginGroup for NotationPlugins {
         fn build(&mut self, group: &mut PluginGroupBuilder) {
-            group.add(GridPlugin);
-            group.add(ArtPlugin);
+            group.add(ConfigPlugin);
             group.add(EntryPlugin);
             group.add(LinePlugin);
+            group.add(BarPlugin);
+            group.add(FrettedPlugin);
+            group.add(GuitarPlugin);
+            group.add(TabPlugin);
             //external plugins
             group.add(ShapePlugin);
         }

@@ -1,25 +1,31 @@
+pub mod chord;
 pub mod duration;
+pub mod entry;
+pub mod interval;
 pub mod note;
+pub mod notes;
+pub mod rhythm;
 pub mod scale;
 pub mod solfege;
-pub mod interval;
-pub mod chord;
-pub mod rhythm;
-pub mod entry;
+pub mod solfeges;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::duration::{Unit, Units, Duration};
+    pub use crate::chord::{Chord, ChordInversion, ChordQuality, Roman};
     #[doc(hidden)]
-    pub use crate::note::{PitchName, PitchSign, Pitch, Octave, Semitones, Note};
+    pub use crate::duration::{Duration, Unit, Units};
     #[doc(hidden)]
-    pub use crate::scale::{Scale, Key};
+    pub use crate::entry::{CoreEntry, Entry};
     #[doc(hidden)]
-    pub use crate::solfege::{Syllable, Solfege};
+    pub use crate::note::{Note, Octave, Pitch, PitchName, PitchSign, Semitones};
     #[doc(hidden)]
-    pub use crate::chord::{ChordQuality, ChordInversion, Chord, Roman};
+    pub use crate::notes::Notes;
     #[doc(hidden)]
-    pub use crate::rhythm::{Tempo, Bpm, BpmRange, Signature, Beats};
+    pub use crate::rhythm::{Beats, Bpm, BpmRange, Signature, Tempo};
     #[doc(hidden)]
-    pub use crate::entry::{Entry, CoreEntry};
+    pub use crate::scale::{Key, Scale};
+    #[doc(hidden)]
+    pub use crate::solfege::{Solfege, Syllable};
+    #[doc(hidden)]
+    pub use crate::solfeges::Solfeges;
 }

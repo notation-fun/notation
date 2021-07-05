@@ -1,0 +1,3 @@
+#license_template_path = ".license.txt"
+imports_granularity = "Module"
+overflow_delimited_expr = true

@@ -1,6 +1,5 @@
-use bevy::prelude::*;
-
 use notation_proto::prelude::*;
+use std::sync::Arc;
 
-#[derive(Clone)]
-pub struct AddLineEvent(pub ArcLine);
+#[derive(Debug)]
+pub struct AddLineEvent(pub Arc<Line>);

@@ -1,80 +1,90 @@
-use std::rc::Rc;
-use std::sync::Arc;
+use std::fmt::Display;
 use std::iter::Iterator;
+use std::sync::Arc;
 
-use crate::prelude::{ProtoEntry};
+use crate::prelude::ProtoEntry;
 
-macro_rules! impl_line_slice {
-    ($ref_type:ident, $line_name:ident, $slice_name:ident) => {
-        #[derive(Clone)]
-        pub struct $line_name {
-            pub entries: Vec<$ref_type<ProtoEntry>>,
-        }
- 
-        #[derive(Clone)]
-        pub struct $slice_name {
-            pub line: $ref_type<$line_name>,
-            pub index: usize,
-            pub count: usize,
-        }
-
-        impl $line_name {
-            pub fn new(entries: Vec<$ref_type<ProtoEntry>>) -> Self {
-                Self {entries}
-            }
-
-            pub fn get_slice(self, index: usize, count: usize) -> $slice_name {
-                $slice_name {
-                    line: $ref_type::new(self),
-                    index,
-                    count,
-                }
-            }
-        }
-
-        impl From<Vec<ProtoEntry>> for $line_name {
-            fn from(v: Vec<ProtoEntry>) -> Self {
-                let entries : Vec<$ref_type<ProtoEntry>> = v.into_iter().map(
-                    |entry| {
-                        $ref_type::new(entry)
-                    }
-                ).collect();
-                Self::new(entries)
-            }
-        }
-
-        impl From<Vec<$ref_type<ProtoEntry>>> for $line_name {
-            fn from(v: Vec<$ref_type<ProtoEntry>>) -> Self {
-                Self::new(v)
-            }
-        }
-
-        impl $line_name {
-            pub fn from_iterator(iter: impl Iterator<Item=ProtoEntry>) -> Self {
-                iter.collect::<Vec<ProtoEntry>>().into()
-            }
-            pub fn from_entries(iter: impl Iterator<Item=$ref_type<ProtoEntry>>) -> Self {
-                iter.collect::<Vec<$ref_type<ProtoEntry>>>().into()
-            }
-        }
-
-        impl From<Vec<$line_name>> for $line_name {
-            fn from(v: Vec<$line_name>) -> Self {
-                let mut entries = Vec::<$ref_type<ProtoEntry>>::new();
-                for x in v {
-                    entries.append(&mut x.entries.clone());
-                }
-                Self::new(entries)
-            }
-        }
-
-        impl $line_name {
-            pub fn from_lines_iterator(iter: impl Iterator<Item=$line_name>) -> Self {
-                iter.collect::<Vec<$line_name>>().into()
-            }
-        }
+#[derive(Debug)]
+pub struct Line {
+    pub name: String,
+    pub entries: Vec<Arc<ProtoEntry>>,
+}
+#[derive(Debug)]
+pub struct Slice {
+    pub line: Arc<Line>,
+    pub index: usize,
+    pub count: usize,
+}
+impl Line {
+    pub fn new(name: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
+        Self { name, entries }
     }
 }
-
-impl_line_slice!(Rc, RcLine, RcSlice);
-impl_line_slice!(Arc, ArcLine, ArcSlice);
+impl Slice {
+    pub fn new(line: &Arc<Line>, index: usize, count: usize) -> Self {
+        Self {
+            line: line.clone(),
+            index,
+            count,
+        }
+    }
+    pub fn new_arc(line: &Arc<Line>, index: usize, count: usize) -> Arc<Self> {
+        Arc::new(Self::new(line, index, count))
+    }
+}
+impl Display for Line {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "<{}>({} E:{})",
+            stringify!(Line),
+            self.name,
+            self.entries.len()
+        )
+    }
+}
+impl Display for Slice {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "<{}>({} {}-{})",
+            stringify!($silce_type),
+            self.line.name,
+            self.index,
+            self.count
+        )
+    }
+}
+impl From<(String, Vec<ProtoEntry>)> for Line {
+    fn from(v: (String, Vec<ProtoEntry>)) -> Self {
+        let entries: Vec<Arc<ProtoEntry>> = v.1.into_iter().map(|entry| Arc::new(entry)).collect();
+        Self::new(v.0, entries)
+    }
+}
+impl From<(String, Vec<Arc<ProtoEntry>>)> for Line {
+    fn from(v: (String, Vec<Arc<ProtoEntry>>)) -> Self {
+        Self::new(v.0, v.1)
+    }
+}
+impl Line {
+    pub fn from_iterator(name: String, iter: impl Iterator<Item = ProtoEntry>) -> Self {
+        Self::from((name, iter.collect::<Vec<ProtoEntry>>()))
+    }
+    pub fn from_entries(name: String, iter: impl Iterator<Item = Arc<ProtoEntry>>) -> Self {
+        Self::from((name, iter.collect::<Vec<Arc<ProtoEntry>>>()))
+    }
+}
+impl From<(String, Vec<Line>)> for Line {
+    fn from(v: (String, Vec<Line>)) -> Self {
+        let mut entries = Vec::<Arc<ProtoEntry>>::new();
+        for x in v.1 {
+            entries.append(&mut x.entries.clone());
+        }
+        Self::new(v.0, entries)
+    }
+}
+impl Line {
+    pub fn from_lines_iterator(name: String, iter: impl Iterator<Item = Line>) -> Self {
+        Self::from((name, iter.collect::<Vec<Line>>()))
+    }
+}

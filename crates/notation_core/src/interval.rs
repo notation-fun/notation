@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::note::Semitones;
 
@@ -15,12 +15,21 @@ pub enum IntervalQuality {
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Interval {
     Unison,
-    Minor2nd, Major2nd, Augmented2nd,
-    Minor3nd, Major3nd,
-    Diminished4th, Perfect4th, Augmented4th,
-    Diminished5th, Perfect5th, Augmented5th,
-    Minor6th, Major6th,
-    Minor7th, Major7th,
+    Minor2nd,
+    Major2nd,
+    Augmented2nd,
+    Minor3nd,
+    Major3nd,
+    Diminished4th,
+    Perfect4th,
+    Augmented4th,
+    Diminished5th,
+    Perfect5th,
+    Augmented5th,
+    Minor6th,
+    Major6th,
+    Minor7th,
+    Major7th,
     Perfect8ve,
 }
 
@@ -44,7 +53,8 @@ impl From<Interval> for Semitones {
             Interval::Minor7th => 10,
             Interval::Major7th => 11,
             Interval::Perfect8ve => 12,
-        }.into()
+        }
+        .into()
     }
 }
 

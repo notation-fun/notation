@@ -1,8 +1,6 @@
-use bevy::{
-    input::mouse::{MouseMotion, MouseWheel},
-    prelude::*,
-    render::camera::Camera,
-};
+use bevy::input::mouse::{MouseMotion, MouseWheel};
+use bevy::prelude::*;
+use bevy::render::camera::Camera;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemLabel)]
 pub enum CameraSystem {

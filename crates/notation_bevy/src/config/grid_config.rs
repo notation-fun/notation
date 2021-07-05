@@ -1,9 +1,12 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
-use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 
-use notation_proto::prelude::{Units, ArcLine};
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+pub struct GridRow(pub usize);
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+pub struct GridCol(pub usize);
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
 pub struct GridConfig {
@@ -15,15 +18,18 @@ pub struct GridConfig {
     pub note_height: f32,
     #[inspectable(min = 0.5, max = 10.0)]
     pub note_outline: f32,
+    #[inspectable(min = 1, max = 16)]
+    pub bars_in_row: u8,
 }
 
 impl Default for GridConfig {
     fn default() -> Self {
         Self {
             unit_size: 240.0,
-            semitone_size: 16.0,
-            note_height: 16.0,
-            note_outline: 2.0,
+            semitone_size: 10.0,
+            note_height: 10.0,
+            note_outline: 1.0,
+            bars_in_row: 4,
         }
     }
 }
