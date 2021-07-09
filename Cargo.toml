@@ -8,3 +8,11 @@ members = [
     "crates/notation_bevy",
     "apps/notation_viewer",
 ]
+
+[profile.release]
+lto = "thin"
+
+[profile.dev]
+opt-level = 1
+
+

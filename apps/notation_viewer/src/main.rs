@@ -1,3 +1,9 @@
+// disable console on windows for release builds
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+#[cfg(target_arch = "wasm32")]
+use bevy_webgl2;
+
 use std::sync::Arc;
 
 use bevy::input::mouse::MouseMotion;
@@ -12,6 +18,9 @@ use notation_proto::prelude::{
     GuitarHandShape, GuitarString, GuitarTuning, Key, Line, Pick, ProtoEntry, Roman, Scale,
     Section, SectionKind, Signature, Slice, Solfege, Tab, TabMeta, Tempo, Track, TrackKind,
 };
+
+#[cfg(target_arch = "wasm32")]
+pub mod bevy_web_fullscreen;
 
 pub struct CameraPanning(bool);
 
@@ -142,18 +151,32 @@ fn make_tab() -> Arc<Tab> {
 }
 
 fn main() {
-    App::build()
-        .insert_resource(Msaa { samples: 8 })
+    let mut app = App::build();
+    app.insert_resource(Msaa { samples: 8 })
         .add_plugins(DefaultPlugins)
         .add_plugins(NotationPlugins)
-        .add_plugins(NotationDevPlugins)
-        .add_startup_system(setup.system())
-        .add_startup_system(add_lines.system())
-        .add_startup_system(add_tabs.system())
+        .add_startup_system(setup.system());
+
+    #[cfg(all(debug_assertions, not(target_arch = "wasm32")))]
+    app.add_startup_system(add_lines.system())
         .insert_resource(CameraPanning(true))
         .add_system(update_camera.system())
-        .add_system(setup_ui.system())
-        .run();
+        .add_plugins(NotationDevPlugins)
+        .add_system(setup_ui.system());
+
+    app.add_startup_system(add_tabs.system());
+
+    #[cfg(target_arch = "wasm32")]
+    app.add_plugin(bevy_webgl2::WebGL2Plugin);
+
+    // When building for WASM, print panics to the browser console
+    #[cfg(target_arch = "wasm32")]
+    console_error_panic_hook::set_once();
+
+    #[cfg(target_arch = "wasm32")]
+    app.add_plugin(bevy_web_fullscreen::FullViewportPlugin);
+
+    app.run();
 }
 
 fn setup(mut commands: Commands) {

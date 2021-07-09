@@ -7,6 +7,14 @@ edition = "2018"
 
 [lib]
 
+[features]
+default = [
+    "bevy/bevy_gltf",
+    "bevy/bevy_winit",
+    "bevy/render",
+    "bevy/png",
+]
+
 [dependencies]
 notation_core = { path = "../notation_core" }
 notation_proto = { path = "../notation_proto" }
@@ -17,7 +25,7 @@ serde = {version = "1.0.126", features = ["derive"]}
 # https://github.com/serde-rs/serde/issues/1937
 serde_arrays = "0.1.0"
 
-bevy = "0.5.0"
+bevy = { version = "0.5.0", default-features = false }
 bevy_prototype_lyon = "0.3.1"
 bevy-inspector-egui = "0.5.1"
 

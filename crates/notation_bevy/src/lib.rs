@@ -80,6 +80,7 @@ pub mod prelude {
     }
 
     use bevy_inspector_egui::WorldInspectorPlugin;
+    use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
     pub struct NotationDevPlugins;
     impl PluginGroup for NotationDevPlugins {
@@ -87,6 +88,8 @@ pub mod prelude {
             group.add(EntryDevPlugin);
             //external plugins
             group.add(WorldInspectorPlugin::new());
+            group.add(LogDiagnosticsPlugin::default());
+            group.add(FrameTimeDiagnosticsPlugin::default());
         }
     }
 }
