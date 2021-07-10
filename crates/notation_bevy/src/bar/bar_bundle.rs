@@ -7,7 +7,7 @@ use crate::prelude::{GridCol, GridConfig, GridRow};
 
 #[derive(Bundle)]
 pub struct BarBundle {
-    pub tab: Arc<TabBar>,
+    pub bar: Arc<TabBar>,
     pub name: Name,
     pub length: Units,
     pub row: GridRow,
@@ -21,16 +21,15 @@ impl BarBundle {
         let ordinal_ = bar.bar_ordinal - 1;
         let row = GridRow(ordinal_ / config.bars_in_row as usize);
         let col = GridCol(ordinal_ % config.bars_in_row as usize);
-        let x = config.unit_size * bar.bar_units().0 * col.0 as f32;
-        let y = config.semitone_size * 18.0 * row.0 as f32;
+        let transform = config.calc_bar_transform(bar.bar_units(), &row, &col);
         let name = Name::from(bar.to_string().as_str());
         Self {
-            tab: bar,
+            bar,
             name,
             length: Units(0.0),
             row,
             col,
-            transform: Transform::from_xyz(x, y, 0.0),
+            transform,
             global_cransform: GlobalTransform::default(),
         }
     }

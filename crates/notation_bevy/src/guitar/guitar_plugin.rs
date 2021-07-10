@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::ecs::system::EntityCommands;
 use std::sync::Arc;
 
 use crate::prelude::GuitarLayerBundle;
@@ -18,7 +19,7 @@ impl Plugin for GuitarPlugin {
 
 impl GuitarPlugin {
     pub fn insert_guitar_layer_extra(
-        commands: &mut bevy::ecs::system::EntityCommands,
+        commands: &mut EntityCommands,
         bar: Arc<TabBar>,
         layer: Arc<BarLayer>,
         track: Arc<Track>,

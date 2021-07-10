@@ -1,16 +1,44 @@
 use bevy::prelude::*;
+use bevy::ecs::system::EntityCommands;
 use bevy_prototype_lyon::prelude::*;
 use notation_core::prelude::Signature;
 use std::sync::Arc;
 
-use crate::{config::{bevy_config::BevyConfig, grid_config::GridCol}, prelude::{AddEntryEvent, GuitarPlugin, LayerBundle}};
+use crate::config::bevy_config::BevyConfig;
+use crate::config::grid_config::{GridCol, GridRow};
+use crate::prelude::{AddEntryEvent, GuitarPlugin, LayerBundle, ConfigChangedEvent, LyonShapeOp};
 use notation_proto::prelude::{BarLayer, TabBar, TrackKind, Units};
+
+use super::bar_separator::{BarSeparator, BarSeparatorData};
+use super::bar_beat::{BarBeat, BarBeatData};
 
 pub struct BarPlugin;
 
 impl Plugin for BarPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(create_layers.system());
+        app.add_system(on_config_changed.system());
+    }
+}
+
+fn on_config_changed(
+    mut commands: Commands,
+    mut evts: EventReader<ConfigChangedEvent>,
+    config: Res<BevyConfig>,
+    mut query: Query<(&Arc<TabBar>, &GridRow, &GridCol, &mut Transform)>,
+    sep_query: Query<(Entity, &BarSeparatorData)>,
+    beat_query: Query<(Entity, &BarBeatData)>,
+) {
+    for _evt in evts.iter() {
+        for (bar, row, col, mut transform) in query.iter_mut() {
+            *transform = config.grid.calc_bar_transform(bar.bar_units(), &row, &col);
+        }
+        for (entity, data) in sep_query.iter() {
+            BarSeparator::update(&mut commands, &config, entity, data);
+        }
+        for (entity, data) in beat_query.iter() {
+            BarBeat::update(&mut commands, &config, entity, data);
+        }
     }
 }
 
@@ -41,22 +69,22 @@ fn create_layers(
         let top = 15.0; //TODO: calc from layers
         let bottom = -120.0; //TODO: calc from layers
         if grid_col.0 == 0 {
-            BarPlugin::add_bar_separator(&mut commands, &config, bar, bar_entity,
-                top, bottom, true);
+            BarSeparator::create(&mut commands, bar_entity, &config,
+                BarSeparatorData::new(&bar, top, bottom, true));
         }
-        BarPlugin::add_bar_separator(&mut commands, &config, bar, bar_entity,
-            top, bottom, false);
+        BarSeparator::create(&mut commands, bar_entity, &config,
+            BarSeparatorData::new(&bar, top, bottom, false));
         let signature = bar.signature();
         for beat in 0..signature.beats_per_bar {
-            BarPlugin::add_beat_block(&mut commands, &config, bar, bar_entity,
-                top, bottom, &signature, beat);
+            BarBeatData::may_new(&config, &bar, &signature, top, bottom, beat)
+                .map(|data| BarBeat::create(&mut commands, bar_entity, &config, data));
         }
     }
 }
 
 impl BarPlugin {
     pub fn insert_layer_extra(
-        commands: &mut bevy::ecs::system::EntityCommands,
+        commands: &mut EntityCommands,
         bar: Arc<TabBar>,
         layer: Arc<BarLayer>,
     ) {
@@ -68,43 +96,6 @@ impl BarPlugin {
                 _ => (),
             }
         }
-    }
-    pub fn add_bar_separator(
-        commands: &mut Commands,
-        config: &BevyConfig,
-        tab_bar: &Arc<TabBar>,
-        bar_entity: Entity,
-        top: f32,
-        bottom: f32,
-        is_begin: bool,
-    ) -> () {
-        let shape = shapes::Line(
-            Vec2::new(0.0, top),
-            Vec2::new(0.0, bottom)
-        );
-        let color = config.theme.core.bar_separator_color;
-        let line_width = config.grid.separator_size;
-        let x = if is_begin {
-            0.0
-        } else {
-            config.grid.unit_size * tab_bar.bar_units().0
-        };
-        let bar_ordinal = tab_bar.bar_ordinal;
-        let name = if is_begin {
-            format!("| {}", bar_ordinal)
-        } else {
-            format!("{} |", bar_ordinal)
-        };
-        let sep_entity = commands
-            .spawn_bundle(GeometryBuilder::build_as(
-                &shape,
-                ShapeColors::new(color),
-                DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width)),
-                Transform::from_xyz(x, 0.0, config.theme.core.bar_separator_z),
-            ))
-            .insert(Name::from(name.as_str()))
-            .id();
-        commands.entity(bar_entity).push_children(&[sep_entity]);
     }
     pub fn add_beat_block(
         commands: &mut Commands,

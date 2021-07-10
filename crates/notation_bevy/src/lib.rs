@@ -12,6 +12,7 @@ pub mod fretted;
 pub mod guitar;
 
 pub mod config;
+pub mod utils;
 
 pub mod prelude {
     #[doc(hidden)]
@@ -26,6 +27,8 @@ pub mod prelude {
     pub use crate::config::bevy_config::BevyConfig;
     #[doc(hidden)]
     pub use crate::config::bevy_theme::BevyTheme;
+    #[doc(hidden)]
+    pub use crate::config::config_events::ConfigChangedEvent;
     #[doc(hidden)]
     pub use crate::config::config_plugin::ConfigPlugin;
     #[doc(hidden)]
@@ -60,6 +63,8 @@ pub mod prelude {
     pub use crate::tab::tab_events::AddTabEvent;
     #[doc(hidden)]
     pub use crate::tab::tab_plugin::TabPlugin;
+    #[doc(hidden)]
+    pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
 
     use bevy::app::{PluginGroup, PluginGroupBuilder};
     use bevy_prototype_lyon::prelude::*;
@@ -79,8 +84,8 @@ pub mod prelude {
         }
     }
 
-    use bevy_inspector_egui::WorldInspectorPlugin;
     use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
+    use bevy_inspector_egui::WorldInspectorPlugin;
 
     pub struct NotationDevPlugins;
     impl PluginGroup for NotationDevPlugins {

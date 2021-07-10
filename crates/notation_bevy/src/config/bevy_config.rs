@@ -18,3 +18,7 @@ impl Default for BevyConfig {
         }
     }
 }
+
+pub struct BevyConfigAccessor<T> {
+    pub calc: fn(&BevyConfig) -> T,
+}

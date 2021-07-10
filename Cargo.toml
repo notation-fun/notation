@@ -9,8 +9,11 @@ members = [
     "apps/notation_viewer",
 ]
 
+# https://rustwasm.github.io/book/reference/code-size.html
 [profile.release]
 lto = "thin"
+opt-level = 's'
+# opt-level = 'z'
 
 [profile.dev]
 opt-level = 1

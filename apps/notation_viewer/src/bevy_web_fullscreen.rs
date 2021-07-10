@@ -1,13 +1,9 @@
 //https://github.com/ostwilkens/bevy_web_fullscreen
- 
-use bevy::{
-    prelude::{AppBuilder, IntoSystem, Plugin, Res, ResMut},
-    window::Windows,
-};
-use std::sync::{
-    mpsc::{Receiver, Sender},
-    Mutex,
-};
+
+use bevy::prelude::{AppBuilder, IntoSystem, Plugin, Res, ResMut};
+use bevy::window::Windows;
+use std::sync::mpsc::{Receiver, Sender};
+use std::sync::Mutex;
 
 type OnResizeSender = Sender<()>;
 type OnResizeReceiver = Receiver<()>;

@@ -55,6 +55,5 @@ impl CoreTheme {
                 _ => self.beat_color0,
             }
         }
-
     }
 }

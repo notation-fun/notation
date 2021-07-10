@@ -1,21 +1,43 @@
 use bevy::prelude::*;
+use bevy::ecs::system::EntityCommands;
+use bevy_prototype_lyon::prelude::*;
 use notation_core::prelude::Units;
 use std::sync::Arc;
 
-use super::fretted_grid::FrettedGrid;
+use super::fretted_string::FrettedString;
+use super::pick_note::{PickNote, PickNoteData};
+use super::{fretted_grid::FrettedGrid, fretted_string::FrettedStringData};
 use super::hand_bundles::HandShapeBundle;
 use super::pick_bundle::PickBundle;
-use crate::prelude::BevyConfig;
+use crate::prelude::{BevyConfig, ConfigChangedEvent, LyonShapeOp};
 use notation_fretted::prelude::{Fretboard, FrettedEntry, HandShape};
-use notation_proto::prelude::TabBar;
+use notation_proto::prelude::{BarLayer, TabBar};
 
 pub struct FrettedPlugin;
 
 impl Plugin for FrettedPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_system(on_add_fretted_grid::<6>.system())
-            .add_system(on_add_fretted_grid::<4>.system())
-            .add_system_set(crate::fretted::pick_systems::new_system_set());
+        app.add_system(on_add_fretted_grid::<6>.system());
+        app.add_system(on_add_fretted_grid::<4>.system());
+        app.add_system(on_config_changed.system());
+        app.add_system_set(crate::fretted::pick_systems::new_system_set());
+    }
+}
+
+fn on_config_changed(
+    mut commands: Commands,
+    mut evts: EventReader<ConfigChangedEvent>,
+    config: Res<BevyConfig>,
+    string_query: Query<(Entity, &FrettedStringData)>,
+    pick_note_query: Query<(Entity, &PickNoteData)>,
+) {
+    for _evt in evts.iter() {
+        for (entity, data) in string_query.iter() {
+            FrettedString::update(&mut commands, &config, entity, data);
+        }
+        for (entity, data) in pick_note_query.iter() {
+            PickNote::update(&mut commands, &config, entity, data);
+        }
     }
 }
 
@@ -34,7 +56,7 @@ fn on_add_fretted_grid<const S: usize>(
 
 impl FrettedPlugin {
     pub fn insert_fretted_entry_extra<const S: usize>(
-        commands: &mut bevy::ecs::system::EntityCommands,
+        commands: &mut EntityCommands,
         entry: &FrettedEntry<S>,
     ) {
         match entry {

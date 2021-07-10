@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::ecs::system::EntityCommands;
 use std::sync::Arc;
 
 use crate::prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, NoteBundle};
@@ -29,7 +30,7 @@ fn on_add_entry(mut commands: Commands, mut evts: EventReader<AddEntryEvent>) {
 
 impl EntryPlugin {
     pub fn insert_core_entry_extra(
-        commands: &mut bevy::ecs::system::EntityCommands,
+        commands: &mut EntityCommands,
         entry: &CoreEntry,
     ) {
         match entry {
@@ -52,7 +53,7 @@ impl EntryPlugin {
     }
 
     pub fn insert_entry_extra(
-        commands: &mut bevy::ecs::system::EntityCommands,
+        commands: &mut EntityCommands,
         entry: Arc<ProtoEntry>,
     ) {
         match entry.as_ref() {

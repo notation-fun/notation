@@ -1,0 +1,68 @@
+use bevy::prelude::*;
+use bevy_prototype_lyon::{entity::ShapeBundle, prelude::*};
+use bevy::ecs::system::EntityCommands;
+
+use crate::config::bevy_config::BevyConfig;
+
+pub trait LyonShape<T: Geometry> {
+    fn get_name(&self) -> String;
+    fn get_shape(&self) -> T;
+    fn get_colors(&self) -> ShapeColors;
+    fn get_draw_mode(&self) -> DrawMode;
+    fn get_transform(&self) -> Transform;
+    fn _insert_lyon(&self, entity_commands: &mut EntityCommands) {
+        let shape = self.get_shape();
+        let colors = self.get_colors();
+        let draw_mode = self.get_draw_mode();
+        let transform = self.get_transform();
+        entity_commands.insert_bundle(GeometryBuilder::build_as(
+            &shape,
+            colors,
+            draw_mode,
+            transform,
+        ));
+    }
+    fn insert_lyon<F>(&self, commands: &mut Commands, entity: Entity, extra: F,
+    ) -> Entity where F: Fn(&mut EntityCommands)
+    {
+        let mut entity_commands = commands.spawn();
+        entity_commands.insert(Name::from(self.get_name().as_str()));
+        self._insert_lyon(&mut entity_commands);
+        extra(&mut entity_commands);
+        let line_entity = entity_commands.id();
+        commands.entity(entity).push_children(&[line_entity]);
+        line_entity
+    }
+    fn update_lyon(&self,
+        commands: &mut Commands,
+        entity: Entity,
+    ) {
+        let mut entity_commands = commands.entity(entity);
+        entity_commands.remove_bundle::<ShapeBundle>();
+        self._insert_lyon(&mut entity_commands);
+    }
+}
+
+pub trait LyonShapeOp<'a, Data: Clone+Send+Sync+'static, T: Geometry, Op: LyonShape<T>> {
+    fn new_shape(config: &'a BevyConfig, data: Data) -> Op;
+    fn create(
+        commands: &mut Commands,
+        entity: Entity,
+        config: &'a BevyConfig,
+        data: Data,
+    ) -> Entity {
+        let shape = Self::new_shape(config, data.clone());
+        shape.insert_lyon(commands, entity, |entity_commands| {
+            entity_commands.insert(data.clone());
+        })
+    }
+    fn update(
+        commands: &mut Commands,
+        config: &'a BevyConfig,
+        entity: Entity,
+        data: &Data,
+    ) {
+        let shape = Self::new_shape(config, data.clone());
+        shape.update_lyon(commands, entity);
+    }
+}

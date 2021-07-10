@@ -12,7 +12,9 @@ use bevy::render::camera::OrthographicProjection;
 
 use bevy_inspector_egui::{bevy_egui, egui};
 
-use notation_bevy::prelude::{AddLineEvent, AddTabEvent, NotationDevPlugins, NotationPlugins};
+use notation_bevy::prelude::{
+    AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins,
+};
 use notation_proto::prelude::{
     new_acoustic_guitar_fretboard, Bar, BarLayer, CoreEntry, Duration, GuitarEntry,
     GuitarHandShape, GuitarString, GuitarTuning, Key, Line, Pick, ProtoEntry, Roman, Scale,
@@ -152,6 +154,7 @@ fn make_tab() -> Arc<Tab> {
 
 fn main() {
     let mut app = App::build();
+    ConfigPlugin::insert_window_descriptor(&mut app, String::from("Notation Viewer"));
     app.insert_resource(Msaa { samples: 8 })
         .add_plugins(DefaultPlugins)
         .add_plugins(NotationPlugins)
@@ -159,7 +162,7 @@ fn main() {
 
     #[cfg(all(debug_assertions, not(target_arch = "wasm32")))]
     app.add_startup_system(add_lines.system())
-        .insert_resource(CameraPanning(true))
+        .insert_resource(CameraPanning(false))
         .add_system(update_camera.system())
         .add_plugins(NotationDevPlugins)
         .add_system(setup_ui.system());
