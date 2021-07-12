@@ -13,7 +13,7 @@ use bevy::render::camera::OrthographicProjection;
 use bevy_inspector_egui::{bevy_egui, egui};
 
 use notation_bevy::prelude::{AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins, TabAsset};
-use notation_model::prelude::{Bar, BarLayer, CoreEntry, Duration, GuitarEntry, GuitarHandShape, GuitarString, GuitarTuning, GuitarUtil, Key, Line, ParseError, Pick, ProtoEntry, Roman, Scale, Section, SectionKind, Signature, Slice, Solfege, Tab, TabMeta, Tempo, Track, TrackKind};
+use notation_model::prelude::{Line, ParseError, Tab};
 
 #[cfg(target_arch = "wasm32")]
 pub mod bevy_web_fullscreen;
@@ -121,9 +121,9 @@ fn setup_ui(
     egui_context: ResMut<bevy_egui::EguiContext>,
     mut camera_panning: ResMut<CameraPanning>,
     tab_query: Query<Entity, With<Arc<Tab>>>,
-    line_query: Query<Entity, With<Arc<Line>>>,
-    tab_evts: EventWriter<AddTabEvent>,
-    line_evts: EventWriter<AddLineEvent>,
+    _line_query: Query<Entity, With<Arc<Line>>>,
+    _tab_evts: EventWriter<AddTabEvent>,
+    _line_evts: EventWriter<AddLineEvent>,
 ) {
     egui::Window::new("Hello").show(egui_context.ctx(), |ui| {
         if ui
