@@ -1,5 +1,5 @@
 use ron::ser::{to_string_pretty, PrettyConfig};
-use std::path::PathBuf;
+use std::{fs::File, io::Write, path::PathBuf};
 use structopt::StructOpt;
 
 /// A basic example
@@ -33,13 +33,19 @@ fn list_tabs(_verbose: u8) {
     }
 }
 
-fn write_tab(tab: String, _output: Option<PathBuf>) {
+fn write_tab(tab: String, output: Option<PathBuf>) {
     if let Some(tab) = tab::new_tab(tab.as_str()) {
         let pretty = PrettyConfig::new()
             .with_separate_tuple_members(true)
             .with_enumerate_arrays(true);
         let s = to_string_pretty(&tab, pretty).expect("Serialization failed");
-        println!("{}", s);
+        match output {
+            None => println!("{}", s),
+            Some (path) => {
+                let mut file = File::create(&path).unwrap();
+                file.write_all(s.as_bytes()).unwrap();
+            }
+        }
     }
 }
 

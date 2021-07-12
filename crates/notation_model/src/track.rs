@@ -5,15 +5,15 @@ use crate::prelude::{ProtoEntry, TrackKind};
 
 #[derive(Debug)]
 pub struct Track {
+    pub key: String,
     pub kind: TrackKind,
-    pub name: String,
     pub entries: Vec<Arc<ProtoEntry>>,
 }
 impl Track {
-    pub fn new(kind: TrackKind, name: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
+    pub fn new(key: String, kind: TrackKind, entries: Vec<Arc<ProtoEntry>>) -> Self {
         Self {
+            key,
             kind,
-            name,
             entries,
         }
     }
@@ -25,8 +25,16 @@ impl Display for Track {
             "<{}>({:?}, {}, [{}])",
             stringify!(Track),
             self.kind,
-            self.name,
+            self.key,
             self.entries.len()
         )
+    }
+}
+impl From<notation_proto::prelude::Track> for Track {
+    fn from(v: notation_proto::prelude::Track) -> Self {
+        let entries: Vec<Arc<ProtoEntry>> = v.entries.into_iter().map(
+            |entry| Arc::new(entry)
+        ).collect();
+        Self::new(v.key, v.kind, entries)
     }
 }

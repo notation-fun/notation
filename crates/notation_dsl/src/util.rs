@@ -1,8 +1,8 @@
-use fehler::{throw, throws};
+use fehler::{throws};
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{quote};
 use syn::parse::{Error, Parse, ParseStream, Result};
-use syn::{braced, bracketed, token, Ident, Token};
+use syn::{braced, bracketed, token};
 
 use crate::bar::BarDsl;
 use crate::entry::EntryDsl;

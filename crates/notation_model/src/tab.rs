@@ -1,10 +1,8 @@
-use std::collections::HashMap;
+
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use crate::prelude::{
-    Bar, Line, Note, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit, Units,
-};
+use crate::prelude::{Bar, BarLayer, Form, Line, Note, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit, Units};
 
 #[derive(Debug)]
 pub struct TabBar {
@@ -21,8 +19,9 @@ pub struct Tab {
     pub meta: Arc<TabMeta>,
     pub lines: Vec<Arc<Line>>,
     pub tracks: Vec<Arc<Track>>,
+    pub layers: Vec<Arc<BarLayer>>,
     pub sections: Vec<Arc<Section>>,
-    pub form: Vec<usize>,
+    pub form: Form,
     pub bars: Vec<Arc<TabBar>>,
 }
 impl Display for TabBar {
@@ -41,13 +40,14 @@ impl Display for Tab {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<{}>({} L:{} T:{} S:{} F:{} B:{})",
+            "<{}>({} L:{} T:{} Y:{} S:{} F:{} B:{})",
             stringify!(Tab),
             self.meta,
             self.lines.len(),
             self.tracks.len(),
+            self.layers.len(),
             self.sections.len(),
-            self.form.len(),
+            self.form.sections.len(),
             self.bars.len(),
         )
     }
@@ -93,87 +93,5 @@ impl TabBar {
                 Syllable::from(Semitones::from(*note))
             }
         }
-    }
-}
-impl Section {
-    pub fn new_tab_bars(
-        &self,
-        arc_section: Arc<Section>,
-        tab: Weak<Tab>,
-        section_round: usize,
-        section_ordinal: usize,
-        section_bar_ordinal: usize,
-    ) -> Vec<Arc<TabBar>> {
-        self.bars
-            .iter()
-            .enumerate()
-            .map(|(bar_index, bar)| TabBar {
-                tab: tab.clone(),
-                section: arc_section.clone(),
-                section_round,
-                section_ordinal,
-                bar: bar.clone(),
-                bar_index: bar_index,
-                bar_ordinal: section_bar_ordinal + bar_index,
-            })
-            .map(|x| Arc::new(x))
-            .collect()
-    }
-}
-impl Tab {
-    pub fn new(
-        meta: Arc<TabMeta>,
-        lines: Vec<Arc<Line>>,
-        tracks: Vec<Arc<Track>>,
-        sections: Vec<Arc<Section>>,
-        form: Vec<usize>,
-    ) -> Arc<Self> {
-        Arc::<Tab>::new_cyclic(|weak_self| {
-            let bars = Self::new_tab_bars(weak_self, &sections, &form);
-            Self {
-                meta,
-                lines,
-                tracks,
-                sections,
-                form,
-                bars,
-            }
-        })
-    }
-    fn new_tab_bars(
-        weak_self: &Weak<Tab>,
-        sections: &Vec<Arc<Section>>,
-        form: &Vec<usize>,
-    ) -> Vec<Arc<TabBar>> {
-        let mut section_rounds: HashMap<usize, usize> = HashMap::new();
-        let mut section_ordinal: usize = 1;
-        let mut bar_ordinal: usize = 1;
-        let mut bars: Vec<Arc<TabBar>> = vec![];
-        for (form_index, section_index) in form.iter().enumerate() {
-            if *section_index <= sections.len() {
-                let section = sections.get(*section_index).unwrap();
-                let section_round = match section_rounds.get(section_index) {
-                    Some(r) => r + 1,
-                    None => 1,
-                };
-                section_rounds.insert(*section_index, section_round);
-                bars.extend(section.new_tab_bars(
-                    section.clone(),
-                    weak_self.clone(),
-                    section_round,
-                    section_ordinal,
-                    bar_ordinal,
-                ));
-                section_ordinal += 1;
-                bar_ordinal += section.bars.len();
-            } else {
-                println!(
-                    "Invalid section_index in form: {:?} -> {:?}",
-                    form_index, *section_index
-                );
-            }
-        }
-        println!("new_tab_bars() -> {:?} bars", bars.len());
-        bars
     }
 }

@@ -62,6 +62,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab::tab_events::AddTabEvent;
     #[doc(hidden)]
+    pub use crate::tab::tab_asset::TabAsset;
+    #[doc(hidden)]
     pub use crate::tab::tab_plugin::TabPlugin;
     #[doc(hidden)]
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};

@@ -1,0 +1,241 @@
+(
+    meta: (
+        key: Natural(G),
+        scale: Major,
+        signature: (
+            beat_unit: Quarter,
+            beats_per_bar: 4,
+        ),
+        tempo: Bpm(60),
+    ),
+    lines: [
+        (
+            key: "shapes",
+            entries: [
+                Mark("duration: Simple(Whole)"),// [0]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(0),
+                            Some(0),
+                            Some(0),
+                            Some(2),
+                            Some(2),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [1]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(0),
+                            Some(0),
+                            Some(0),
+                            Some(0),
+                            Some(2),
+                            Some(3),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),
+            ],
+        ),// [0]
+        (
+            key: "picks",
+            entries: [
+                Mark("duration: Triplet(Eighth)"),// [0]
+                FrettedSix(Pick(
+                    Single(5),
+                    Triplet(Eighth),
+                )),// [1]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [2]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [3]
+                FrettedSix(Pick(
+                    Single(0),
+                    Triplet(Eighth),
+                )),// [4]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [5]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [6]
+                FrettedSix(Pick(
+                    Single(5),
+                    Triplet(Eighth),
+                )),// [7]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [8]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [9]
+                FrettedSix(Pick(
+                    Single(0),
+                    Triplet(Eighth),
+                )),// [10]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [11]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),
+            ],
+        ),
+    ],
+    tracks: [
+        (
+            key: "guitar",
+            kind: Guitar,
+            entries: [
+                FrettedSix(Fretboard((
+                    total_fret_num: 20,
+                    string_notes: (
+                        (
+                            pitch: (
+                                name: E,
+                                sign: Natural,
+                            ),
+                            octave: P4,
+                        ),
+                        (
+                            pitch: (
+                                name: B,
+                                sign: Natural,
+                            ),
+                            octave: P3,
+                        ),
+                        (
+                            pitch: (
+                                name: G,
+                                sign: Natural,
+                            ),
+                            octave: P3,
+                        ),
+                        (
+                            pitch: (
+                                name: D,
+                                sign: Natural,
+                            ),
+                            octave: P3,
+                        ),
+                        (
+                            pitch: (
+                                name: A,
+                                sign: Natural,
+                            ),
+                            octave: P2,
+                        ),
+                        (
+                            pitch: (
+                                name: E,
+                                sign: Natural,
+                            ),
+                            octave: P2,
+                        ),
+                    ),
+                    capo: 0,
+                ))),
+            ],
+        ),
+    ],
+    layers: [
+        (
+            key: "Em",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 1,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 1,
+                    count: 12,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [0]
+        (
+            key: "G",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 2,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 1,
+                    count: 12,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),
+    ],
+    sections: [
+        (
+            key: "A",
+            kind: Verse,
+            bars: [
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        "G",
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        "G",
+                    ],
+                ),
+            ],
+        ),
+    ],
+    form: (
+        sections: [
+            "A",// [0]
+            "A",
+        ],
+    ),
+)

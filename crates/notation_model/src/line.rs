@@ -1,12 +1,14 @@
+use fehler::{throw, throws};
+use std::convert::TryFrom;
 use std::fmt::Display;
 use std::iter::Iterator;
 use std::sync::Arc;
 
-use crate::prelude::ProtoEntry;
+use crate::prelude::{ParseError, ProtoEntry};
 
 #[derive(Debug)]
 pub struct Line {
-    pub name: String,
+    pub key: String,
     pub entries: Vec<Arc<ProtoEntry>>,
 }
 #[derive(Debug)]
@@ -16,8 +18,8 @@ pub struct Slice {
     pub count: usize,
 }
 impl Line {
-    pub fn new(name: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
-        Self { name, entries }
+    pub fn new(key: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
+        Self { key, entries }
     }
 }
 impl Slice {
@@ -38,7 +40,7 @@ impl Display for Line {
             f,
             "<{}>({} E:{})",
             stringify!(Line),
-            self.name,
+            self.key,
             self.entries.len()
         )
     }
@@ -49,42 +51,30 @@ impl Display for Slice {
             f,
             "<{}>({} {}-{})",
             stringify!($silce_type),
-            self.line.name,
+            self.line.key,
             self.index,
             self.count
         )
     }
 }
-impl From<(String, Vec<ProtoEntry>)> for Line {
-    fn from(v: (String, Vec<ProtoEntry>)) -> Self {
-        let entries: Vec<Arc<ProtoEntry>> = v.1.into_iter().map(|entry| Arc::new(entry)).collect();
-        Self::new(v.0, entries)
+impl From<notation_proto::prelude::Line> for Line {
+    fn from(v: notation_proto::prelude::Line) -> Self {
+        let entries: Vec<Arc<ProtoEntry>> = v.entries.into_iter().map(
+            |entry| Arc::new(entry)
+        ).collect();
+        Self::new(v.key, entries)
     }
 }
-impl From<(String, Vec<Arc<ProtoEntry>>)> for Line {
-    fn from(v: (String, Vec<Arc<ProtoEntry>>)) -> Self {
-        Self::new(v.0, v.1)
-    }
-}
-impl Line {
-    pub fn from_iterator(name: String, iter: impl Iterator<Item = ProtoEntry>) -> Self {
-        Self::from((name, iter.collect::<Vec<ProtoEntry>>()))
-    }
-    pub fn from_entries(name: String, iter: impl Iterator<Item = Arc<ProtoEntry>>) -> Self {
-        Self::from((name, iter.collect::<Vec<Arc<ProtoEntry>>>()))
-    }
-}
-impl From<(String, Vec<Line>)> for Line {
-    fn from(v: (String, Vec<Line>)) -> Self {
-        let mut entries = Vec::<Arc<ProtoEntry>>::new();
-        for x in v.1 {
-            entries.append(&mut x.entries.clone());
+impl TryFrom<(notation_proto::prelude::Slice, &Vec<Arc<Line>>)> for Slice {
+    type Error = ParseError;
+
+    #[throws(Self::Error)]
+    fn try_from(v: (notation_proto::prelude::Slice, &Vec<Arc<Line>>)) -> Self {
+        if let Some(line) = v.1.iter().find(|x| x.key == v.0.line) {
+            Self::new(line, v.0.index, v.0.count)
+        } else {
+            throw!(ParseError::LineNotFound(v.0.line));
         }
-        Self::new(v.0, entries)
     }
 }
-impl Line {
-    pub fn from_lines_iterator(name: String, iter: impl Iterator<Item = Line>) -> Self {
-        Self::from((name, iter.collect::<Vec<Line>>()))
-    }
-}
+

@@ -2,7 +2,7 @@ use fehler::throws;
 
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Error, Parse, ParseStream, Result};
+use syn::parse::{Error, Parse, ParseStream};
 use syn::{bracketed, token, LitStr};
 
 pub struct BarDsl {

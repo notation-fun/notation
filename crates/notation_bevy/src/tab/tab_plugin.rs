@@ -3,9 +3,9 @@ use std::sync::Arc;
 use bevy::prelude::*;
 use notation_model::prelude::Tab;
 
-use crate::prelude::{AddTabEvent, BarBundle, BevyConfig, ConfigChangedEvent};
+use crate::prelude::{AddTabEvent, BarBundle, BevyConfig, ConfigChangedEvent, TabAsset};
 
-use super::tab_bundle::TabBundle;
+use super::{tab_asset::TabAssetLoader, tab_bundle::TabBundle};
 
 pub struct TabPlugin;
 
@@ -14,6 +14,8 @@ impl Plugin for TabPlugin {
         app.add_event::<AddTabEvent>();
         app.add_system(on_add_tab.system());
         app.add_system(on_config_changed.system());
+        app.add_asset::<TabAsset>();
+        app.init_asset_loader::<TabAssetLoader>();
     }
 }
 

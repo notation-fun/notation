@@ -8,3 +8,5 @@ edition = "2018"
 
 [dependencies]
 notation_proto = { path = "../notation_proto" }
+thiserror = "1.0"
+fehler = "1.0"

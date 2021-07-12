@@ -41,6 +41,11 @@ pub struct Section {
     pub kind: SectionKind,
     pub bars: Vec<Bar>,
 }
+impl Display for Section {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<Section>({} <{}> B:{})", self.key, self.kind, self.bars.len())
+    }
+}
 impl Section {
     pub fn new(key: String, kind: SectionKind, bars: Vec<Bar>) -> Self {
         Self { key, kind, bars }

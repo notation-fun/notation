@@ -9,6 +9,5 @@ edition = "2018"
 
 [dependencies]
 serde = {version = "1.0.126", features = ["derive"]}
-thiserror = "1.0"
 fehler = "1.0"
 

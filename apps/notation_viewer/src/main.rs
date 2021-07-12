@@ -12,144 +12,24 @@ use bevy::render::camera::OrthographicProjection;
 
 use bevy_inspector_egui::{bevy_egui, egui};
 
-use notation_bevy::prelude::{
-    AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins,
-};
-use notation_model::prelude::{
-    Bar, BarLayer, CoreEntry, Duration, GuitarEntry, GuitarHandShape, GuitarString, GuitarTuning,
-    GuitarUtil, Key, Line, Pick, ProtoEntry, Roman, Scale, Section, SectionKind, Signature, Slice,
-    Solfege, Tab, TabMeta, Tempo, Track, TrackKind,
-};
+use notation_bevy::prelude::{AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins, TabAsset};
+use notation_model::prelude::{Bar, BarLayer, CoreEntry, Duration, GuitarEntry, GuitarHandShape, GuitarString, GuitarTuning, GuitarUtil, Key, Line, ParseError, Pick, ProtoEntry, Roman, Scale, Section, SectionKind, Signature, Slice, Solfege, Tab, TabMeta, Tempo, Track, TrackKind};
 
 #[cfg(target_arch = "wasm32")]
 pub mod bevy_web_fullscreen;
 
 pub struct CameraPanning(bool);
 
-fn make_note_line() -> Line {
-    (
-        String::from("notes"),
-        vec![
-            (Solfege::LA_3, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::LA_5, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-            (Solfege::LA_3, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::LA_5, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-            (Solfege::DO_4, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::DO_6, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-            (Solfege::DO_4, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::DO_6, Duration::_1_8),
-            (Solfege::MI_5, Duration::_1_8),
-            (Solfege::DO_5, Duration::_1_8),
-        ]
-        .into_iter()
-        .map(CoreEntry::from)
-        .map(ProtoEntry::from)
-        .collect::<Vec<ProtoEntry>>(),
-    )
-        .into()
+pub struct AppState {
+    pub tab_asset: Handle<TabAsset>,
+    pub tab: Option<Arc<Tab>>,
+    pub parse_error: Option<ParseError>,
 }
 
-fn make_chord_line() -> Line {
-    (
-        String::from("chords"),
-        vec![
-            (Roman::VI_MINOR, Duration::_1),
-            (Roman::I_MAJOR, Duration::_1),
-        ]
-        .into_iter()
-        .map(CoreEntry::from)
-        .map(ProtoEntry::from)
-        .collect::<Vec<ProtoEntry>>(),
-    )
-        .into()
-}
-
-fn make_shape_line() -> Line {
-    let shape_e = GuitarHandShape::from([Some(0), Some(0), Some(0), Some(2), Some(2), Some(0)]);
-    let shape_g = GuitarHandShape::from([Some(3), Some(0), Some(0), Some(0), Some(2), Some(3)]);
-    let entries: Vec<ProtoEntry> = vec![
-        GuitarEntry::from((shape_e, Duration::_1)),
-        GuitarEntry::from((shape_g, Duration::_1)),
-    ]
-    .into_iter()
-    .map(ProtoEntry::from)
-    .collect();
-    (String::from("shape"), entries).into()
-}
-
-fn make_pick_line() -> Line {
-    let entries: Vec<ProtoEntry> = vec![
-        GuitarEntry::from((Pick::from(GuitarString::_6), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_3), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_2), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_1), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_2), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_3), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_6), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_3), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_2), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_1), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_2), Duration::T_1_8)),
-        GuitarEntry::from((Pick::from(GuitarString::_3), Duration::T_1_8)),
-    ]
-    .into_iter()
-    .map(ProtoEntry::from)
-    .collect();
-    (String::from("pick"), entries).into()
-}
-
-fn make_tab() -> Arc<Tab> {
-    let chords = Arc::new(make_chord_line());
-    let chords_1 = Slice::new_arc(&chords, 0, 1);
-    let chords_2 = Slice::new_arc(&chords, 1, 1);
-    let shapes = Arc::new(make_shape_line());
-    let shapes_1 = Slice::new_arc(&shapes, 0, 1);
-    let shapes_2 = Slice::new_arc(&shapes, 1, 1);
-    let picks = Arc::new(make_pick_line());
-    let picks_1 = Slice::new_arc(&picks, 0, 12);
-    let guitar = Arc::new(Track::new(TrackKind::Guitar, "guitar".into(), vec![
-        Arc::new(ProtoEntry::from(GuitarEntry::Fretboard(
-            GuitarUtil::new_acoustic_guitar_fretboard(GuitarTuning::Standard),
-        ))),
-    ]));
-
-    let chord_1 = Arc::new(BarLayer::from(vec![chords_1]));
-    let chord_2 = Arc::new(BarLayer::from(vec![chords_2]));
-    let pick_1 = Arc::new(BarLayer::from((&guitar, vec![shapes_1, picks_1.clone()])));
-    let pick_2 = Arc::new(BarLayer::from((&guitar, vec![shapes_2, picks_1.clone()])));
-    let bar_1 = Arc::new(Bar::from(vec![chord_1, pick_1]));
-    let bar_2 = Arc::new(Bar::from(vec![chord_2, pick_2]));
-    let verse = Arc::new(Section::from((SectionKind::Verse, vec![
-        bar_1.clone(),
-        bar_1.clone(),
-        bar_2.clone(),
-        bar_2.clone(),
-    ])));
-    let meta = Arc::new(TabMeta {
-        key: Key::G,
-        scale: Scale::Major,
-        signature: Signature::_4_4,
-        tempo: Tempo::Bpm(60),
-    });
-    let lines = vec![chords, shapes, picks];
-    let tracks = vec![guitar];
-    let sections = vec![verse];
-    let form = vec![0, 0];
-    Tab::new(meta, lines, tracks, sections, form)
+impl AppState {
+    pub fn new(tab_asset: Handle<TabAsset>) -> Self {
+        Self { tab_asset, tab: None, parse_error: None }
+    }
 }
 
 fn main() {
@@ -161,13 +41,12 @@ fn main() {
         .add_startup_system(setup.system());
 
     #[cfg(all(debug_assertions, not(target_arch = "wasm32")))]
-    app.add_startup_system(add_lines.system())
-        .insert_resource(CameraPanning(false))
+    app.insert_resource(CameraPanning(false))
         .add_system(update_camera.system())
         .add_plugins(NotationDevPlugins)
         .add_system(setup_ui.system());
 
-    app.add_startup_system(add_tabs.system());
+    app.add_system(load_tab.system());
 
     #[cfg(target_arch = "wasm32")]
     app.add_plugin(bevy_webgl2::WebGL2Plugin);
@@ -182,16 +61,31 @@ fn main() {
     app.run();
 }
 
-fn setup(mut commands: Commands) {
+fn setup(mut commands: Commands, server: Res<AssetServer>) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+    let tab_asset = server.load("amateur_guitar/1_right_hand.ron");
+    commands.insert_resource(AppState::new(tab_asset));
 }
 
-fn add_lines(mut evts: EventWriter<AddLineEvent>) {
-    evts.send(AddLineEvent(Arc::new(make_note_line())));
-}
-
-fn add_tabs(mut evts: EventWriter<AddTabEvent>) {
-    evts.send(AddTabEvent(make_tab()));
+fn load_tab(
+    mut state: ResMut<AppState>,
+    mut assets: ResMut<Assets<TabAsset>>,
+    mut evts: EventWriter<AddTabEvent>,
+) {
+    if state.tab.is_none() && state.parse_error.is_none() {
+        if let Some(asset) = assets.get(&state.tab_asset) {
+            match Tab::try_parse_arc(asset.tab.clone()) {
+                Ok(tab) => {
+                    state.tab = Some(tab.clone());
+                    evts.send(AddTabEvent(tab));
+                },
+                Err(err) => {
+                    println!("Parse Tab Failed: {:?}", err);
+                    state.parse_error = Some(err);
+                }
+            }
+        }
+    }
 }
 
 fn update_camera(
@@ -223,6 +117,7 @@ fn update_camera(
 
 fn setup_ui(
     mut commands: Commands,
+    mut state: ResMut<AppState>,
     egui_context: ResMut<bevy_egui::EguiContext>,
     mut camera_panning: ResMut<CameraPanning>,
     tab_query: Query<Entity, With<Arc<Tab>>>,
@@ -246,17 +141,9 @@ fn setup_ui(
                 commands.entity(tab).despawn_recursive();
             }
         }
-        if ui.button("Add Tabs").clicked() {
-            add_tabs(tab_evts);
-        }
-        ui.separator();
-        if ui.button("Clear Lines").clicked() {
-            for line in line_query.iter() {
-                commands.entity(line).despawn_recursive();
-            }
-        }
-        if ui.button("Add Lines").clicked() {
-            add_lines(line_evts);
+        if ui.button("Load Tab").clicked() {
+            state.tab = None;
+            state.parse_error = None;
         }
     });
 }

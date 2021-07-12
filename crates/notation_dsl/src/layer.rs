@@ -2,8 +2,8 @@ use fehler::throws;
 
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Error, Parse, ParseStream, Result};
-use syn::{bracketed, token, LitInt, LitStr, Token};
+use syn::parse::{Error, Parse, ParseStream};
+use syn::{LitInt, LitStr, Token};
 
 use crate::slice::SliceDsl;
 

@@ -14,7 +14,7 @@ pub struct LineBundle {
 
 impl From<Arc<Line>> for LineBundle {
     fn from(v: Arc<Line>) -> Self {
-        let name = Name::from(v.name.clone().as_str());
+        let name = Name::from(v.key.clone().as_str());
         Self {
             line: v,
             name,

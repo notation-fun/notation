@@ -53,11 +53,12 @@ impl EntryPlugin {
         match entry.as_ref() {
             ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
             ProtoEntry::FrettedSix(entry) => {
-                FrettedPlugin::insert_fretted_entry_extra(commands, entry)
+                FrettedPlugin::insert_fretted_entry_extra(commands, entry);
             }
             ProtoEntry::FrettedFour(entry) => {
-                FrettedPlugin::insert_fretted_entry_extra(commands, entry)
+                FrettedPlugin::insert_fretted_entry_extra(commands, entry);
             }
+            ProtoEntry::Mark(_) => {},
         }
     }
 }

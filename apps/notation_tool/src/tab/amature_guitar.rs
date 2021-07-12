@@ -102,6 +102,8 @@ pub fn new_tab_1_right_hand() -> Tab {
         sections: [
             {"A" Verse [
                 [ "Em" ]
+                [ "Em" ]
+                [ "G" ]
                 [ "G" ]
             ]}
         ]

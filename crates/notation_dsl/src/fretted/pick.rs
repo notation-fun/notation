@@ -15,7 +15,10 @@ impl Parse for PickDsl {
     fn parse(input: ParseStream) -> Self {
         let mut strings = vec![];
         while input.peek(LitInt) {
-            strings.push(input.parse::<LitInt>()?.base10_parse::<u8>()?);
+            strings.push(
+                input.parse::<LitInt>()?.base10_parse::<u8>()
+                .map(|x| x - 1)?
+            );
         }
         PickDsl { strings }
     }

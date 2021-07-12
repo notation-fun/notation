@@ -1,14 +1,14 @@
-use fehler::{throw, throws};
+use fehler::{throws};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Error, Parse, ParseStream, Result};
-use syn::{Expr, Ident, Token, braced, bracketed, token};
+use syn::parse::{Error, Parse, ParseStream};
+use syn::{Expr, Token};
 
-use crate::context::ContextDsl;
+
 use crate::form::FormDsl;
-use crate::fretted::fretboard::FretboardDsl;
-use crate::fretted::pick::PickDsl;
-use crate::fretted::shape::ShapeDsl;
+
+
+
 use crate::layer::LayerDsl;
 use crate::line::LineDsl;
 use crate::section::SectionDsl;

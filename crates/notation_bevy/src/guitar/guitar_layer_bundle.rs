@@ -14,7 +14,7 @@ fn as_fretted_entry(v: &ProtoEntry) -> Option<&GuitarEntry> {
 }
 
 fn new_default_fretboard() -> GuitarFretboard {
-    GuitarUtil::new_acoustic_guitar_fretboard(GuitarTuning::Standard)
+    GuitarUtil::new_acoustic_guitar_fretboard(None)
 }
 
 impl GuitarLayerBundle {

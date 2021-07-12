@@ -1,7 +1,7 @@
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
-use syn::{bracketed, token, LitInt, LitStr};
+use syn::{LitInt, LitStr};
 
 pub struct SliceDsl {
     pub line: LitStr,
