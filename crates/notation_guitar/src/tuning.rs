@@ -10,6 +10,12 @@ pub enum GuitarTuning {
     DropD,
 }
 
+impl Default for GuitarTuning {
+    fn default() -> Self {
+        Self::Standard
+    }
+}
+
 impl From<GuitarTuning> for GuitarStrings {
     fn from(v: GuitarTuning) -> Self {
         match v {

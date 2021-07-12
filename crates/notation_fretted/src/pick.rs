@@ -63,6 +63,19 @@ impl From<(u8, u8, u8, u8, u8)> for Pick {
     }
 }
 
+impl From<Vec<u8>> for Pick {
+    fn from(v: Vec<u8>) -> Self {
+        match v.len() {
+            0 => Self::from(0),
+            1 => Self::from(v[0]),
+            2 => Self::from((v[0], v[1])),
+            3 => Self::from((v[0], v[1], v[2])),
+            4 => Self::from((v[0], v[1], v[2], v[3])),
+            _ => Self::from((v[0], v[1], v[2], v[3], v[4])),
+        }
+    }
+}
+
 impl Pick {
     pub fn get_strings(&self) -> Vec<u8> {
         match self.clone() {

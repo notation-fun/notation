@@ -1,20 +1,21 @@
 use crate::prelude::{Slice, Track};
+use serde::{Deserialize, Serialize};
 use std::fmt::Display;
-use std::sync::Arc;
 
-#[derive(Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct BarLayer {
-    pub track: Option<Arc<Track>>,
+    pub key: String,
+    pub slices: Vec<Slice>,
+    pub track: Option<String>,
     pub rounds: Option<Vec<u16>>,
-    pub slices: Vec<Arc<Slice>>,
 }
-#[derive(Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Bar {
-    pub layers: Vec<Arc<BarLayer>>,
+    pub layers: Vec<String>,
 }
 impl Display for BarLayer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<{}>(", stringify!(BarLayer))?;
+        write!(f, "<BarLayer>(")?;
         if let Some(ref track) = self.track {
             write!(f, "{} ", track)?;
         }
@@ -30,44 +31,50 @@ impl Display for Bar {
         write!(f, "<{}>(L:{})", stringify!(Bar), self.layers.len())
     }
 }
-impl From<Vec<Arc<Slice>>> for BarLayer {
-    fn from(v: Vec<Arc<Slice>>) -> Self {
+impl BarLayer {
+    pub fn new(
+        key: String,
+        slices: Vec<Slice>,
+        track: Option<String>,
+        rounds: Option<Vec<u16>>,
+    ) -> Self {
         Self {
-            track: None,
-            rounds: None,
-            slices: v,
+            key,
+            slices,
+            track,
+            rounds,
         }
     }
 }
-impl From<(&Arc<Track>, Vec<Arc<Slice>>)> for BarLayer {
-    fn from(v: (&Arc<Track>, Vec<Arc<Slice>>)) -> Self {
-        Self {
-            track: Some(v.0.clone()),
-            rounds: None,
-            slices: v.1,
-        }
+impl From<(String, Vec<Slice>)> for BarLayer {
+    fn from(v: (String, Vec<Slice>)) -> Self {
+        Self::new(v.0, v.1, None, None)
     }
 }
-impl From<(Vec<u16>, Vec<Arc<Slice>>)> for BarLayer {
-    fn from(v: (Vec<u16>, Vec<Arc<Slice>>)) -> Self {
-        Self {
-            track: None,
-            rounds: Some(v.0),
-            slices: v.1,
-        }
+impl From<(String, Vec<Slice>, &Track)> for BarLayer {
+    fn from(v: (String, Vec<Slice>, &Track)) -> Self {
+        Self::new(v.0, v.1, Some(v.2.key.clone()), None)
     }
 }
-impl From<(&Arc<Track>, Vec<u16>, Vec<Arc<Slice>>)> for BarLayer {
-    fn from(v: (&Arc<Track>, Vec<u16>, Vec<Arc<Slice>>)) -> Self {
-        Self {
-            track: Some(v.0.clone()),
-            rounds: Some(v.1),
-            slices: v.2,
-        }
+impl From<(String, Vec<Slice>, Vec<u16>)> for BarLayer {
+    fn from(v: (String, Vec<Slice>, Vec<u16>)) -> Self {
+        Self::new(v.0, v.1, None, Some(v.2))
     }
 }
-impl From<Vec<Arc<BarLayer>>> for Bar {
-    fn from(v: Vec<Arc<BarLayer>>) -> Self {
+impl From<(String, Vec<Slice>, &Track, Vec<u16>)> for BarLayer {
+    fn from(v: (String, Vec<Slice>, &Track, Vec<u16>)) -> Self {
+        Self::new(v.0, v.1, Some(v.2.key.clone()), Some(v.3))
+    }
+}
+impl From<Vec<String>> for Bar {
+    fn from(v: Vec<String>) -> Self {
         Self { layers: v }
+    }
+}
+impl From<Vec<&str>> for Bar {
+    fn from(v: Vec<&str>) -> Self {
+        Self {
+            layers: v.iter().map(|x| x.to_string()).collect(),
+        }
     }
 }

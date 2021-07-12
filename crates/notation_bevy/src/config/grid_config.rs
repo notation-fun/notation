@@ -1,4 +1,4 @@
-use notation_core::prelude::{Signature, Units};
+use notation_model::prelude::{Signature, Units};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;

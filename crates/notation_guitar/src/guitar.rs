@@ -40,22 +40,26 @@ pub type GuitarHandShape = HandShape<GUITAR_STRING_NUM>;
 
 pub type GuitarEntry = FrettedEntry<GUITAR_STRING_NUM>;
 
-pub fn new_guitar_fretboard(total_fret_num: usize, strings: GuitarStrings) -> GuitarFretboard {
-    GuitarFretboard {
-        total_fret_num,
-        string_notes: strings,
-        capo: 0,
+pub struct GuitarUtil();
+
+impl GuitarUtil {
+    pub fn new_guitar_fretboard(total_fret_num: usize, strings: GuitarStrings) -> GuitarFretboard {
+        GuitarFretboard {
+            total_fret_num,
+            string_notes: strings,
+            capo: 0,
+        }
     }
-}
 
-pub fn new_acoustic_guitar_fretboard(tuning: GuitarTuning) -> GuitarFretboard {
-    new_guitar_fretboard(GUITAR_FRET_NUM_ACOUSTIC, tuning.into())
-}
+    pub fn new_acoustic_guitar_fretboard(tuning: Option<GuitarTuning>) -> GuitarFretboard {
+        Self::new_guitar_fretboard(GUITAR_FRET_NUM_ACOUSTIC, tuning.unwrap_or_default().into())
+    }
 
-pub fn new_classical_guitar_fretboard(tuning: GuitarTuning) -> GuitarFretboard {
-    new_guitar_fretboard(GUITAR_FRET_NUM_CLASSICAL, tuning.into())
-}
+    pub fn new_classical_guitar_fretboard(tuning: Option<GuitarTuning>) -> GuitarFretboard {
+        Self::new_guitar_fretboard(GUITAR_FRET_NUM_CLASSICAL, tuning.unwrap_or_default().into())
+    }
 
-pub fn new_electric_guitar_fretboard(tuning: GuitarTuning) -> GuitarFretboard {
-    new_guitar_fretboard(GUITAR_FRET_NUM_ELECTRIC, tuning.into())
+    pub fn new_electric_guitar_fretboard(tuning: Option<GuitarTuning>) -> GuitarFretboard {
+        Self::new_guitar_fretboard(GUITAR_FRET_NUM_ELECTRIC, tuning.unwrap_or_default().into())
+    }
 }

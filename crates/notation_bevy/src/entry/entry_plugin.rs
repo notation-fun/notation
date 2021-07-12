@@ -1,9 +1,9 @@
-use bevy::prelude::*;
 use bevy::ecs::system::EntityCommands;
+use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, NoteBundle};
-use notation_proto::prelude::{CoreEntry, ProtoEntry};
+use notation_model::prelude::{CoreEntry, ProtoEntry};
 
 pub struct EntryPlugin;
 
@@ -29,10 +29,7 @@ fn on_add_entry(mut commands: Commands, mut evts: EventReader<AddEntryEvent>) {
 }
 
 impl EntryPlugin {
-    pub fn insert_core_entry_extra(
-        commands: &mut EntityCommands,
-        entry: &CoreEntry,
-    ) {
+    pub fn insert_core_entry_extra(commands: &mut EntityCommands, entry: &CoreEntry) {
         match entry {
             CoreEntry::Rest(_) => (),
             CoreEntry::Note(note, _) => {
@@ -52,10 +49,7 @@ impl EntryPlugin {
         };
     }
 
-    pub fn insert_entry_extra(
-        commands: &mut EntityCommands,
-        entry: Arc<ProtoEntry>,
-    ) {
+    pub fn insert_entry_extra(commands: &mut EntityCommands, entry: Arc<ProtoEntry>) {
         match entry.as_ref() {
             ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
             ProtoEntry::FrettedSix(entry) => {

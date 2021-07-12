@@ -2,11 +2,10 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_core::prelude::Units;
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
-use notation_proto::prelude::{TabBar};
+use notation_model::prelude::{TabBar, Units};
 
 #[derive(Clone, Debug)]
 pub struct BarSeparatorData {
@@ -22,7 +21,11 @@ impl BarSeparatorData {
         let bar_ordinal = tab_bar.bar_ordinal;
         let bar_units = tab_bar.bar_units();
         BarSeparatorData {
-            bar_ordinal, bar_units, top, bottom, is_begin,
+            bar_ordinal,
+            bar_units,
+            top,
+            bottom,
+            is_begin,
         }
     }
 }
@@ -65,8 +68,6 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
 
 impl<'a> LyonShapeOp<'a, BarSeparatorData, shapes::Line, BarSeparator<'a>> for BarSeparator<'a> {
     fn new_shape(config: &'a BevyConfig, data: BarSeparatorData) -> BarSeparator<'a> {
-        BarSeparator::<'a> {
-            config, data,
-        }
+        BarSeparator::<'a> { config, data }
     }
 }

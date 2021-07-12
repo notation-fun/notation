@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 
-use notation_core::prelude::Signature;
+use notation_model::prelude::Signature;
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
 pub struct CoreTheme {
     pub background_color: Color,

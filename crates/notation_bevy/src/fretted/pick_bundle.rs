@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_fretted::prelude::Pick;
+use notation_model::prelude::Pick;
 
 #[derive(Bundle)]
 pub struct PickBundle {

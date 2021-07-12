@@ -8,7 +8,7 @@ edition = "2018"
 [lib]
 
 [dependencies]
-serde = {version = "1.0.126", features = ["derive"]}
+serde = {version = "1.0.126", features = ["derive", "alloc"]}
 notation_core = { path = "../notation_core" }
 notation_fretted = { path = "../notation_fretted" }
 notation_guitar = { path = "../notation_guitar" }

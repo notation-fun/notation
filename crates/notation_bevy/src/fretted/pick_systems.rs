@@ -1,11 +1,10 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_proto::prelude::TabBar;
+
+use notation_model::prelude::TabBar;
 use std::sync::Arc;
 
 use crate::prelude::{BevyConfig, FrettedPlugin, LyonShapeOp};
-use notation_core::prelude::{Duration, Syllable, Units};
-use notation_fretted::prelude::{Fretboard, HandShape, Pick};
+use notation_model::prelude::{Duration, Fretboard, HandShape, Pick, Units};
 
 use super::pick_note::{PickNote, PickNoteData};
 

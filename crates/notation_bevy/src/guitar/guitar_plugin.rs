@@ -1,9 +1,9 @@
-use bevy::prelude::*;
 use bevy::ecs::system::EntityCommands;
+use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::GuitarLayerBundle;
-use notation_proto::prelude::{BarLayer, TabBar, Track};
+use notation_model::prelude::{BarLayer, TabBar, Track};
 
 pub struct GuitarPlugin;
 

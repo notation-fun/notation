@@ -92,6 +92,12 @@ impl<const S: usize> Entry for FrettedEntry<S> {
     }
 }
 
+impl<const S: usize> From<Fretboard<S>> for FrettedEntry<S> {
+    fn from(v: Fretboard<S>) -> Self {
+        Self::Fretboard(v)
+    }
+}
+
 impl<const S: usize> From<(HandShape<S>, Duration)> for FrettedEntry<S> {
     fn from(v: (HandShape<S>, Duration)) -> Self {
         Self::Shape(v.0, v.1)

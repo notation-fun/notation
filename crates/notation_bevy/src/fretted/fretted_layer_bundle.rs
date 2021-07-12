@@ -2,8 +2,7 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::FrettedGrid;
-use notation_fretted::prelude::{Fretboard, FrettedEntry};
-use notation_proto::prelude::{BarLayer, ProtoEntry, TabBar, Track};
+use notation_model::prelude::{BarLayer, Fretboard, FrettedEntry, ProtoEntry, TabBar, Track};
 
 #[derive(Bundle)]
 pub struct FrettedLayerBundle<const S: usize> {

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_fretted::prelude::HandShape;
+use notation_model::prelude::HandShape;
 
 #[derive(Bundle)]
 pub struct HandShapeBundle<const S: usize> {

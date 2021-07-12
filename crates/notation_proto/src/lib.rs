@@ -8,7 +8,6 @@ pub mod line;
 pub mod section;
 pub mod tab;
 pub mod track;
-pub mod util;
 
 pub mod prelude {
     #[doc(hidden)]
@@ -18,9 +17,9 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::line::{Line, Slice};
     #[doc(hidden)]
-    pub use crate::section::{Section, SectionKind};
+    pub use crate::section::{Form, Section, SectionKind};
     #[doc(hidden)]
-    pub use crate::tab::{Tab, TabBar, TabMeta};
+    pub use crate::tab::{Tab, TabMeta};
     #[doc(hidden)]
     pub use crate::track::{Track, TrackKind};
     #[doc(hidden)]

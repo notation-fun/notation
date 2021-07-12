@@ -74,6 +74,39 @@ impl Duration {
     pub const DT_1_32: Self = Duration::DottedTriplet(Unit::ThirtySecondth);
 }
 
+impl Duration {
+    pub fn from_ident(ident: &str) -> Self {
+        match ident {
+            "_0" => Self::_0,
+            "_1" => Self::_1,
+            "_1_2" => Self::_1_2,
+            "_1_4" => Self::_1_4,
+            "_1_8" => Self::_1_8,
+            "_1_16" => Self::_1_16,
+            "_1_32" => Self::_1_32,
+            "D_1" => Self::D_1,
+            "D_1_2" => Self::D_1_2,
+            "D_1_4" => Self::D_1_4,
+            "D_1_8" => Self::D_1_8,
+            "D_1_16" => Self::D_1_16,
+            "D_1_32" => Self::D_1_32,
+            "T_1" => Self::T_1,
+            "T_1_2" => Self::T_1_2,
+            "T_1_4" => Self::T_1_4,
+            "T_1_8" => Self::T_1_8,
+            "T_1_16" => Self::T_1_16,
+            "T_1_32" => Self::T_1_32,
+            "DT_1" => Self::DT_1,
+            "DT_1_2" => Self::DT_1_2,
+            "DT_1_4" => Self::DT_1_4,
+            "DT_1_8" => Self::DT_1_8,
+            "DT_1_16" => Self::DT_1_16,
+            "DT_1_32" => Self::DT_1_32,
+            _ => Self::_0,
+        }
+    }
+}
+
 impl Default for Duration {
     fn default() -> Self {
         Self::Simple(Unit::default())

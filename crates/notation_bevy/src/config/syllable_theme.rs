@@ -1,4 +1,4 @@
-use notation_core::prelude::{Octave, Semitones, Solfege, Syllable};
+use notation_model::prelude::{Octave, Semitones, Solfege, Syllable};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;

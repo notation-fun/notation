@@ -12,6 +12,13 @@ pub struct Fretboard<const S: usize> {
 }
 
 impl<const S: usize> Fretboard<S> {
+    pub fn new(total_fret_num: usize, string_notes: [Note; S], capo: u8) -> Self {
+        Self {
+            total_fret_num,
+            string_notes,
+            capo,
+        }
+    }
     pub fn clone_<const S1: usize>(&self) -> Fretboard<S1> {
         if S != S1 {
             println!("Fretboard<{}> unsafe clone_: {}", S, S1);

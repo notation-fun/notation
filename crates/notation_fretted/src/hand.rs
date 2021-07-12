@@ -32,6 +32,9 @@ impl<const S: usize> Display for HandShape<S> {
 }
 
 impl<const S: usize> HandShape<S> {
+    pub fn new(frets: [Option<u8>; S], fingers: [Option<Finger>; S]) -> Self {
+        Self { frets, fingers }
+    }
     pub fn clone_<const S1: usize>(&self) -> HandShape<S1> {
         if S != S1 {
             println!("HandShape<{}> unsafe clone_: {}", S, S1);
@@ -50,9 +53,6 @@ impl<const S: usize> HandShape<S> {
         } else {
             self.frets[string as usize]
         }
-    }
-    pub fn new(frets: [Option<u8>; S], fingers: [Option<Finger>; S]) -> Self {
-        Self { frets, fingers }
     }
 }
 

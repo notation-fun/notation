@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::{egui, Context, InspectableRegistry};
 
-use notation_core::prelude::Syllable;
+use notation_model::prelude::Syllable;
 
 pub fn register_inspectors(mut registry: ResMut<InspectableRegistry>) {
     registry.register_raw(syllable_ui);

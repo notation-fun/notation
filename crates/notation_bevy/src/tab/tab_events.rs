@@ -1,4 +1,4 @@
-use notation_proto::prelude::*;
+use notation_model::prelude::*;
 use std::sync::Arc;
 
 #[derive(Debug)]

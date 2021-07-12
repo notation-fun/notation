@@ -1,0 +1,14 @@
+[package]
+name = "notation_tool"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+notation_proto = { path = "../../crates/notation_proto" }
+notation_dsl = { path = "../../crates/notation_dsl" }
+
+structopt = "0.3"
+serde = "1.0.126"
+ron = "0.6"

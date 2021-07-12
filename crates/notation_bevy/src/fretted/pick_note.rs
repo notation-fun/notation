@@ -2,11 +2,11 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_core::prelude::{Duration, Syllable, Units};
+use notation_model::prelude::{Duration, Syllable, Units};
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
-use notation_proto::prelude::{TabBar};
+use notation_model::prelude::TabBar;
 
 #[derive(Clone, Debug)]
 pub struct PickNoteData {
@@ -27,7 +27,11 @@ impl PickNoteData {
     ) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         PickNoteData {
-            bar_ordinal, duration, position, string, syllable,
+            bar_ordinal,
+            duration,
+            position,
+            string,
+            syllable,
         }
     }
 }
@@ -38,7 +42,10 @@ pub struct PickNote<'a> {
 
 impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
     fn get_name(&self) -> String {
-        format!("{}:{} String {}", self.data.bar_ordinal, self.data.syllable, self.data.string)
+        format!(
+            "{}:{} String {}",
+            self.data.bar_ordinal, self.data.syllable, self.data.string
+        )
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
@@ -48,26 +55,30 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.config.theme.syllable.color_of_syllable(self.data.syllable))
+        ShapeColors::new(
+            self.config
+                .theme
+                .syllable
+                .color_of_syllable(self.data.syllable),
+        )
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(self.config.grid.note_outline),
+            outline_options: StrokeOptions::default()
+                .with_line_width(self.config.grid.note_outline),
         }
     }
     fn get_transform(&self) -> Transform {
         let x = self.config.grid.unit_size * self.data.position.0;
-        let y =
-            self.config.theme.fretted.string_space * -1.0 * self.data.string as f32 - self.config.grid.note_height / 2.0;
+        let y = self.config.theme.fretted.string_space * -1.0 * self.data.string as f32
+            - self.config.grid.note_height / 2.0;
         Transform::from_xyz(x, y, self.config.theme.fretted.pick_z)
     }
 }
 
 impl<'a> LyonShapeOp<'a, PickNoteData, shapes::Rectangle, PickNote<'a>> for PickNote<'a> {
     fn new_shape(config: &'a BevyConfig, data: PickNoteData) -> PickNote<'a> {
-        PickNote::<'a> {
-            config, data,
-        }
+        PickNote::<'a> { config, data }
     }
 }

@@ -1,16 +1,16 @@
-use bevy::prelude::*;
 use bevy::ecs::system::EntityCommands;
+use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_core::prelude::Signature;
+use notation_model::prelude::Signature;
 use std::sync::Arc;
 
 use crate::config::bevy_config::BevyConfig;
 use crate::config::grid_config::{GridCol, GridRow};
-use crate::prelude::{AddEntryEvent, GuitarPlugin, LayerBundle, ConfigChangedEvent, LyonShapeOp};
-use notation_proto::prelude::{BarLayer, TabBar, TrackKind, Units};
+use crate::prelude::{AddEntryEvent, ConfigChangedEvent, GuitarPlugin, LayerBundle, LyonShapeOp};
+use notation_model::prelude::{BarLayer, TabBar, TrackKind, Units};
 
-use super::bar_separator::{BarSeparator, BarSeparatorData};
 use super::bar_beat::{BarBeat, BarBeatData};
+use super::bar_separator::{BarSeparator, BarSeparatorData};
 
 pub struct BarPlugin;
 
@@ -69,11 +69,19 @@ fn create_layers(
         let top = 15.0; //TODO: calc from layers
         let bottom = -120.0; //TODO: calc from layers
         if grid_col.0 == 0 {
-            BarSeparator::create(&mut commands, bar_entity, &config,
-                BarSeparatorData::new(&bar, top, bottom, true));
+            BarSeparator::create(
+                &mut commands,
+                bar_entity,
+                &config,
+                BarSeparatorData::new(&bar, top, bottom, true),
+            );
         }
-        BarSeparator::create(&mut commands, bar_entity, &config,
-            BarSeparatorData::new(&bar, top, bottom, false));
+        BarSeparator::create(
+            &mut commands,
+            bar_entity,
+            &config,
+            BarSeparatorData::new(&bar, top, bottom, false),
+        );
         let signature = bar.signature();
         for beat in 0..signature.beats_per_bar {
             BarBeatData::may_new(&config, &bar, &signature, top, bottom, beat)

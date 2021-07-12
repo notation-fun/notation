@@ -15,10 +15,10 @@ use bevy_inspector_egui::{bevy_egui, egui};
 use notation_bevy::prelude::{
     AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins,
 };
-use notation_proto::prelude::{
-    new_acoustic_guitar_fretboard, Bar, BarLayer, CoreEntry, Duration, GuitarEntry,
-    GuitarHandShape, GuitarString, GuitarTuning, Key, Line, Pick, ProtoEntry, Roman, Scale,
-    Section, SectionKind, Signature, Slice, Solfege, Tab, TabMeta, Tempo, Track, TrackKind,
+use notation_model::prelude::{
+    Bar, BarLayer, CoreEntry, Duration, GuitarEntry, GuitarHandShape, GuitarString, GuitarTuning,
+    GuitarUtil, Key, Line, Pick, ProtoEntry, Roman, Scale, Section, SectionKind, Signature, Slice,
+    Solfege, Tab, TabMeta, Tempo, Track, TrackKind,
 };
 
 #[cfg(target_arch = "wasm32")]
@@ -123,7 +123,7 @@ fn make_tab() -> Arc<Tab> {
     let picks_1 = Slice::new_arc(&picks, 0, 12);
     let guitar = Arc::new(Track::new(TrackKind::Guitar, "guitar".into(), vec![
         Arc::new(ProtoEntry::from(GuitarEntry::Fretboard(
-            new_acoustic_guitar_fretboard(GuitarTuning::Standard),
+            GuitarUtil::new_acoustic_guitar_fretboard(GuitarTuning::Standard),
         ))),
     ]));
 

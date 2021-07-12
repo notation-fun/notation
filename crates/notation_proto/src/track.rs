@@ -1,45 +1,56 @@
 use serde::{Deserialize, Serialize};
 
 use std::fmt::Display;
-use std::sync::Arc;
 
 use crate::prelude::ProtoEntry;
 
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum TrackKind {
-    None,
     Vocal,
     Piano,
     Guitar,
     Bass,
     Drums,
     Synth,
-    Custom(String, u8),
+    Custom(String),
+}
+impl Display for TrackKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+impl TrackKind {
+    pub fn from_ident(ident: &str) -> Self {
+        match ident {
+            "Vocal" => Self::Vocal,
+            "Piano" => Self::Piano,
+            "Guitar" => Self::Guitar,
+            "Bass" => Self::Bass,
+            "Drums" => Self::Guitar,
+            "Synth" => Self::Guitar,
+            _ => Self::Custom(ident.to_string()),
+        }
+    }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Track {
+    pub key: String,
     pub kind: TrackKind,
-    pub name: String,
-    pub entries: Vec<Arc<ProtoEntry>>,
+    pub entries: Vec<ProtoEntry>,
 }
 impl Track {
-    pub fn new(kind: TrackKind, name: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
-        Self {
-            kind,
-            name,
-            entries,
-        }
+    pub fn new(key: String, kind: TrackKind, entries: Vec<ProtoEntry>) -> Self {
+        Self { kind, key, entries }
     }
 }
 impl Display for Track {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<{}>({:?}, {}, [{}])",
-            stringify!(Track),
+            "<Track>({} <{}> E:{})",
+            self.key,
             self.kind,
-            self.name,
             self.entries.len()
         )
     }

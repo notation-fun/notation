@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_proto::prelude::{Tab, Units};
+use notation_model::prelude::{Tab, Units};
 
 use crate::config::bevy_config::BevyConfig;
 

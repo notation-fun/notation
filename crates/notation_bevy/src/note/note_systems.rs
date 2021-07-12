@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use notation_core::prelude::{Duration, Octave, Semitones, Syllable, Units};
+use notation_model::prelude::{Duration, Octave, Semitones, Syllable, Units};
 
 use crate::prelude::BevyConfig;
 

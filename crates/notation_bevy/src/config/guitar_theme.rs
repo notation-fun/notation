@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use bevy_inspector_egui::Inspectable;
 
-use notation_guitar::prelude::GUITAR_STRING_NUM;
+use notation_model::prelude::GUITAR_STRING_NUM;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
 pub struct GuitarTheme {

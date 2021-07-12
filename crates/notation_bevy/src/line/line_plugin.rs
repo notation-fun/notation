@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::prelude::{AddEntryEvent, AddLineEvent};
-use notation_proto::prelude::Units;
+use notation_model::prelude::Units;
 
 use super::line_bundle::LineBundle;
 

@@ -1,9 +1,9 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
+
 use std::sync::Arc;
 
 use crate::prelude::{BevyConfig, LyonShapeOp};
-use notation_proto::prelude::{TabBar, Units};
+use notation_model::prelude::TabBar;
 
 use super::fretted_string::{FrettedString, FrettedStringData};
 
@@ -18,7 +18,12 @@ impl<const S: usize> FrettedGrid<S> {
         tab_bar: &Arc<TabBar>,
     ) -> () {
         for string in 0..S {
-            FrettedString::create(commands, entity, config, FrettedStringData::new(tab_bar, string));
+            FrettedString::create(
+                commands,
+                entity,
+                config,
+                FrettedStringData::new(tab_bar, string),
+            );
         }
     }
 }

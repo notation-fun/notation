@@ -2,11 +2,11 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_core::prelude::{Signature, Units};
+use notation_model::prelude::Units;
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
-use notation_proto::prelude::{TabBar};
+use notation_model::prelude::TabBar;
 
 #[derive(Clone, Debug)]
 pub struct FrettedStringData {
@@ -16,14 +16,13 @@ pub struct FrettedStringData {
 }
 
 impl FrettedStringData {
-    pub fn new(
-        tab_bar: &Arc<TabBar>,
-        string: usize,
-    ) -> Self {
+    pub fn new(tab_bar: &Arc<TabBar>, string: usize) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         let bar_units = tab_bar.bar_units();
         FrettedStringData {
-            bar_ordinal, bar_units, string,
+            bar_ordinal,
+            bar_units,
+            string,
         }
     }
 }
@@ -37,7 +36,10 @@ impl<'a> LyonShape<shapes::Line> for FrettedString<'a> {
         format!("{}:String {}", self.data.bar_ordinal, self.data.string)
     }
     fn get_shape(&self) -> shapes::Line {
-        shapes::Line(Vec2::ZERO, Vec2::new(self.config.grid.unit_size * self.data.bar_units.0, 0.0))
+        shapes::Line(
+            Vec2::ZERO,
+            Vec2::new(self.config.grid.unit_size * self.data.bar_units.0, 0.0),
+        )
     }
     fn get_colors(&self) -> ShapeColors {
         ShapeColors::new(self.config.theme.fretted.string_color)
@@ -54,8 +56,6 @@ impl<'a> LyonShape<shapes::Line> for FrettedString<'a> {
 
 impl<'a> LyonShapeOp<'a, FrettedStringData, shapes::Line, FrettedString<'a>> for FrettedString<'a> {
     fn new_shape(config: &'a BevyConfig, data: FrettedStringData) -> FrettedString<'a> {
-        FrettedString::<'a> {
-            config, data,
-        }
+        FrettedString::<'a> { config, data }
     }
 }

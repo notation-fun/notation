@@ -2,11 +2,10 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_core::prelude::{Signature, Units};
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
-use notation_proto::prelude::{TabBar};
+use notation_model::prelude::{Signature, TabBar, Units};
 
 #[derive(Clone, Debug)]
 pub struct BarBeatData {
@@ -29,7 +28,12 @@ impl BarBeatData {
         let bar_ordinal = tab_bar.bar_ordinal;
         let beat_units = Units::from(signature.beat_unit);
         BarBeatData {
-            signature: signature.clone(), beat_units, bar_ordinal, top, bottom, beat,
+            signature: signature.clone(),
+            beat_units,
+            bar_ordinal,
+            top,
+            bottom,
+            beat,
         }
     }
     pub fn may_new(
@@ -40,10 +44,11 @@ impl BarBeatData {
         bottom: f32,
         beat: u8,
     ) -> Option<Self> {
-        config.theme.core.get_beat_color(signature, beat)
-            .map(|_color|{
-                Self::new(tab_bar, signature, top, bottom, beat)
-            })
+        config
+            .theme
+            .core
+            .get_beat_color(signature, beat)
+            .map(|_color| Self::new(tab_bar, signature, top, bottom, beat))
     }
 }
 
@@ -65,7 +70,11 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
     fn get_colors(&self) -> ShapeColors {
         let signature = self.data.signature;
-        let color = self.config.theme.core.get_beat_color(&signature, self.data.beat);
+        let color = self
+            .config
+            .theme
+            .core
+            .get_beat_color(&signature, self.data.beat);
         ShapeColors::new(color.unwrap_or(self.config.theme.core.background_color))
     }
     fn get_draw_mode(&self) -> DrawMode {
@@ -79,8 +88,6 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
 
 impl<'a> LyonShapeOp<'a, BarBeatData, shapes::Rectangle, BarBeat<'a>> for BarBeat<'a> {
     fn new_shape(config: &'a BevyConfig, data: BarBeatData) -> BarBeat<'a> {
-        BarBeat::<'a> {
-            config, data,
-        }
+        BarBeat::<'a> { config, data }
     }
 }

@@ -1,9 +1,9 @@
 use crate::fretted::fretted_layer_bundle::FrettedLayerBundle;
 use crate::prelude::FrettedGrid;
-use notation_guitar::prelude::{
-    new_acoustic_guitar_fretboard, GuitarEntry, GuitarFretboard, GuitarTuning, GUITAR_STRING_NUM,
+use notation_model::prelude::{
+    BarLayer, GuitarEntry, GuitarFretboard, GuitarTuning, GuitarUtil, ProtoEntry, TabBar, Track,
+    GUITAR_STRING_NUM,
 };
-use notation_proto::prelude::{BarLayer, ProtoEntry, TabBar, Track};
 use std::sync::Arc;
 
 pub type GuitarFrettedGrid = FrettedGrid<GUITAR_STRING_NUM>;
@@ -14,7 +14,7 @@ fn as_fretted_entry(v: &ProtoEntry) -> Option<&GuitarEntry> {
 }
 
 fn new_default_fretboard() -> GuitarFretboard {
-    new_acoustic_guitar_fretboard(GuitarTuning::Standard)
+    GuitarUtil::new_acoustic_guitar_fretboard(GuitarTuning::Standard)
 }
 
 impl GuitarLayerBundle {

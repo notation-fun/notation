@@ -1,17 +1,16 @@
-use bevy::prelude::*;
 use bevy::ecs::system::EntityCommands;
-use bevy_prototype_lyon::prelude::*;
-use notation_core::prelude::Units;
+use bevy::prelude::*;
+
+use notation_model::prelude::Units;
 use std::sync::Arc;
 
-use super::fretted_string::FrettedString;
-use super::pick_note::{PickNote, PickNoteData};
-use super::{fretted_grid::FrettedGrid, fretted_string::FrettedStringData};
+use super::fretted_grid::FrettedGrid;
+use super::fretted_string::{FrettedString, FrettedStringData};
 use super::hand_bundles::HandShapeBundle;
 use super::pick_bundle::PickBundle;
+use super::pick_note::{PickNote, PickNoteData};
 use crate::prelude::{BevyConfig, ConfigChangedEvent, LyonShapeOp};
-use notation_fretted::prelude::{Fretboard, FrettedEntry, HandShape};
-use notation_proto::prelude::{BarLayer, TabBar};
+use notation_model::prelude::{Fretboard, FrettedEntry, HandShape, TabBar};
 
 pub struct FrettedPlugin;
 

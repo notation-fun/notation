@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_proto::prelude::{Line, Units};
+use notation_model::prelude::{Line, Units};
 
 #[derive(Bundle)]
 pub struct LineBundle {

@@ -29,7 +29,7 @@ dev = [
 ]
 
 [dependencies]
-notation_proto = { path = "../../crates/notation_proto" }
+notation_model = { path = "../../crates/notation_model" }
 notation_bevy = { path = "../../crates/notation_bevy" }
 
 # bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", features = ["dynamic"]}

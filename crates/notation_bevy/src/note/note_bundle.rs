@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_core::prelude::{Note, Octave, Pitch, Solfege, Syllable};
+use notation_model::prelude::{Note, Octave, Pitch, Solfege, Syllable};
 
 #[derive(Bundle)]
 pub struct NoteBundle {

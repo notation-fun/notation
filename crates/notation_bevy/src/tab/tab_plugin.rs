@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_proto::prelude::Tab;
+use notation_model::prelude::Tab;
 
 use crate::prelude::{AddTabEvent, BarBundle, BevyConfig, ConfigChangedEvent};
 

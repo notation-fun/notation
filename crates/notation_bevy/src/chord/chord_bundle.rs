@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_core::prelude::{ChordInversion, ChordQuality, Pitch, Syllable};
+use notation_model::prelude::{ChordInversion, ChordQuality, Pitch, Syllable};
 
 use crate::entry::entry_bundle::EntryBundle;
 

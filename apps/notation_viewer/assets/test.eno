@@ -1,0 +1,30 @@
+# meta
+key: G
+scale: Major
+signature: 4/4
+tempo: 60
+
+# tracks
+
+## guitar
+kind: Guitar
+
+### entries
+
+# lines
+
+## pick
+duration: 1/8
+kind: Pick<6>
+
+-- entries
+| 632123632123 |
+-- entries
+
+## shape
+duration: 1
+kind: HandShape<6>
+
+-- entries
+| (022000) | (320001) |
+-- entries

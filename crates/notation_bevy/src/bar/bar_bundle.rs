@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_proto::prelude::{TabBar, Units};
+use notation_model::prelude::{TabBar, Units};
 
 use crate::prelude::{GridCol, GridConfig, GridRow};
 

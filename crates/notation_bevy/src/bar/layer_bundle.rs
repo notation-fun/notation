@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_proto::prelude::{BarLayer, TabBar};
+use notation_model::prelude::{BarLayer, TabBar};
 
 #[derive(Bundle)]
 pub struct LayerBundle {

@@ -16,10 +16,7 @@ default = [
 ]
 
 [dependencies]
-notation_core = { path = "../notation_core" }
-notation_proto = { path = "../notation_proto" }
-notation_fretted = { path = "../notation_fretted" }
-notation_guitar = { path = "../notation_guitar" }
+notation_model = { path = "../notation_model" }
 
 serde = {version = "1.0.126", features = ["derive"]}
 # https://github.com/serde-rs/serde/issues/1937

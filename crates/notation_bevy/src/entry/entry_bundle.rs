@@ -1,8 +1,7 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_core::prelude::Duration;
-use notation_proto::prelude::*;
+use notation_model::prelude::*;
 
 #[derive(Bundle)]
 pub struct EntryBundle {
