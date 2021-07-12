@@ -69,7 +69,7 @@ fn setup(mut commands: Commands, server: Res<AssetServer>) {
 
 fn load_tab(
     mut state: ResMut<AppState>,
-    mut assets: ResMut<Assets<TabAsset>>,
+    assets: ResMut<Assets<TabAsset>>,
     mut evts: EventWriter<AddTabEvent>,
 ) {
     if state.tab.is_none() && state.parse_error.is_none() {
