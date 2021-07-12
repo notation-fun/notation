@@ -1,6 +1,7 @@
-use fehler::{throws};
-use std::{convert::TryFrom, sync::Arc};
+use fehler::throws;
+use std::convert::TryFrom;
 use std::fmt::Display;
+use std::sync::Arc;
 
 use crate::prelude::{Bar, BarLayer, ParseError, SectionKind};
 
@@ -12,7 +13,13 @@ pub struct Section {
 }
 impl Display for Section {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<Section>({} <{}> B:{})", self.key, self.kind, self.bars.len())
+        write!(
+            f,
+            "<Section>({} <{}> B:{})",
+            self.key,
+            self.kind,
+            self.bars.len()
+        )
     }
 }
 impl Section {
@@ -39,10 +46,9 @@ impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
         for section in v.0.sections {
             sections.push(
                 v.1.iter()
-                .find(|x| x.key == section)
-                .map(
-                    |x| x.clone()
-                ).ok_or(ParseError::SectionNotFound(section))?
+                    .find(|x| x.key == section)
+                    .map(|x| x.clone())
+                    .ok_or(ParseError::SectionNotFound(section))?,
             );
         }
         Self { sections }
@@ -56,10 +62,7 @@ impl TryFrom<(notation_proto::prelude::Section, &Vec<Arc<BarLayer>>)> for Sectio
     fn try_from(v: (notation_proto::prelude::Section, &Vec<Arc<BarLayer>>)) -> Self {
         let mut bars = Vec::new();
         for bar in v.0.bars {
-            bars.push(
-                Bar::try_from((bar, v.1))
-                .map(|x| Arc::new(x))?
-            );
+            bars.push(Bar::try_from((bar, v.1)).map(|x| Arc::new(x))?);
         }
         Self::new(v.0.key, v.0.kind, bars)
     }

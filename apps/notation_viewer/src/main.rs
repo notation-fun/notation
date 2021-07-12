@@ -12,7 +12,9 @@ use bevy::render::camera::OrthographicProjection;
 
 use bevy_inspector_egui::{bevy_egui, egui};
 
-use notation_bevy::prelude::{AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins, TabAsset};
+use notation_bevy::prelude::{
+    AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins, TabAsset,
+};
 use notation_model::prelude::{Line, ParseError, Tab};
 
 #[cfg(target_arch = "wasm32")]
@@ -28,7 +30,11 @@ pub struct AppState {
 
 impl AppState {
     pub fn new(tab_asset: Handle<TabAsset>) -> Self {
-        Self { tab_asset, tab: None, parse_error: None }
+        Self {
+            tab_asset,
+            tab: None,
+            parse_error: None,
+        }
     }
 }
 
@@ -78,7 +84,7 @@ fn load_tab(
                 Ok(tab) => {
                     state.tab = Some(tab.clone());
                     evts.send(AddTabEvent(tab));
-                },
+                }
                 Err(err) => {
                     println!("Parse Tab Failed: {:?}", err);
                     state.parse_error = Some(err);

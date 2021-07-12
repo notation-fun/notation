@@ -43,7 +43,13 @@ pub struct Section {
 }
 impl Display for Section {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<Section>({} <{}> B:{})", self.key, self.kind, self.bars.len())
+        write!(
+            f,
+            "<Section>({} <{}> B:{})",
+            self.key,
+            self.kind,
+            self.bars.len()
+        )
     }
 }
 impl Section {

@@ -1,13 +1,10 @@
-use fehler::{throws};
+use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
 use syn::{Expr, Token};
 
-
 use crate::form::FormDsl;
-
-
 
 use crate::layer::LayerDsl;
 use crate::line::LineDsl;
@@ -59,13 +56,27 @@ impl Parse for TabDsl {
         input.parse::<Token![:]>()?;
         let form = input.parse()?;
 
-        TabDsl{ meta, lines, tracks, layers, sections, form }
+        TabDsl {
+            meta,
+            lines,
+            tracks,
+            layers,
+            sections,
+            form,
+        }
     }
 }
 
 impl ToTokens for TabDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let TabDsl{ meta, lines, tracks, layers, sections, form } = self;
+        let TabDsl {
+            meta,
+            lines,
+            tracks,
+            layers,
+            sections,
+            form,
+        } = self;
         let lines_quote = LineDsl::quote_vec(lines);
         let tracks_quote = TrackDsl::quote_vec(tracks);
         let layers_quote = LayerDsl::quote_vec(layers);

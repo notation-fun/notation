@@ -1,6 +1,6 @@
-use fehler::{throws};
+use fehler::throws;
 use proc_macro2::TokenStream;
-use quote::{quote};
+use quote::quote;
 use syn::parse::{Error, Parse, ParseStream, Result};
 use syn::{braced, bracketed, token};
 
@@ -59,4 +59,3 @@ impl_dsl!(TrackDsl);
 impl_dsl!(LayerDsl);
 impl_dsl!(BarDsl);
 impl_dsl!(SectionDsl);
-

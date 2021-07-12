@@ -58,7 +58,7 @@ impl EntryPlugin {
             ProtoEntry::FrettedFour(entry) => {
                 FrettedPlugin::insert_fretted_entry_extra(commands, entry);
             }
-            ProtoEntry::Mark(_) => {},
+            ProtoEntry::Mark(_) => {}
         }
     }
 }

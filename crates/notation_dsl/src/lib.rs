@@ -8,17 +8,17 @@ use proc_macro::TokenStream;
 use quote::ToTokens;
 use syn::parse_macro_input;
 
+mod bar;
 mod context;
 mod entry;
 mod form;
 mod fretted;
-mod line;
-mod slice;
-mod track;
 mod layer;
-mod bar;
+mod line;
 mod section;
+mod slice;
 mod tab;
+mod track;
 mod util;
 
 #[proc_macro]

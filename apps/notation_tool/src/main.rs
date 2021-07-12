@@ -1,5 +1,7 @@
 use ron::ser::{to_string_pretty, PrettyConfig};
-use std::{fs::File, io::Write, path::PathBuf};
+use std::fs::File;
+use std::io::Write;
+use std::path::PathBuf;
 use structopt::StructOpt;
 
 /// A basic example
@@ -41,7 +43,7 @@ fn write_tab(tab: String, output: Option<PathBuf>) {
         let s = to_string_pretty(&tab, pretty).expect("Serialization failed");
         match output {
             None => println!("{}", s),
-            Some (path) => {
+            Some(path) => {
                 let mut file = File::create(&path).unwrap();
                 file.write_all(s.as_bytes()).unwrap();
             }

@@ -1,8 +1,10 @@
-
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use crate::prelude::{Bar, BarLayer, Form, Line, Note, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit, Units};
+use crate::prelude::{
+    Bar, BarLayer, Form, Line, Note, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit,
+    Units,
+};
 
 #[derive(Debug)]
 pub struct TabBar {

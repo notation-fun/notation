@@ -5,7 +5,8 @@ use notation_model::prelude::Tab;
 
 use crate::prelude::{AddTabEvent, BarBundle, BevyConfig, ConfigChangedEvent, TabAsset};
 
-use super::{tab_asset::TabAssetLoader, tab_bundle::TabBundle};
+use super::tab_asset::TabAssetLoader;
+use super::tab_bundle::TabBundle;
 
 pub struct TabPlugin;
 

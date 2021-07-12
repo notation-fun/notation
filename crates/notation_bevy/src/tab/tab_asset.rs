@@ -1,14 +1,10 @@
-
-
-use bevy::{
-    asset::{AssetLoader, LoadContext, LoadedAsset},
-    prelude::*,
-    reflect::TypeUuid,
-    utils::BoxedFuture,
-};
+use bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
+use bevy::prelude::*;
+use bevy::reflect::TypeUuid;
+use bevy::utils::BoxedFuture;
 use serde::Deserialize;
 
-use notation_model::prelude::{ProtoTab};
+use notation_model::prelude::ProtoTab;
 
 #[derive(Debug, Deserialize, TypeUuid)]
 #[uuid = "52bcea66-eb44-4ad6-85bf-240b79494499"]

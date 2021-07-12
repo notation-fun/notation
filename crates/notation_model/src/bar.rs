@@ -1,4 +1,4 @@
-use fehler::{throws};
+use fehler::throws;
 
 use crate::prelude::{Line, ParseError, Slice, Track};
 use std::convert::TryFrom;
@@ -41,31 +41,43 @@ impl BarLayer {
         track: Option<Arc<Track>>,
         rounds: Option<Vec<u16>>,
     ) -> Self {
-        Self { key, slices, track, rounds, }
+        Self {
+            key,
+            slices,
+            track,
+            rounds,
+        }
     }
 }
-impl TryFrom<(notation_proto::prelude::BarLayer, &Vec<Arc<Line>>, &Vec<Arc<Track>>)> for BarLayer {
+impl
+    TryFrom<(
+        notation_proto::prelude::BarLayer,
+        &Vec<Arc<Line>>,
+        &Vec<Arc<Track>>,
+    )> for BarLayer
+{
     type Error = ParseError;
 
     #[throws(Self::Error)]
-    fn try_from(v: (notation_proto::prelude::BarLayer, &Vec<Arc<Line>>, &Vec<Arc<Track>>)) -> Self {
+    fn try_from(
+        v: (
+            notation_proto::prelude::BarLayer,
+            &Vec<Arc<Line>>,
+            &Vec<Arc<Track>>,
+        ),
+    ) -> Self {
         let mut slices = Vec::new();
         for slice in v.0.slices {
-            slices.push(
-                Slice::try_from((slice, v.1))
-                .map(|x| Arc::new(x))?
-            );
+            slices.push(Slice::try_from((slice, v.1)).map(|x| Arc::new(x))?);
         }
         let track = match v.0.track {
             None => None,
-            Some(track) => {
-                Some (
-                    v.2.iter()
+            Some(track) => Some(
+                v.2.iter()
                     .find(|x| x.key == track)
                     .map(|x| x.clone())
-                    .ok_or(ParseError::TrackNotFound(track))?
-                )
-            },
+                    .ok_or(ParseError::TrackNotFound(track))?,
+            ),
         };
         Self::new(v.0.key, slices, track, v.0.rounds)
     }
@@ -84,9 +96,9 @@ impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<BarLayer>>)> for Bar {
         for layer in v.0.layers {
             layers.push(
                 v.1.iter()
-                .find(|x| x.key == layer)
-                .map(|x| x.clone())
-                .ok_or(ParseError::LayerNotFound(layer))?
+                    .find(|x| x.key == layer)
+                    .map(|x| x.clone())
+                    .ok_or(ParseError::LayerNotFound(layer))?,
             );
         }
         Self::from(layers)

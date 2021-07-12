@@ -1,4 +1,4 @@
-use fehler::{throws};
+use fehler::throws;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 
@@ -23,25 +23,15 @@ impl Tab {
     #[throws(ParseError)]
     pub fn try_parse_arc(v: notation_proto::prelude::Tab) -> Arc<Self> {
         let meta = Arc::new(v.meta);
-        let lines = v.lines.into_iter().map(
-            |x| Arc::new(x.into())
-        ).collect();
-        let tracks = v.tracks.into_iter().map(
-            |x| Arc::new(x.into())
-        ).collect();
+        let lines = v.lines.into_iter().map(|x| Arc::new(x.into())).collect();
+        let tracks = v.tracks.into_iter().map(|x| Arc::new(x.into())).collect();
         let mut layers = Vec::new();
         for layer in v.layers {
-            layers.push(
-                BarLayer::try_from((layer, &lines, &tracks))
-                .map(|x| Arc::new(x))?
-            );
+            layers.push(BarLayer::try_from((layer, &lines, &tracks)).map(|x| Arc::new(x))?);
         }
         let mut sections = Vec::new();
         for section in v.sections {
-            sections.push(
-                Section::try_from((section, &layers))
-                .map(|x| Arc::new(x))?
-            );
+            sections.push(Section::try_from((section, &layers)).map(|x| Arc::new(x))?);
         }
         let form = Form::try_from((v.form, &sections))?;
         Self::new_arc(meta, lines, tracks, layers, sections, form)
@@ -69,10 +59,7 @@ impl Tab {
             }
         })
     }
-    fn new_tab_bars(
-        weak_self: &Weak<Tab>,
-        form: &Form,
-    ) -> Vec<Arc<TabBar>> {
+    fn new_tab_bars(weak_self: &Weak<Tab>, form: &Form) -> Vec<Arc<TabBar>> {
         let mut section_rounds: HashMap<String, usize> = HashMap::new();
         let mut section_ordinal: usize = 1;
         let mut bar_ordinal: usize = 1;
