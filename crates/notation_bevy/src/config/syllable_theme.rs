@@ -1,4 +1,4 @@
-use notation_model::prelude::{Octave, Semitones, Solfege, Syllable};
+use notation_model::prelude::{Octave, Semitones, Syllable};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -56,9 +56,5 @@ impl SyllableTheme {
 
     pub fn color_of_syllable_octave(&self, v: Syllable, _o: Octave) -> Color {
         self.color_of_semitones(Semitones::from(v))
-    }
-
-    pub fn color_of_solfege(&self, v: Solfege) -> Color {
-        self.color_of_syllable_octave(v.syllable, v.octave)
     }
 }

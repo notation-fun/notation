@@ -1,5 +1,4 @@
 use bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
-use bevy::prelude::*;
 use bevy::reflect::TypeUuid;
 use bevy::utils::BoxedFuture;
 use serde::Deserialize;

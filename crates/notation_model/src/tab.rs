@@ -2,8 +2,8 @@ use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
 use crate::prelude::{
-    Bar, BarLayer, Form, Line, Note, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit,
-    Units,
+    Bar, BarLayer, Form, Line, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track,
+    Unit, Units,
 };
 
 #[derive(Debug)]
@@ -82,17 +82,17 @@ impl TabBar {
             }
         }
     }
-    pub fn calc_syllable(&self, note: &Note) -> Syllable {
+    pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
         match self.tab.upgrade() {
-            Some(tab) => tab.meta.calc_syllable(note),
+            Some(tab) => tab.meta.calc_syllable(pitch),
             None => {
                 println!(
                     "<{}>.calc_syllable({}) tab missing: {}",
                     stringify!(TabBar),
-                    note,
+                    pitch,
                     self
                 );
-                Syllable::from(Semitones::from(*note))
+                Syllable::from(Semitones::from(*pitch))
             }
         }
     }

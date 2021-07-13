@@ -14,21 +14,13 @@ pub enum Pick {
 impl Display for Pick {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self.clone() {
-            Pick::Single(a) => write!(f, "<Pick>({})", a + 1),
-            Pick::Double(a, b) => write!(f, "<Pick>({}, {})", a + 1, b + 1),
-            Pick::Triple(a, b, c) => write!(f, "<Pick>({}, {}, {})", a + 1, b + 1, c + 1),
+            Pick::Single(a) => write!(f, "<Pick>({})", a),
+            Pick::Double(a, b) => write!(f, "<Pick>({}, {})", a, b),
+            Pick::Triple(a, b, c) => write!(f, "<Pick>({}, {}, {})", a, b, c),
             Pick::Tetra(a, b, c, d) => {
-                write!(f, "<Pick>({}, {}, {}, {})", a + 1, b + 1, c + 1, d + 1)
+                write!(f, "<Pick>({}, {}, {}, {})", a, b, c, d)
             }
-            Pick::Penta(a, b, c, d, e) => write!(
-                f,
-                "<Pick>({}, {}, {}, {}, {})",
-                a + 1,
-                b + 1,
-                c + 1,
-                d + 1,
-                e + 1
-            ),
+            Pick::Penta(a, b, c, d, e) => write!(f, "<Pick>({}, {}, {}, {}, {})", a, b, c, d, e),
         }
     }
 }

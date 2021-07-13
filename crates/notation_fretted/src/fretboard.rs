@@ -61,26 +61,13 @@ impl<const S: usize> Fretboard<S> {
         }
         self.string_notes.clone().map(|x| self.get_capo_note(x))
     }
+    /// string is 1-based.
     pub fn open_note(&self, string: u8) -> Option<Note> {
-        if string as usize >= self.string_notes.len() {
+        if string == 0 || string as usize > self.string_notes.len() {
             None
         } else {
-            Some(self.get_capo_note(self.string_notes[string as usize]))
+            Some(self.get_capo_note(self.string_notes[(string - 1) as usize]))
         }
-    }
-    pub fn shape_notes(&self, shape: &HandShape<S>) -> [Option<Note>; S] {
-        let mut notes = self.open_notes().map(|x| Some(x));
-        for (index, note) in notes.iter_mut().enumerate() {
-            *note = match shape.string_fret(index as u8) {
-                None => None,
-                Some(0) => *note,
-                Some(fret) => {
-                    let open_note = (*note).unwrap();
-                    Some((Semitones::from(open_note) + Semitones(fret as i8)).into())
-                }
-            }
-        }
-        notes
     }
     pub fn shape_note(&self, shape: &HandShape<S>, string: u8) -> Option<Note> {
         let note = self.open_note(string);

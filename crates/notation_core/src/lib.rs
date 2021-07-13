@@ -3,29 +3,32 @@ pub mod duration;
 pub mod entry;
 pub mod interval;
 pub mod note;
-pub mod notes;
+pub mod octave;
+pub mod pitch;
 pub mod rhythm;
 pub mod scale;
-pub mod solfege;
-pub mod solfeges;
+pub mod syllable;
+pub mod tone;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::chord::{Chord, ChordInversion, ChordQuality, Roman};
+    pub use crate::chord::{Chord, ChordInversion, ChordQuality};
     #[doc(hidden)]
     pub use crate::duration::{Duration, Unit, Units};
     #[doc(hidden)]
     pub use crate::entry::{CoreEntry, Entry};
     #[doc(hidden)]
-    pub use crate::note::{Note, Octave, Pitch, PitchName, PitchSign, Semitones};
+    pub use crate::note::Note;
     #[doc(hidden)]
-    pub use crate::notes::Notes;
+    pub use crate::octave::Octave;
+    #[doc(hidden)]
+    pub use crate::pitch::{Pitch, PitchName, PitchSign, Semitones};
     #[doc(hidden)]
     pub use crate::rhythm::{Beats, Bpm, BpmRange, Signature, Tempo};
     #[doc(hidden)]
     pub use crate::scale::{Key, Scale};
     #[doc(hidden)]
-    pub use crate::solfege::{Solfege, Syllable};
+    pub use crate::syllable::Syllable;
     #[doc(hidden)]
-    pub use crate::solfeges::Solfeges;
+    pub use crate::tone::Tone;
 }

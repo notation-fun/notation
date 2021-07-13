@@ -17,3 +17,9 @@ impl Default for GuitarTheme {
         }
     }
 }
+
+impl GuitarTheme {
+    pub fn get_string_width(&self, string: u8) -> f32 {
+        self.string_widthes[string as usize - 1]
+    }
+}

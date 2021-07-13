@@ -48,10 +48,10 @@ impl<const S: usize> HandShape<S> {
         HandShape::<S1> { frets, fingers }
     }
     pub fn string_fret(&self, string: u8) -> Option<u8> {
-        if string as usize >= self.frets.len() {
+        if string == 0 || string as usize > self.frets.len() {
             None
         } else {
-            self.frets[string as usize]
+            self.frets[string as usize - 1]
         }
     }
 }

@@ -12,11 +12,11 @@ use notation_model::prelude::TabBar;
 pub struct FrettedStringData {
     pub bar_ordinal: usize,
     pub bar_units: Units,
-    pub string: usize,
+    pub string: u8,
 }
 
 impl FrettedStringData {
-    pub fn new(tab_bar: &Arc<TabBar>, string: usize) -> Self {
+    pub fn new(tab_bar: &Arc<TabBar>, string: u8) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         let bar_units = tab_bar.bar_units();
         FrettedStringData {
@@ -45,11 +45,11 @@ impl<'a> LyonShape<shapes::Line> for FrettedString<'a> {
         ShapeColors::new(self.config.theme.fretted.string_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.config.theme.guitar.string_widthes[self.data.string];
+        let line_width = self.config.theme.guitar.get_string_width(self.data.string);
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let y = self.data.string as f32 * -1.0 * self.config.theme.fretted.string_space;
+        let y = -1.0 * self.data.string as f32 * self.config.theme.fretted.string_space;
         Transform::from_xyz(0.0, y, self.config.theme.fretted.string_z)
     }
 }

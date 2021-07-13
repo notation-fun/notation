@@ -1,7 +1,7 @@
 use fehler::{throw, throws};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Error, Parse, ParseStream};
+use syn::parse::{Error, ParseStream};
 use syn::{Ident, Token};
 
 use crate::context::ContextDsl;
@@ -9,9 +9,13 @@ use crate::fretted::fretboard::FretboardDsl;
 use crate::fretted::pick::PickDsl;
 use crate::fretted::shape::ShapeDsl;
 
+pub struct MultibleDsl<T> {
+    pub items: Vec<T>,
+}
+
 pub enum EntryDsl {
-    Pick(PickDsl),
-    Shape(ShapeDsl),
+    Pick(MultibleDsl<PickDsl>),
+    Shape(MultibleDsl<ShapeDsl>),
     Fretboard(FretboardDsl),
     Context(ContextDsl),
 }
@@ -19,8 +23,8 @@ pub enum EntryDsl {
 impl EntryDsl {
     #[throws(Error)]
     pub fn parse_without_brace(input: ParseStream) -> Self {
-        if input.peek(Token![!]) {
-            input.parse::<Token![!]>()?;
+        if input.peek(Token![$]) {
+            input.parse::<Token![$]>()?;
             Self::Context(input.parse()?)
         } else {
             match input.parse::<Ident>()?.to_string().as_str() {

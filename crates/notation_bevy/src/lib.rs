@@ -2,7 +2,7 @@ pub use notation_model;
 
 pub mod chord;
 pub mod entry;
-pub mod note;
+pub mod tone;
 
 pub mod bar;
 pub mod line;
@@ -56,8 +56,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::line::line_plugin::LinePlugin;
     #[doc(hidden)]
-    pub use crate::note::note_bundle::NoteBundle;
-    #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
     pub use crate::tab::tab_bundle::TabBundle;
@@ -65,6 +63,8 @@ pub mod prelude {
     pub use crate::tab::tab_events::AddTabEvent;
     #[doc(hidden)]
     pub use crate::tab::tab_plugin::TabPlugin;
+    #[doc(hidden)]
+    pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
 

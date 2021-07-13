@@ -62,51 +62,51 @@
             entries: [
                 Mark("duration: Triplet(Eighth)"),// [0]
                 FrettedSix(Pick(
-                    Single(5),
+                    Single(6),
                     Triplet(Eighth),
                 )),// [1]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single(3),
                     Triplet(Eighth),
                 )),// [2]
                 FrettedSix(Pick(
-                    Single(1),
+                    Single(2),
                     Triplet(Eighth),
                 )),// [3]
                 FrettedSix(Pick(
-                    Single(0),
+                    Single(1),
                     Triplet(Eighth),
                 )),// [4]
                 FrettedSix(Pick(
-                    Single(1),
+                    Single(2),
                     Triplet(Eighth),
                 )),// [5]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single(3),
                     Triplet(Eighth),
                 )),// [6]
                 FrettedSix(Pick(
-                    Single(5),
+                    Single(6),
                     Triplet(Eighth),
                 )),// [7]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single(3),
                     Triplet(Eighth),
                 )),// [8]
                 FrettedSix(Pick(
-                    Single(1),
+                    Single(2),
                     Triplet(Eighth),
                 )),// [9]
                 FrettedSix(Pick(
-                    Single(0),
+                    Single(1),
                     Triplet(Eighth),
                 )),// [10]
                 FrettedSix(Pick(
-                    Single(1),
+                    Single(2),
                     Triplet(Eighth),
                 )),// [11]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single(3),
                     Triplet(Eighth),
                 )),
             ],
@@ -121,46 +121,52 @@
                     total_fret_num: 20,
                     string_notes: (
                         (
+                            octave: P4,
                             pitch: (
                                 name: E,
                                 sign: Natural,
                             ),
-                            octave: P4,
+                            syllable: None,
                         ),
                         (
+                            octave: P3,
                             pitch: (
                                 name: B,
                                 sign: Natural,
                             ),
-                            octave: P3,
+                            syllable: None,
                         ),
                         (
+                            octave: P3,
                             pitch: (
                                 name: G,
                                 sign: Natural,
                             ),
-                            octave: P3,
+                            syllable: None,
                         ),
                         (
+                            octave: P3,
                             pitch: (
                                 name: D,
                                 sign: Natural,
                             ),
-                            octave: P3,
+                            syllable: None,
                         ),
                         (
+                            octave: P2,
                             pitch: (
                                 name: A,
                                 sign: Natural,
                             ),
-                            octave: P2,
+                            syllable: None,
                         ),
                         (
+                            octave: P2,
                             pitch: (
                                 name: E,
                                 sign: Natural,
                             ),
-                            octave: P2,
+                            syllable: None,
                         ),
                     ),
                     capo: 0,

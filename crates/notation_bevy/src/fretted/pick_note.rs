@@ -71,7 +71,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
     }
     fn get_transform(&self) -> Transform {
         let x = self.config.grid.unit_size * self.data.position.0;
-        let y = self.config.theme.fretted.string_space * -1.0 * self.data.string as f32
+        let y = -1.0 * self.config.theme.fretted.string_space * self.data.string as f32
             - self.config.grid.note_height / 2.0;
         Transform::from_xyz(x, y, self.config.theme.fretted.pick_z)
     }

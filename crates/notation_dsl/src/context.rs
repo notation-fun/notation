@@ -40,7 +40,7 @@ impl Default for Context {
 }
 
 impl Context {
-    pub fn duration() -> Duration {
+    pub fn _duration() -> Duration {
         CONTEXT.read().unwrap().duration
     }
     pub fn fretted() -> FrettedContext {

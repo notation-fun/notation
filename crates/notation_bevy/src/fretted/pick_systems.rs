@@ -27,7 +27,7 @@ fn create_pick_blocks<const S: usize>(
         {
             for string in pick.get_strings() {
                 if let Some(note) = fretboard.shape_note(&shape, string) {
-                    let syllable = bar.calc_syllable(&note);
+                    let syllable = bar.calc_syllable(&note.pitch);
                     let data = PickNoteData::new(&bar, *duration, *units, string, syllable);
                     PickNote::create(&mut commands, entity, &config, data);
                 }

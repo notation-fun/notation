@@ -1,7 +1,7 @@
-use fehler::throws;
+use fehler::{throw, throws};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Error, Parse, ParseStream};
+use syn::parse::{Error, ParseStream};
 use syn::{LitInt, Token};
 
 use crate::context::Context;
@@ -10,10 +10,13 @@ pub struct ShapeDsl {
     pub frets: Vec<Option<u8>>,
 }
 
-impl Parse for ShapeDsl {
+impl ShapeDsl {
     #[throws(Error)]
-    fn parse(input: ParseStream) -> Self {
+    pub fn parse_without_paren(input: ParseStream, multied: bool, with_paren: bool) -> Self {
         let mut frets = vec![];
+        if multied && !with_paren {
+            throw!(Error::new(input.span(), "paren required in multied mode"));
+        }
         while input.peek(LitInt) || input.peek(Token![_]) {
             if input.peek(LitInt) {
                 frets.push(Some(input.parse::<LitInt>()?.base10_parse::<u8>()?));

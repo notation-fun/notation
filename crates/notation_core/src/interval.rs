@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::note::Semitones;
+use crate::prelude::Semitones;
 
 // https://hellomusictheory.com/learn/intervals/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]

@@ -2,7 +2,7 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, NoteBundle};
+use crate::prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, ToneBundle};
 use notation_model::prelude::{CoreEntry, ProtoEntry};
 
 pub struct EntryPlugin;
@@ -11,7 +11,7 @@ impl Plugin for EntryPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_event::<AddEntryEvent>()
             .add_system(on_add_entry.system())
-            .add_system_set(crate::note::note_systems::new_system_set());
+            .add_system_set(crate::tone::tone_systems::new_system_set());
     }
 }
 
@@ -32,18 +32,11 @@ impl EntryPlugin {
     pub fn insert_core_entry_extra(commands: &mut EntityCommands, entry: &CoreEntry) {
         match entry {
             CoreEntry::Rest(_) => (),
-            CoreEntry::Note(note, _) => {
-                commands.insert_bundle(NoteBundle::from(*note));
+            CoreEntry::Tone(tone, _) => {
+                commands.insert_bundle(ToneBundle::from(*tone));
                 ()
             }
-            CoreEntry::Notes(_notes, _) => (),
-            CoreEntry::Solfege(solfege, _) => {
-                commands.insert_bundle(NoteBundle::from(*solfege));
-                ()
-            }
-            CoreEntry::Solfeges(_solfeges, _) => (),
             CoreEntry::Chord(_, _) => (),
-            CoreEntry::Roman(_, _) => (),
             CoreEntry::Signature(_) => (),
             CoreEntry::Tempo(_) => (),
         };

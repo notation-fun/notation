@@ -17,12 +17,12 @@ impl<const S: usize> FrettedGrid<S> {
         entity: Entity,
         tab_bar: &Arc<TabBar>,
     ) -> () {
-        for string in 0..S {
+        for string in 1..=S {
             FrettedString::create(
                 commands,
                 entity,
                 config,
-                FrettedStringData::new(tab_bar, string),
+                FrettedStringData::new(tab_bar, string as u8),
             );
         }
     }
