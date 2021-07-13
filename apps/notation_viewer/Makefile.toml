@@ -47,3 +47,12 @@ dependencies = ["build-web", "basic-http-server"]
 
 [tasks.test]
 disabled = true
+
+[tasks.release-to-amateurguitar-www]
+script_runner = "@shell"
+script = ["""
+cp ./target/wasm.js ../../../../amateurguitar/www/static/notation/
+cp ./target/wasm_bg.wasm ../../../../amateurguitar/www/static/notation/
+cp ./assets/amateurguitar ../../../../amateurguitar/www/static/notation/assets/
+"""]
+dependencies = ["build-web"]
