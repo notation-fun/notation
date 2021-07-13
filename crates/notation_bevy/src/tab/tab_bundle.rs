@@ -17,7 +17,7 @@ pub struct TabBundle {
 impl TabBundle {
     pub fn new(config: &BevyConfig, v: Arc<Tab>) -> Self {
         let name = v.to_string().as_str().into();
-        let transform = config.grid.calc_tab_transform(&v.meta.signature);
+        let transform = config.grid.calc_tab_transform(&v);
         Self {
             tab: v,
             name,

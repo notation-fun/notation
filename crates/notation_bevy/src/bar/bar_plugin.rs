@@ -66,8 +66,8 @@ fn create_layers(
                 }
             }
         }
-        let top = 5.0; //TODO: calc from layers
-        let bottom = -140.0; //TODO: calc from layers
+        let top = config.grid.bar_separator_top;
+        let bottom = config.grid.bar_separator_bottom;
         if grid_col.0 == 0 {
             BarSeparator::create(
                 &mut commands,

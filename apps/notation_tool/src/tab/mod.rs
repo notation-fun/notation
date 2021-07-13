@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use notation_proto::prelude::*;
 
+pub mod test;
 pub mod amature_guitar;
 
 pub struct TabInfo<'a> {
@@ -16,10 +17,16 @@ impl<'a> TabInfo<'a> {
 }
 
 pub fn get_tab_list<'a>() -> Vec<TabInfo<'a>> {
-    vec![TabInfo::new(
-        "ag:1_right_hand",
-        amature_guitar::new_tab_1_right_hand,
-    )]
+    vec![
+        TabInfo::new(
+            "test",
+            test::new_tab_test,
+        ),
+        TabInfo::new(
+            "ag:1_right_hand",
+            amature_guitar::new_tab_1_right_hand,
+        ),
+    ]
 }
 
 pub fn get_tab_map<'a>() -> HashMap<&'a str, TabInfo<'a>> {

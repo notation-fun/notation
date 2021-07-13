@@ -27,7 +27,7 @@ fn on_config_changed(
 ) {
     for _evt in evts.iter() {
         for (tab, mut transform) in query.iter_mut() {
-            *transform = config.grid.calc_tab_transform(&tab.meta.signature);
+            *transform = config.grid.calc_tab_transform(&tab);
         }
     }
 }
