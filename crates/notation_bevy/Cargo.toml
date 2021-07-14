@@ -15,6 +15,18 @@ default = [
     "bevy/png",
 ]
 
+dev = [
+    "bevy/dynamic",
+]
+
+inspector = [
+    "bevy-inspector-egui",
+]
+
+native = [
+    "bevy/bevy_wgpu",
+]
+
 [dependencies]
 notation_model = { path = "../notation_model" }
 
@@ -25,7 +37,25 @@ anyhow = "1.0"
 ron = "0.6"
 
 bevy = { version = "0.5.0", default-features = false }
+winit = "0.24.0"
+rand = "0.8"
+getrandom = {version="0.2", features=["wasm-bindgen"]}
+
 bevy_prototype_lyon = "0.3.1"
+bevy_asset_loader = "0.4.0"
 
-bevy-inspector-egui = "0.5.1"
+bevy-inspector-egui = { version = "0.5.1", optional = true }
 
+#[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# Can not enable bevy_wgpu in this way, so the actually binary crate
+# need to include native feature manually
+# https://github.com/rust-lang/cargo/issues/1197
+# if not providing the dev and inspector feature, then can create a
+# wrapper crate, though think having these features benefits more
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+bevy_webgl2 = "0.5.0"
+console_error_panic_hook = "0.1"
+gloo-events = "0.1.1"
+futures = "0.3"
+web-sys = { version = "0.3.45", features = ["Element", "Document", "Window", "Location"] }

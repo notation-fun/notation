@@ -1,13 +1,8 @@
-use bevy::prelude::*;
-use bevy_inspector_egui::{egui, Context, InspectableRegistry};
+use bevy_inspector_egui::{egui, Context};
 
 use notation_model::prelude::Syllable;
 
-pub fn register_inspectors(mut registry: ResMut<InspectableRegistry>) {
-    registry.register_raw(syllable_ui);
-}
-
-fn syllable_ui(v: &mut Syllable, ui: &mut egui::Ui, context: &Context) -> bool {
+pub fn inspector_ui(v: &mut Syllable, ui: &mut egui::Ui, context: &Context) -> bool {
     let mut changed = false;
     egui::ComboBox::from_id_source(context.id())
         .selected_text(format!("{:?}", v))

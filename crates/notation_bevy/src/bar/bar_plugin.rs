@@ -1,7 +1,6 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::Signature;
+
 use std::sync::Arc;
 
 use crate::config::bevy_config::BevyConfig;
@@ -66,25 +65,23 @@ fn create_layers(
                 }
             }
         }
-        let top = config.grid.bar_separator_top;
-        let bottom = config.grid.bar_separator_bottom;
         if grid_col.0 == 0 {
             BarSeparator::create(
                 &mut commands,
                 bar_entity,
                 &config,
-                BarSeparatorData::new(&bar, top, bottom, true),
+                BarSeparatorData::new(&bar, true),
             );
         }
         BarSeparator::create(
             &mut commands,
             bar_entity,
             &config,
-            BarSeparatorData::new(&bar, top, bottom, false),
+            BarSeparatorData::new(&bar, false),
         );
         let signature = bar.signature();
         for beat in 0..signature.beats_per_bar {
-            BarBeatData::may_new(&config, &bar, &signature, top, bottom, beat)
+            BarBeatData::may_new(&config, &bar, &signature, beat)
                 .map(|data| BarBeat::create(&mut commands, bar_entity, &config, data));
         }
     }
@@ -103,38 +100,6 @@ impl BarPlugin {
                 }
                 _ => (),
             }
-        }
-    }
-    pub fn add_beat_block(
-        commands: &mut Commands,
-        config: &BevyConfig,
-        tab_bar: &Arc<TabBar>,
-        bar_entity: Entity,
-        top: f32,
-        bottom: f32,
-        signature: &Signature,
-        beat: u8,
-    ) -> () {
-        if let Some(color) = config.theme.core.get_beat_color(signature, beat) {
-            let beat_units = Units::from(signature.beat_unit);
-            let shape = shapes::Rectangle {
-                width: config.grid.unit_size * beat_units.0,
-                height: (top - bottom),
-                origin: shapes::RectangleOrigin::BottomLeft,
-            };
-            let x = config.grid.unit_size * beat_units.0 * beat as f32;
-            let bar_ordinal = tab_bar.bar_ordinal;
-            let name = format!("{}:{}", bar_ordinal, beat);
-            let beat_entity = commands
-                .spawn_bundle(GeometryBuilder::build_as(
-                    &shape,
-                    ShapeColors::new(color),
-                    DrawMode::Fill(FillOptions::default()),
-                    Transform::from_xyz(x, bottom, config.theme.core.beat_z),
-                ))
-                .insert(Name::from(name.as_str()))
-                .id();
-            commands.entity(bar_entity).push_children(&[beat_entity]);
         }
     }
 }

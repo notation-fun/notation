@@ -8,15 +8,17 @@ use crate::prelude::{AddTabEvent, BarBundle, BevyConfig, ConfigChangedEvent, Tab
 use super::tab_asset::TabAssetLoader;
 use super::tab_bundle::TabBundle;
 
+use super::tab_state_bundle::TabStateBundle;
+
 pub struct TabPlugin;
 
 impl Plugin for TabPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_event::<AddTabEvent>();
-        app.add_system(on_add_tab.system());
-        app.add_system(on_config_changed.system());
         app.add_asset::<TabAsset>();
         app.init_asset_loader::<TabAssetLoader>();
+        app.add_system(on_add_tab.system());
+        app.add_system(on_config_changed.system());
     }
 }
 
@@ -38,6 +40,10 @@ fn on_add_tab(mut commands: Commands, config: Res<BevyConfig>, mut evts: EventRe
         let tab_entity = commands
             .spawn_bundle(TabBundle::new(&config, tab.clone()))
             .id();
+        let state_entity = commands
+            .spawn_bundle(TabStateBundle::new(&config, tab.clone()))
+            .id();
+        commands.entity(tab_entity).push_children(&[state_entity]);
         for bar in tab.bars.iter() {
             let bar_bundle = BarBundle::new(bar.clone(), &config.grid);
             let bar_entity = commands.spawn_bundle(bar_bundle).id();

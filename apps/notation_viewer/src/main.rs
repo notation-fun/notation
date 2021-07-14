@@ -1,24 +1,14 @@
-// disable console on windows for release builds
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
-#[cfg(target_arch = "wasm32")]
-use bevy_webgl2;
-
 use std::sync::Arc;
 
-use bevy::input::mouse::MouseMotion;
-use bevy::prelude::*;
-use bevy::render::camera::OrthographicProjection;
+use notation_bevy::bevy::input::mouse::MouseMotion;
+use notation_bevy::bevy::render::camera::OrthographicProjection;
 
-use bevy_inspector_egui::{bevy_egui, egui};
+use notation_bevy::bevy::prelude::*;
+use notation_bevy::notation_model::prelude::*;
+use notation_bevy::prelude::*;
 
-use notation_bevy::prelude::{
-    AddLineEvent, AddTabEvent, ConfigPlugin, NotationDevPlugins, NotationPlugins, TabAsset,
-};
-use notation_model::prelude::{Line, ParseError, Tab};
-
-#[cfg(target_arch = "wasm32")]
-pub mod bevy_web_fullscreen;
+#[cfg(feature = "inspector")]
+use notation_bevy::bevy_inspector_egui::{bevy_egui, egui};
 
 pub struct CameraPanning(bool);
 
@@ -39,30 +29,17 @@ impl AppState {
 }
 
 fn main() {
-    let mut app = App::build();
-    ConfigPlugin::insert_window_descriptor(&mut app, String::from("Notation Viewer"));
-    app.insert_resource(Msaa { samples: 8 })
-        .add_plugins(DefaultPlugins)
-        .add_plugins(NotationPlugins)
-        .add_startup_system(setup.system());
+    let mut app = new_notation_app("Notation Viewer");
+    app.add_startup_system(setup.system());
 
-    #[cfg(all(debug_assertions, not(target_arch = "wasm32")))]
+    #[cfg(any(feature = "dev", feature = "inspector"))]
     app.insert_resource(CameraPanning(false))
-        .add_system(update_camera.system())
-        .add_plugins(NotationDevPlugins)
-        .add_system(setup_ui.system());
+        .add_system(update_camera.system());
+
+    #[cfg(feature = "inspector")]
+    app.add_system(setup_ui.system());
 
     app.add_system(load_tab.system());
-
-    #[cfg(target_arch = "wasm32")]
-    app.add_plugin(bevy_webgl2::WebGL2Plugin);
-
-    // When building for WASM, print panics to the browser console
-    #[cfg(target_arch = "wasm32")]
-    console_error_panic_hook::set_once();
-
-    #[cfg(target_arch = "wasm32")]
-    app.add_plugin(bevy_web_fullscreen::FullViewportPlugin);
 
     app.run();
 }
@@ -74,7 +51,7 @@ fn setup(mut commands: Commands, server: Res<AssetServer>) {
     let tab_asset = server.load("test.ron");
 
     #[cfg(target_arch = "wasm32")]
-    let tab_asset = server.load("amateurguitar/1_right_hand.ron");
+    let tab_asset = server.load("beginner/1_right_hand.ron");
 
     commands.insert_resource(AppState::new(tab_asset));
 }
@@ -127,6 +104,7 @@ fn update_camera(
     }
 }
 
+#[cfg(feature = "inspector")]
 fn setup_ui(
     mut commands: Commands,
     mut state: ResMut<AppState>,

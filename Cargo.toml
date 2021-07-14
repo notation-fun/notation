@@ -1,6 +1,6 @@
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [workspace]
+resolver = "2"
 members = [
     "crates/notation_core",
     "crates/notation_fretted",

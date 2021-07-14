@@ -3,14 +3,17 @@
 # NOTE: For maximum performance, build using a nightly compiler
 # If you are using rust stable, remove the "-Zshare-generics=y" below.
 
+[build]
+rustc-wrapper = "sccache"
+
 [target.x86_64-unknown-linux-gnu]
 linker = "/usr/bin/clang"
-rustflags = ["-Clink-arg=-fuse-ld=lld", "-Zshare-generics=off", "-Zmacro-backtrace=on"]
+rustflags = ["-Clink-arg=-fuse-ld=lld", "-Zshare-generics=on", "-Zmacro-backtrace=on"]
 
 # NOTE: you must manually install https://github.com/michaeleisel/zld on mac. you can easily do this with the "brew" package manager:
 # `brew install michaeleisel/zld/zld`
 [target.x86_64-apple-darwin]
-rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/zld", "-Zshare-generics=off", "-Zmacro-backtrace=on"]
+rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/zld", "-Zshare-generics=on", "-Zmacro-backtrace=on"]
 
 [target.x86_64-pc-windows-msvc]
 linker = "rust-lld.exe"

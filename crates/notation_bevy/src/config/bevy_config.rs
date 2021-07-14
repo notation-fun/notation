@@ -1,10 +1,13 @@
-use bevy_inspector_egui::Inspectable;
 use serde::{Deserialize, Serialize};
 
 use super::bevy_theme::BevyTheme;
 use super::grid_config::GridConfig;
 
-#[derive(PartialEq, Serialize, Deserialize, Debug, Inspectable)]
+#[cfg(feature = "inspector")]
+use bevy_inspector_egui::Inspectable;
+
+#[derive(PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct BevyConfig {
     pub grid: GridConfig,
     pub theme: BevyTheme,

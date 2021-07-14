@@ -18,9 +18,7 @@ pub struct BarBundle {
 
 impl BarBundle {
     pub fn new(bar: Arc<TabBar>, config: &GridConfig) -> Self {
-        let ordinal_ = bar.bar_ordinal - 1;
-        let row = GridRow(ordinal_ / config.bars_in_row as usize);
-        let col = GridCol(ordinal_ % config.bars_in_row as usize);
+        let (row, col) = config.calc_bar_row_col(&bar);
         let transform = config.calc_bar_transform(bar.bar_units(), &row, &col);
         let name = Name::from(bar.to_string().as_str());
         Self {

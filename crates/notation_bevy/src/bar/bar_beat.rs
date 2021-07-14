@@ -12,27 +12,17 @@ pub struct BarBeatData {
     pub signature: Signature,
     pub beat_units: Units,
     pub bar_ordinal: usize,
-    pub top: f32,
-    pub bottom: f32,
     beat: u8,
 }
 
 impl BarBeatData {
-    pub fn new(
-        tab_bar: &Arc<TabBar>,
-        signature: &Signature,
-        top: f32,
-        bottom: f32,
-        beat: u8,
-    ) -> Self {
+    pub fn new(tab_bar: &Arc<TabBar>, signature: &Signature, beat: u8) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         let beat_units = Units::from(signature.beat_unit);
         BarBeatData {
             signature: signature.clone(),
             beat_units,
             bar_ordinal,
-            top,
-            bottom,
             beat,
         }
     }
@@ -40,15 +30,13 @@ impl BarBeatData {
         config: &BevyConfig,
         tab_bar: &Arc<TabBar>,
         signature: &Signature,
-        top: f32,
-        bottom: f32,
         beat: u8,
     ) -> Option<Self> {
         config
             .theme
             .core
             .get_beat_color(signature, beat)
-            .map(|_color| Self::new(tab_bar, signature, top, bottom, beat))
+            .map(|_color| Self::new(tab_bar, signature, beat))
     }
 }
 
@@ -64,7 +52,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.config.grid.unit_size * self.data.beat_units.0,
-            height: (self.data.top - self.data.bottom),
+            height: (self.config.grid.bar_beat_top - self.config.grid.bar_beat_bottom),
             origin: shapes::RectangleOrigin::BottomLeft,
         }
     }
@@ -82,7 +70,11 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
     fn get_transform(&self) -> Transform {
         let x = self.config.grid.unit_size * self.data.beat_units.0 * self.data.beat as f32;
-        Transform::from_xyz(x, self.data.bottom, self.config.theme.core.beat_z)
+        Transform::from_xyz(
+            x,
+            self.config.grid.bar_beat_bottom,
+            self.config.theme.core.beat_z,
+        )
     }
 }
 

@@ -5,21 +5,26 @@ use notation_model::prelude::Tab;
 
 use crate::config::bevy_config::BevyConfig;
 
+use super::tab_state::TabState;
+
 #[derive(Bundle)]
-pub struct TabBundle {
+pub struct TabStateBundle {
     pub tab: Arc<Tab>,
     pub name: Name,
+    pub state: TabState,
     pub transform: Transform,
     pub global_cransform: GlobalTransform,
 }
 
-impl TabBundle {
-    pub fn new(config: &BevyConfig, v: Arc<Tab>) -> Self {
-        let name = v.to_string().as_str().into();
-        let transform = config.grid.calc_tab_transform(&v);
+impl TabStateBundle {
+    pub fn new(config: &BevyConfig, tab: Arc<Tab>) -> Self {
+        let name = format!("State: {}", tab).as_str().into();
+        let state = TabState::new(&tab);
+        let transform = config.grid.calc_tab_transform(&tab);
         Self {
-            tab: v,
+            tab,
             name,
+            state,
             transform,
             global_cransform: GlobalTransform::default(),
         }

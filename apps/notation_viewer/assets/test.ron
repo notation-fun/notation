@@ -16,12 +16,12 @@
                 FrettedSix(Shape(
                     (
                         frets: (
+                            Some(3),
                             Some(0),
                             Some(0),
                             Some(0),
                             Some(2),
-                            Some(2),
-                            Some(0),
+                            Some(3),
                         ),
                         fingers: (
                             None,
@@ -40,9 +40,51 @@
                             Some(0),
                             Some(0),
                             Some(0),
+                            Some(2),
+                            Some(2),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [2]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(0),
+                            Some(1),
                             Some(0),
                             Some(2),
                             Some(3),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [3]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(2),
+                            Some(3),
+                            Some(2),
+                            Some(0),
+                            Some(0),
+                            Some(0),
                         ),
                         fingers: (
                             None,
@@ -105,6 +147,102 @@
                     Single(2),
                     Triplet(Eighth),
                 )),// [11]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [12]
+                FrettedSix(Pick(
+                    Single(5),
+                    Triplet(Eighth),
+                )),// [13]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [14]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [15]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [16]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [17]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [18]
+                FrettedSix(Pick(
+                    Single(5),
+                    Triplet(Eighth),
+                )),// [19]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [20]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [21]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [22]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [23]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [24]
+                FrettedSix(Pick(
+                    Single(4),
+                    Triplet(Eighth),
+                )),// [25]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [26]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [27]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [28]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [29]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [30]
+                FrettedSix(Pick(
+                    Single(4),
+                    Triplet(Eighth),
+                )),// [31]
+                FrettedSix(Pick(
+                    Single(3),
+                    Triplet(Eighth),
+                )),// [32]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [33]
+                FrettedSix(Pick(
+                    Single(1),
+                    Triplet(Eighth),
+                )),// [34]
+                FrettedSix(Pick(
+                    Single(2),
+                    Triplet(Eighth),
+                )),// [35]
                 FrettedSix(Pick(
                     Single(3),
                     Triplet(Eighth),
@@ -176,7 +314,7 @@
     ],
     layers: [
         (
-            key: "Em",
+            key: "G",
             slices: [
                 (
                     line: "shapes",
@@ -193,7 +331,7 @@
             rounds: None,
         ),// [0]
         (
-            key: "G",
+            key: "Em",
             slices: [
                 (
                     line: "shapes",
@@ -208,6 +346,40 @@
             ],
             track: Some("guitar"),
             rounds: None,
+        ),// [1]
+        (
+            key: "C",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 3,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 13,
+                    count: 12,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [2]
+        (
+            key: "D",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 4,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 25,
+                    count: 12,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
         ),
     ],
     sections: [
@@ -217,7 +389,7 @@
             bars: [
                 (
                     layers: [
-                        "Em",
+                        "G",
                     ],
                 ),// [0]
                 (
@@ -227,12 +399,12 @@
                 ),// [1]
                 (
                     layers: [
-                        "G",
+                        "C",
                     ],
                 ),// [2]
                 (
                     layers: [
-                        "G",
+                        "D",
                     ],
                 ),
             ],
@@ -243,7 +415,7 @@
             bars: [
                 (
                     layers: [
-                        "G",
+                        "C",
                     ],
                 ),// [0]
                 (
@@ -253,7 +425,7 @@
                 ),// [1]
                 (
                     layers: [
-                        "Em",
+                        "C",
                     ],
                 ),// [2]
                 (
@@ -267,10 +439,9 @@
     form: (
         sections: [
             "A",// [0]
-            "B",// [1]
+            "A",// [1]
             "B",// [2]
-            "B",// [3]
-            "B",
+            "A",
         ],
     ),
 )

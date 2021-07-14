@@ -104,6 +104,9 @@ impl Signature {
             beats_per_bar,
         }
     }
+}
+
+impl Signature {
     pub const _4_4: Self = Self {
         beat_unit: Unit::Quarter,
         beats_per_bar: 4,

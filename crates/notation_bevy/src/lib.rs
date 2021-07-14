@@ -1,11 +1,20 @@
 pub use notation_model;
 
+pub use {bevy, bevy_prototype_lyon};
+
+#[cfg(target_arch = "wasm32")]
+pub use bevy_webgl2;
+
+#[cfg(feature = "inspector")]
+pub use bevy_inspector_egui;
+
 pub mod chord;
 pub mod entry;
 pub mod tone;
 
 pub mod bar;
 pub mod line;
+pub mod play;
 pub mod tab;
 
 pub mod fretted;
@@ -13,6 +22,15 @@ pub mod guitar;
 
 pub mod config;
 pub mod utils;
+
+pub mod ext;
+pub mod ui;
+
+#[cfg(feature = "inspector")]
+pub mod inspector;
+
+#[cfg(feature = "dev")]
+pub mod dev;
 
 pub mod prelude {
     #[doc(hidden)]
@@ -36,8 +54,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::entry_bundle::EntryBundle;
     #[doc(hidden)]
-    pub use crate::entry::entry_dev::EntryDevPlugin;
-    #[doc(hidden)]
     pub use crate::entry::entry_events::AddEntryEvent;
     #[doc(hidden)]
     pub use crate::entry::entry_plugin::EntryPlugin;
@@ -56,6 +72,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::line::line_plugin::LinePlugin;
     #[doc(hidden)]
+    pub use crate::play::play_plugin::PlayPlugin;
+    #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
     pub use crate::tab::tab_bundle::TabBundle;
@@ -69,7 +87,7 @@ pub mod prelude {
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
 
     use bevy::app::{PluginGroup, PluginGroupBuilder};
-    use bevy_prototype_lyon::prelude::*;
+    use bevy::prelude::*;
 
     pub struct NotationPlugins;
     impl PluginGroup for NotationPlugins {
@@ -81,22 +99,35 @@ pub mod prelude {
             group.add(FrettedPlugin);
             group.add(GuitarPlugin);
             group.add(TabPlugin);
+            group.add(PlayPlugin);
             //external plugins
-            group.add(ShapePlugin);
+            group.add(bevy_prototype_lyon::prelude::ShapePlugin);
         }
     }
 
-    use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
-    use bevy_inspector_egui::WorldInspectorPlugin;
+    pub fn new_notation_app(title: &str) -> AppBuilder {
+        let mut app = App::build();
+        ConfigPlugin::insert_window_descriptor(&mut app, String::from(title));
+        app.insert_resource(Msaa { samples: 8 });
+        app.add_plugins(DefaultPlugins);
+        app.add_plugins(NotationPlugins);
 
-    pub struct NotationDevPlugins;
-    impl PluginGroup for NotationDevPlugins {
-        fn build(&mut self, group: &mut PluginGroupBuilder) {
-            group.add(EntryDevPlugin);
-            //external plugins
-            group.add(WorldInspectorPlugin::new());
-            group.add(LogDiagnosticsPlugin::default());
-            group.add(FrameTimeDiagnosticsPlugin::default());
-        }
+        #[cfg(target_arch = "wasm32")]
+        app.add_plugin(bevy_webgl2::WebGL2Plugin);
+
+        // When building for WASM, print panics to the browser console
+        #[cfg(target_arch = "wasm32")]
+        console_error_panic_hook::set_once();
+
+        #[cfg(target_arch = "wasm32")]
+        app.add_plugin(crate::ext::bevy_web_fullscreen::FullViewportPlugin);
+
+        #[cfg(feature = "inspector")]
+        app.add_plugins(crate::inspector::NotationInspectorPlugins);
+
+        #[cfg(feature = "dev")]
+        app.add_plugins(crate::dev::NotationDevPlugins);
+
+        app
     }
 }

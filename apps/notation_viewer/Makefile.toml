@@ -23,7 +23,7 @@ install_crate = {crate_name = "basic-http-server", binary = "basic-http-server",
 install_crate = {crate_name = "wasm-bindgen-cli", version = "0.2.69", binary = "wasm-bindgen", test_arg="--help"}
 
 [tasks.cargo-build-web]
-args = ["build", "--target", "wasm32-unknown-unknown", "--features", "web", "@@split(CARGO_RELEASE_ARGS, )"]
+args = ["build", "--target", "wasm32-unknown-unknown", "@@split(CARGO_RELEASE_ARGS, )"]
 command = "cargo"
 dependencies = ["install-target-wasm32-unknown-unknown"]
 
@@ -53,6 +53,6 @@ script_runner = "@shell"
 script = ["""
 cp ./target/wasm.js ../../../../amateurguitar/www/static/notation/
 cp ./target/wasm_bg.wasm ../../../../amateurguitar/www/static/notation/
-cp ./assets/amateurguitar ../../../../amateurguitar/www/static/notation/assets/
+cp ./assets/beginner/* ../../../../amateurguitar/www/static/notation/assets/beginner/
 """]
 dependencies = ["build-web"]

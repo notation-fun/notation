@@ -4,50 +4,14 @@ version = "0.1.0"
 edition = "2018"
 
 [features]
-default = [
-    "bevy/bevy_gltf",
-    "bevy/bevy_winit",
-    "bevy/render",
-    "bevy/png",
-]
-
-native = [
-    "bevy/bevy_wgpu",
-]
-
-web = [
-    "bevy_webgl2",
-    "console_error_panic_hook",
-    "gloo-events",
-    "web-sys",
-    "futures",
-]
-
 dev = [
-    "bevy/dynamic",
-    "native",
+    "notation_bevy/dev",
+    "notation_bevy/native",
+]
+inspector = [
+    "notation_bevy/inspector",
+    "notation_bevy/native",
 ]
 
 [dependencies]
-notation_model = { path = "../../crates/notation_model" }
 notation_bevy = { path = "../../crates/notation_bevy" }
-
-# bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", features = ["dynamic"]}
-bevy = { version = "0.5.0", default-features = false }
-bevy_webgl2 = {version = "0.5.0", optional = true }
-console_error_panic_hook = {version = "0.1", optional = true }
-
-winit = "0.24.0"
-rand = "0.8"
-getrandom = {version="0.2", features=["wasm-bindgen"]}
-
-bevy_prototype_lyon = "0.3.1"
-bevy-inspector-egui = "0.5.1"
-bevy_asset_loader = "0.4.0"
-
-gloo-events = { version = "0.1.1", optional = true }
-web-sys = { version = "0.3.45", features = ["Element", "Document", "Window", "Location"], optional = true }
-futures = { version = "0.3", optional = true }
-
-[build-dependencies]
-embed-resource = "1.4"

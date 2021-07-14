@@ -54,10 +54,25 @@ impl Display for Tab {
         )
     }
 }
+impl Tab {
+    pub fn bar_units(&self) -> Units {
+        Units::from(self.meta.signature)
+    }
+    pub fn signature(&self) -> Signature {
+        self.meta.signature.clone()
+    }
+    pub fn beat_unit(&self) -> Unit {
+        self.meta.signature.beat_unit
+    }
+    pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
+        self.meta.calc_syllable(pitch)
+    }
+}
+
 impl TabBar {
     pub fn bar_units(&self) -> Units {
         match self.tab.upgrade() {
-            Some(tab) => Units::from(tab.meta.signature),
+            Some(tab) => tab.bar_units(),
             None => {
                 println!("<{}>.bar_units() tab missing: {}", stringify!(TabBar), self);
                 Units::from(Unit::Whole)
@@ -66,7 +81,7 @@ impl TabBar {
     }
     pub fn signature(&self) -> Signature {
         match self.tab.upgrade() {
-            Some(tab) => tab.meta.signature.clone(),
+            Some(tab) => tab.signature(),
             None => {
                 println!("<{}>.signature() tab missing: {}", stringify!(TabBar), self);
                 Signature::_4_4
@@ -75,7 +90,7 @@ impl TabBar {
     }
     pub fn beat_unit(&self) -> Unit {
         match self.tab.upgrade() {
-            Some(tab) => tab.meta.signature.beat_unit,
+            Some(tab) => tab.beat_unit(),
             None => {
                 println!("<{}>.beat_unit() tab missing: {}", stringify!(TabBar), self);
                 Unit::Quarter
@@ -84,7 +99,7 @@ impl TabBar {
     }
     pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
         match self.tab.upgrade() {
-            Some(tab) => tab.meta.calc_syllable(pitch),
+            Some(tab) => tab.calc_syllable(pitch),
             None => {
                 println!(
                     "<{}>.calc_syllable({}) tab missing: {}",

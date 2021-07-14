@@ -2,9 +2,12 @@ use notation_model::prelude::{Octave, Semitones, Syllable};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
+
+#[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct SyllableTheme {
     pub colors: [Color; 12],
 }

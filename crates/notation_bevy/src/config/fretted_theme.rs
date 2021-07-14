@@ -1,9 +1,12 @@
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
+
+#[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct FrettedTheme {
     pub string_color: Color,
     pub string_space: f32,

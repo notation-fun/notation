@@ -1,10 +1,14 @@
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
-use bevy_inspector_egui::Inspectable;
 
 use notation_model::prelude::Signature;
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Inspectable)]
+
+#[cfg(feature = "inspector")]
+use bevy_inspector_egui::Inspectable;
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct CoreTheme {
     pub background_color: Color,
     pub outline_color: Color,
@@ -14,6 +18,8 @@ pub struct CoreTheme {
     pub beat_color1: Option<Color>,
     pub beat_color2: Option<Color>,
     pub beat_z: f32,
+    pub pos_indicator_color: Color,
+    pub pos_indicator_z: f32,
 }
 
 impl Default for CoreTheme {
@@ -27,6 +33,8 @@ impl Default for CoreTheme {
             beat_color1: Some(Color::hex("00000010").unwrap()),
             beat_color2: None,
             beat_z: 0.0,
+            pos_indicator_color: Color::hex("000000AA").unwrap(),
+            pos_indicator_z: 20.0,
         }
     }
 }
