@@ -53,9 +53,9 @@ impl Display for Octave {
 impl From<Octave> for Semitones {
     fn from(v: Octave) -> Self {
         let v = match v {
-            Octave::N1 => 12 * -1,
-            Octave::P0 => 12 * 0,
-            Octave::P1 => 12 * 1,
+            Octave::N1 => -12,
+            Octave::P0 => 0,
+            Octave::P1 => 12,
             Octave::P2 => 12 * 2,
             Octave::P3 => 12 * 3,
             Octave::P4 => 12 * 4,

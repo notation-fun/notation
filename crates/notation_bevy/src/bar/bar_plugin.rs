@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::config::bevy_config::BevyConfig;
 use crate::config::grid_config::{GridCol, GridRow};
 use crate::prelude::{AddEntryEvent, ConfigChangedEvent, GuitarPlugin, LayerBundle, LyonShapeOp};
-use notation_model::prelude::{BarLayer, TabBar, TrackKind, Units};
+use notation_model::prelude::{BarLayer, BarPosition, TabBar, TrackKind, Units};
 
 use super::bar_beat::{BarBeat, BarBeatData};
 use super::bar_separator::{BarSeparator, BarSeparatorData};
@@ -30,7 +30,7 @@ fn on_config_changed(
 ) {
     for _evt in evts.iter() {
         for (bar, row, col, mut transform) in query.iter_mut() {
-            *transform = config.grid.calc_bar_transform(bar.bar_units(), &row, &col);
+            *transform = config.grid.calc_bar_transform(bar.bar_units(), row, col);
         }
         for (entity, data) in sep_query.iter() {
             BarSeparator::update(&mut commands, &config, entity, data);
@@ -49,18 +49,18 @@ fn create_layers(
 ) {
     for (bar_entity, bar, grid_col) in query.iter() {
         for layer in &bar.bar.layers {
-            let layer_undle = LayerBundle::new(&bar, layer.clone());
+            let layer_undle = LayerBundle::new(bar, layer.clone());
             let mut layer_commands = commands.spawn_bundle(layer_undle);
             BarPlugin::insert_layer_extra(&mut layer_commands, bar.clone(), layer.clone());
             let layer_entity = layer_commands.id();
             commands.entity(bar_entity).push_children(&[layer_entity]);
             for slice in &layer.slices {
-                let mut position = Units(0.0);
+                let mut pos = BarPosition::new(bar.bar_ordinal, Units(0.0));
                 for index in slice.index..slice.index + slice.count {
                     if let Some(entry) = slice.line.entries.get(index) {
                         let duration = entry.as_ref().duration();
-                        add_entry_evts.send(AddEntryEvent(layer_entity, entry.clone(), position));
-                        position = position + Units::from(duration);
+                        add_entry_evts.send(AddEntryEvent(layer_entity, entry.clone(), pos));
+                        pos.in_bar_pos = pos.in_bar_pos + Units::from(duration);
                     }
                 }
             }
@@ -70,18 +70,18 @@ fn create_layers(
                 &mut commands,
                 bar_entity,
                 &config,
-                BarSeparatorData::new(&bar, true),
+                BarSeparatorData::new(bar, true),
             );
         }
         BarSeparator::create(
             &mut commands,
             bar_entity,
             &config,
-            BarSeparatorData::new(&bar, false),
+            BarSeparatorData::new(bar, false),
         );
         let signature = bar.signature();
         for beat in 0..signature.beats_per_bar {
-            BarBeatData::may_new(&config, &bar, &signature, beat)
+            BarBeatData::may_new(&config, bar, &signature, beat)
                 .map(|data| BarBeat::create(&mut commands, bar_entity, &config, data));
         }
     }

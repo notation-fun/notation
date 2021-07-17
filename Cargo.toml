@@ -5,6 +5,7 @@ members = [
     "crates/notation_core",
     "crates/notation_fretted",
     "crates/notation_proto",
+    "crates/notation_midi",
     "crates/notation_dsl",
     "crates/notation_model",
     "crates/notation_bevy",

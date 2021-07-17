@@ -13,7 +13,10 @@ pub struct Note {
 
 impl Display for Note {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {} {:?}", self.octave, self.pitch, self.syllable)
+        match self.syllable {
+            Some(s) => write!(f, "{} {} {}", self.octave, self.pitch, s),
+            None => write!(f, "{} {}", self.octave, self.pitch),
+        }
     }
 }
 

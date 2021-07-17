@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::prelude::{Bar, BarLayer, Line, ProtoEntry, Slice, Track};
 
 pub fn get_entry<F: Fn(&ProtoEntry) -> bool>(
-    v: &Vec<Arc<ProtoEntry>>,
+    v: &[Arc<ProtoEntry>],
     predicate: &F,
 ) -> Option<Arc<ProtoEntry>> {
     for entry in v.iter() {
@@ -14,7 +14,7 @@ pub fn get_entry<F: Fn(&ProtoEntry) -> bool>(
     None
 }
 pub fn get_entry_<F: Fn(usize, &ProtoEntry) -> bool>(
-    v: &Vec<Arc<ProtoEntry>>,
+    v: &[Arc<ProtoEntry>],
     predicate: &F,
 ) -> Option<Arc<ProtoEntry>> {
     for (index, entry) in v.iter().enumerate() {

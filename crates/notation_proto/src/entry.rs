@@ -113,10 +113,8 @@ impl ProtoEntry {
         None
     }
     pub fn cast_size_fretted_fretboard<const S: usize>(&self) -> Option<Fretboard<S>> {
-        if let Some(x) = self.cast_size_fretted() {
-            if let FrettedEntry::Fretboard(y) = x {
-                return Some(y);
-            }
+        if let Some(FrettedEntry::Fretboard(x)) = self.cast_size_fretted() {
+            return Some(x);
         }
         None
     }

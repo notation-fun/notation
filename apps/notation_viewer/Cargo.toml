@@ -4,13 +4,16 @@ version = "0.1.0"
 edition = "2018"
 
 [features]
+native = [
+    "notation_bevy/native",
+]
 dev = [
     "notation_bevy/dev",
-    "notation_bevy/native",
+    "native",
 ]
 inspector = [
     "notation_bevy/inspector",
-    "notation_bevy/native",
+    "native",
 ]
 
 [dependencies]

@@ -1,7 +1,7 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use notation_model::prelude::Units;
+use notation_model::prelude::BarPosition;
 use std::sync::Arc;
 
 use super::fretted_grid::FrettedGrid;
@@ -73,7 +73,7 @@ impl FrettedPlugin {
         layer_query: &Query<(&Arc<TabBar>, &Fretboard<S>, &Children)>,
         shape_query: &Query<&HandShape<S>>,
         layer_entity: Entity,
-        _position: &Units,
+        _position: &BarPosition,
     ) -> Option<(Arc<TabBar>, Fretboard<S>, HandShape<S>)> {
         if let Ok((bar, fretboard, children)) = layer_query.get(layer_entity) {
             let mut matched_shape = None;
@@ -85,7 +85,7 @@ impl FrettedPlugin {
                 }
             }
             if let Some(shape) = matched_shape {
-                return Some((bar.clone(), fretboard.clone(), shape.clone()));
+                return Some((bar.clone(), *fretboard, *shape));
             }
         }
         None

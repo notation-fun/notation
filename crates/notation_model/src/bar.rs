@@ -68,14 +68,14 @@ impl
     ) -> Self {
         let mut slices = Vec::new();
         for slice in v.0.slices {
-            slices.push(Slice::try_from((slice, v.1)).map(|x| Arc::new(x))?);
+            slices.push(Slice::try_from((slice, v.1)).map(Arc::new)?);
         }
         let track = match v.0.track {
             None => None,
             Some(track) => Some(
                 v.2.iter()
                     .find(|x| x.key == track)
-                    .map(|x| x.clone())
+                    .cloned()
                     .ok_or(ParseError::TrackNotFound(track))?,
             ),
         };
@@ -97,7 +97,7 @@ impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<BarLayer>>)> for Bar {
             layers.push(
                 v.1.iter()
                     .find(|x| x.key == layer)
-                    .map(|x| x.clone())
+                    .cloned()
                     .ok_or(ParseError::LayerNotFound(layer))?,
             );
         }

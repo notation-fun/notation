@@ -1,4 +1,4 @@
-use notation_model::prelude::{Tab, TabBar, Units};
+use notation_model::prelude::{Tab, TabBar, TabPosition, Units};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -88,9 +88,9 @@ impl GridConfig {
         let y = -1.0 * self.bar_height * row.0 as f32;
         Transform::from_xyz(x, y, 0.0)
     }
-    pub fn calc_pos_row_col(&self, tab: &Tab, pos: Units) -> (GridRow, GridCol) {
+    pub fn calc_pos_row_col(&self, tab: &Tab, pos: TabPosition) -> (GridRow, GridCol) {
         let bar_units = tab.bar_units();
-        let mut index = (pos.0 / bar_units.0) as usize;
+        let mut index = (pos.in_tab_pos.0 / bar_units.0) as usize;
         if index >= tab.bars.len() {
             index = tab.bars.len() - 1;
         }
@@ -98,12 +98,12 @@ impl GridConfig {
         let col = GridCol(index % self.bars_in_row as usize);
         (row, col)
     }
-    pub fn calc_pos_transform(&self, tab: &Tab, pos: Units) -> Transform {
+    pub fn calc_pos_transform(&self, tab: &Tab, pos: TabPosition) -> Transform {
         let bar_units = tab.bar_units();
         let (row, col) = self.calc_pos_row_col(tab, pos);
         let bar_x = self.unit_size * bar_units.0 * col.0 as f32;
         let bars = row.0 * self.bars_in_row as usize + col.0;
-        let offset_x = pos.0 - bar_units.0 * bars as f32;
+        let offset_x = pos.in_tab_pos.0 - bar_units.0 * bars as f32;
         let x = bar_x + offset_x * self.unit_size;
         let y = -1.0 * self.bar_height * row.0 as f32;
         Transform::from_xyz(x, y, 0.0)

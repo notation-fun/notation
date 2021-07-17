@@ -30,6 +30,6 @@ pub fn get_tab_map<'a>() -> HashMap<&'a str, TabInfo<'a>> {
         .collect()
 }
 
-pub fn new_tab<'a>(name: &'a str) -> Option<Tab> {
+pub fn new_tab(name: &str) -> Option<Tab> {
     get_tab_map().get(name).map(|x| (x.new_tab)())
 }

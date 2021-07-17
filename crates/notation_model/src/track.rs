@@ -28,8 +28,7 @@ impl Display for Track {
 }
 impl From<notation_proto::prelude::Track> for Track {
     fn from(v: notation_proto::prelude::Track) -> Self {
-        let entries: Vec<Arc<ProtoEntry>> =
-            v.entries.into_iter().map(|entry| Arc::new(entry)).collect();
+        let entries: Vec<Arc<ProtoEntry>> = v.entries.into_iter().map(Arc::new).collect();
         Self::new(v.key, v.kind, entries)
     }
 }

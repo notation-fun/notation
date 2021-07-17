@@ -1,4 +1,4 @@
-pub use notation_model;
+pub use {notation_midi, notation_model};
 
 pub use {bevy, bevy_prototype_lyon};
 
@@ -58,6 +58,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::entry_plugin::EntryPlugin;
     #[doc(hidden)]
+    pub use crate::entry::entry_state::EntryState;
+    #[doc(hidden)]
     pub use crate::fretted::fretted_grid::FrettedGrid;
     #[doc(hidden)]
     pub use crate::fretted::fretted_plugin::FrettedPlugin;
@@ -74,6 +76,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_plugin::PlayPlugin;
     #[doc(hidden)]
+    pub use crate::play::play_state::PlayState;
+    #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
     pub use crate::tab::tab_bundle::TabBundle;
@@ -82,12 +86,17 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab::tab_plugin::TabPlugin;
     #[doc(hidden)]
+    pub use crate::tab::tab_state::TabState;
+    #[doc(hidden)]
+    pub use crate::tab::tab_state_bundle::TabStateBundle;
+    #[doc(hidden)]
     pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
 
     use bevy::app::{PluginGroup, PluginGroupBuilder};
     use bevy::prelude::*;
+    use notation_midi::midi_plugin::MidiPlugin;
 
     pub struct NotationPlugins;
     impl PluginGroup for NotationPlugins {
@@ -100,6 +109,8 @@ pub mod prelude {
             group.add(GuitarPlugin);
             group.add(TabPlugin);
             group.add(PlayPlugin);
+            //crates plugins
+            group.add(MidiPlugin);
             //external plugins
             group.add(bevy_prototype_lyon::prelude::ShapePlugin);
         }

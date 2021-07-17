@@ -7,15 +7,15 @@ use crate::prelude::{LyonShape, LyonShapeOp};
 #[derive(Clone, Debug)]
 pub struct PosIndicatorData {}
 
-impl PosIndicatorData {
-    pub fn new() -> Self {
+impl Default for PosIndicatorData {
+    fn default() -> Self {
         PosIndicatorData {}
     }
 }
 
 pub struct PosIndicator<'a> {
-    config: &'a BevyConfig,
-    data: PosIndicatorData,
+    pub config: &'a BevyConfig,
+    pub data: PosIndicatorData,
 }
 
 impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {

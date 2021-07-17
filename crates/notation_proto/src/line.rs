@@ -22,11 +22,7 @@ impl Line {
 }
 impl Slice {
     pub fn new(line: String, index: usize, count: usize) -> Self {
-        Self {
-            line: line,
-            index,
-            count,
-        }
+        Self { line, index, count }
     }
 }
 impl Display for Line {

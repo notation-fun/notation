@@ -29,6 +29,7 @@ native = [
 
 [dependencies]
 notation_model = { path = "../notation_model" }
+notation_midi = { path = "../notation_midi" }
 
 serde = {version = "1.0.126", features = ["derive"]}
 # https://github.com/serde-rs/serde/issues/1937

@@ -40,7 +40,7 @@ macro_rules! impl_dsl {
                 }
                 result
             }
-            pub fn quote_vec(v: &Vec<$dsl_type>) -> TokenStream {
+            pub fn quote_vec(v: &[$dsl_type]) -> TokenStream {
                 let items: Vec<TokenStream> = v.iter().map(
                         |x| quote! { #x }
                 ).collect();

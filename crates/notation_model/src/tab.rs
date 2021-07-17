@@ -1,6 +1,8 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
+use notation_proto::prelude::TabPosition;
+
 use crate::prelude::{
     Bar, BarLayer, Form, Line, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track,
     Unit, Units,
@@ -59,7 +61,7 @@ impl Tab {
         Units::from(self.meta.signature)
     }
     pub fn signature(&self) -> Signature {
-        self.meta.signature.clone()
+        self.meta.signature
     }
     pub fn beat_unit(&self) -> Unit {
         self.meta.signature.beat_unit
@@ -70,6 +72,9 @@ impl Tab {
 }
 
 impl TabBar {
+    pub fn tab_pos(&self) -> TabPosition {
+        TabPosition::new(Units((self.bar_ordinal - 1) as f32 * self.bar_units().0))
+    }
     pub fn bar_units(&self) -> Units {
         match self.tab.upgrade() {
             Some(tab) => tab.bar_units(),

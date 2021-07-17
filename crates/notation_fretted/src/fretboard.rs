@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 
+use crate::prelude::Pick;
+
 use super::hand::HandShape;
-use notation_core::prelude::{Note, Semitones};
+use notation_core::prelude::{Note, Semitones, Tone};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Fretboard<const S: usize> {
@@ -57,9 +59,9 @@ impl<const S: usize> Fretboard<S> {
     }
     pub fn open_notes(&self) -> [Note; S] {
         if self.capo == 0 {
-            return self.string_notes.clone();
+            return self.string_notes;
         }
-        self.string_notes.clone().map(|x| self.get_capo_note(x))
+        self.string_notes.map(|x| self.get_capo_note(x))
     }
     /// string is 1-based.
     pub fn open_note(&self, string: u8) -> Option<Note> {
@@ -71,13 +73,37 @@ impl<const S: usize> Fretboard<S> {
     }
     pub fn shape_note(&self, shape: &HandShape<S>, string: u8) -> Option<Note> {
         let note = self.open_note(string);
-        if note.is_none() {
-            return None;
-        }
+        note?;
         match shape.string_fret(string) {
             None => None,
             Some(0) => note,
             Some(fret) => Some((Semitones::from(note.unwrap()) + Semitones(fret as i8)).into()),
         }
+    }
+    pub fn pick_tone(&self, shape: &HandShape<S>, pick: &Pick) -> Tone {
+        let notes = match pick {
+            Pick::None => vec![],
+            Pick::Single(p1) => vec![self.shape_note(shape, *p1)],
+            Pick::Double(p1, p2) => vec![self.shape_note(shape, *p1), self.shape_note(shape, *p2)],
+            Pick::Triple(p1, p2, p3) => vec![
+                self.shape_note(shape, *p1),
+                self.shape_note(shape, *p2),
+                self.shape_note(shape, *p3),
+            ],
+            Pick::Tetra(p1, p2, p3, p4) => vec![
+                self.shape_note(shape, *p1),
+                self.shape_note(shape, *p2),
+                self.shape_note(shape, *p3),
+                self.shape_note(shape, *p4),
+            ],
+            Pick::Penta(p1, p2, p3, p4, p5) => vec![
+                self.shape_note(shape, *p1),
+                self.shape_note(shape, *p2),
+                self.shape_note(shape, *p3),
+                self.shape_note(shape, *p4),
+                self.shape_note(shape, *p5),
+            ],
+        };
+        notes.into()
     }
 }

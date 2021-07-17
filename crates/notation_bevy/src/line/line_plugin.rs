@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::prelude::{AddEntryEvent, AddLineEvent};
-use notation_model::prelude::Units;
+use notation_model::prelude::{BarPosition, Units};
 
 use super::line_bundle::LineBundle;
 
@@ -23,14 +23,14 @@ fn on_add_line(
     for evt in evts.iter() {
         let line = evt.0.clone();
         let line_entity = commands.spawn_bundle(LineBundle::from(line.clone())).id();
-        let mut position = Units(0.0);
+        let mut pos = BarPosition::new(1, Units(0.0));
         for entry in line.entries.iter() {
             let duration = entry.duration();
-            add_entry_evts.send(AddEntryEvent(line_entity, entry.clone(), position));
-            position = position + Units::from(duration);
+            add_entry_evts.send(AddEntryEvent(line_entity, entry.clone(), pos));
+            pos.in_bar_pos = pos.in_bar_pos + Units::from(duration);
         }
         if let Ok(mut units) = set_units.get_mut(line_entity) {
-            *units = position;
+            *units = pos.in_bar_pos;
         }
     }
 }

@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{Duration, Syllable, Units};
+use notation_model::prelude::{BarPosition, Duration, Syllable, Units};
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
@@ -12,7 +12,7 @@ use notation_model::prelude::TabBar;
 pub struct PickNoteData {
     pub bar_ordinal: usize,
     pub duration: Duration,
-    pub position: Units,
+    pub position: BarPosition,
     pub string: u8,
     pub syllable: Syllable,
 }
@@ -21,7 +21,7 @@ impl PickNoteData {
     pub fn new(
         tab_bar: &Arc<TabBar>,
         duration: Duration,
-        position: Units,
+        position: BarPosition,
         string: u8,
         syllable: Syllable,
     ) -> Self {
@@ -70,7 +70,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
-        let x = self.config.grid.unit_size * self.data.position.0;
+        let x = self.config.grid.unit_size * self.data.position.in_bar_pos.0;
         let y = -1.0 * self.config.theme.fretted.string_space * self.data.string as f32
             - self.config.grid.note_height / 2.0;
         Transform::from_xyz(x, y, self.config.theme.fretted.pick_z)

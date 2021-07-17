@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_model::prelude::{TabBar, Units};
+use notation_model::prelude::{TabBar, TabPosition};
 
 use crate::prelude::{GridCol, GridConfig, GridRow};
 
@@ -9,7 +9,7 @@ use crate::prelude::{GridCol, GridConfig, GridRow};
 pub struct BarBundle {
     pub bar: Arc<TabBar>,
     pub name: Name,
-    pub length: Units,
+    pub pos: TabPosition,
     pub row: GridRow,
     pub col: GridCol,
     pub transform: Transform,
@@ -21,10 +21,11 @@ impl BarBundle {
         let (row, col) = config.calc_bar_row_col(&bar);
         let transform = config.calc_bar_transform(bar.bar_units(), &row, &col);
         let name = Name::from(bar.to_string().as_str());
+        let pos = bar.tab_pos();
         Self {
             bar,
             name,
-            length: Units(0.0),
+            pos,
             row,
             col,
             transform,

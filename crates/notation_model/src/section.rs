@@ -47,7 +47,7 @@ impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
             sections.push(
                 v.1.iter()
                     .find(|x| x.key == section)
-                    .map(|x| x.clone())
+                    .cloned()
                     .ok_or(ParseError::SectionNotFound(section))?,
             );
         }
@@ -62,7 +62,7 @@ impl TryFrom<(notation_proto::prelude::Section, &Vec<Arc<BarLayer>>)> for Sectio
     fn try_from(v: (notation_proto::prelude::Section, &Vec<Arc<BarLayer>>)) -> Self {
         let mut bars = Vec::new();
         for bar in v.0.bars {
-            bars.push(Bar::try_from((bar, v.1)).map(|x| Arc::new(x))?);
+            bars.push(Bar::try_from((bar, v.1)).map(Arc::new)?);
         }
         Self::new(v.0.key, v.0.kind, bars)
     }

@@ -34,9 +34,16 @@ pub enum PitchSign {
 impl Display for PitchSign {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", match self {
+            /* Unicode version, not very readable in console
+            PitchSign::Natural => "",
+            PitchSign::Sharp => "♯",
+            PitchSign::Flat => "♭" ,
+            PitchSign::DoubleSharp => "𝄪",
+            PitchSign::DoubleFlat => "𝄫",
+             */
             PitchSign::Natural => "",
             PitchSign::Sharp => "#",
-            PitchSign::Flat => "b",
+            PitchSign::Flat => "b" ,
             PitchSign::DoubleSharp => "##",
             PitchSign::DoubleFlat => "bb",
         })
@@ -51,7 +58,7 @@ pub struct Pitch {
 
 impl Display for Pitch {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}{}", self.sign, self.name)
+        write!(f, "{}{}", self.name, self.sign)
     }
 }
 

@@ -16,7 +16,7 @@ impl<const S: usize> FrettedGrid<S> {
         config: &BevyConfig,
         entity: Entity,
         tab_bar: &Arc<TabBar>,
-    ) -> () {
+    ) {
         for string in 1..=S {
             FrettedString::create(
                 commands,

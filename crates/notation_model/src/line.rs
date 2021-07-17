@@ -59,8 +59,7 @@ impl Display for Slice {
 }
 impl From<notation_proto::prelude::Line> for Line {
     fn from(v: notation_proto::prelude::Line) -> Self {
-        let entries: Vec<Arc<ProtoEntry>> =
-            v.entries.into_iter().map(|entry| Arc::new(entry)).collect();
+        let entries: Vec<Arc<ProtoEntry>> = v.entries.into_iter().map(Arc::new).collect();
         Self::new(v.key, entries)
     }
 }

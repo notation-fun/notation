@@ -20,7 +20,7 @@ impl BarBeatData {
         let bar_ordinal = tab_bar.bar_ordinal;
         let beat_units = Units::from(signature.beat_unit);
         BarBeatData {
-            signature: signature.clone(),
+            signature: *signature,
             beat_units,
             bar_ordinal,
             beat,

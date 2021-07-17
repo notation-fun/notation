@@ -27,11 +27,11 @@ impl Tab {
         let tracks = v.tracks.into_iter().map(|x| Arc::new(x.into())).collect();
         let mut layers = Vec::new();
         for layer in v.layers {
-            layers.push(BarLayer::try_from((layer, &lines, &tracks)).map(|x| Arc::new(x))?);
+            layers.push(BarLayer::try_from((layer, &lines, &tracks)).map(Arc::new)?);
         }
         let mut sections = Vec::new();
         for section in v.sections {
-            sections.push(Section::try_from((section, &layers)).map(|x| Arc::new(x))?);
+            sections.push(Section::try_from((section, &layers)).map(Arc::new)?);
         }
         let form = Form::try_from((v.form, &sections))?;
         Self::new_arc(meta, lines, tracks, layers, sections, form)
@@ -102,10 +102,10 @@ impl Section {
                 section_round,
                 section_ordinal,
                 bar: bar.clone(),
-                bar_index: bar_index,
+                bar_index,
                 bar_ordinal: section_bar_ordinal + bar_index,
             })
-            .map(|x| Arc::new(x))
+            .map(Arc::new)
             .collect()
     }
 }

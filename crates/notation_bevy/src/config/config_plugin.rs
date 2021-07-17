@@ -37,7 +37,9 @@ fn on_window_resized(
     mut config_evts: EventWriter<ConfigChangedEvent>,
 ) {
     for evt in evts.iter() {
-        if evt.width != window.width || evt.height != window.height {
+        if evt.width as usize != window.width as usize
+            || evt.height as usize != window.height as usize
+        {
             window.width = evt.width;
             window.height = evt.height;
             config.grid.resize(evt.width, evt.height);

@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::ops::{Add, Sub};
 
 use serde::{Deserialize, Serialize};
@@ -15,6 +16,19 @@ pub enum Unit {
 impl Default for Unit {
     fn default() -> Self {
         Self::Quarter
+    }
+}
+
+impl Display for Unit {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            Unit::Whole => "_1",
+            Unit::Half => "_1_2",
+            Unit::Quarter => "_1_4",
+            Unit::Eighth => "_1_8",
+            Unit::Sixteenth => "_1_16",
+            Unit::ThirtySecondth => "_1_32",
+        })
     }
 }
 
@@ -44,6 +58,27 @@ pub enum Duration {
     Dotted(Unit),
     Triplet(Unit),
     DottedTriplet(Unit),
+}
+
+impl Display for Duration {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Duration::Zero => write!(f, "_0"),
+            Duration::Simple(d) => d.fmt(f),
+            Duration::Dotted(d) => {
+                write!(f, "D")?;
+                d.fmt(f)
+            }
+            Duration::Triplet(d) => {
+                write!(f, "T")?;
+                d.fmt(f)
+            }
+            Duration::DottedTriplet(d) => {
+                write!(f, "DT")?;
+                d.fmt(f)
+            }
+        }
+    }
 }
 
 impl Duration {

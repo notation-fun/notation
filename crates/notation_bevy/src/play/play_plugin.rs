@@ -1,10 +1,9 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_model::prelude::Tab;
+use notation_model::prelude::{BarPosition, Duration, ProtoEntry, Tab};
 
-use crate::prelude::{BevyConfig, ConfigChangedEvent, LyonShapeOp};
-use crate::tab::tab_state::TabState;
+use crate::prelude::{BevyConfig, ConfigChangedEvent, EntryState, LyonShapeOp, TabState};
 
 use super::pos_indicator::{PosIndicator, PosIndicatorData};
 
@@ -37,7 +36,7 @@ fn on_add_tab_state(
     state_query: Query<(Entity, &TabState), Added<TabState>>,
 ) {
     for (entity, _state) in state_query.iter() {
-        PosIndicator::create(&mut commands, entity, &config, PosIndicatorData::new());
+        PosIndicator::create(&mut commands, entity, &config, PosIndicatorData::default());
     }
 }
 
@@ -46,10 +45,31 @@ fn on_time(
     time: Res<Time>,
     config: Res<BevyConfig>,
     mut query: Query<(&Arc<Tab>, &mut TabState, &mut Transform)>,
+    mut entry_query: Query<(
+        Entity,
+        &Arc<ProtoEntry>,
+        &Duration,
+        &BarPosition,
+        &mut EntryState,
+    )>,
 ) {
     for (tab, mut state, mut transform) in query.iter_mut() {
-        if state.tick(time.delta_seconds()) {
-            *transform = config.grid.calc_pos_transform(&tab, state.pos);
+        let (changed, end_passed) = state.tick(time.delta_seconds());
+        if changed {
+            *transform = config.grid.calc_pos_transform(tab, state.pos.tab);
+            for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
+                if state.is_in_range(*position) {
+                    if entry_state.is_idle() && state.pos.is_passed(position) {
+                        *entry_state = EntryState::Playing;
+                    } else if entry_state.is_playing()
+                        && state.pos.is_passed_with(position, duration)
+                    {
+                        *entry_state = EntryState::Played;
+                    } else if end_passed && entry_state.is_played() {
+                        *entry_state = EntryState::Idle;
+                    }
+                }
+            }
         }
     }
 }

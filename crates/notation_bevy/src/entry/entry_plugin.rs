@@ -17,10 +17,9 @@ impl Plugin for EntryPlugin {
 
 fn on_add_entry(mut commands: Commands, mut evts: EventReader<AddEntryEvent>) {
     for evt in evts.iter() {
-        let parent = evt.0.clone();
+        let parent = evt.0;
         let entry = evt.1.clone();
-        let position = evt.2;
-        let entry_bundle = EntryBundle::from((entry.clone(), position));
+        let entry_bundle = EntryBundle::from((entry.clone(), evt.2));
         let mut entry_commands = commands.spawn_bundle(entry_bundle);
         EntryPlugin::insert_entry_extra(&mut entry_commands, entry);
         let entry_entity = entry_commands.id();
@@ -34,7 +33,6 @@ impl EntryPlugin {
             CoreEntry::Rest(_) => (),
             CoreEntry::Tone(tone, _) => {
                 commands.insert_bundle(ToneBundle::from(*tone));
-                ()
             }
             CoreEntry::Chord(_, _) => (),
             CoreEntry::Signature(_) => (),
