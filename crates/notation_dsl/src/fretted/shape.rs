@@ -21,6 +21,7 @@ impl ShapeDsl {
             if input.peek(LitInt) {
                 frets.push(Some(input.parse::<LitInt>()?.base10_parse::<u8>()?));
             } else {
+                input.parse::<Token![_]>()?;
                 frets.push(None);
             }
         }

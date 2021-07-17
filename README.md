@@ -12,3 +12,9 @@
 
 - https://bevy-cheatbook.github.io/platforms/wasm/cargo-make.html
 - https://github.com/mrk-its/bevy_webgl2_app_template
+
+# Todo
+
+proc_macro performance issue
+
+- https://github.com/rust-lang/rust/issues/65080

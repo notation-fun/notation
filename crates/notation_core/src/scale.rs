@@ -68,7 +68,7 @@ impl Scale {
         let mut semitones = Semitones::from(*key).0
             + match self {
                 Scale::Major => 0,
-                Scale::Minor => -3,
+                Scale::Minor => 3,
             };
         if semitones < 0 {
             semitones += 12

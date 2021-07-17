@@ -1,7 +1,7 @@
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{ParseStream, Result};
-use syn::LitStr;
+use syn::{Expr, LitStr};
 
 use crate::entry::EntryDsl;
 
@@ -27,3 +27,28 @@ impl ToTokens for LineDsl {
         });
     }
 }
+
+pub enum LineDslOrExpr {
+    Dsl(LineDsl),
+    Expr(Expr),
+}
+
+impl LineDslOrExpr {
+    pub fn parse_without_brace(input: ParseStream) -> Result<Self> {
+        if input.peek(LitStr) {
+            Ok(Self::Dsl(input.parse()?))
+        } else {
+            Ok(Self::Expr(input.parse()?))
+        }
+    }
+}
+
+impl ToTokens for LineDslOrExpr {
+    fn to_tokens(&self, tokens: &mut TokenStream) {
+        tokens.extend(match self {
+            Self::Dsl(x) => quote! { #x },
+            Self::Expr(x) => quote! { #x },
+        });
+    }
+}
+

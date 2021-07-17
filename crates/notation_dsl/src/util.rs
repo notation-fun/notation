@@ -9,7 +9,7 @@ use crate::entry::{EntryDsl, MultibleDsl};
 use crate::fretted::pick::PickDsl;
 use crate::fretted::shape::ShapeDsl;
 use crate::layer::LayerDsl;
-use crate::line::LineDsl;
+use crate::line::{LineDsl, LineDslOrExpr};
 use crate::section::SectionDsl;
 use crate::slice::SliceDsl;
 use crate::track::TrackDsl;
@@ -41,12 +41,12 @@ macro_rules! impl_dsl {
                 result
             }
             pub fn quote_vec(v: &[$dsl_type]) -> TokenStream {
-                let items: Vec<TokenStream> = v.iter().map(
-                        |x| quote! { #x }
+                let item_quotes: Vec<TokenStream> = v.iter().map(
+                    |x| quote! { #x }
                 ).collect();
                 quote! {
                     vec![
-                        #(#items),*
+                        #(#item_quotes),*
                     ]
                 }
             }
@@ -56,10 +56,10 @@ macro_rules! impl_dsl {
 
 impl_dsl!(EntryDsl);
 impl_dsl!(LineDsl);
+impl_dsl!(LineDslOrExpr);
 impl_dsl!(SliceDsl);
 impl_dsl!(TrackDsl);
 impl_dsl!(LayerDsl);
-impl_dsl!(BarDsl);
 impl_dsl!(SectionDsl);
 
 macro_rules! impl_multible_dsl {
@@ -91,6 +91,16 @@ macro_rules! impl_multible_dsl {
                 }
                 result
             }
+            pub fn quote_multible(v: &MultibleDsl<$dsl_type>) -> TokenStream {
+                let item_quotes: Vec<TokenStream> = v.items.iter().map(
+                    |x| quote! { #x }
+                ).collect();
+                quote! {
+                    vec![
+                        #(#item_quotes),*
+                    ]
+                }
+            }
         }
         impl Parse for MultibleDsl<$dsl_type> {
             fn parse(input: ParseStream) -> Result<Self> {
@@ -107,14 +117,17 @@ macro_rules! impl_multible_dsl {
         }
         impl ToTokens for MultibleDsl<$dsl_type> {
             fn to_tokens(&self, tokens: &mut TokenStream) {
-                let items = &self.items;
+                let item_quotes: Vec<TokenStream> = self.items.iter().map(
+                    |x| quote! { #x }
+                ).collect();
                 tokens.extend(quote! {
-                    #(#items),*
+                    #(#item_quotes),*
                 });
             }
         }
     }
 }
 
+impl_multible_dsl!(BarDsl);
 impl_multible_dsl!(PickDsl);
 impl_multible_dsl!(ShapeDsl);

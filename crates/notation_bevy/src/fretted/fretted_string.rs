@@ -38,7 +38,7 @@ impl<'a> LyonShape<shapes::Line> for FrettedString<'a> {
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
             Vec2::ZERO,
-            Vec2::new(self.config.grid.unit_size * self.data.bar_units.0, 0.0),
+            Vec2::new(self.config.grid.bar_size, 0.0),
         )
     }
     fn get_colors(&self) -> ShapeColors {

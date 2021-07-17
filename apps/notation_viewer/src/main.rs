@@ -48,7 +48,7 @@ fn setup(mut commands: Commands, server: Res<AssetServer>) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
     #[cfg(not(target_arch = "wasm32"))]
-    let tab_asset = server.load("test.ron");
+    let tab_asset = server.load("songs/pu_shu/bai_hua_lin.ron");
 
     #[cfg(target_arch = "wasm32")]
     let tab_asset = server.load("beginner/1_right_hand.ron");

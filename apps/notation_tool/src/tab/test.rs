@@ -49,16 +49,16 @@ pub fn new_tab_test() -> Tab {
         ]
         sections: [
             {"A" Verse [
-                [ "G" ]
-                [ "Em" ]
-                [ "C" ]
-                [ "D" ]
+                ( "G" )
+                ( "Em" )
+                ( "C" )
+                ( "D" )
             ]}
             {"B" Verse [
-                [ "C" ]
-                [ "G" ]
-                [ "C" ]
-                [ "Em" ]
+                ( "C" )
+                ( "G" )
+                ( "C" )
+                ( "Em" )
             ]}
         ]
         form: "A" "A" "B" "A"

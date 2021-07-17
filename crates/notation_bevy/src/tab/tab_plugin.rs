@@ -28,8 +28,8 @@ fn on_config_changed(
     mut query: Query<(&Arc<Tab>, &mut Transform)>,
 ) {
     for _evt in evts.iter() {
-        for (tab, mut transform) in query.iter_mut() {
-            *transform = config.grid.calc_tab_transform(tab);
+        for (_tab, mut transform) in query.iter_mut() {
+            *transform = config.grid.calc_tab_transform();
         }
     }
 }

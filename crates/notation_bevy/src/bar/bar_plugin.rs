@@ -29,8 +29,8 @@ fn on_config_changed(
     beat_query: Query<(Entity, &BarBeatData)>,
 ) {
     for _evt in evts.iter() {
-        for (bar, row, col, mut transform) in query.iter_mut() {
-            *transform = config.grid.calc_bar_transform(bar.bar_units(), row, col);
+        for (_bar, row, col, mut transform) in query.iter_mut() {
+            *transform = config.grid.calc_bar_transform(row, col);
         }
         for (entity, data) in sep_query.iter() {
             BarSeparator::update(&mut commands, &config, entity, data);

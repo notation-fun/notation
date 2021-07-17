@@ -18,7 +18,7 @@ impl TabState {
             end_bar_ordinal: tab.bars.len(),
             should_loop: true,
             play_state: PlayState::default(),
-            play_speed: 0.2,
+            play_speed: 0.4,
         }
     }
     pub fn play(&mut self) -> bool {

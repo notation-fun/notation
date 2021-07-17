@@ -51,7 +51,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.config.grid.unit_size * self.data.beat_units.0,
+            width: self.config.grid.bar_size,
             height: (self.config.grid.bar_beat_top - self.config.grid.bar_beat_bottom),
             origin: shapes::RectangleOrigin::BottomLeft,
         }
@@ -69,7 +69,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
-        let x = self.config.grid.unit_size * self.data.beat_units.0 * self.data.beat as f32;
+        let x = self.config.grid.bar_size * self.data.beat as f32;
         Transform::from_xyz(
             x,
             self.config.grid.bar_beat_bottom,

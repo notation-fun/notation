@@ -1,0 +1,772 @@
+(
+    meta: (
+        key: Natural(E),
+        scale: Minor,
+        signature: (
+            beat_unit: Quarter,
+            beats_per_bar: 3,
+        ),
+        tempo: Bpm(118),
+    ),
+    lines: [
+        (
+            key: "shapes",
+            entries: [
+                Mark("duration: Simple(Whole)"),// [0]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(0),
+                            Some(0),
+                            Some(0),
+                            Some(2),
+                            Some(2),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [1]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(0),
+                            Some(1),
+                            Some(2),
+                            Some(1),
+                            Some(0),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [2]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(2),
+                            Some(4),
+                            Some(2),
+                            Some(4),
+                            Some(2),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [3]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(3),
+                            Some(0),
+                            Some(0),
+                            Some(0),
+                            Some(2),
+                            Some(3),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [4]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(2),
+                            Some(0),
+                            Some(2),
+                            Some(1),
+                            Some(2),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [5]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(0),
+                            Some(0),
+                            Some(1),
+                            Some(2),
+                            Some(2),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [6]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(0),
+                            Some(1),
+                            Some(2),
+                            Some(2),
+                            Some(0),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [7]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(3),
+                            Some(0),
+                            Some(0),
+                            Some(0),
+                            Some(2),
+                            None,
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [8]
+                FrettedSix(Shape(
+                    (
+                        frets: (
+                            Some(2),
+                            Some(3),
+                            Some(2),
+                            Some(0),
+                            Some(0),
+                            Some(0),
+                        ),
+                        fingers: (
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),
+            ],
+        ),// [0]
+        (
+            key: "picks",
+            entries: [
+                Mark("duration: Simple(Eighth)"),// [0]
+                FrettedSix(Pick(
+                    Single(6),
+                    Simple(Eighth),
+                )),// [1]
+                FrettedSix(Pick(
+                    Single(3),
+                    Simple(Eighth),
+                )),// [2]
+                FrettedSix(Pick(
+                    Single(2),
+                    Simple(Eighth),
+                )),// [3]
+                FrettedSix(Pick(
+                    Single(1),
+                    Simple(Eighth),
+                )),// [4]
+                FrettedSix(Pick(
+                    Single(2),
+                    Simple(Eighth),
+                )),// [5]
+                FrettedSix(Pick(
+                    Single(3),
+                    Simple(Eighth),
+                )),// [6]
+                FrettedSix(Pick(
+                    Single(5),
+                    Simple(Eighth),
+                )),// [7]
+                FrettedSix(Pick(
+                    Single(3),
+                    Simple(Eighth),
+                )),// [8]
+                FrettedSix(Pick(
+                    Single(2),
+                    Simple(Eighth),
+                )),// [9]
+                FrettedSix(Pick(
+                    Single(1),
+                    Simple(Eighth),
+                )),// [10]
+                FrettedSix(Pick(
+                    Single(2),
+                    Simple(Eighth),
+                )),// [11]
+                FrettedSix(Pick(
+                    Single(3),
+                    Simple(Eighth),
+                )),// [12]
+                FrettedSix(Pick(
+                    Single(5),
+                    Simple(Eighth),
+                )),// [13]
+                FrettedSix(Pick(
+                    Single(4),
+                    Simple(Eighth),
+                )),// [14]
+                FrettedSix(Pick(
+                    Single(3),
+                    Simple(Eighth),
+                )),// [15]
+                FrettedSix(Pick(
+                    Single(2),
+                    Simple(Eighth),
+                )),// [16]
+                FrettedSix(Pick(
+                    Single(3),
+                    Simple(Eighth),
+                )),// [17]
+                FrettedSix(Pick(
+                    Single(4),
+                    Simple(Eighth),
+                )),
+            ],
+        ),
+    ],
+    tracks: [
+        (
+            key: "guitar",
+            kind: Guitar,
+            entries: [
+                FrettedSix(Fretboard((
+                    total_fret_num: 20,
+                    string_notes: (
+                        (
+                            octave: P4,
+                            pitch: (
+                                name: E,
+                                sign: Natural,
+                            ),
+                            syllable: None,
+                        ),
+                        (
+                            octave: P3,
+                            pitch: (
+                                name: B,
+                                sign: Natural,
+                            ),
+                            syllable: None,
+                        ),
+                        (
+                            octave: P3,
+                            pitch: (
+                                name: G,
+                                sign: Natural,
+                            ),
+                            syllable: None,
+                        ),
+                        (
+                            octave: P3,
+                            pitch: (
+                                name: D,
+                                sign: Natural,
+                            ),
+                            syllable: None,
+                        ),
+                        (
+                            octave: P2,
+                            pitch: (
+                                name: A,
+                                sign: Natural,
+                            ),
+                            syllable: None,
+                        ),
+                        (
+                            octave: P2,
+                            pitch: (
+                                name: E,
+                                sign: Natural,
+                            ),
+                            syllable: None,
+                        ),
+                    ),
+                    capo: 0,
+                ))),
+            ],
+        ),
+    ],
+    layers: [
+        (
+            key: "Em",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 1,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 1,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [0]
+        (
+            key: "Em_1",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 1,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 7,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [1]
+        (
+            key: "Em_2",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 1,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 13,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [2]
+        (
+            key: "Adim",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 2,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 13,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [3]
+        (
+            key: "B7",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 3,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 13,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [4]
+        (
+            key: "B7_1",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 4,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 13,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [5]
+        (
+            key: "G",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 5,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 1,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [6]
+        (
+            key: "E",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 6,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 1,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [7]
+        (
+            key: "E_1",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 6,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 13,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [8]
+        (
+            key: "Am",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 7,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 7,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [9]
+        (
+            key: "G/B",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 8,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 7,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),// [10]
+        (
+            key: "D",
+            slices: [
+                (
+                    line: "shapes",
+                    index: 9,
+                    count: 1,
+                ),// [0]
+                (
+                    line: "picks",
+                    index: 13,
+                    count: 6,
+                ),
+            ],
+            track: Some("guitar"),
+            rounds: None,
+        ),
+    ],
+    sections: [
+        (
+            key: "A1",
+            kind: Verse,
+            bars: [
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        "Em_1",
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        "Adim",
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        "B7",
+                    ],
+                ),// [3]
+                (
+                    layers: [
+                        "Adim",
+                    ],
+                ),// [4]
+                (
+                    layers: [
+                        "Adim",
+                    ],
+                ),// [5]
+                (
+                    layers: [
+                        "B7",
+                    ],
+                ),// [6]
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),
+            ],
+        ),// [0]
+        (
+            key: "A2",
+            kind: Verse,
+            bars: [
+                (
+                    layers: [
+                        "E",
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        "E_1",
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        "Am",
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        "G",
+                    ],
+                ),// [3]
+                (
+                    layers: [
+                        "G/B",
+                    ],
+                ),// [4]
+                (
+                    layers: [
+                        "Am",
+                    ],
+                ),// [5]
+                (
+                    layers: [
+                        "B7_1",
+                    ],
+                ),// [6]
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),
+            ],
+        ),// [1]
+        (
+            key: "B1",
+            kind: Chorus,
+            bars: [
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        "Am",
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        "D",
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        "G",
+                    ],
+                ),// [3]
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),// [4]
+                (
+                    layers: [
+                        "Am",
+                    ],
+                ),// [5]
+                (
+                    layers: [
+                        "Adim",
+                    ],
+                ),// [6]
+                (
+                    layers: [
+                        "B7_1",
+                    ],
+                ),
+            ],
+        ),// [2]
+        (
+            key: "B2",
+            kind: Chorus,
+            bars: [
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        "Am",
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        "D",
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        "G",
+                    ],
+                ),// [3]
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),// [4]
+                (
+                    layers: [
+                        "Am",
+                    ],
+                ),// [5]
+                (
+                    layers: [
+                        "B7_1",
+                    ],
+                ),// [6]
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),
+            ],
+        ),// [3]
+        (
+            key: "O",
+            kind: Outro,
+            bars: [
+                (
+                    layers: [
+                        "Em",
+                    ],
+                ),
+            ],
+        ),
+    ],
+    form: (
+        sections: [
+            "A1",// [0]
+            "A1",// [1]
+            "A2",// [2]
+            "A1",// [3]
+            "A2",// [4]
+            "B1",// [5]
+            "B2",// [6]
+            "A1",// [7]
+            "A2",// [8]
+            "A1",// [9]
+            "A2",// [10]
+            "B1",// [11]
+            "B2",// [12]
+            "A2",// [13]
+            "A1",// [14]
+            "A1",// [15]
+            "O",
+        ],
+    ),
+)

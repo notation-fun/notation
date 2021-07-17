@@ -18,7 +18,7 @@ pub fn calc_transform(
     position: &Units,
 ) -> Transform {
     let semitones = Semitones::from(*syllable) + Semitones::from(*octave);
-    let x = config.grid.unit_size * position.0;
+    let x = config.grid.bar_size * position.0;
     let y = config.grid.semitone_size * semitones.0 as f32;
     Transform::from_xyz(x, y, 0.0)
 }
@@ -30,7 +30,7 @@ fn create_note_block(
 ) {
     for (entity, syllable, octave, duration, units) in query.iter() {
         let shape = shapes::Rectangle {
-            width: config.grid.unit_size * Units::from(*duration).0,
+            width: config.grid.bar_size * Units::from(*duration).0,
             height: config.grid.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,
         };

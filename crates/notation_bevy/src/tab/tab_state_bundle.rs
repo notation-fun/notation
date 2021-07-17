@@ -20,7 +20,7 @@ impl TabStateBundle {
     pub fn new(config: &BevyConfig, tab: Arc<Tab>) -> Self {
         let name = format!("State: {}", tab).as_str().into();
         let state = TabState::new(&tab);
-        let transform = config.grid.calc_tab_transform(&tab);
+        let transform = config.grid.calc_tab_transform();
         Self {
             tab,
             name,

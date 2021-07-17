@@ -28,10 +28,11 @@ fn create_pick_notes<const S: usize>(
         if let Some((bar, fretboard, shape)) =
             FrettedPlugin::get_fretted_shape(&layer_query, &shape_query, parent.0, pos)
         {
+            let bar_units = bar.bar_units();
             for string in pick.get_strings() {
                 if let Some(note) = fretboard.shape_note(&shape, string) {
                     let syllable = bar.calc_syllable(&note.pitch);
-                    let data = PickNoteData::new(&bar, *duration, *pos, string, syllable);
+                    let data = PickNoteData::new(bar_units, &bar, *duration, *pos, string, syllable);
                     PickNote::create(&mut commands, entity, &config, data);
                 }
             }

@@ -19,7 +19,7 @@ pub struct BarBundle {
 impl BarBundle {
     pub fn new(bar: Arc<TabBar>, config: &GridConfig) -> Self {
         let (row, col) = config.calc_bar_row_col(&bar);
-        let transform = config.calc_bar_transform(bar.bar_units(), &row, &col);
+        let transform = config.calc_bar_transform(&row, &col);
         let name = Name::from(bar.to_string().as_str());
         let pos = bar.tab_pos();
         Self {

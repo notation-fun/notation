@@ -18,7 +18,7 @@ pub struct GridConfig {
     pub window_width: f32,
     pub window_height: f32,
     pub margin: f32,
-    pub unit_size: f32,
+    pub bar_size: f32,
     pub semitone_size: f32,
     pub note_height: f32,
     pub note_outline: f32,
@@ -41,7 +41,7 @@ impl Default for GridConfig {
             window_width: 1280.0,
             window_height: 720.0,
             margin: 20.0,
-            unit_size: 240.0,
+            bar_size: 240.0,
             semitone_size: 10.0,
             note_height: 10.0,
             note_outline: 1.0,
@@ -62,29 +62,30 @@ impl Default for GridConfig {
 
 impl GridConfig {
     pub fn resize(&mut self, width: f32, height: f32) {
-        let unit_size = (width - self.margin * 2.0) / self.bars_in_row as f32;
+        let bar_size = (width - self.margin * 2.0) / self.bars_in_row as f32;
         println!(
             "GridConfig.resize({}, {} -> {}, {}), unit_size: {} -> {}",
-            self.window_width, self.window_height, width, height, self.unit_size, unit_size,
+            self.window_width, self.window_height, width, height, self.bar_size, bar_size,
         );
         self.window_width = width;
         self.window_height = height;
-        self.unit_size = unit_size;
+        self.bar_size = bar_size;
     }
-    pub fn calc_tab_transform(&self, tab: &Tab) -> Transform {
-        let signature = tab.meta.signature;
-        let x = (self.unit_size * Units::from(signature).0 * self.bars_in_row as f32) * -0.5;
+    pub fn calc_tab_transform(&self) -> Transform {
+        let x = (self.bar_size * self.bars_in_row as f32) * -0.5;
         let y = self.window_height / 2.0 - self.margin - self.header_height;
         Transform::from_xyz(x, y, 0.0)
     }
-    pub fn calc_bar_row_col(&self, bar: &TabBar) -> (GridRow, GridCol) {
-        let index = bar.bar_ordinal - 1;
+    pub fn calc_row_col(&self, index: usize) -> (GridRow, GridCol) {
         let row = GridRow(index / self.bars_in_row as usize);
         let col = GridCol(index % self.bars_in_row as usize);
         (row, col)
     }
-    pub fn calc_bar_transform(&self, bar_units: Units, row: &GridRow, col: &GridCol) -> Transform {
-        let x = self.unit_size * bar_units.0 * col.0 as f32;
+    pub fn calc_bar_row_col(&self, bar: &TabBar) -> (GridRow, GridCol) {
+        self.calc_row_col(bar.bar_ordinal - 1)
+    }
+    pub fn calc_bar_transform(&self, row: &GridRow, col: &GridCol) -> Transform {
+        let x = self.bar_size * col.0 as f32;
         let y = -1.0 * self.bar_height * row.0 as f32;
         Transform::from_xyz(x, y, 0.0)
     }
@@ -94,17 +95,15 @@ impl GridConfig {
         if index >= tab.bars.len() {
             index = tab.bars.len() - 1;
         }
-        let row = GridRow(index / self.bars_in_row as usize);
-        let col = GridCol(index % self.bars_in_row as usize);
-        (row, col)
+        self.calc_row_col(index)
     }
     pub fn calc_pos_transform(&self, tab: &Tab, pos: TabPosition) -> Transform {
-        let bar_units = tab.bar_units();
         let (row, col) = self.calc_pos_row_col(tab, pos);
-        let bar_x = self.unit_size * bar_units.0 * col.0 as f32;
+        let bar_x = self.bar_size * col.0 as f32;
         let bars = row.0 * self.bars_in_row as usize + col.0;
-        let offset_x = pos.in_tab_pos.0 - bar_units.0 * bars as f32;
-        let x = bar_x + offset_x * self.unit_size;
+        let bar_units = tab.bar_units();
+        let offset_units = pos.in_tab_pos.0 - bar_units.0 * bars as f32;
+        let x = bar_x + offset_units * self.bar_size / bar_units.0;
         let y = -1.0 * self.bar_height * row.0 as f32;
         Transform::from_xyz(x, y, 0.0)
     }

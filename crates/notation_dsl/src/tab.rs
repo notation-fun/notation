@@ -7,13 +7,13 @@ use syn::{Expr, Token};
 use crate::form::FormDsl;
 
 use crate::layer::LayerDsl;
-use crate::line::LineDsl;
+use crate::line::{LineDsl, LineDslOrExpr};
 use crate::section::SectionDsl;
 use crate::track::TrackDsl;
 
 pub struct TabDsl {
     meta: Expr,
-    lines: Vec<LineDsl>,
+    lines: Vec<LineDslOrExpr>,
     tracks: Vec<TrackDsl>,
     layers: Vec<LayerDsl>,
     sections: Vec<SectionDsl>,
@@ -38,7 +38,7 @@ impl Parse for TabDsl {
 
         input.parse::<kw::lines>()?;
         input.parse::<Token![:]>()?;
-        let lines = LineDsl::parse_vec(input)?;
+        let lines = LineDslOrExpr::parse_vec(input)?;
 
         input.parse::<kw::tracks>()?;
         input.parse::<Token![:]>()?;
@@ -77,7 +77,7 @@ impl ToTokens for TabDsl {
             sections,
             form,
         } = self;
-        let lines_quote = LineDsl::quote_vec(lines);
+        let lines_quote = LineDslOrExpr::quote_vec(lines);
         let tracks_quote = TrackDsl::quote_vec(tracks);
         let layers_quote = LayerDsl::quote_vec(layers);
         let sections_quote = SectionDsl::quote_vec(sections);

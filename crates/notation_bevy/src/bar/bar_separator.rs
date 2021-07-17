@@ -56,7 +56,7 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
         let x = if self.data.is_begin {
             0.0
         } else {
-            self.config.grid.unit_size * self.data.bar_units.0
+            self.config.grid.bar_size
         };
         Transform::from_xyz(x, 0.0, self.config.theme.core.bar_separator_z)
     }

@@ -10,6 +10,7 @@ use notation_model::prelude::TabBar;
 
 #[derive(Clone, Debug)]
 pub struct PickNoteData {
+    pub bar_units: Units,
     pub bar_ordinal: usize,
     pub duration: Duration,
     pub position: BarPosition,
@@ -19,6 +20,7 @@ pub struct PickNoteData {
 
 impl PickNoteData {
     pub fn new(
+        bar_units: Units,
         tab_bar: &Arc<TabBar>,
         duration: Duration,
         position: BarPosition,
@@ -27,6 +29,7 @@ impl PickNoteData {
     ) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         PickNoteData {
+            bar_units,
             bar_ordinal,
             duration,
             position,
@@ -49,7 +52,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.config.grid.unit_size * Units::from(self.data.duration).0,
+            width: self.config.grid.bar_size / self.data.bar_units.0 * Units::from(self.data.duration).0,
             height: self.config.grid.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,
         }
@@ -70,7 +73,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
-        let x = self.config.grid.unit_size * self.data.position.in_bar_pos.0;
+        let x = self.config.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0;
         let y = -1.0 * self.config.theme.fretted.string_space * self.data.string as f32
             - self.config.grid.note_height / 2.0;
         Transform::from_xyz(x, y, self.config.theme.fretted.pick_z)
