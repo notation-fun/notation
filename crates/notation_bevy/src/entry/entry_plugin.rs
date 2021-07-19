@@ -50,6 +50,7 @@ impl EntryPlugin {
                 FrettedPlugin::insert_fretted_entry_extra(commands, entry);
             }
             ProtoEntry::Mark(_) => {}
+            ProtoEntry::Extra(_, _) => {}
         }
     }
 }

@@ -16,7 +16,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::ProtoEntry;
     #[doc(hidden)]
-    pub use crate::line::{Line, Slice};
+    pub use crate::line::{Line, Slice, SliceBegin, SliceEnd};
     #[doc(hidden)]
     pub use crate::position::{BarPosition, Position, TabPosition};
     #[doc(hidden)]

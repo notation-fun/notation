@@ -56,12 +56,10 @@ fn create_layers(
             commands.entity(bar_entity).push_children(&[layer_entity]);
             for slice in &layer.slices {
                 let mut pos = BarPosition::new(bar.bar_ordinal, Units(0.0));
-                for index in slice.index..slice.index + slice.count {
-                    if let Some(entry) = slice.line.entries.get(index) {
-                        let duration = entry.as_ref().duration();
-                        add_entry_evts.send(AddEntryEvent(layer_entity, entry.clone(), pos));
-                        pos.in_bar_pos = pos.in_bar_pos + Units::from(duration);
-                    }
+                for entry in slice.entries.iter() {
+                    let duration = entry.as_ref().duration();
+                    add_entry_evts.send(AddEntryEvent(layer_entity, entry.clone(), pos));
+                    pos.in_bar_pos = pos.in_bar_pos + Units::from(duration);
                 }
             }
         }

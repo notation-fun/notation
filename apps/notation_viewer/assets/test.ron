@@ -12,7 +12,10 @@
         (
             key: "shapes",
             entries: [
-                Mark("duration: Simple(Whole)"),// [0]
+                Extra(
+                    "dsl::context::duration",
+                    "_1",
+                ),// [0]
                 FrettedSix(Shape(
                     (
                         frets: (
@@ -102,7 +105,10 @@
         (
             key: "picks",
             entries: [
-                Mark("duration: Triplet(Eighth)"),// [0]
+                Extra(
+                    "dsl::context::duration",
+                    "T_1_8",
+                ),// [0]
                 FrettedSix(Pick(
                     Single(6),
                     Triplet(Eighth),
@@ -318,13 +324,13 @@
             slices: [
                 (
                     line: "shapes",
-                    index: 1,
-                    count: 1,
+                    begin: Index(1),
+                    end: Count(1),
                 ),// [0]
                 (
                     line: "picks",
-                    index: 1,
-                    count: 12,
+                    begin: Index(1),
+                    end: Count(12),
                 ),
             ],
             track: Some("guitar"),
@@ -335,13 +341,13 @@
             slices: [
                 (
                     line: "shapes",
-                    index: 2,
-                    count: 1,
+                    begin: Index(2),
+                    end: Count(1),
                 ),// [0]
                 (
                     line: "picks",
-                    index: 1,
-                    count: 12,
+                    begin: Index(1),
+                    end: Count(12),
                 ),
             ],
             track: Some("guitar"),
@@ -352,13 +358,13 @@
             slices: [
                 (
                     line: "shapes",
-                    index: 3,
-                    count: 1,
+                    begin: Index(3),
+                    end: Count(1),
                 ),// [0]
                 (
                     line: "picks",
-                    index: 13,
-                    count: 12,
+                    begin: Index(13),
+                    end: Count(12),
                 ),
             ],
             track: Some("guitar"),
@@ -369,13 +375,13 @@
             slices: [
                 (
                     line: "shapes",
-                    index: 4,
-                    count: 1,
+                    begin: Index(4),
+                    end: Count(1),
                 ),// [0]
                 (
                     line: "picks",
-                    index: 25,
-                    count: 12,
+                    begin: Index(25),
+                    end: Count(12),
                 ),
             ],
             track: Some("guitar"),

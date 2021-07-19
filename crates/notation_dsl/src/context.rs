@@ -4,7 +4,6 @@ use fehler::{throw, throws};
 use notation_proto::prelude::{Duration, GUITAR_STRING_NUM};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use ron::ser::{to_string_pretty, PrettyConfig};
 use syn::parse::{Error, Parse, ParseStream};
 use syn::{Ident, LitInt, Token};
 
@@ -51,10 +50,9 @@ impl Context {
 impl Context {
     pub fn duration_quote() -> TokenStream {
         let duration = CONTEXT.read().unwrap().duration;
-        let pretty = PrettyConfig::new();
-        let s = to_string_pretty(&duration, pretty).expect("Serialization failed");
+        let ident = format!("{}", duration);
         quote! {
-            ron::de::from_str::<Duration>(#s).unwrap()
+            Duration::from_ident(#ident)
         }
     }
 }
@@ -87,19 +85,16 @@ impl ToTokens for ContextDsl {
         tokens.extend(match self {
             Self::Duration(x) => {
                 CONTEXT.write().unwrap().duration = Duration::from_ident(x.to_string().as_str());
-                let mark = format!("duration: {:?}", CONTEXT.read().unwrap().duration);
+                let comment = format!("{}", CONTEXT.read().unwrap().duration);
                 quote! {
-                    ProtoEntry::from(#mark)
+                    ProtoEntry::from(("dsl::context::duration", #comment))
                 }
             }
             Self::StringNum(x) => {
                 CONTEXT.write().unwrap().fretted.string_num = *x;
-                let mark = format!(
-                    "string_num: {:?}",
-                    CONTEXT.read().unwrap().fretted.string_num
-                );
+                let comment = format!("{}", CONTEXT.read().unwrap().fretted.string_num);
                 quote! {
-                    ProtoEntry::from(#mark)
+                    ProtoEntry::from(("dsl::context::string_num", #comment))
                 }
             }
         });

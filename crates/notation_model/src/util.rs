@@ -31,9 +31,7 @@ impl Line {
 }
 impl Slice {
     pub fn get_entry<F: Fn(&ProtoEntry) -> bool>(&self, predicate: &F) -> Option<Arc<ProtoEntry>> {
-        get_entry_(&self.line.entries, &|index, entry| {
-            index >= self.index && index < self.index + self.count && predicate(entry)
-        })
+        get_entry(&self.entries, predicate)
     }
 }
 impl Track {

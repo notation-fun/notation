@@ -10,6 +10,7 @@ pub enum ProtoEntry {
     Core(CoreEntry),
     FrettedSix(FrettedEntry<6>),
     FrettedFour(FrettedEntry<4>),
+    Extra(String, String),
 }
 
 impl ProtoEntry {
@@ -19,11 +20,26 @@ impl ProtoEntry {
             ProtoEntry::Core(entry) => entry.duration(),
             ProtoEntry::FrettedSix(entry) => entry.duration(),
             ProtoEntry::FrettedFour(entry) => entry.duration(),
+            ProtoEntry::Extra(_, _) => Duration::Zero,
         }
     }
     /// Returns `true` if the proto_entry is [`Mark`].
     pub fn is_mark(&self) -> bool {
         matches!(self, Self::Mark(..))
+    }
+    pub fn is_mark_string(&self, val: &String) -> bool {
+        if let Self::Mark(v) = self {
+            v == val
+        } else {
+            false
+        }
+    }
+    pub fn is_mark_str(&self, val: &str) -> bool {
+        if let Self::Mark(v) = self {
+            v.as_str() == val
+        } else {
+            false
+        }
     }
     /// Returns `true` if the proto_entry is [`Core`].
     pub fn is_core(&self) -> bool {
@@ -94,6 +110,7 @@ impl ProtoEntry {
             ProtoEntry::Core(_) => false,
             ProtoEntry::FrettedSix(_) => S == 6,
             ProtoEntry::FrettedFour(_) => S == 4,
+            ProtoEntry::Extra(_, _) => false,
         }
     }
     pub fn cast_size_fretted<const S: usize>(&self) -> Option<FrettedEntry<S>> {
@@ -102,6 +119,7 @@ impl ProtoEntry {
             ProtoEntry::Core(_) => None,
             ProtoEntry::FrettedSix(x) => Some(x.clone_::<S>()),
             ProtoEntry::FrettedFour(x) => Some(x.clone_::<S>()),
+            ProtoEntry::Extra(_, _) => None,
         }
     }
     pub fn cast_size_fretted_shape<const S: usize>(&self) -> Option<(HandShape<S>, Duration)> {
@@ -126,6 +144,7 @@ impl ProtoEntry {
             ProtoEntry::Core(_) => false,
             ProtoEntry::FrettedSix(_) => true,
             ProtoEntry::FrettedFour(_) => true,
+            ProtoEntry::Extra(_, _) => false,
         }
     }
     pub fn is_fretted_pick(&self) -> bool {
@@ -134,6 +153,7 @@ impl ProtoEntry {
             ProtoEntry::Core(_) => false,
             ProtoEntry::FrettedSix(x) => x.is_pick(),
             ProtoEntry::FrettedFour(x) => x.is_pick(),
+            ProtoEntry::Extra(_, _) => false,
         }
     }
     pub fn is_fretted_strum(&self) -> bool {
@@ -142,6 +162,7 @@ impl ProtoEntry {
             ProtoEntry::Core(_) => false,
             ProtoEntry::FrettedSix(x) => x.is_strum(),
             ProtoEntry::FrettedFour(x) => x.is_strum(),
+            ProtoEntry::Extra(_, _) => false,
         }
     }
     pub fn is_fretted_shape(&self) -> bool {
@@ -150,6 +171,7 @@ impl ProtoEntry {
             ProtoEntry::Core(_) => false,
             ProtoEntry::FrettedSix(x) => x.is_shape(),
             ProtoEntry::FrettedFour(x) => x.is_shape(),
+            ProtoEntry::Extra(_, _) => false,
         }
     }
     pub fn is_fretted_fretboard(&self) -> bool {
@@ -158,6 +180,7 @@ impl ProtoEntry {
             ProtoEntry::Core(_) => false,
             ProtoEntry::FrettedSix(x) => x.is_fretboard(),
             ProtoEntry::FrettedFour(x) => x.is_fretboard(),
+            ProtoEntry::Extra(_, _) => false,
         }
     }
 }
@@ -177,6 +200,30 @@ impl From<String> for ProtoEntry {
 impl From<&str> for ProtoEntry {
     fn from(v: &str) -> Self {
         ProtoEntry::Mark(String::from(v))
+    }
+}
+
+impl From<(String, String)> for ProtoEntry {
+    fn from(v: (String, String)) -> Self {
+        ProtoEntry::Extra(v.0, v.1)
+    }
+}
+
+impl From<(&str, String)> for ProtoEntry {
+    fn from(v: (&str, String)) -> Self {
+        ProtoEntry::Extra(String::from(v.0), v.1)
+    }
+}
+
+impl From<(String, &str)> for ProtoEntry {
+    fn from(v: (String, &str)) -> Self {
+        ProtoEntry::Extra(v.0, String::from(v.1))
+    }
+}
+
+impl From<(&str, &str)> for ProtoEntry {
+    fn from(v: (&str, &str)) -> Self {
+        ProtoEntry::Extra(String::from(v.0), String::from(v.1))
     }
 }
 

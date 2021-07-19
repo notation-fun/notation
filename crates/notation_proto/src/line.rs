@@ -9,11 +9,24 @@ pub struct Line {
     pub key: String,
     pub entries: Vec<ProtoEntry>,
 }
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub enum SliceBegin {
+    Mark(String),
+    Index(usize),
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub enum SliceEnd {
+    Mark(String),
+    Count(usize),
+}
+
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Slice {
     pub line: String,
-    pub index: usize,
-    pub count: usize,
+    pub begin: SliceBegin,
+    pub end: SliceEnd,
 }
 impl Line {
     pub fn new(key: String, entries: Vec<ProtoEntry>) -> Self {
@@ -21,8 +34,8 @@ impl Line {
     }
 }
 impl Slice {
-    pub fn new(line: String, index: usize, count: usize) -> Self {
-        Self { line, index, count }
+    pub fn new(line: String, begin: SliceBegin, end: SliceEnd) -> Self {
+        Self { line, begin, end }
     }
 }
 impl Display for Line {
@@ -30,9 +43,19 @@ impl Display for Line {
         write!(f, "<Line>({} E:{})", self.key, self.entries.len())
     }
 }
+impl Display for SliceBegin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+impl Display for SliceEnd {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 impl Display for Slice {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<Slice>({} {}-{})", self.line, self.index, self.count)
+        write!(f, "<Slice>({} {}-{})", self.line, self.begin, self.end)
     }
 }
 impl From<(String, Vec<ProtoEntry>)> for Line {

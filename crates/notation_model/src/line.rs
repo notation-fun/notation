@@ -1,4 +1,5 @@
 use fehler::{throw, throws};
+use notation_proto::prelude::{SliceBegin, SliceEnd};
 use std::convert::TryFrom;
 use std::fmt::Display;
 use std::iter::Iterator;
@@ -14,24 +15,75 @@ pub struct Line {
 #[derive(Debug)]
 pub struct Slice {
     pub line: Arc<Line>,
-    pub index: usize,
-    pub count: usize,
+    pub begin: SliceBegin,
+    pub end: SliceEnd,
+    pub entries: Vec<Arc<ProtoEntry>>,
 }
 impl Line {
     pub fn new(key: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
         Self { key, entries }
     }
+    pub fn index_of_mark(&self, begin: usize, mark: &String) -> Option<usize> {
+        for i in begin..(self.entries.len() - begin) {
+            let entry = self.entries.get(i);
+            if entry.is_some() && entry.unwrap().is_mark_string(mark) {
+                return Some(i);
+            }
+        }
+        None
+    }
+    pub fn get_entries(&self, begin: &SliceBegin, end: &SliceEnd) -> Vec<Arc<ProtoEntry>> {
+        let (index, count) = match (begin, end) {
+            (SliceBegin::Mark(x), SliceEnd::Mark(y)) => {
+                match self.index_of_mark(0, x) {
+                    Some(index) => {
+                        let index = index + 1;
+                        match self.index_of_mark(index, y) {
+                            Some(end) => (index, end - index),
+                            None => (index, 0),
+                        }
+                    }
+                    None => (0, 0),
+                }
+            }
+            (SliceBegin::Mark(x), SliceEnd::Count(y)) => {
+                match self.index_of_mark(0, x) {
+                    Some(index) => (index + 1, *y),
+                    None => (0, 0),
+                }
+            }
+            (SliceBegin::Index(x), SliceEnd::Mark(y)) => {
+                match self.index_of_mark(*x, y) {
+                    Some(end) => (*x, end - 1 - *x),
+                    None => (*x, 0),
+                }
+            }
+            (SliceBegin::Index(x), SliceEnd::Count(y)) => {
+                (*x, *y)
+            }
+        };
+        let mut entries = vec![];
+        for i in index..(index + count) {
+            let entry = self.entries.get(i);
+            if entry.is_some() {
+                entries.push(entry.unwrap().clone());
+            }
+        }
+        entries
+    }
 }
 impl Slice {
-    pub fn new(line: &Arc<Line>, index: usize, count: usize) -> Self {
+    pub fn new(line: &Arc<Line>, begin: SliceBegin, end: SliceEnd) -> Self {
+        let entries = line.get_entries(&begin, &end);
         Self {
             line: line.clone(),
-            index,
-            count,
+            begin,
+            end,
+            entries,
         }
     }
-    pub fn new_arc(line: &Arc<Line>, index: usize, count: usize) -> Arc<Self> {
-        Arc::new(Self::new(line, index, count))
+    pub fn new_arc(line: &Arc<Line>, begin: SliceBegin, end: SliceEnd) -> Arc<Self> {
+        Arc::new(Self::new(line, begin, end))
     }
 }
 impl Display for Line {
@@ -52,8 +104,8 @@ impl Display for Slice {
             "<{}>({} {}-{})",
             stringify!($silce_type),
             self.line.key,
-            self.index,
-            self.count
+            self.begin,
+            self.end,
         )
     }
 }
@@ -69,7 +121,7 @@ impl TryFrom<(notation_proto::prelude::Slice, &Vec<Arc<Line>>)> for Slice {
     #[throws(Self::Error)]
     fn try_from(v: (notation_proto::prelude::Slice, &Vec<Arc<Line>>)) -> Self {
         if let Some(line) = v.1.iter().find(|x| x.key == v.0.line) {
-            Self::new(line, v.0.index, v.0.count)
+            Self::new(line, v.0.begin, v.0.end)
         } else {
             throw!(ParseError::LineNotFound(v.0.line));
         }
