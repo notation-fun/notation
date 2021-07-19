@@ -13,6 +13,7 @@ impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(on_config_changed.system());
         app.add_system(on_add_tab_state.system());
+        app.add_system(on_stop.system());
         app.add_system(on_time.system());
     }
 }
@@ -40,6 +41,36 @@ fn on_add_tab_state(
     }
 }
 
+fn on_stop(
+    _commands: Commands,
+    config: Res<BevyConfig>,
+    mut query: Query<(&Arc<Tab>, &TabState, &mut Transform), Changed<TabState>>,
+    mut entry_query: Query<(
+        Entity,
+        &Arc<ProtoEntry>,
+        &BarPosition,
+        &mut EntryState,
+    )>,
+) {
+    for (tab, state, mut transform) in query.iter_mut() {
+        if !state.play_state.is_playing() {
+            *transform = config.grid.calc_pos_transform(tab, state.pos.tab);
+            for (_entity, _entry, position, mut entry_state) in entry_query.iter_mut() {
+                if state.play_state.is_stopped() {
+                    if state.is_in_range(position) {
+                        *entry_state = EntryState::Idle;
+                    }
+                } else if state.play_state.is_paused() {
+                    if position.bar_ordinal == state.pos.bar.bar_ordinal {
+                        *entry_state = EntryState::Idle;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 fn on_time(
     _commands: Commands,
     time: Res<Time>,
@@ -58,7 +89,7 @@ fn on_time(
         if changed {
             *transform = config.grid.calc_pos_transform(tab, state.pos.tab);
             for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
-                if state.is_in_range(*position) {
+                if state.is_in_range(position) {
                     if entry_state.is_idle() && state.pos.is_passed(position) {
                         *entry_state = EntryState::Playing;
                     } else if entry_state.is_playing()

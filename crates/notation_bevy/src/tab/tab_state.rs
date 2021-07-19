@@ -34,6 +34,7 @@ impl TabState {
             false
         } else {
             self.play_state = PlayState::Paused;
+            self.pos.set_in_bar(self.pos.bar.bar_ordinal, Units(0.0));
             true
         }
     }
@@ -42,6 +43,7 @@ impl TabState {
             false
         } else {
             self.play_state = PlayState::Stopped;
+            self.pos.set_in_bar(self.begin_bar_ordinal, Units(0.0));
             true
         }
     }
@@ -65,7 +67,7 @@ impl TabState {
             (false, false)
         }
     }
-    pub fn is_in_range(&self, pos: BarPosition) -> bool {
+    pub fn is_in_range(&self, pos: &BarPosition) -> bool {
         self.end_bar_ordinal >= self.begin_bar_ordinal
             && pos.bar_ordinal >= self.begin_bar_ordinal
             && pos.bar_ordinal <= self.end_bar_ordinal

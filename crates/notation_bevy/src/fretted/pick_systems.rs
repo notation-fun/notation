@@ -56,17 +56,15 @@ fn play_pick_tone<const S: usize>(
     mut stop_note_evts: EventWriter<StopToneEvent>,
 ) {
     for (parent, pick, pos, state) in query.iter() {
-        if !state.is_idle() {
-            if let Some((_bar, fretboard, shape)) =
-                FrettedPlugin::get_fretted_shape(&layer_query, &shape_query, parent.0, pos)
-            {
-                let tone = fretboard.pick_tone(&shape, pick);
-                if !tone.is_none() {
-                    if state.is_playing() {
-                        play_note_evts.send(PlayToneEvent(tone));
-                    } else if state.is_played() {
-                        stop_note_evts.send(StopToneEvent(tone));
-                    }
+        if let Some((_bar, fretboard, shape)) =
+            FrettedPlugin::get_fretted_shape(&layer_query, &shape_query, parent.0, pos)
+        {
+            let tone = fretboard.pick_tone(&shape, pick);
+            if !tone.is_none() {
+                if state.is_playing() {
+                    play_note_evts.send(PlayToneEvent(tone));
+                } else if state.is_played() || state.is_idle() {
+                    stop_note_evts.send(StopToneEvent(tone));
                 }
             }
         }

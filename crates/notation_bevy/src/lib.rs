@@ -93,6 +93,8 @@ pub mod prelude {
     pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
+    #[doc(hidden)]
+    pub use crate::ui::NotationUiPlugin;
 
     use bevy::app::{PluginGroup, PluginGroupBuilder};
     use bevy::prelude::*;
@@ -135,6 +137,11 @@ pub mod prelude {
 
         #[cfg(feature = "inspector")]
         app.add_plugins(crate::inspector::NotationInspectorPlugins);
+
+        #[cfg(not(feature = "inspector"))]
+        app.add_plugin(bevy_egui::EguiPlugin);
+
+        app.add_plugin(NotationUiPlugin);
 
         #[cfg(feature = "dev")]
         app.add_plugins(crate::dev::NotationDevPlugins);
