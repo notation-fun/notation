@@ -10,7 +10,7 @@ use notation_model::prelude::{Signature, TabBar, Units};
 #[derive(Clone, Debug)]
 pub struct BarBeatData {
     pub signature: Signature,
-    pub beat_units: Units,
+    pub bar_beats: u8,
     pub bar_ordinal: usize,
     beat: u8,
 }
@@ -18,10 +18,10 @@ pub struct BarBeatData {
 impl BarBeatData {
     pub fn new(tab_bar: &Arc<TabBar>, signature: &Signature, beat: u8) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
-        let beat_units = Units::from(signature.beat_unit);
+        let bar_beats = tab_bar.bar_beats();
         BarBeatData {
             signature: *signature,
-            beat_units,
+            bar_beats,
             bar_ordinal,
             beat,
         }
@@ -51,7 +51,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.config.grid.bar_size,
+            width: self.config.grid.bar_size / self.data.bar_beats as f32,
             height: (self.config.grid.bar_beat_top - self.config.grid.bar_beat_bottom),
             origin: shapes::RectangleOrigin::BottomLeft,
         }
@@ -69,7 +69,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
-        let x = self.config.grid.bar_size * self.data.beat as f32;
+        let x = self.config.grid.bar_size / self.data.bar_beats as f32 * self.data.beat as f32;
         Transform::from_xyz(
             x,
             self.config.grid.bar_beat_bottom,

@@ -16,7 +16,7 @@ default = [
 ]
 
 dev = [
-    "bevy/dynamic",
+    #"bevy/dynamic",
 ]
 
 inspector = [

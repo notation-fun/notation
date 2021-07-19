@@ -19,6 +19,6 @@ impl PlayState {
 }
 impl Default for PlayState {
     fn default() -> Self {
-        Self::Playing
+        Self::Stopped
     }
 }

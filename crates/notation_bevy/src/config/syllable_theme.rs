@@ -17,16 +17,16 @@ impl Default for SyllableTheme {
         Self {
             colors: [
                 Color::hex("E94F4F").unwrap(), // Do
-                Color::hex("333333").unwrap(), // Di, Ra
+                Color::hex("AAAAAA").unwrap(), // Di, Ra
                 Color::hex("FFEB34").unwrap(), // Re
-                Color::hex("333333").unwrap(), // Ri, Me
+                Color::hex("AAAAAA").unwrap(), // Ri, Me
                 Color::hex("59D7FF").unwrap(), // Mi
                 Color::hex("C31F6E").unwrap(), // Fa
-                Color::hex("333333").unwrap(), // Fi, Se
+                Color::hex("AAAAAA").unwrap(), // Fi, Se
                 Color::hex("FF8F28").unwrap(), // So
-                Color::hex("333333").unwrap(), // Si, Le
+                Color::hex("AAAAAA").unwrap(), // Si, Le
                 Color::hex("A3DC5B").unwrap(), // La
-                Color::hex("333333").unwrap(), // Li, Te
+                Color::hex("AAAAAA").unwrap(), // Li, Te
                 Color::hex("7C87E8").unwrap(), // Ti
             ],
         }

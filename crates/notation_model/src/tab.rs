@@ -60,6 +60,9 @@ impl Tab {
     pub fn bar_units(&self) -> Units {
         Units::from(self.meta.signature)
     }
+    pub fn bar_beats(&self) -> u8 {
+        self.meta.signature.beats_per_bar
+    }
     pub fn signature(&self) -> Signature {
         self.meta.signature
     }
@@ -81,6 +84,15 @@ impl TabBar {
             None => {
                 println!("<{}>.bar_units() tab missing: {}", stringify!(TabBar), self);
                 Units::from(Unit::Whole)
+            }
+        }
+    }
+    pub fn bar_beats(&self) -> u8 {
+        match self.tab.upgrade() {
+            Some(tab) => tab.bar_beats(),
+            None => {
+                println!("<{}>.bar_beats() tab missing: {}", stringify!(TabBar), self);
+                4 as u8
             }
         }
     }

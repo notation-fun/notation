@@ -80,6 +80,14 @@ impl<const S: usize> Fretboard<S> {
             Some(fret) => Some((Semitones::from(note.unwrap()) + Semitones(fret as i8)).into()),
         }
     }
+    pub fn shape_fret_note(&self, shape: &HandShape<S>, string: u8) -> Option<(u8, Note)> {
+        let note = self.open_note(string)?;
+        match shape.string_fret(string) {
+            None => None,
+            Some(0) => Some((0 as u8, note)),
+            Some(fret) => Some((fret, (Semitones::from(note) + Semitones(fret as i8)).into())),
+        }
+    }
     pub fn pick_tone(&self, shape: &HandShape<S>, pick: &Pick) -> Tone {
         let notes = match pick {
             Pick::None => vec![],

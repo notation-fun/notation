@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use bevy::prelude::*;
+use bevy::{ecs::system::EntityCommands, prelude::*};
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
@@ -22,5 +22,25 @@ impl Default for FrettedTheme {
             string_z: 1.0,
             pick_z: 10.0,
         }
+    }
+}
+
+impl FrettedTheme {
+    pub fn insert_fret_text(&self, entity_commands: &mut EntityCommands, asset_server: &AssetServer, fret: u8) {
+        let font = asset_server.load("fonts/FiraMono-Medium.ttf");
+        let style = TextStyle {
+            font,
+            font_size: 24.0,
+            color: Color::BLACK,
+        };
+        let alignment = TextAlignment {
+            vertical: VerticalAlign::Center,
+            horizontal: HorizontalAlign::Center,
+        };
+        entity_commands.insert_bundle(Text2dBundle {
+            text: Text::with_section(format!("{}", fret).as_str(), style, alignment),
+            transform: Transform::from_xyz(12.0, 5.0, 1.0),
+            ..Default::default()
+        });
     }
 }

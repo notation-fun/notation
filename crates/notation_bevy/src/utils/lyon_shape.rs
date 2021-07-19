@@ -52,6 +52,39 @@ pub trait LyonShapeOp<'a, Data: Clone + Send + Sync + 'static, T: Geometry, Op: 
             entity_commands.insert(data.clone());
         })
     }
+    fn create_with_extra<F>(
+        commands: &mut Commands,
+        entity: Entity,
+        config: &'a BevyConfig,
+        data: Data,
+        extra: F,
+    ) -> Entity
+    where
+        F: Fn(&mut EntityCommands),
+    {
+        let shape = Self::new_shape(config, data.clone());
+        shape.insert_lyon(commands, entity, |entity_commands| {
+            entity_commands.insert(data.clone());
+            extra(entity_commands);
+        })
+    }
+    fn create_with_child<F>(
+        commands: &mut Commands,
+        entity: Entity,
+        config: &'a BevyConfig,
+        data: Data,
+        setup_child: F,
+    ) -> Entity
+    where
+        F: Fn(&mut EntityCommands),
+    {
+        let entity = Self::create(commands, entity, config, data);
+        let mut child_commands = commands.spawn();
+        setup_child(&mut child_commands);
+        let child_entity = child_commands.id();
+        commands.entity(entity).push_children(&[child_entity]);
+        entity
+    }
     fn update(commands: &mut Commands, config: &'a BevyConfig, entity: Entity, data: &Data) {
         let shape = Self::new_shape(config, data.clone());
         shape.update_lyon(commands, entity);

@@ -19,6 +19,7 @@ pub fn new_system_set() -> SystemSet {
 
 fn create_pick_notes<const S: usize>(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
     config: Res<BevyConfig>,
     query: Query<(&Parent, Entity, &Pick, &Duration, &BarPosition), Added<Pick>>,
     layer_query: Query<(&Arc<TabBar>, &Fretboard<S>, &Children)>,
@@ -30,10 +31,12 @@ fn create_pick_notes<const S: usize>(
         {
             let bar_units = bar.bar_units();
             for string in pick.get_strings() {
-                if let Some(note) = fretboard.shape_note(&shape, string) {
+                if let Some((fret, note)) = fretboard.shape_fret_note(&shape, string) {
                     let syllable = bar.calc_syllable(&note.pitch);
                     let data = PickNoteData::new(bar_units, &bar, *duration, *pos, string, syllable);
-                    PickNote::create(&mut commands, entity, &config, data);
+                    PickNote::create_with_child(&mut commands, entity, &config, data, |child_commands|{
+                        config.theme.fretted.insert_fret_text(child_commands, &asset_server, fret);
+                    });
                 }
             }
         }
