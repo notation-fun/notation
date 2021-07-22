@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use std::time::Instant;
 
 use bevy::prelude::*;
 use notation_model::prelude::{BarPosition, Duration, ProtoEntry, Tab};
@@ -9,8 +10,33 @@ use super::pos_indicator::{PosIndicator, PosIndicatorData};
 
 pub struct PlayPlugin;
 
+pub struct NotationTime {
+    last: Instant,
+    pub delta: std::time::Duration,
+}
+
+impl Default for NotationTime {
+    fn default() -> Self {
+        NotationTime {
+            last: Instant::now(),
+            delta: std::time::Duration::new(0, 0),
+        }
+    }
+}
+impl NotationTime {
+    pub fn tick(&mut self) {
+        let now = Instant::now();
+        self.delta = now.duration_since(self.last);
+        self.last = now;
+    }
+    pub fn delta_seconds(&self) -> f32 {
+        self.delta.as_secs_f32()
+    }
+}
+
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
+        app.init_resource::<NotationTime>();
         app.add_system(on_config_changed.system());
         app.add_system(on_add_tab_state.system());
         app.add_system(on_stop.system());
@@ -73,8 +99,8 @@ fn on_stop(
 
 fn on_time(
     _commands: Commands,
-    time: Res<Time>,
     config: Res<BevyConfig>,
+    mut time: ResMut<NotationTime>,
     mut query: Query<(&Arc<Tab>, &mut TabState, &mut Transform)>,
     mut entry_query: Query<(
         Entity,
@@ -84,6 +110,7 @@ fn on_time(
         &mut EntryState,
     )>,
 ) {
+    time.tick();
     for (tab, mut state, mut transform) in query.iter_mut() {
         let (changed, end_passed) = state.tick(time.delta_seconds());
         if changed {
