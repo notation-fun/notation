@@ -135,16 +135,14 @@ pub mod prelude {
         #[cfg(target_arch = "wasm32")]
         app.add_plugin(crate::ext::bevy_web_fullscreen::FullViewportPlugin);
 
-        #[cfg(feature = "inspector")]
-        app.add_plugins(crate::inspector::NotationInspectorPlugins);
-
-        #[cfg(not(feature = "inspector"))]
         app.add_plugin(bevy_egui::EguiPlugin);
-
         app.add_plugin(NotationUiPlugin);
 
         #[cfg(feature = "dev")]
         app.add_plugins(crate::dev::NotationDevPlugins);
+
+        #[cfg(feature = "inspector")]
+        app.add_plugins(crate::inspector::NotationInspectorPlugins);
 
         app
     }
