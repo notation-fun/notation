@@ -20,6 +20,7 @@ impl TopPanelState {
 }
 impl FromWorld for TopPanelState {
     fn from_world(world: &mut World) -> Self {
+        //TODO: get it from user preference, TabState is NOT a resource
         world.get_resource::<TabState>()
             .map(|state|
                 Self {
@@ -72,7 +73,7 @@ pub fn top_panel_ui(
                     changed = true;
                 }
                 ui.add(
-                    Slider::new(&mut state.play_speed, 0.1..=1.0)
+                    Slider::new(&mut state.play_speed, 0.1..=2.0)
                         .text("Play Speed"),
                 );
             });

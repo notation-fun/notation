@@ -1,7 +1,8 @@
 use crate::prelude::PlayState;
-use notation_model::prelude::{BarPosition, Position, Tab, Units};
+use notation_model::prelude::{BarPosition, Bpm, Position, Tab, TabMeta, Units};
 
 pub struct TabState {
+    pub second_to_units: f32,
     pub pos: Position,
     pub begin_bar_ordinal: usize,
     pub end_bar_ordinal: usize,
@@ -12,13 +13,16 @@ pub struct TabState {
 
 impl TabState {
     pub fn new(tab: &Tab) -> Self {
+        let second_to_units = Bpm::from(tab.meta.tempo) as f32 / 60.0
+            * Units::from(tab.meta.signature.beat_unit).0;
         Self {
+            second_to_units,
             pos: Position::new(tab.bar_units()),
             begin_bar_ordinal: 1,
             end_bar_ordinal: tab.bars.len(),
             should_loop: true,
             play_state: PlayState::default(),
-            play_speed: 0.4,
+            play_speed: 1.0,
         }
     }
     pub fn play(&mut self) -> bool {
@@ -49,7 +53,8 @@ impl TabState {
     }
     pub fn tick(&mut self, delta_seconds: f32) -> (bool, bool) {
         if self.play_state.is_playing() {
-            self.pos.tick(Units(delta_seconds * self.play_speed));
+            let delta_units = delta_seconds * self.second_to_units;
+            self.pos.tick(Units(delta_units * self.play_speed));
             let end_passed = self.pos.bar.bar_ordinal > self.end_bar_ordinal;
             if end_passed {
                 if self.should_loop {

@@ -73,8 +73,8 @@ impl Position {
     pub fn cal_bar_pos(&self, bar_ordinal: usize) -> Units {
         Units((bar_ordinal - 1) as f32 * self.bar_units.0)
     }
-    pub fn tick(&mut self, delta_seconds: Units) {
-        self.set_in_tab(self.tab.in_tab_pos + delta_seconds);
+    pub fn tick(&mut self, delta_units: Units) {
+        self.set_in_tab(self.tab.in_tab_pos + delta_units);
     }
     pub fn set_in_tab(&mut self, pos: Units) {
         self.tab = TabPosition::new(pos);
