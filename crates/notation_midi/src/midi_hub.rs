@@ -28,6 +28,9 @@ impl MidiHub {
     pub fn new_output_conn() -> Option<MidiOutputConnection> {
         if let Some(output) = Self::new_output() {
             if output.port_count() > 0 {
+                #[cfg(target_os="linux")]
+                let port = &output.ports()[1]; //TODO: Select port
+                #[cfg(not(target_os="linux"))]
                 let port = &output.ports()[0]; //TODO: Select port
                 output.connect(port, "MidiHub").ok()
             } else {
