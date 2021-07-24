@@ -1,5 +1,14 @@
 use std::sync::Arc;
-use std::time::Instant;
+
+#[cfg(target_arch = "wasm32")]
+use instant::Instant as StdInstant;
+#[cfg(target_arch = "wasm32")]
+use instant::Duration as StdDuration;
+
+#[cfg(not(target_arch = "wasm32"))]
+use std::time::Instant as StdInstant;
+#[cfg(not(target_arch = "wasm32"))]
+use std::time::Duration as StdDuration;
 
 use bevy::prelude::*;
 use notation_model::prelude::{BarPosition, Duration, ProtoEntry, Tab};
@@ -11,21 +20,21 @@ use super::pos_indicator::{PosIndicator, PosIndicatorData};
 pub struct PlayPlugin;
 
 pub struct NotationTime {
-    last: Instant,
-    pub delta: std::time::Duration,
+    last: StdInstant,
+    pub delta: StdDuration,
 }
 
 impl Default for NotationTime {
     fn default() -> Self {
         NotationTime {
-            last: Instant::now(),
-            delta: std::time::Duration::new(0, 0),
+            last: StdInstant::now(),
+            delta: StdDuration::new(0, 0),
         }
     }
 }
 impl NotationTime {
     pub fn tick(&mut self) {
-        let now = Instant::now();
+        let now = StdInstant::now();
         self.delta = now.duration_since(self.last);
         self.last = now;
     }

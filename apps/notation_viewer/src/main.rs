@@ -48,7 +48,8 @@ fn setup(mut commands: Commands, server: Res<AssetServer>) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
     #[cfg(not(target_arch = "wasm32"))]
-    let tab_asset = server.load("songs/pu_shu/bai_hua_lin.ron");
+    //let tab_asset = server.load("songs/pu_shu/bai_hua_lin.ron");
+    let tab_asset = server.load("songs/jay/long_juan_feng.ron");
 
     #[cfg(target_arch = "wasm32")]
     let tab_asset = server.load("beginner/1_right_hand.ron");
@@ -77,6 +78,7 @@ fn load_tab(
     }
 }
 
+#[cfg(any(feature = "dev", feature = "inspector"))]
 fn update_camera(
     _keyboard_input: Res<Input<KeyCode>>,
     keyboard_input: Res<Input<KeyCode>>,

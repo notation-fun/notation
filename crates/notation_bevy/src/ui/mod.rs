@@ -14,8 +14,10 @@ impl Plugin for NotationUiPlugin {
 }
 
 pub fn update_ui_scale_factor(mut egui_settings: ResMut<EguiSettings>, windows: Res<Windows>) {
-    if let Some(window) = windows.get_primary() {
-        egui_settings.scale_factor = 1.0 / window.scale_factor();
+    if let Some(_window) = windows.get_primary() {
+        //setting scale_factor like this will make the app crash on windows for some reason
+        //egui_settings.scale_factor = window.scale_factor();
+        egui_settings.scale_factor = 1.0;
     }
 }
 

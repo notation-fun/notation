@@ -53,7 +53,7 @@ impl Default for GridConfig {
             bar_separator_bottom: -140.0,
             bar_beat_top: -10.0,
             bar_beat_bottom: -130.0,
-            pos_indicator_size: 8.0,
+            pos_indicator_size: 2.0,
             pos_indicator_top: 10.0,
             pos_indicator_bottom: -150.0,
         }

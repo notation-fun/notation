@@ -11,7 +11,7 @@
 			"label": "rust: cargo build",
 			"args": [
 				"--features",
-				"native",
+				"dev",
 			]
 		}
 	]
