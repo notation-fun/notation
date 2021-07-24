@@ -129,11 +129,13 @@ fn on_time(
                     if entry_state.is_idle() && state.pos.is_passed(position) {
                         *entry_state = EntryState::Playing;
                     } else if entry_state.is_playing()
-                        && state.pos.is_passed_with(position, duration)
-                    {
+                        && state.pos.is_passed_with(position, duration) {
                         *entry_state = EntryState::Played;
-                    } else if end_passed && entry_state.is_played() {
-                        *entry_state = EntryState::Idle;
+                    }
+                    if end_passed {
+                        if entry_state.is_played() || position.bar_ordinal > state.pos.bar.bar_ordinal {
+                            *entry_state = EntryState::Idle;
+                        }
                     }
                 }
             }

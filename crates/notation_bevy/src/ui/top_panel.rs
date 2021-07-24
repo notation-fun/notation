@@ -28,7 +28,6 @@ impl FromWorld for TopPanelState {
                     stopped: state.play_state.is_stopped(),
                     play_speed: state.play_speed,
                 }
-
             ).unwrap_or_else(TopPanelState::default)
     }
 }
