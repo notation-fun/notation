@@ -126,11 +126,12 @@ fn on_time(
             *transform = config.grid.calc_pos_transform(tab, state.pos.tab);
             for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
                 if state.is_in_range(position) {
-                    if entry_state.is_idle() && state.pos.is_passed(position) {
-                        *entry_state = EntryState::Playing;
-                    } else if entry_state.is_playing()
+                    if entry_state.is_playing()
                         && state.pos.is_passed_with(position, duration) {
                         *entry_state = EntryState::Played;
+                    }
+                    if entry_state.is_idle() && state.pos.is_passed(position) {
+                        *entry_state = EntryState::Playing;
                     }
                     if end_passed {
                         if entry_state.is_played() || position.bar_ordinal > state.pos.bar.bar_ordinal {

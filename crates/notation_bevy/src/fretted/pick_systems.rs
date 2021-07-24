@@ -61,10 +61,10 @@ fn play_pick_tone<const S: usize>(
         {
             let tone = fretboard.pick_tone(&shape, pick);
             if !tone.is_none() {
-                if state.is_playing() {
-                    play_note_evts.send(PlayToneEvent(tone));
-                } else if state.is_played() || state.is_idle() {
+                if state.is_played() || state.is_idle() {
                     stop_note_evts.send(StopToneEvent(tone));
+                } else if state.is_playing() {
+                    play_note_evts.send(PlayToneEvent(tone));
                 }
             }
         }
