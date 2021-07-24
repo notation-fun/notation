@@ -12,6 +12,7 @@ pub struct FrettedTheme {
     pub string_space: f32,
     pub string_z: f32,
     pub pick_z: f32,
+    pub always_show_fret: bool,
 }
 
 impl Default for FrettedTheme {
@@ -21,6 +22,7 @@ impl Default for FrettedTheme {
             string_space: 20.0,
             string_z: 1.0,
             pick_z: 10.0,
+            always_show_fret: false,
         }
     }
 }

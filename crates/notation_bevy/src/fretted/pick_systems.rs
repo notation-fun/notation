@@ -35,7 +35,9 @@ fn create_pick_notes<const S: usize>(
                     let syllable = bar.calc_syllable(&note.pitch);
                     let data = PickNoteData::new(bar_units, &bar, *duration, *pos, pick_note, syllable);
                     PickNoteShape::create_with_child(&mut commands, entity, &config, data, |child_commands|{
-                        config.theme.fretted.insert_fret_text(child_commands, &asset_server, fret);
+                        if config.theme.fretted.always_show_fret || pick_note.fret.is_some() {
+                            config.theme.fretted.insert_fret_text(child_commands, &asset_server, fret);
+                        }
                     });
                 }
             }

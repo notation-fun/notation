@@ -1,13 +1,19 @@
+use std::sync::Arc;
+
 use bevy::prelude::*;
 use bevy_egui::{EguiContext, egui::{self, Slider}};
 use float_eq::float_ne;
+use notation_model::prelude::Tab;
 
-use crate::prelude::TabState;
+use crate::{config::bevy_config::{BevyConfig, BevyConfigAccessor}, prelude::TabState};
+
+use super::app::AppState;
 
 pub struct TopPanelState {
     playing: bool,
     stopped: bool,
     play_speed: f32,
+    always_show_fret: bool,
 }
 impl TopPanelState {
     pub fn default() -> Self {
@@ -15,28 +21,32 @@ impl TopPanelState {
             playing: false,
             stopped: false,
             play_speed: 1.0,
+            always_show_fret: false,
         }
     }
 }
 impl FromWorld for TopPanelState {
     fn from_world(world: &mut World) -> Self {
         //TODO: get it from user preference, TabState is NOT a resource
-        world.get_resource::<TabState>()
-            .map(|state|
+        world.get_resource::<BevyConfig>()
+            .map(|config|
                 Self {
-                    playing: state.play_state.is_playing(),
-                    stopped: state.play_state.is_stopped(),
-                    play_speed: state.play_speed,
+                    playing: false,
+                    stopped: false,
+                    play_speed: 1.0,
+                    always_show_fret: config.theme.fretted.always_show_fret,
                 }
             ).unwrap_or_else(TopPanelState::default)
     }
 }
 
 impl TopPanelState {
-    pub fn sync_tab_state(
+    pub fn sync_to_world(
         &self,
+        config: &mut ResMut<BevyConfig>,
         query: &mut Query<&mut TabState>,
     ) {
+        config.theme.fretted.always_show_fret = self.always_show_fret;
         for mut tab_state in query.iter_mut() {
             if self.stopped {
                 tab_state.stop();
@@ -51,13 +61,18 @@ impl TopPanelState {
 }
 
 pub fn top_panel_ui(
+    mut commands: Commands,
     egui_ctx: Res<EguiContext>,
     _assets: Res<AssetServer>,
+    mut app_state: ResMut<AppState>,
     mut state: ResMut<TopPanelState>,
+    mut config: ResMut<BevyConfig>,
     mut query: Query<&mut TabState>,
+    tab_query: Query<Entity, With<Arc<Tab>>>,
 ) {
     let mut changed = false;
     let play_speed = state.play_speed;
+    let always_show_fret = state.always_show_fret;
     egui::TopBottomPanel::top("top_panel")
         .show(egui_ctx.ctx(), |ui| {
             ui.horizontal(|ui| {
@@ -75,12 +90,22 @@ pub fn top_panel_ui(
                     Slider::new(&mut state.play_speed, 0.1..=2.0)
                         .text("Play Speed"),
                 );
+                ui.checkbox(&mut state.always_show_fret, "Always Show Fret");
+                if ui.button("Reload Tab").clicked() {
+                    for tab in tab_query.iter() {
+                        commands.entity(tab).despawn_recursive();
+                    }
+                    app_state.tab = None;
+                }
             });
         });
-    if !changed && float_ne!(play_speed, state.play_speed, abs<=0.01) {
-        changed = true;
+    if !changed {
+        if always_show_fret != state.always_show_fret
+            || float_ne!(play_speed, state.play_speed, abs<=0.01) {
+            changed = true;
+        }
     }
     if changed {
-        state.sync_tab_state(&mut query);
+        state.sync_to_world(&mut config, &mut query);
     }
 }

@@ -1,15 +1,11 @@
 use bevy::prelude::*;
 use bevy_egui::{EguiSettings};
 
-pub mod top_panel;
-
 pub struct NotationUiPlugin;
 
 impl Plugin for NotationUiPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(update_ui_scale_factor.system());
-        app.insert_resource(top_panel::TopPanelState::default());
-        app.add_system(top_panel::top_panel_ui.system());
     }
 }
 

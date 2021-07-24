@@ -25,6 +25,7 @@ pub mod utils;
 
 pub mod ext;
 pub mod ui;
+pub mod viewer;
 
 #[cfg(feature = "inspector")]
 pub mod inspector;
