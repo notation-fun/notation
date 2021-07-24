@@ -52,7 +52,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.config.grid.bar_size / self.data.bar_units.0 * Units::from(self.data.duration).0,
+            width: self.config.grid.bar_size / self.data.bar_units.0 * Units::from(self.data.duration).0 - self.config.grid.note_outline * 2.0,
             height: self.config.grid.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,
         }
