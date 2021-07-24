@@ -7,7 +7,7 @@ use std::sync::Arc;
 use crate::prelude::{BevyConfig, EntryState, FrettedPlugin, LyonShapeOp};
 use notation_model::prelude::{Duration, Fretboard, HandShape, Pick};
 
-use super::pick_note::{PickNote, PickNoteData};
+use super::pick_note::{PickNoteShape, PickNoteData};
 
 pub fn new_system_set() -> SystemSet {
     SystemSet::new()
@@ -30,11 +30,11 @@ fn create_pick_notes<const S: usize>(
             FrettedPlugin::get_fretted_shape(&layer_query, &shape_query, parent.0, pos)
         {
             let bar_units = bar.bar_units();
-            for string in pick.get_strings() {
-                if let Some((fret, note)) = fretboard.shape_fret_note(&shape, string) {
+            for pick_note in pick.get_notes() {
+                if let Some((fret, note)) = fretboard.shape_pick_fret_note(&shape, pick_note) {
                     let syllable = bar.calc_syllable(&note.pitch);
-                    let data = PickNoteData::new(bar_units, &bar, *duration, *pos, string, syllable);
-                    PickNote::create_with_child(&mut commands, entity, &config, data, |child_commands|{
+                    let data = PickNoteData::new(bar_units, &bar, *duration, *pos, pick_note, syllable);
+                    PickNoteShape::create_with_child(&mut commands, entity, &config, data, |child_commands|{
                         config.theme.fretted.insert_fret_text(child_commands, &asset_server, fret);
                     });
                 }

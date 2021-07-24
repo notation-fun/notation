@@ -1,5 +1,3 @@
-#![feature(array_map)]
-
 pub mod entry;
 pub mod fretboard;
 pub mod hand;
@@ -14,7 +12,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::hand::{Finger, HandShape};
     #[doc(hidden)]
-    pub use crate::pick::Pick;
+    pub use crate::pick::{PickNote, Pick};
     #[doc(hidden)]
     pub use crate::strum::Strum;
 }

@@ -9,6 +9,18 @@ pub enum Finger {
     Ring,
     Pinky,
 }
+impl Display for Finger {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            Finger::Thumb => "T",
+            Finger::Index => "I",
+            Finger::Middle => "M",
+            Finger::Ring => "R",
+            Finger::Pinky => "Y",
+        })
+    }
+}
+
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct HandShape<const S: usize> {

@@ -6,34 +6,36 @@ use syn::LitInt;
 
 use crate::context::Context;
 
+use super::pick_note::PickNoteDsl;
+
 pub struct PickDsl {
-    pub strings: Vec<u8>,
+    pub notes: Vec<PickNoteDsl>,
 }
 
 impl PickDsl {
     #[throws(Error)]
     pub fn parse_without_paren(input: ParseStream, multied: bool, with_paren: bool) -> Self {
-        let mut strings = vec![];
+        let mut notes = vec![];
         while input.peek(LitInt) {
-            strings.push(input.parse::<LitInt>()?.base10_parse::<u8>()?);
+            notes.push(input.parse()?);
             if multied && !with_paren {
                 break;
             }
         }
-        PickDsl { strings }
+        PickDsl { notes }
     }
 }
 
 impl ToTokens for PickDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let PickDsl { strings } = self;
+        let PickDsl { notes } = self;
         let duration = Context::duration_quote();
         let string_num = Context::fretted().string_num;
-        let strings_quote: Vec<_> = strings.iter().map(|x| quote! { #x }).collect();
+        let notes_quote: Vec<_> = notes.iter().map(|x| quote! { #x }).collect();
         tokens.extend(quote! {
             ProtoEntry::from(FrettedEntry::<#string_num>::from(
                 (Pick::from(vec![
-                    #(#strings_quote),*
+                    #(#notes_quote),*
                 ]), #duration)
             ))
         });

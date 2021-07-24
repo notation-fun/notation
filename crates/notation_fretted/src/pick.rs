@@ -2,14 +2,58 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
+use crate::{prelude::Finger, strum::StrumDirection};
+
+#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+pub struct PickNote {
+    pub string: u8,
+    pub fret: Option<u8>,
+    pub fret_finger: Option<Finger>,
+    pub pick_finger: Option<Finger>,
+    pub pick_direction: Option<StrumDirection>,
+}
+impl Display for PickNote {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}{}{}{}{}",
+            self.string,
+            self.fret.map(|x| format!("@{}", x)).unwrap_or("".to_string()),
+            self.fret_finger.map(|x| format!("_{}", x)).unwrap_or("".to_string()),
+            self.pick_finger.map(|x| format!("^{}", x)).unwrap_or("".to_string()),
+            self.pick_direction.map(|x| format!("*{}", x)).unwrap_or("".to_string()),
+        )
+    }
+}
+impl PickNote {
+    pub fn new(
+        string: u8,
+        fret: Option<u8>,
+        fret_finger: Option<Finger>,
+        pick_finger: Option<Finger>,
+        pick_direction: Option<StrumDirection>,
+    ) -> Self {
+        Self { string, fret, fret_finger, pick_finger, pick_direction }
+    }
+    pub fn new_string(
+        string: u8,
+    ) -> Self {
+        Self::new(string, None, None, None, None)
+    }
+    pub fn new_string_fret(
+        string: u8,
+        fret: u8,
+    ) -> Self {
+        Self::new(string, Some(fret), None, None, None)
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Pick {
     None,
-    Single(u8),
-    Double(u8, u8),
-    Triple(u8, u8, u8),
-    Tetra(u8, u8, u8, u8),
-    Penta(u8, u8, u8, u8, u8),
+    Single(PickNote),
+    Double(PickNote, PickNote),
+    Triple(PickNote, PickNote, PickNote),
+    Tetra(PickNote, PickNote, PickNote, PickNote),
+    Penta(PickNote, PickNote, PickNote, PickNote, PickNote),
 }
 
 impl Display for Pick {
@@ -35,38 +79,38 @@ impl From<()> for Pick {
     }
 }
 
-impl From<u8> for Pick {
-    fn from(v: u8) -> Self {
+impl From<PickNote> for Pick {
+    fn from(v: PickNote) -> Self {
         Self::Single(v)
     }
 }
 
-impl From<(u8, u8)> for Pick {
-    fn from(v: (u8, u8)) -> Self {
+impl From<(PickNote, PickNote)> for Pick {
+    fn from(v: (PickNote, PickNote)) -> Self {
         Self::Double(v.0, v.1)
     }
 }
 
-impl From<(u8, u8, u8)> for Pick {
-    fn from(v: (u8, u8, u8)) -> Self {
+impl From<(PickNote, PickNote, PickNote)> for Pick {
+    fn from(v: (PickNote, PickNote, PickNote)) -> Self {
         Self::Triple(v.0, v.1, v.2)
     }
 }
 
-impl From<(u8, u8, u8, u8)> for Pick {
-    fn from(v: (u8, u8, u8, u8)) -> Self {
+impl From<(PickNote, PickNote, PickNote, PickNote)> for Pick {
+    fn from(v: (PickNote, PickNote, PickNote, PickNote)) -> Self {
         Self::Tetra(v.0, v.1, v.2, v.3)
     }
 }
 
-impl From<(u8, u8, u8, u8, u8)> for Pick {
-    fn from(v: (u8, u8, u8, u8, u8)) -> Self {
+impl From<(PickNote, PickNote, PickNote, PickNote, PickNote)> for Pick {
+    fn from(v: (PickNote, PickNote, PickNote, PickNote, PickNote)) -> Self {
         Self::Penta(v.0, v.1, v.2, v.3, v.4)
     }
 }
 
-impl From<Vec<u8>> for Pick {
-    fn from(v: Vec<u8>) -> Self {
+impl From<Vec<PickNote>> for Pick {
+    fn from(v: Vec<PickNote>) -> Self {
         match v.len() {
             1 => Self::from(v[0]),
             2 => Self::from((v[0], v[1])),
@@ -79,7 +123,7 @@ impl From<Vec<u8>> for Pick {
 }
 
 impl Pick {
-    pub fn get_strings(&self) -> Vec<u8> {
+    pub fn get_notes(&self) -> Vec<PickNote> {
         match *self {
             Self::None => vec![],
             Self::Single(p1) => vec![p1],
@@ -91,8 +135,8 @@ impl Pick {
     }
 }
 
-impl From<Pick> for Vec<u8> {
+impl From<Pick> for Vec<PickNote> {
     fn from(v: Pick) -> Self {
-        v.get_strings()
+        v.get_notes()
     }
 }

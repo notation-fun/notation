@@ -8,7 +8,7 @@ use super::fretted_grid::FrettedGrid;
 use super::fretted_string::{FrettedString, FrettedStringData};
 use super::hand_bundles::HandShapeBundle;
 use super::pick_bundle::PickBundle;
-use super::pick_note::{PickNote, PickNoteData};
+use super::pick_note::{PickNoteShape, PickNoteData};
 use crate::prelude::{BevyConfig, ConfigChangedEvent, LyonShapeOp};
 use notation_model::prelude::{Fretboard, FrettedEntry, HandShape, TabBar};
 
@@ -35,7 +35,7 @@ fn on_config_changed(
             FrettedString::update(&mut commands, &config, entity, data);
         }
         for (entity, data) in pick_note_query.iter() {
-            PickNote::update(&mut commands, &config, entity, data);
+            PickNoteShape::update(&mut commands, &config, entity, data);
         }
     }
 }

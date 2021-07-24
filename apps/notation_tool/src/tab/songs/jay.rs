@@ -3,7 +3,7 @@ use notation_proto::prelude::*;
 
 pub fn new_tab_long_juan_feng() -> Tab {
     tab! {
-        meta: TabMeta::new(Key::E, Scale::Minor, Signature::_4_4, Tempo::Bpm(72))
+        meta: TabMeta::new(Key::A, Scale::Major, Signature::_4_4, Tempo::Bpm(72))
         lines: [
             {"shapes" [
                 $duration = _1
@@ -15,23 +15,23 @@ pub fn new_tab_long_juan_feng() -> Tab {
             ]}
             {"picks" [
                 $duration = _1_8
-                "intro-6" Pick [ (6 3) 4 2 3 2 ]
+                "intro-6" Pick [ (6 3) 4 2 3 2@1 ]
                 $duration = _1_16
-                Pick [ 2 3 3 2 ]
+                Pick [ 2 3 3@2 2 ]
                 $duration = _1_8
-                Pick [ 3 ]
-                "intro-5" Pick [ (5 3) 4 2 3 2 ]
+                Pick [ 3@2 ]
+                "intro-5" Pick [ (5 3) 4 2 3 2@1 ]
                 $duration = _1_16
-                Pick [ 2 3 3 2 ]
+                Pick [ 2 3 3@2 2 ]
                 $duration = _1_8
-                Pick [ 3 ]
+                Pick [ 3@2 ]
                 "verse-5" Pick [ 5 4 3 2 3 4 ]
                 "verse-5" Pick [ 4 3 2 1 2 3 ]
             ]}
         ]
         tracks: [
             {"guitar" Guitar [
-                Fretboard
+                Fretboard capo: 2
             ]}
         ]
         layers: [

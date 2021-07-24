@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, Syllable, Units};
+use notation_model::prelude::{BarPosition, Duration, Syllable, Units, PickNote};
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
@@ -14,7 +14,7 @@ pub struct PickNoteData {
     pub bar_ordinal: usize,
     pub duration: Duration,
     pub position: BarPosition,
-    pub string: u8,
+    pub pick_note: PickNote,
     pub syllable: Syllable,
 }
 
@@ -24,7 +24,7 @@ impl PickNoteData {
         tab_bar: &Arc<TabBar>,
         duration: Duration,
         position: BarPosition,
-        string: u8,
+        pick_note: PickNote,
         syllable: Syllable,
     ) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
@@ -33,21 +33,21 @@ impl PickNoteData {
             bar_ordinal,
             duration,
             position,
-            string,
+            pick_note,
             syllable,
         }
     }
 }
-pub struct PickNote<'a> {
+pub struct PickNoteShape<'a> {
     config: &'a BevyConfig,
     data: PickNoteData,
 }
 
-impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
+impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
     fn get_name(&self) -> String {
         format!(
-            "{}:{} String {}",
-            self.data.bar_ordinal, self.data.syllable, self.data.string
+            "{}:{} {}",
+            self.data.bar_ordinal, self.data.syllable, self.data.pick_note
         )
     }
     fn get_shape(&self) -> shapes::Rectangle {
@@ -74,14 +74,14 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNote<'a> {
     }
     fn get_transform(&self) -> Transform {
         let x = self.config.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0;
-        let y = -1.0 * self.config.theme.fretted.string_space * self.data.string as f32
+        let y = -1.0 * self.config.theme.fretted.string_space * self.data.pick_note.string as f32
             - self.config.grid.note_height / 2.0;
         Transform::from_xyz(x, y, self.config.theme.fretted.pick_z)
     }
 }
 
-impl<'a> LyonShapeOp<'a, PickNoteData, shapes::Rectangle, PickNote<'a>> for PickNote<'a> {
-    fn new_shape(config: &'a BevyConfig, data: PickNoteData) -> PickNote<'a> {
-        PickNote::<'a> { config, data }
+impl<'a> LyonShapeOp<'a, PickNoteData, shapes::Rectangle, PickNoteShape<'a>> for PickNoteShape<'a> {
+    fn new_shape(config: &'a BevyConfig, data: PickNoteData) -> PickNoteShape<'a> {
+        PickNoteShape::<'a> { config, data }
     }
 }
