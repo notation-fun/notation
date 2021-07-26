@@ -21,7 +21,6 @@ impl Display for Finger {
     }
 }
 
-
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct HandShape<const S: usize> {
     #[serde(with = "serde_arrays")]

@@ -1,4 +1,4 @@
-use notation_model::prelude::{Tab, TabBar, TabPosition, Units};
+use notation_model::prelude::{Tab, TabBar, TabPosition};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -46,7 +46,7 @@ impl Default for GridConfig {
             note_height: 10.0,
             note_outline: 1.0,
             bars_in_row: 4,
-            header_height: 20.0,
+            header_height: 64.0,
             bar_height: 200.0,
             bar_separator_size: 4.0,
             bar_separator_top: 0.0,

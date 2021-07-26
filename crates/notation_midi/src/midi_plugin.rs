@@ -1,5 +1,5 @@
-use bevy::prelude::*;
 use crate::prelude::{MidiHub, MidiUtil, PlayToneEvent, StopToneEvent};
+use bevy::prelude::*;
 
 pub struct MidiPlugin;
 

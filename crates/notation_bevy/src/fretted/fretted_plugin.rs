@@ -8,7 +8,7 @@ use super::fretted_grid::FrettedGrid;
 use super::fretted_string::{FrettedString, FrettedStringData};
 use super::hand_bundles::HandShapeBundle;
 use super::pick_bundle::PickBundle;
-use super::pick_note::{PickNoteShape, PickNoteData};
+use super::pick_note::{PickNoteData, PickNoteShape};
 use crate::prelude::{BevyConfig, ConfigChangedEvent, LyonShapeOp};
 use notation_model::prelude::{Fretboard, FrettedEntry, HandShape, TabBar};
 
@@ -19,6 +19,7 @@ impl Plugin for FrettedPlugin {
         app.add_system(on_add_fretted_grid::<6>.system());
         app.add_system(on_add_fretted_grid::<4>.system());
         app.add_system(on_config_changed.system());
+        app.add_system_set(crate::fretted::hand_systems::new_system_set());
         app.add_system_set(crate::fretted::pick_systems::new_system_set());
     }
 }

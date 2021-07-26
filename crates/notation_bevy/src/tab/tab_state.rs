@@ -1,5 +1,5 @@
 use crate::prelude::PlayState;
-use notation_model::prelude::{BarPosition, Bpm, Position, Tab, TabMeta, Units};
+use notation_model::prelude::{BarPosition, Bpm, Position, Tab, Units};
 
 pub struct TabState {
     pub second_to_units: f32,
@@ -13,8 +13,8 @@ pub struct TabState {
 
 impl TabState {
     pub fn new(tab: &Tab) -> Self {
-        let second_to_units = Bpm::from(tab.meta.tempo) as f32 / 60.0
-            * Units::from(tab.meta.signature.beat_unit).0;
+        let second_to_units =
+            Bpm::from(tab.meta.tempo) as f32 / 60.0 * Units::from(tab.meta.signature.beat_unit).0;
         Self {
             second_to_units,
             pos: Position::new(tab.bar_units()),

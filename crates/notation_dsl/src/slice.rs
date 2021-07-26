@@ -12,7 +12,9 @@ impl Parse for SliceBeginDsl {
         if input.peek(LitStr) {
             Ok(Self::Mark(input.parse()?))
         } else {
-            Ok(Self::Index(input.parse::<LitInt>()?.base10_parse::<usize>()?))
+            Ok(Self::Index(
+                input.parse::<LitInt>()?.base10_parse::<usize>()?,
+            ))
         }
     }
 }
@@ -26,7 +28,9 @@ impl Parse for SliceEndDsl {
         if input.peek(LitStr) {
             Ok(Self::Mark(input.parse()?))
         } else {
-            Ok(Self::Count(input.parse::<LitInt>()?.base10_parse::<usize>()?))
+            Ok(Self::Count(
+                input.parse::<LitInt>()?.base10_parse::<usize>()?,
+            ))
         }
     }
 }

@@ -93,9 +93,9 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]
-    pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
-    #[doc(hidden)]
     pub use crate::ui::NotationUiPlugin;
+    #[doc(hidden)]
+    pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
 
     use bevy::app::{PluginGroup, PluginGroupBuilder};
     use bevy::prelude::*;

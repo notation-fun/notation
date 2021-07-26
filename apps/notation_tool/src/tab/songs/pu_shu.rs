@@ -1,4 +1,4 @@
-use notation_dsl::{tab};
+use notation_dsl::tab;
 use notation_proto::prelude::*;
 
 pub fn new_tab_bai_hua_lin() -> Tab {
@@ -106,4 +106,3 @@ pub fn new_tab_bai_hua_lin() -> Tab {
             "A2" "A1" "A1" "O"
     }
 }
-

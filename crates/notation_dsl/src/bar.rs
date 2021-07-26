@@ -3,7 +3,7 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::{LitStr};
+use syn::LitStr;
 
 pub struct BarDsl {
     pub layers: Vec<LitStr>,

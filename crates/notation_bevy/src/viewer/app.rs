@@ -3,19 +3,15 @@ use std::sync::Arc;
 use bevy::input::mouse::MouseMotion;
 use bevy::render::camera::OrthographicProjection;
 
+use crate::prelude::*;
 use bevy::prelude::*;
 use notation_model::prelude::*;
-use crate::prelude::*;
-
-#[cfg(feature = "inspector")]
-use notation_bevy::bevy_inspector_egui::{bevy_egui, egui};
 
 use super::top_panel;
 
-pub struct CameraPanning(bool);
+pub struct TabPath(String);
 
 pub struct AppState {
-    pub tab_path: String,
     pub tab_asset: Handle<TabAsset>,
     pub tab: Option<Arc<Tab>>,
     pub parse_error: Option<ParseError>,
@@ -25,10 +21,9 @@ pub struct AppState {
 impl FromWorld for AppState {
     fn from_world(world: &mut World) -> Self {
         let server = world.get_resource::<AssetServer>().unwrap();
-        let tab_path = "songs/jay/long_juan_feng.ron";
-        let tab_asset = server.load(tab_path);
+        let tab_path = world.get_resource::<TabPath>().unwrap();
+        let tab_asset = server.load(tab_path.0.as_str());
         Self {
-            tab_path: tab_path.to_string(),
             tab_asset,
             tab: None,
             parse_error: None,
@@ -37,16 +32,14 @@ impl FromWorld for AppState {
     }
 }
 
-pub fn main() {
+pub fn main(tab_path: String) {
     let mut app = new_notation_app("Notation Viewer");
     app.add_startup_system(setup.system());
 
+    app.insert_resource(TabPath(tab_path));
     app.init_resource::<AppState>();
 
     app.add_system(update_camera.system());
-
-    #[cfg(feature = "inspector")]
-    app.add_system(setup_ui.system());
 
     app.add_system(load_tab.system());
 
@@ -104,38 +97,3 @@ fn update_camera(
         }
     }
 }
-
-#[cfg(feature = "inspector")]
-fn setup_ui(
-    mut commands: Commands,
-    mut state: ResMut<AppState>,
-    egui_context: ResMut<bevy_egui::EguiContext>,
-    mut camera_panning: ResMut<CameraPanning>,
-    tab_query: Query<Entity, With<Arc<Tab>>>,
-    _line_query: Query<Entity, With<Arc<Line>>>,
-    _tab_evts: EventWriter<AddTabEvent>,
-    _line_evts: EventWriter<AddLineEvent>,
-) {
-    egui::Window::new("Hello").show(egui_context.ctx(), |ui| {
-        if ui
-            .button(format!("[space] Camera Panning: {:?}", camera_panning.0))
-            .clicked()
-        {
-            *camera_panning = match camera_panning.0 {
-                true => CameraPanning(false),
-                false => CameraPanning(true),
-            }
-        }
-        ui.separator();
-        if ui.button("Clear Tabs").clicked() {
-            for tab in tab_query.iter() {
-                commands.entity(tab).despawn_recursive();
-            }
-        }
-        if ui.button("Load Tab").clicked() {
-            state.tab = None;
-            state.parse_error = None;
-        }
-    });
-}
-

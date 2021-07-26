@@ -12,7 +12,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::hand::{Finger, HandShape};
     #[doc(hidden)]
-    pub use crate::pick::{PickNote, Pick};
+    pub use crate::pick::{Pick, PickNote};
     #[doc(hidden)]
     pub use crate::strum::Strum;
 }

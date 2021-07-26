@@ -7,7 +7,7 @@ use syn::{Expr, Token};
 use crate::form::FormDsl;
 
 use crate::layer::LayerDsl;
-use crate::line::{LineDsl, LineDslOrExpr};
+use crate::line::{LineDslOrExpr};
 use crate::section::SectionDsl;
 use crate::track::TrackDsl;
 

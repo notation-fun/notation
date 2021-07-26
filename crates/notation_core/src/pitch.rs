@@ -43,7 +43,7 @@ impl Display for PitchSign {
              */
             PitchSign::Natural => "",
             PitchSign::Sharp => "#",
-            PitchSign::Flat => "b" ,
+            PitchSign::Flat => "b",
             PitchSign::DoubleSharp => "##",
             PitchSign::DoubleFlat => "bb",
         })

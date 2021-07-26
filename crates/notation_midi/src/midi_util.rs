@@ -11,22 +11,20 @@ impl MidiUtil {
         KeyNumber::try_from(midi_note as u8).ok()
     }
     pub fn note_midi_on_msg(note: &Note) -> Option<StructuredShortMessage> {
-        Self::note_midi_key_number(note).map(|key_number|
--> StructuredShortMessage             {StructuredShortMessage::NoteOn {
-                channel: Channel::new(1),
-                key_number,
-                velocity: U7::new(127),
-            }}
-        )
-    }
-    pub fn note_midi_off_msg(note: &Note) -> Option<StructuredShortMessage> {
-        Self::note_midi_key_number(note).map(|key_number|
-            StructuredShortMessage::NoteOff {
+        Self::note_midi_key_number(note).map(|key_number| -> StructuredShortMessage {
+            StructuredShortMessage::NoteOn {
                 channel: Channel::new(1),
                 key_number,
                 velocity: U7::new(127),
             }
-        )
+        })
+    }
+    pub fn note_midi_off_msg(note: &Note) -> Option<StructuredShortMessage> {
+        Self::note_midi_key_number(note).map(|key_number| StructuredShortMessage::NoteOff {
+            channel: Channel::new(1),
+            key_number,
+            velocity: U7::new(127),
+        })
     }
     pub fn tone_midi_on_msgs(tone: &Tone) -> Vec<StructuredShortMessage> {
         tone.get_notes()

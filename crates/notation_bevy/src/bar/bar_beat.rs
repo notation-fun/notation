@@ -5,7 +5,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
-use notation_model::prelude::{Signature, TabBar, Units};
+use notation_model::prelude::{Signature, TabBar};
 
 #[derive(Clone, Debug)]
 pub struct BarBeatData {

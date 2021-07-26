@@ -2,7 +2,8 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{prelude::Finger, strum::StrumDirection};
+use crate::prelude::Finger;
+use crate::strum::StrumDirection;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct PickNote {
@@ -14,12 +15,22 @@ pub struct PickNote {
 }
 impl Display for PickNote {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}{}{}{}{}",
+        write!(
+            f,
+            "{}{}{}{}{}",
             self.string,
-            self.fret.map(|x| format!("@{}", x)).unwrap_or("".to_string()),
-            self.fret_finger.map(|x| format!("_{}", x)).unwrap_or("".to_string()),
-            self.pick_finger.map(|x| format!("^{}", x)).unwrap_or("".to_string()),
-            self.pick_direction.map(|x| format!("*{}", x)).unwrap_or("".to_string()),
+            self.fret
+                .map(|x| format!("@{}", x))
+                .unwrap_or("".to_string()),
+            self.fret_finger
+                .map(|x| format!("_{}", x))
+                .unwrap_or("".to_string()),
+            self.pick_finger
+                .map(|x| format!("^{}", x))
+                .unwrap_or("".to_string()),
+            self.pick_direction
+                .map(|x| format!("*{}", x))
+                .unwrap_or("".to_string()),
         )
     }
 }
@@ -31,17 +42,18 @@ impl PickNote {
         pick_finger: Option<Finger>,
         pick_direction: Option<StrumDirection>,
     ) -> Self {
-        Self { string, fret, fret_finger, pick_finger, pick_direction }
+        Self {
+            string,
+            fret,
+            fret_finger,
+            pick_finger,
+            pick_direction,
+        }
     }
-    pub fn new_string(
-        string: u8,
-    ) -> Self {
+    pub fn new_string(string: u8) -> Self {
         Self::new(string, None, None, None, None)
     }
-    pub fn new_string_fret(
-        string: u8,
-        fret: u8,
-    ) -> Self {
+    pub fn new_string_fret(string: u8, fret: u8) -> Self {
         Self::new(string, Some(fret), None, None, None)
     }
 }

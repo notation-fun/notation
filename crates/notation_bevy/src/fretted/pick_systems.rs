@@ -7,7 +7,7 @@ use std::sync::Arc;
 use crate::prelude::{BevyConfig, EntryState, FrettedPlugin, LyonShapeOp};
 use notation_model::prelude::{Duration, Fretboard, HandShape, Pick};
 
-use super::pick_note::{PickNoteShape, PickNoteData};
+use super::pick_note::{PickNoteData, PickNoteShape};
 
 pub fn new_system_set() -> SystemSet {
     SystemSet::new()
@@ -33,12 +33,23 @@ fn create_pick_notes<const S: usize>(
             for pick_note in pick.get_notes() {
                 if let Some((fret, note)) = fretboard.shape_pick_fret_note(&shape, pick_note) {
                     let syllable = bar.calc_syllable(&note.pitch);
-                    let data = PickNoteData::new(bar_units, &bar, *duration, *pos, pick_note, syllable);
-                    PickNoteShape::create_with_child(&mut commands, entity, &config, data, |child_commands|{
-                        if config.theme.fretted.always_show_fret || pick_note.fret.is_some() {
-                            config.theme.fretted.insert_fret_text(child_commands, &asset_server, fret);
-                        }
-                    });
+                    let data =
+                        PickNoteData::new(bar_units, &bar, *duration, *pos, pick_note, syllable);
+                    PickNoteShape::create_with_child(
+                        &mut commands,
+                        entity,
+                        &config,
+                        data,
+                        |child_commands| {
+                            if config.theme.fretted.always_show_fret || pick_note.fret.is_some() {
+                                config.theme.fretted.insert_fret_text(
+                                    child_commands,
+                                    &asset_server,
+                                    fret,
+                                );
+                            }
+                        },
+                    );
                 }
             }
         }
@@ -48,10 +59,7 @@ fn create_pick_notes<const S: usize>(
 fn play_pick_tone<const S: usize>(
     mut _commands: Commands,
     _config: Res<BevyConfig>,
-    query: Query<
-        (&Parent, &Pick, &BarPosition, &EntryState),
-        Changed<EntryState>,
-    >,
+    query: Query<(&Parent, &Pick, &BarPosition, &EntryState), Changed<EntryState>>,
     layer_query: Query<(&Arc<TabBar>, &Fretboard<S>, &Children)>,
     shape_query: Query<&HandShape<S>>,
     mut play_note_evts: EventWriter<PlayToneEvent>,

@@ -225,102 +225,246 @@
                 ),// [0]
                 Mark("6-1"),// [1]
                 FrettedSix(Pick(
-                    Single(6),
+                    Single((
+                        string: 6,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [2]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [3]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [4]
                 FrettedSix(Pick(
-                    Single(1),
+                    Single((
+                        string: 1,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [5]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [6]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [7]
                 Mark("5-1"),// [8]
                 FrettedSix(Pick(
-                    Single(5),
+                    Single((
+                        string: 5,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [9]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [10]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [11]
                 FrettedSix(Pick(
-                    Single(1),
+                    Single((
+                        string: 1,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [12]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [13]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [14]
                 Mark("5-2"),// [15]
                 FrettedSix(Pick(
-                    Single(5),
+                    Single((
+                        string: 5,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [16]
                 FrettedSix(Pick(
-                    Single(4),
+                    Single((
+                        string: 4,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [17]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [18]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [19]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [20]
                 FrettedSix(Pick(
-                    Single(4),
+                    Single((
+                        string: 4,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [21]
                 Mark("4-1"),// [22]
                 FrettedSix(Pick(
-                    Single(4),
+                    Single((
+                        string: 4,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [23]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [24]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [25]
                 FrettedSix(Pick(
-                    Single(1),
+                    Single((
+                        string: 1,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [26]
                 FrettedSix(Pick(
-                    Single(2),
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),// [27]
                 FrettedSix(Pick(
-                    Single(3),
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
                     Simple(Eighth),
                 )),
             ],

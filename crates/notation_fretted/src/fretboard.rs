@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{pick::PickNote, prelude::Pick};
+use crate::pick::PickNote;
+use crate::prelude::Pick;
 
 use super::hand::HandShape;
 use notation_core::prelude::{Note, Semitones, Tone};
@@ -72,15 +73,14 @@ impl<const S: usize> Fretboard<S> {
         }
     }
     pub fn shape_note(&self, shape: &HandShape<S>, string: u8) -> Option<Note> {
-        shape.string_fret(string)
+        shape
+            .string_fret(string)
             .and_then(|fret| self.fretted_note(string, fret))
     }
     pub fn shape_fret_note(&self, shape: &HandShape<S>, string: u8) -> Option<(u8, Note)> {
-        shape.string_fret(string)
-            .and_then(|fret| {
-                self.fretted_note(string, fret)
-                    .map(|n| (fret, n))
-            })
+        shape
+            .string_fret(string)
+            .and_then(|fret| self.fretted_note(string, fret).map(|n| (fret, n)))
     }
     pub fn shape_pick_note(&self, shape: &HandShape<S>, pick_note: PickNote) -> Option<Note> {
         match pick_note.fret {
@@ -88,9 +88,15 @@ impl<const S: usize> Fretboard<S> {
             None => self.shape_note(shape, pick_note.string),
         }
     }
-    pub fn shape_pick_fret_note(&self, shape: &HandShape<S>, pick_note: PickNote) -> Option<(u8, Note)> {
+    pub fn shape_pick_fret_note(
+        &self,
+        shape: &HandShape<S>,
+        pick_note: PickNote,
+    ) -> Option<(u8, Note)> {
         match pick_note.fret {
-            Some(fret) => self.fretted_note(pick_note.string, fret).map(|note| (fret, note)),
+            Some(fret) => self
+                .fretted_note(pick_note.string, fret)
+                .map(|note| (fret, note)),
             None => self.shape_fret_note(shape, pick_note.string),
         }
     }
@@ -98,7 +104,10 @@ impl<const S: usize> Fretboard<S> {
         let notes = match pick {
             Pick::None => vec![],
             Pick::Single(p1) => vec![self.shape_pick_note(shape, *p1)],
-            Pick::Double(p1, p2) => vec![self.shape_pick_note(shape, *p1), self.shape_pick_note(shape, *p2)],
+            Pick::Double(p1, p2) => vec![
+                self.shape_pick_note(shape, *p1),
+                self.shape_pick_note(shape, *p2),
+            ],
             Pick::Triple(p1, p2, p3) => vec![
                 self.shape_pick_note(shape, *p1),
                 self.shape_pick_note(shape, *p2),

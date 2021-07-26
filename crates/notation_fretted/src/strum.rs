@@ -15,7 +15,6 @@ impl Display for StrumDirection {
     }
 }
 
-
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum StrumStrings {
     All,

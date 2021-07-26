@@ -1,6 +1,6 @@
-use std::sync::Mutex;
 use helgoboss_midi::{ShortMessage, StructuredShortMessage};
 use midir::{MidiOutput, MidiOutputConnection};
+use std::sync::Mutex;
 
 pub struct MidiHub {
     output_conn: Option<Mutex<MidiOutputConnection>>,
@@ -28,9 +28,9 @@ impl MidiHub {
     pub fn new_output_conn() -> Option<MidiOutputConnection> {
         if let Some(output) = Self::new_output() {
             if output.port_count() > 0 {
-                #[cfg(target_os="linux")]
+                #[cfg(target_os = "linux")]
                 let port = &output.ports()[1]; //TODO: Select port
-                #[cfg(not(target_os="linux"))]
+                #[cfg(not(target_os = "linux"))]
                 let port = &output.ports()[0]; //TODO: Select port
                 output.connect(port, "MidiHub").ok()
             } else {
@@ -49,8 +49,11 @@ impl MidiHub {
         self.check_output_conn();
         if let Some(conn) = &self.output_conn {
             //println!("send midi: {:?}", msg);
-            if let Err(err) = conn.lock().unwrap().send(
-                &[msg.status_byte(), msg.data_byte_1().into(), msg.data_byte_2().into()]) {
+            if let Err(err) = conn.lock().unwrap().send(&[
+                msg.status_byte(),
+                msg.data_byte_1().into(),
+                msg.data_byte_2().into(),
+            ]) {
                 println!("send midi failed: {:?} -> {:?}", msg, err);
             }
         }

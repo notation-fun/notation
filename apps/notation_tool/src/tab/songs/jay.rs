@@ -1,4 +1,4 @@
-use notation_dsl::{tab};
+use notation_dsl::tab;
 use notation_proto::prelude::*;
 
 pub fn new_tab_long_juan_feng() -> Tab {
@@ -86,4 +86,3 @@ pub fn new_tab_long_juan_feng() -> Tab {
         form: "Intro" "Verse" "Verse"
     }
 }
-

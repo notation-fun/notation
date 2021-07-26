@@ -1,14 +1,14 @@
 use std::sync::Arc;
 
 #[cfg(target_arch = "wasm32")]
-use instant::Instant as StdInstant;
-#[cfg(target_arch = "wasm32")]
 use instant::Duration as StdDuration;
+#[cfg(target_arch = "wasm32")]
+use instant::Instant as StdInstant;
 
 #[cfg(not(target_arch = "wasm32"))]
-use std::time::Instant as StdInstant;
-#[cfg(not(target_arch = "wasm32"))]
 use std::time::Duration as StdDuration;
+#[cfg(not(target_arch = "wasm32"))]
+use std::time::Instant as StdInstant;
 
 use bevy::prelude::*;
 use notation_model::prelude::{BarPosition, Duration, ProtoEntry, Tab};
@@ -80,12 +80,7 @@ fn on_stop(
     _commands: Commands,
     config: Res<BevyConfig>,
     mut query: Query<(&Arc<Tab>, &TabState, &mut Transform), Changed<TabState>>,
-    mut entry_query: Query<(
-        Entity,
-        &Arc<ProtoEntry>,
-        &BarPosition,
-        &mut EntryState,
-    )>,
+    mut entry_query: Query<(Entity, &Arc<ProtoEntry>, &BarPosition, &mut EntryState)>,
 ) {
     for (tab, state, mut transform) in query.iter_mut() {
         if !state.play_state.is_playing() {
@@ -104,7 +99,6 @@ fn on_stop(
         }
     }
 }
-
 
 fn on_time(
     _commands: Commands,
@@ -126,15 +120,16 @@ fn on_time(
             *transform = config.grid.calc_pos_transform(tab, state.pos.tab);
             for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
                 if state.is_in_range(position) {
-                    if entry_state.is_playing()
-                        && state.pos.is_passed_with(position, duration) {
+                    if entry_state.is_playing() && state.pos.is_passed_with(position, duration) {
                         *entry_state = EntryState::Played;
                     }
                     if entry_state.is_idle() && state.pos.is_passed(position) {
                         *entry_state = EntryState::Playing;
                     }
                     if end_passed {
-                        if entry_state.is_played() || position.bar_ordinal > state.pos.bar.bar_ordinal {
+                        if entry_state.is_played()
+                            || position.bar_ordinal > state.pos.bar.bar_ordinal
+                        {
                             *entry_state = EntryState::Idle;
                         }
                     }

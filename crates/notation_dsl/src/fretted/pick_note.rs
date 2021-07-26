@@ -26,9 +26,7 @@ impl Parse for PickNoteDsl {
 impl ToTokens for PickNoteDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let PickNoteDsl { string, fret } = self;
-        let fret_quote = fret
-            .map(|f| quote!{ Some(#f) })
-            .unwrap_or( quote! {None} );
+        let fret_quote = fret.map(|f| quote! { Some(#f) }).unwrap_or(quote! {None});
         tokens.extend(quote! {
             PickNote::new(#string, #fret_quote, None, None, None)
         });

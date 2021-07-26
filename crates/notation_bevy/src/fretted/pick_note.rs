@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, Syllable, Units, PickNote};
+use notation_model::prelude::{BarPosition, Duration, PickNote, Syllable, Units};
 
 use crate::config::bevy_config::BevyConfig;
 use crate::prelude::{LyonShape, LyonShapeOp};
@@ -52,7 +52,9 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.config.grid.bar_size / self.data.bar_units.0 * Units::from(self.data.duration).0 - self.config.grid.note_outline * 2.0,
+            width: self.config.grid.bar_size / self.data.bar_units.0
+                * Units::from(self.data.duration).0
+                - self.config.grid.note_outline * 2.0,
             height: self.config.grid.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,
         }

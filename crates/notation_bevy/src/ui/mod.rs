@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_egui::{EguiSettings};
+use bevy_egui::EguiSettings;
 
 pub struct NotationUiPlugin;
 
@@ -16,4 +16,3 @@ pub fn update_ui_scale_factor(mut egui_settings: ResMut<EguiSettings>, windows: 
         egui_settings.scale_factor = 1.0;
     }
 }
-
