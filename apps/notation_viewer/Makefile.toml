@@ -53,6 +53,9 @@ script_runner = "@shell"
 script = ["""
 cp ./target/wasm.js ../../../../amateurguitar/www/static/notation/
 cp ./target/wasm_bg.wasm ../../../../amateurguitar/www/static/notation/
+cp ./assets/fonts/* ../../../../amateurguitar/www/static/notation/assets/fonts/
 cp ./assets/beginner/* ../../../../amateurguitar/www/static/notation/assets/beginner/
+cp ./assets/songs/jay/* ../../../../amateurguitar/www/static/notation/assets/songs/jay/
+cp ./assets/songs/pu_shu/* ../../../../amateurguitar/www/static/notation/assets/songs/pu_shu/
 """]
 dependencies = ["build-web"]
