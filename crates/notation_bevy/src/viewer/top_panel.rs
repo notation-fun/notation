@@ -9,7 +9,7 @@ use notation_model::prelude::Tab;
 use crate::config::bevy_config::{BevyConfig};
 use crate::prelude::TabState;
 
-use super::app::AppState;
+use super::app::{AppState, TabPathes};
 
 pub struct TopPanelState {
     playing: bool,
@@ -61,18 +61,20 @@ impl TopPanelState {
 pub fn top_panel_ui(
     mut commands: Commands,
     egui_ctx: Res<EguiContext>,
-    _assets: Res<AssetServer>,
+    asset_server: Res<AssetServer>,
     mut app_state: ResMut<AppState>,
     mut state: ResMut<TopPanelState>,
     mut config: ResMut<BevyConfig>,
     mut query: Query<&mut TabState>,
     tab_query: Query<Entity, With<Arc<Tab>>>,
+    tab_pathes: Res<TabPathes>,
 ) {
     let mut changed = false;
     let play_speed = state.play_speed;
     let always_show_fret = state.always_show_fret;
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         ui.horizontal(|ui| {
+            ui.checkbox(&mut app_state.camera_panning, "Panning");
             let play_title = if state.stopped || !state.playing {
                 "Play"
             } else {
@@ -94,6 +96,20 @@ pub fn top_panel_ui(
                     commands.entity(tab).despawn_recursive();
                 }
                 app_state.tab = None;
+            }
+            if tab_pathes.0.len() > 1 {
+                egui::ComboBox::from_label("Select Tab:")
+                    .selected_text(app_state.tab_path.clone())
+                    .show_ui(ui, |ui| {
+                        for path in tab_pathes.0.iter() {
+                            if ui.selectable_label(*path == app_state.tab_path, path).clicked() {
+                                for tab in tab_query.iter() {
+                                    commands.entity(tab).despawn_recursive();
+                                }
+                                app_state.change_tab(&asset_server, path.clone());
+                            }
+                        }
+                    });
             }
         });
     });

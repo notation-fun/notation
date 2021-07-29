@@ -9,34 +9,48 @@ use notation_model::prelude::*;
 
 use super::top_panel;
 
-pub struct TabPath(String);
+pub struct TabPathes(pub Vec<String>);
 
 pub struct AppState {
+    pub tab_path: String,
     pub tab_asset: Handle<TabAsset>,
     pub tab: Option<Arc<Tab>>,
     pub parse_error: Option<ParseError>,
     pub camera_panning: bool,
 }
 
-impl FromWorld for AppState {
-    fn from_world(world: &mut World) -> Self {
-        let server = world.get_resource::<AssetServer>().unwrap();
-        let tab_path = world.get_resource::<TabPath>().unwrap();
-        let tab_asset = server.load(tab_path.0.as_str());
+impl AppState {
+    pub fn new(asset_server: &AssetServer, tab_path: String, camera_panning: bool) -> Self {
+        let tab_asset = asset_server.load(tab_path.as_str());
         Self {
+            tab_path,
             tab_asset,
             tab: None,
             parse_error: None,
-            camera_panning: false,
+            camera_panning,
         }
+    }
+    pub fn change_tab(&mut self, asset_server: &AssetServer, tab_path: String) {
+        self.tab_path = tab_path;
+        self.tab_asset = asset_server.load(self.tab_path.as_str());
+        self.tab = None;
+        self.parse_error = None;
     }
 }
 
-pub fn main(tab_path: String) {
+impl FromWorld for AppState {
+    fn from_world(world: &mut World) -> Self {
+        let server = world.get_resource::<AssetServer>().unwrap();
+        let tab_pathes = world.get_resource::<TabPathes>().unwrap();
+        Self::new(server, tab_pathes.0[0].clone(), false)
+    }
+}
+
+pub fn main(tab_pathes: Vec<String>) {
     let mut app = new_notation_app("Notation Viewer");
     app.add_startup_system(setup.system());
 
-    app.insert_resource(TabPath(tab_path));
+    app.insert_resource(TabPathes(tab_pathes));
     app.init_resource::<AppState>();
 
     app.add_system(update_camera.system());

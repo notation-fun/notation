@@ -147,4 +147,13 @@ pub mod prelude {
 
         app
     }
+
+    #[cfg(target_arch = "wasm32")]
+    pub fn get_tab_from_url() -> Result<String, String> {
+        web_sys::window().ok_or("No_Window".to_owned())
+            .and_then(|x| x.document().ok_or("No_Document".to_owned()) )
+            .and_then(|x| x.location().ok_or("No_Location".to_owned()) )
+            .and_then(|x| x.search().map_err(|e| format!("No_Search:{:?}", e)) )
+            .map(|x| x.trim_start_matches('?').to_owned() )
+    }
 }
