@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::entity::ShapeBundle;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::config::bevy_config::BevyConfig;
+use crate::prelude::NotationTheme;
 
 pub trait LyonShape<T: Geometry> {
     fn get_name(&self) -> String;
@@ -40,14 +40,14 @@ pub trait LyonShape<T: Geometry> {
 }
 
 pub trait LyonShapeOp<'a, Data: Clone + Send + Sync + 'static, T: Geometry, Op: LyonShape<T>> {
-    fn new_shape(config: &'a BevyConfig, data: Data) -> Op;
+    fn new_shape(theme: &'a NotationTheme, data: Data) -> Op;
     fn create(
         commands: &mut Commands,
         entity: Entity,
-        config: &'a BevyConfig,
+        theme: &'a NotationTheme,
         data: Data,
     ) -> Entity {
-        let shape = Self::new_shape(config, data.clone());
+        let shape = Self::new_shape(theme, data.clone());
         shape.insert_lyon(commands, entity, |entity_commands| {
             entity_commands.insert(data.clone());
         })
@@ -55,14 +55,14 @@ pub trait LyonShapeOp<'a, Data: Clone + Send + Sync + 'static, T: Geometry, Op: 
     fn create_with_extra<F>(
         commands: &mut Commands,
         entity: Entity,
-        config: &'a BevyConfig,
+        theme: &'a NotationTheme,
         data: Data,
         extra: F,
     ) -> Entity
     where
         F: Fn(&mut EntityCommands),
     {
-        let shape = Self::new_shape(config, data.clone());
+        let shape = Self::new_shape(theme, data.clone());
         shape.insert_lyon(commands, entity, |entity_commands| {
             entity_commands.insert(data.clone());
             extra(entity_commands);
@@ -71,22 +71,22 @@ pub trait LyonShapeOp<'a, Data: Clone + Send + Sync + 'static, T: Geometry, Op: 
     fn create_with_child<F>(
         commands: &mut Commands,
         entity: Entity,
-        config: &'a BevyConfig,
+        theme: &'a NotationTheme,
         data: Data,
         setup_child: F,
     ) -> Entity
     where
         F: Fn(&mut EntityCommands),
     {
-        let entity = Self::create(commands, entity, config, data);
+        let entity = Self::create(commands, entity, theme, data);
         let mut child_commands = commands.spawn();
         setup_child(&mut child_commands);
         let child_entity = child_commands.id();
         commands.entity(entity).push_children(&[child_entity]);
         entity
     }
-    fn update(commands: &mut Commands, config: &'a BevyConfig, entity: Entity, data: &Data) {
-        let shape = Self::new_shape(config, data.clone());
+    fn update(commands: &mut Commands, theme: &'a NotationTheme, entity: Entity, data: &Data) {
+        let shape = Self::new_shape(theme, data.clone());
         shape.update_lyon(commands, entity);
     }
 }

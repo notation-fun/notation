@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use std::sync::Arc;
 
-use crate::prelude::{BevyConfig, LyonShapeOp};
+use crate::prelude::{LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
 
 use super::fretted_string::{FrettedString, FrettedStringData};
@@ -13,7 +13,7 @@ impl<const S: usize> FrettedGrid<S> {
     pub fn add_strings(
         &self,
         commands: &mut Commands,
-        config: &BevyConfig,
+        theme: &NotationTheme,
         entity: Entity,
         tab_bar: &Arc<TabBar>,
     ) {
@@ -21,7 +21,7 @@ impl<const S: usize> FrettedGrid<S> {
             FrettedString::create(
                 commands,
                 entity,
-                config,
+                theme,
                 FrettedStringData::new(tab_bar, string as u8),
             );
         }

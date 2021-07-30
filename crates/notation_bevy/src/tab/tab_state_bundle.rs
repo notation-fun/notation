@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use notation_model::prelude::Tab;
 
-use crate::config::bevy_config::BevyConfig;
+use crate::prelude::{NotationSettings, NotationTheme};
 
 use super::tab_state::TabState;
 
@@ -17,10 +17,10 @@ pub struct TabStateBundle {
 }
 
 impl TabStateBundle {
-    pub fn new(config: &BevyConfig, tab: Arc<Tab>) -> Self {
+    pub fn new(settings: &NotationSettings, theme: &NotationTheme, tab: Arc<Tab>) -> Self {
         let name = format!("State: {}", tab).as_str().into();
         let state = TabState::new(&tab);
-        let transform = config.grid.calc_tab_transform();
+        let transform = theme.grid.calc_tab_transform(settings);
         Self {
             tab,
             name,

@@ -4,8 +4,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use notation_model::prelude::Units;
 
-use crate::config::bevy_config::BevyConfig;
-use crate::prelude::{LyonShape, LyonShapeOp};
+use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
 
 #[derive(Clone, Debug)]
@@ -27,7 +26,7 @@ impl FrettedStringData {
     }
 }
 pub struct FrettedString<'a> {
-    config: &'a BevyConfig,
+    theme: &'a NotationTheme,
     data: FrettedStringData,
 }
 
@@ -36,23 +35,23 @@ impl<'a> LyonShape<shapes::Line> for FrettedString<'a> {
         format!("{}:String {}", self.data.bar_ordinal, self.data.string)
     }
     fn get_shape(&self) -> shapes::Line {
-        shapes::Line(Vec2::ZERO, Vec2::new(self.config.grid.bar_size, 0.0))
+        shapes::Line(Vec2::ZERO, Vec2::new(self.theme.grid.bar_size, 0.0))
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.config.theme.fretted.string_color)
+        ShapeColors::new(self.theme.fretted.string_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.config.theme.guitar.get_string_width(self.data.string);
+        let line_width = self.theme.guitar.get_string_width(self.data.string);
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let y = -1.0 * self.data.string as f32 * self.config.theme.fretted.string_space;
-        Transform::from_xyz(0.0, y, self.config.theme.fretted.string_z)
+        let y = -1.0 * self.data.string as f32 * self.theme.fretted.string_space;
+        Transform::from_xyz(0.0, y, self.theme.fretted.string_z)
     }
 }
 
 impl<'a> LyonShapeOp<'a, FrettedStringData, shapes::Line, FrettedString<'a>> for FrettedString<'a> {
-    fn new_shape(config: &'a BevyConfig, data: FrettedStringData) -> FrettedString<'a> {
-        FrettedString::<'a> { config, data }
+    fn new_shape(theme: &'a NotationTheme, data: FrettedStringData) -> FrettedString<'a> {
+        FrettedString::<'a> { theme, data }
     }
 }

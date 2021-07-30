@@ -3,8 +3,7 @@ use std::sync::Arc;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::config::bevy_config::BevyConfig;
-use crate::prelude::{LyonShape, LyonShapeOp};
+use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::{Signature, TabBar};
 
 #[derive(Clone, Debug)]
@@ -27,13 +26,12 @@ impl BarBeatData {
         }
     }
     pub fn may_new(
-        config: &BevyConfig,
+        theme: &NotationTheme,
         tab_bar: &Arc<TabBar>,
         signature: &Signature,
         beat: u8,
     ) -> Option<Self> {
-        config
-            .theme
+        theme
             .core
             .get_beat_color(signature, beat)
             .map(|_color| Self::new(tab_bar, signature, beat))
@@ -41,7 +39,7 @@ impl BarBeatData {
 }
 
 pub struct BarBeat<'a> {
-    config: &'a BevyConfig,
+    theme: &'a NotationTheme,
     data: BarBeatData,
 }
 
@@ -51,35 +49,27 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.config.grid.bar_size / self.data.bar_beats as f32,
-            height: (self.config.grid.bar_beat_top - self.config.grid.bar_beat_bottom),
+            width: self.theme.grid.bar_size / self.data.bar_beats as f32,
+            height: (self.theme.grid.bar_beat_top - self.theme.grid.bar_beat_bottom),
             origin: shapes::RectangleOrigin::BottomLeft,
         }
     }
     fn get_colors(&self) -> ShapeColors {
         let signature = self.data.signature;
-        let color = self
-            .config
-            .theme
-            .core
-            .get_beat_color(&signature, self.data.beat);
-        ShapeColors::new(color.unwrap_or(self.config.theme.core.background_color))
+        let color = self.theme.core.get_beat_color(&signature, self.data.beat);
+        ShapeColors::new(color.unwrap_or(self.theme.core.background_color))
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
-        let x = self.config.grid.bar_size / self.data.bar_beats as f32 * self.data.beat as f32;
-        Transform::from_xyz(
-            x,
-            self.config.grid.bar_beat_bottom,
-            self.config.theme.core.beat_z,
-        )
+        let x = self.theme.grid.bar_size / self.data.bar_beats as f32 * self.data.beat as f32;
+        Transform::from_xyz(x, self.theme.grid.bar_beat_bottom, self.theme.core.beat_z)
     }
 }
 
 impl<'a> LyonShapeOp<'a, BarBeatData, shapes::Rectangle, BarBeat<'a>> for BarBeat<'a> {
-    fn new_shape(config: &'a BevyConfig, data: BarBeatData) -> BarBeat<'a> {
-        BarBeat::<'a> { config, data }
+    fn new_shape(theme: &'a NotationTheme, data: BarBeatData) -> BarBeat<'a> {
+        BarBeat::<'a> { theme, data }
     }
 }

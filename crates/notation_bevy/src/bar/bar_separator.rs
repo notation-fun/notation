@@ -3,8 +3,7 @@ use std::sync::Arc;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::config::bevy_config::BevyConfig;
-use crate::prelude::{LyonShape, LyonShapeOp};
+use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::{TabBar, Units};
 
 #[derive(Clone, Debug)]
@@ -27,7 +26,7 @@ impl BarSeparatorData {
 }
 
 pub struct BarSeparator<'a> {
-    config: &'a BevyConfig,
+    theme: &'a NotationTheme,
     data: BarSeparatorData,
 }
 
@@ -41,29 +40,29 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
     }
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
-            Vec2::new(0.0, self.config.grid.bar_separator_top),
-            Vec2::new(0.0, self.config.grid.bar_separator_bottom),
+            Vec2::new(0.0, self.theme.grid.bar_separator_top),
+            Vec2::new(0.0, self.theme.grid.bar_separator_bottom),
         )
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.config.theme.core.bar_separator_color)
+        ShapeColors::new(self.theme.core.bar_separator_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.config.grid.bar_separator_size;
+        let line_width = self.theme.grid.bar_separator_size;
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
         let x = if self.data.is_begin {
             0.0
         } else {
-            self.config.grid.bar_size
+            self.theme.grid.bar_size
         };
-        Transform::from_xyz(x, 0.0, self.config.theme.core.bar_separator_z)
+        Transform::from_xyz(x, 0.0, self.theme.core.bar_separator_z)
     }
 }
 
 impl<'a> LyonShapeOp<'a, BarSeparatorData, shapes::Line, BarSeparator<'a>> for BarSeparator<'a> {
-    fn new_shape(config: &'a BevyConfig, data: BarSeparatorData) -> BarSeparator<'a> {
-        BarSeparator::<'a> { config, data }
+    fn new_shape(theme: &'a NotationTheme, data: BarSeparatorData) -> BarSeparator<'a> {
+        BarSeparator::<'a> { theme, data }
     }
 }

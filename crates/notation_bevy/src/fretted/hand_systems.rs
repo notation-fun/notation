@@ -1,17 +1,11 @@
-
 use bevy::prelude::*;
 
 use notation_model::prelude::{BarPosition, Duration};
 use std::sync::Arc;
 
-
-
-
-
-
 use super::shape_diagram::{ShapeDiagramData, ShapeDiagramShape};
 use super::shape_finger::{ShapeFingerData, ShapeFingerShape};
-use crate::prelude::{BevyConfig, LyonShapeOp};
+use crate::prelude::{LyonShapeOp, NotationTheme};
 use notation_model::prelude::{HandShape, TabBar};
 
 pub fn new_system_set() -> SystemSet {
@@ -22,7 +16,7 @@ pub fn new_system_set() -> SystemSet {
 
 fn on_add_shape_diagram<const S: usize>(
     mut commands: Commands,
-    config: Res<BevyConfig>,
+    theme: Res<NotationTheme>,
     query: Query<(&Parent, Entity, &HandShape<S>, &Duration, &BarPosition), Added<HandShape<S>>>,
     parent_query: Query<&Arc<TabBar>>,
 ) {
@@ -31,11 +25,11 @@ fn on_add_shape_diagram<const S: usize>(
             let data =
                 ShapeDiagramData::<S>::new(bar.bar_units(), &bar, *duration, *position, *shape);
             let diagram_entity =
-                ShapeDiagramShape::<S>::create(&mut commands, entity, &config, data);
+                ShapeDiagramShape::<S>::create(&mut commands, entity, &theme, data);
             for (string, fret) in shape.frets.iter().enumerate() {
                 if fret.is_none() || fret.unwrap() > 0 {
                     let finger_data = ShapeFingerData::new(string as u8, *fret, None);
-                    ShapeFingerShape::create(&mut commands, diagram_entity, &config, finger_data);
+                    ShapeFingerShape::create(&mut commands, diagram_entity, &theme, finger_data);
                 }
             }
         }

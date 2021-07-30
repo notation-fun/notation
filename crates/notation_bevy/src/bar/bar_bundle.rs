@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use notation_model::prelude::{TabBar, TabPosition};
 
-use crate::prelude::{GridCol, GridConfig, GridRow};
+use crate::prelude::{GridCol, GridRow, NotationSettings, NotationTheme};
 
 #[derive(Bundle)]
 pub struct BarBundle {
@@ -17,9 +17,9 @@ pub struct BarBundle {
 }
 
 impl BarBundle {
-    pub fn new(bar: Arc<TabBar>, config: &GridConfig) -> Self {
-        let (row, col) = config.calc_bar_row_col(&bar);
-        let transform = config.calc_bar_transform(&row, &col);
+    pub fn new(settings: &NotationSettings, theme: &NotationTheme, bar: Arc<TabBar>) -> Self {
+        let (row, col) = theme.grid.calc_bar_row_col(settings, &bar);
+        let transform = theme.grid.calc_bar_transform(&row, &col);
         let name = Name::from(bar.to_string().as_str());
         let pos = bar.tab_pos();
         Self {

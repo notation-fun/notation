@@ -9,7 +9,7 @@ use super::fretted_string::{FrettedString, FrettedStringData};
 use super::hand_bundles::HandShapeBundle;
 use super::pick_bundle::PickBundle;
 use super::pick_note::{PickNoteData, PickNoteShape};
-use crate::prelude::{BevyConfig, ConfigChangedEvent, LyonShapeOp};
+use crate::prelude::{LyonShapeOp, NotationTheme, WindowResizedEvent};
 use notation_model::prelude::{Fretboard, FrettedEntry, HandShape, TabBar};
 
 pub struct FrettedPlugin;
@@ -26,30 +26,30 @@ impl Plugin for FrettedPlugin {
 
 fn on_config_changed(
     mut commands: Commands,
-    mut evts: EventReader<ConfigChangedEvent>,
-    config: Res<BevyConfig>,
+    mut evts: EventReader<WindowResizedEvent>,
+    theme: Res<NotationTheme>,
     string_query: Query<(Entity, &FrettedStringData)>,
     pick_note_query: Query<(Entity, &PickNoteData)>,
 ) {
     for _evt in evts.iter() {
         for (entity, data) in string_query.iter() {
-            FrettedString::update(&mut commands, &config, entity, data);
+            FrettedString::update(&mut commands, &theme, entity, data);
         }
         for (entity, data) in pick_note_query.iter() {
-            PickNoteShape::update(&mut commands, &config, entity, data);
+            PickNoteShape::update(&mut commands, &theme, entity, data);
         }
     }
 }
 
 fn on_add_fretted_grid<const S: usize>(
     mut commands: Commands,
-    config: Res<BevyConfig>,
+    theme: Res<NotationTheme>,
     query: Query<(&Parent, Entity, &FrettedGrid<S>), Added<FrettedGrid<S>>>,
     parent_query: Query<&Arc<TabBar>>,
 ) {
     for (parent, entity, fretted_grid) in query.iter() {
         if let Ok(tab_bar) = parent_query.get(parent.0) {
-            fretted_grid.add_strings(&mut commands, &config, entity, tab_bar);
+            fretted_grid.add_strings(&mut commands, &theme, entity, tab_bar);
         }
     }
 }

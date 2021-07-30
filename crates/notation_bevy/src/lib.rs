@@ -20,9 +20,11 @@ pub mod tab;
 pub mod fretted;
 pub mod guitar;
 
-pub mod config;
+pub mod settings;
+pub mod theme;
 pub mod utils;
 
+pub mod app;
 pub mod ext;
 pub mod ui;
 pub mod viewer;
@@ -35,6 +37,12 @@ pub mod dev;
 
 pub mod prelude {
     #[doc(hidden)]
+    pub use crate::app::notation_app::{NotationApp, NotationPlugins};
+    #[doc(hidden)]
+    pub use crate::app::notation_app_events::WindowResizedEvent;
+    #[doc(hidden)]
+    pub use crate::app::notation_app_state::{NotationAppState, TabPathes};
+    #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
     pub use crate::bar::bar_plugin::BarPlugin;
@@ -42,16 +50,6 @@ pub mod prelude {
     pub use crate::bar::layer_bundle::LayerBundle;
     #[doc(hidden)]
     pub use crate::chord::chord_bundle::ChordBundle;
-    #[doc(hidden)]
-    pub use crate::config::bevy_config::BevyConfig;
-    #[doc(hidden)]
-    pub use crate::config::bevy_theme::BevyTheme;
-    #[doc(hidden)]
-    pub use crate::config::config_events::ConfigChangedEvent;
-    #[doc(hidden)]
-    pub use crate::config::config_plugin::ConfigPlugin;
-    #[doc(hidden)]
-    pub use crate::config::grid_config::{GridCol, GridConfig, GridRow};
     #[doc(hidden)]
     pub use crate::entry::entry_bundle::EntryBundle;
     #[doc(hidden)]
@@ -79,6 +77,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_state::PlayState;
     #[doc(hidden)]
+    pub use crate::settings::notation_settings::NotationSettings;
+    #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
     pub use crate::tab::tab_bundle::TabBundle;
@@ -91,69 +91,23 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab::tab_state_bundle::TabStateBundle;
     #[doc(hidden)]
+    pub use crate::theme::core_theme::CoreTheme;
+    #[doc(hidden)]
+    pub use crate::theme::fretted_theme::FrettedTheme;
+    #[doc(hidden)]
+    pub use crate::theme::grid_theme::{GridCol, GridRow, GridTheme};
+    #[doc(hidden)]
+    pub use crate::theme::guitar_theme::GuitarTheme;
+    #[doc(hidden)]
+    pub use crate::theme::notation_theme::NotationTheme;
+    #[doc(hidden)]
+    pub use crate::theme::syllable_theme::SyllableTheme;
+    #[doc(hidden)]
     pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]
     pub use crate::ui::NotationUiPlugin;
     #[doc(hidden)]
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
-
-    use bevy::app::{PluginGroup, PluginGroupBuilder};
-    use bevy::prelude::*;
-    use notation_midi::midi_plugin::MidiPlugin;
-
-    pub struct NotationPlugins;
-    impl PluginGroup for NotationPlugins {
-        fn build(&mut self, group: &mut PluginGroupBuilder) {
-            group.add(ConfigPlugin);
-            group.add(EntryPlugin);
-            group.add(LinePlugin);
-            group.add(BarPlugin);
-            group.add(FrettedPlugin);
-            group.add(GuitarPlugin);
-            group.add(TabPlugin);
-            group.add(PlayPlugin);
-            //crates plugins
-            group.add(MidiPlugin);
-            //external plugins
-            group.add(bevy_prototype_lyon::prelude::ShapePlugin);
-        }
-    }
-
-    pub fn new_notation_app(title: &str) -> AppBuilder {
-        let mut app = App::build();
-        ConfigPlugin::insert_window_descriptor(&mut app, String::from(title));
-        app.insert_resource(Msaa { samples: 8 });
-        app.add_plugins(DefaultPlugins);
-        app.add_plugins(NotationPlugins);
-
-        #[cfg(target_arch = "wasm32")]
-        app.add_plugin(bevy_webgl2::WebGL2Plugin);
-
-        // When building for WASM, print panics to the browser console
-        #[cfg(target_arch = "wasm32")]
-        console_error_panic_hook::set_once();
-
-        #[cfg(target_arch = "wasm32")]
-        app.add_plugin(crate::ext::bevy_web_fullscreen::FullViewportPlugin);
-
-        app.add_plugin(bevy_egui::EguiPlugin);
-        app.add_plugin(NotationUiPlugin);
-
-        #[cfg(feature = "dev")]
-        app.add_plugins(crate::dev::NotationDevPlugins);
-
-        #[cfg(feature = "inspector")]
-        app.add_plugins(crate::inspector::NotationInspectorPlugins);
-
-        app
-    }
-
-    #[cfg(target_arch = "wasm32")]
-    pub fn get_tab_from_url() -> Result<String, String> {
-        web_sys::window().ok_or("No_Window".to_owned())
-            .and_then(|x| x.document().ok_or("No_Document".to_owned()) )
-            .and_then(|x| x.location().ok_or("No_Location".to_owned()) )
-            .and_then(|x| x.search().map_err(|e| format!("No_Search:{:?}", e)) )
-            .map(|x| x.trim_start_matches('?').to_owned() )
-    }
+    #[doc(hidden)]
+    pub use crate::viewer::run_notation_viewer;
 }

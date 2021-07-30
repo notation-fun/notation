@@ -4,8 +4,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use notation_model::prelude::{BarPosition, Duration, HandShape, Units};
 
-use crate::config::bevy_config::BevyConfig;
-use crate::prelude::{LyonShape, LyonShapeOp};
+use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
 
 #[derive(Clone, Debug)]
@@ -36,7 +35,7 @@ impl<const S: usize> ShapeDiagramData<S> {
     }
 }
 pub struct ShapeDiagramShape<'a, const S: usize> {
-    config: &'a BevyConfig,
+    theme: &'a NotationTheme,
     data: ShapeDiagramData<S>,
 }
 
@@ -51,18 +50,18 @@ impl<'a, const S: usize> LyonShape<shapes::SvgPathShape> for ShapeDiagramShape<'
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.config.theme.fretted.shape_color)
+        ShapeColors::new(self.theme.fretted.shape_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Stroke(
-            StrokeOptions::default().with_line_width(self.config.theme.fretted.shape_line_width),
+            StrokeOptions::default().with_line_width(self.theme.fretted.shape_line_width),
         )
     }
     fn get_transform(&self) -> Transform {
-        let x = self.config.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0
+        let x = self.theme.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0
             + 16.0;
         let y = 32.0;
-        Transform::from_xyz(x, y, self.config.theme.fretted.string_z)
+        Transform::from_xyz(x, y, self.theme.fretted.string_z)
     }
 }
 
@@ -70,7 +69,7 @@ impl<'a, const S: usize>
     LyonShapeOp<'a, ShapeDiagramData<S>, shapes::SvgPathShape, ShapeDiagramShape<'a, S>>
     for ShapeDiagramShape<'a, S>
 {
-    fn new_shape(config: &'a BevyConfig, data: ShapeDiagramData<S>) -> ShapeDiagramShape<'a, S> {
-        ShapeDiagramShape::<'a> { config, data }
+    fn new_shape(theme: &'a NotationTheme, data: ShapeDiagramData<S>) -> ShapeDiagramShape<'a, S> {
+        ShapeDiagramShape::<'a> { theme, data }
     }
 }
