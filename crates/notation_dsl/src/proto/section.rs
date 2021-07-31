@@ -5,8 +5,8 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
 use syn::{Ident, LitStr};
 
-use crate::bar::BarDsl;
-use crate::entry::MultibleDsl;
+use crate::proto::bar::BarDsl;
+use crate::proto::entry::MultibleDsl;
 
 pub struct SectionDsl {
     pub key: LitStr,

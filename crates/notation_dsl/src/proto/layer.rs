@@ -5,7 +5,7 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
 use syn::{LitInt, LitStr, Token};
 
-use crate::slice::SliceDsl;
+use crate::proto::slice::SliceDsl;
 
 pub struct LayerDsl {
     pub key: LitStr,

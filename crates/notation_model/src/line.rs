@@ -24,7 +24,7 @@ impl Line {
         Self { key, entries }
     }
     pub fn index_of_mark(&self, begin: usize, mark: &String) -> Option<usize> {
-        for i in begin..(self.entries.len() - begin) {
+        for i in begin..self.entries.len() {
             let entry = self.entries.get(i);
             if entry.is_some() && entry.unwrap().is_mark_string(mark) {
                 return Some(i);

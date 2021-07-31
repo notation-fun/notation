@@ -5,7 +5,7 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
 use syn::{Ident, LitStr};
 
-use crate::entry::EntryDsl;
+use crate::proto::entry::EntryDsl;
 
 pub struct TrackDsl {
     pub key: LitStr,

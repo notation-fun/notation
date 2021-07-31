@@ -2,45 +2,45 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::LitInt;
 
 use crate::context::Context;
-use crate::core::duration::DurationTweakDsl;
 
-use super::pick_note::PickNoteDsl;
+use super::duration::DurationTweakDsl;
+use super::note::NoteDsl;
 
-pub struct PickDsl {
-    pub notes: Vec<PickNoteDsl>,
+pub struct ToneDsl {
+    pub notes: Vec<NoteDsl>,
     pub duration_tweak: Option<DurationTweakDsl>,
 }
 
-impl PickDsl {
+impl ToneDsl {
     #[throws(Error)]
     pub fn parse_without_paren(input: ParseStream, multied: bool, with_paren: bool) -> Self {
         let mut notes = vec![];
-        while input.peek(LitInt) {
+        while NoteDsl::peek(input) {
             notes.push(input.parse()?);
             if multied && !with_paren {
                 break;
             }
         }
         let duration_tweak = DurationTweakDsl::try_parse(input);
-        PickDsl { notes, duration_tweak }
+        ToneDsl { notes, duration_tweak }
     }
 }
 
-impl ToTokens for PickDsl {
+impl ToTokens for ToneDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let PickDsl { notes, duration_tweak } = self;
+        let ToneDsl { notes, duration_tweak } = self;
         let duration_quote = Context::duration_quote(duration_tweak);
         let string_num = Context::fretted().string_num;
         let notes_quote: Vec<_> = notes.iter().map(|x| quote! { #x }).collect();
         tokens.extend(quote! {
-            ProtoEntry::from(FrettedEntry::<#string_num>::from(
-                (Pick::from(vec![
+            ProtoEntry::from(CoreEntry::from(
+                (Tone::from(vec![
                     #(#notes_quote),*
                 ]), #duration_quote)
             ))
         });
     }
 }
+

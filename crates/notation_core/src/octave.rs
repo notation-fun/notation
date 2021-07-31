@@ -34,19 +34,41 @@ impl Default for Octave {
 impl Display for Octave {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", match self {
-            Octave::N1 => "_",
-            Octave::P0 => "0",
-            Octave::P1 => "1",
-            Octave::P2 => "2",
-            Octave::P3 => "3",
-            Octave::P4 => "4",
-            Octave::P5 => "5",
-            Octave::P6 => "6",
-            Octave::P7 => "7",
-            Octave::P8 => "8",
-            Octave::P9 => "9",
-            Octave::P10 => "10",
+            Octave::N1 => "N1",
+            Octave::P0 => "P0",
+            Octave::P1 => "P1",
+            Octave::P2 => "P2",
+            Octave::P3 => "P3",
+            Octave::P4 => "P4",
+            Octave::P5 => "P5",
+            Octave::P6 => "P6",
+            Octave::P7 => "P7",
+            Octave::P8 => "P8",
+            Octave::P9 => "P9",
+            Octave::P10 => "P10",
         })
+    }
+}
+
+impl Octave {
+    pub fn to_ident(&self) -> String {
+        format!("{}", self)
+    }
+    pub fn from_ident(ident: &str) -> Self {
+        match ident {
+            "P0" => Self::P0,
+            "P1" => Self::P1,
+            "P2" => Self::P2,
+            "P3" => Self::P3,
+            "P4" => Self::P4,
+            "P5" => Self::P5,
+            "P6" => Self::P6,
+            "P7" => Self::P7,
+            "P8" => Self::P8,
+            "P9" => Self::P9,
+            "P10" => Self::P10,
+            _ => Self::N1,
+        }
     }
 }
 

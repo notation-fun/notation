@@ -5,9 +5,11 @@ use syn::parse::{Error, ParseStream};
 use syn::{LitInt, Token};
 
 use crate::context::Context;
+use crate::core::duration::DurationTweakDsl;
 
 pub struct ShapeDsl {
     pub frets: Vec<Option<u8>>,
+    pub duration_tweak: Option<DurationTweakDsl>,
 }
 
 impl ShapeDsl {
@@ -26,13 +28,14 @@ impl ShapeDsl {
             }
         }
         frets.reverse();
-        ShapeDsl { frets }
+        let duration_tweak = DurationTweakDsl::try_parse(input);
+        ShapeDsl { frets, duration_tweak }
     }
 }
 
 impl ToTokens for ShapeDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let ShapeDsl { frets } = self;
+        let ShapeDsl { frets, duration_tweak } = self;
         let string_num = Context::fretted().string_num;
         let mut frets_quote: Vec<TokenStream> = vec![];
         let mut fingers_quote: Vec<TokenStream> = vec![];
@@ -43,14 +46,14 @@ impl ToTokens for ShapeDsl {
             });
             fingers_quote.push(quote! { None });
         }
-        let duration = Context::duration_quote();
+        let duration_quote = Context::duration_quote(duration_tweak);
         tokens.extend(quote! {
             ProtoEntry::from(FrettedEntry::<#string_num>::from(
                 (HandShape::<#string_num>::new([
                     #(#frets_quote),*
                 ], [
                     #(#fingers_quote),*
-                ]), #duration)
+                ]), #duration_quote)
             ))
         });
     }

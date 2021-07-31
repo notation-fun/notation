@@ -58,7 +58,7 @@ pub struct Pitch {
 
 impl Display for Pitch {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}{}", self.name, self.sign)
+        write!(f, "{}{}", self.sign, self.name)
     }
 }
 
@@ -150,63 +150,69 @@ impl Pitch {
         sign: PitchSign::Flat,
     };
 
-    pub const C_DOUBA_FLAT_SHARP: Pitch = Self {
+    pub const C_DOUBLE_SHARP: Pitch = Self {
         name: PitchName::C,
         sign: PitchSign::DoubleSharp,
     };
-    pub const D_DOUBA_FLAT_SHARP: Pitch = Self {
+    pub const D_DOUBLE_SHARP: Pitch = Self {
         name: PitchName::D,
         sign: PitchSign::DoubleSharp,
     };
-    pub const E_DOUBA_FLAT_SHARP: Pitch = Self {
+    pub const E_DOUBLE_SHARP: Pitch = Self {
         name: PitchName::E,
         sign: PitchSign::DoubleSharp,
     };
-    pub const F_DOUBA_FLAT_SHARP: Pitch = Self {
+    pub const F_DOUBLE_SHARP: Pitch = Self {
         name: PitchName::F,
         sign: PitchSign::DoubleSharp,
     };
-    pub const G_DOUBA_FLAT_SHARP: Pitch = Self {
+    pub const G_DOUBLE_SHARP: Pitch = Self {
         name: PitchName::G,
         sign: PitchSign::DoubleSharp,
     };
-    pub const A_DOUBA_FLAT_SHARP: Pitch = Self {
+    pub const A_DOUBLE_SHARP: Pitch = Self {
         name: PitchName::A,
         sign: PitchSign::DoubleSharp,
     };
-    pub const B_DOUBA_FLAT_SHARP: Pitch = Self {
+    pub const B_DOUBLE_SHARP: Pitch = Self {
         name: PitchName::B,
         sign: PitchSign::DoubleSharp,
     };
 
-    pub const C_DOUBA_FLAT_FLAT: Pitch = Self {
+    pub const C_DOUBLE_FLAT: Pitch = Self {
         name: PitchName::C,
         sign: PitchSign::DoubleFlat,
     };
-    pub const D_DOUBA_FLAT_FLAT: Pitch = Self {
+    pub const D_DOUBLE_FLAT: Pitch = Self {
         name: PitchName::D,
         sign: PitchSign::DoubleFlat,
     };
-    pub const E_DOUBA_FLAT_FLAT: Pitch = Self {
+    pub const E_DOUBLE_FLAT: Pitch = Self {
         name: PitchName::E,
         sign: PitchSign::DoubleFlat,
     };
-    pub const F_DOUBA_FLAT_FLAT: Pitch = Self {
+    pub const F_DOUBLE_FLAT: Pitch = Self {
         name: PitchName::F,
         sign: PitchSign::DoubleFlat,
     };
-    pub const G_DOUBA_FLAT_FLAT: Pitch = Self {
+    pub const G_DOUBLE_FLAT: Pitch = Self {
         name: PitchName::G,
         sign: PitchSign::DoubleFlat,
     };
-    pub const A_DOUBA_FLAT_FLAT: Pitch = Self {
+    pub const A_DOUBLE_FLAT: Pitch = Self {
         name: PitchName::A,
         sign: PitchSign::DoubleFlat,
     };
-    pub const B_DOUBA_FLAT_FLAT: Pitch = Self {
+    pub const B_DOUBLE_FLAT: Pitch = Self {
         name: PitchName::B,
         sign: PitchSign::DoubleFlat,
     };
+}
+
+impl Pitch {
+    pub fn new(name: PitchName, sign: PitchSign) -> Self {
+        Self { name, sign, }
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
@@ -270,6 +276,19 @@ impl From<Pitch> for Semitones {
     }
 }
 
+impl From<Semitones> for PitchSign {
+    fn from(v: Semitones) -> Self {
+        match v.0 {
+            0 => Self::Natural,
+            1 => Self::Sharp,
+            -1 => Self::Flat,
+            2 => Self::DoubleSharp,
+            -2 => Self::DoubleFlat,
+            _ => Self::Natural,
+        }
+    }
+}
+
 impl From<Semitones> for Pitch {
     fn from(v: Semitones) -> Self {
         let pos_val = if v.0 >= 0 { v.0 % 12 } else { v.0 % 12 + 12 };
@@ -286,6 +305,52 @@ impl From<Semitones> for Pitch {
             9 => Pitch::A,
             10 => Pitch::A_SHARP,
             11 => Pitch::B,
+            _ => Pitch::C,
+        }
+    }
+}
+
+impl Pitch {
+    pub fn to_text(&self) -> String {
+        format!("{}", self)
+    }
+    pub fn from_text(text: &str) -> Self {
+        match text {
+            "C" => Pitch::C,
+            "D" => Pitch::D,
+            "E" => Pitch::E,
+            "F" => Pitch::F,
+            "G" => Pitch::G,
+            "A" => Pitch::A,
+            "B" => Pitch::B,
+            "#C" => Pitch::C_SHARP,
+            "#D" => Pitch::D_SHARP,
+            "#E" => Pitch::E_SHARP,
+            "#F" => Pitch::F_SHARP,
+            "#G" => Pitch::G_SHARP,
+            "#A" => Pitch::A_SHARP,
+            "#B" => Pitch::B_SHARP,
+            "bC" => Pitch::C_FLAT,
+            "bD" => Pitch::D_FLAT,
+            "bE" => Pitch::E_FLAT,
+            "bF" => Pitch::F_FLAT,
+            "bG" => Pitch::G_FLAT,
+            "bA" => Pitch::A_FLAT,
+            "bB" => Pitch::B_FLAT,
+            "##C" => Pitch::C_DOUBLE_SHARP,
+            "##D" => Pitch::D_DOUBLE_SHARP,
+            "##E" => Pitch::E_DOUBLE_SHARP,
+            "##F" => Pitch::F_DOUBLE_SHARP,
+            "##G" => Pitch::G_DOUBLE_SHARP,
+            "##A" => Pitch::A_DOUBLE_SHARP,
+            "##B" => Pitch::B_DOUBLE_SHARP,
+            "bbC" => Pitch::C_DOUBLE_FLAT,
+            "bbD" => Pitch::D_DOUBLE_FLAT,
+            "bbE" => Pitch::E_DOUBLE_FLAT,
+            "bbF" => Pitch::F_DOUBLE_FLAT,
+            "bbG" => Pitch::G_DOUBLE_FLAT,
+            "bbA" => Pitch::A_DOUBLE_FLAT,
+            "bbB" => Pitch::B_DOUBLE_FLAT,
             _ => Pitch::C,
         }
     }

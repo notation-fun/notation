@@ -32,6 +32,29 @@ impl Display for Unit {
     }
 }
 
+impl Unit {
+    pub fn halfed(&self) -> Self {
+        match self {
+            Self::Whole => Self::Half,
+            Self::Half => Self::Quarter,
+            Self::Quarter => Self::Eighth,
+            Self::Eighth => Self::Sixteenth,
+            Self::Sixteenth => Self::ThirtySecondth,
+            Self::ThirtySecondth => Self::ThirtySecondth,
+        }
+    }
+    pub fn doubled(&self) -> Self {
+        match self {
+            Self::Whole => Self::Whole,
+            Self::Half => Self::Whole,
+            Self::Quarter => Self::Half,
+            Self::Eighth => Self::Quarter,
+            Self::Sixteenth => Self::Eighth,
+            Self::ThirtySecondth => Self::Sixteenth,
+        }
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
 pub struct Units(pub f32);
 
@@ -107,9 +130,25 @@ impl Duration {
     pub const DT_1_8: Self = Duration::DottedTriplet(Unit::Eighth);
     pub const DT_1_16: Self = Duration::DottedTriplet(Unit::Sixteenth);
     pub const DT_1_32: Self = Duration::DottedTriplet(Unit::ThirtySecondth);
+
+    /// Returns `true` if the duration is [`Simple`].
+    pub fn is_simple(&self) -> bool {
+        matches!(self, Self::Simple(..))
+    }
+
+    pub fn as_simple(&self) -> Option<&Unit> {
+        if let Self::Simple(v) = self {
+            Some(v)
+        } else {
+            None
+        }
+    }
 }
 
 impl Duration {
+    pub fn to_ident(&self) -> String {
+        format!("{}", self)
+    }
     pub fn from_ident(ident: &str) -> Self {
         match ident {
             "_0" => Self::_0,

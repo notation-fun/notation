@@ -4,15 +4,16 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream, Result};
 use syn::{braced, bracketed, parenthesized, token};
 
-use crate::bar::BarDsl;
-use crate::entry::{EntryDsl, MultibleDsl};
+use crate::core::tone::ToneDsl;
 use crate::fretted::pick::PickDsl;
 use crate::fretted::shape::ShapeDsl;
-use crate::layer::LayerDsl;
-use crate::line::{LineDsl, LineDslOrExpr};
-use crate::section::SectionDsl;
-use crate::slice::SliceDsl;
-use crate::track::TrackDsl;
+use crate::proto::entry::{EntryDsl, MultibleDsl};
+use crate::proto::bar::BarDsl;
+use crate::proto::layer::LayerDsl;
+use crate::proto::line::{LineDsl, LineDslOrExpr};
+use crate::proto::section::SectionDsl;
+use crate::proto::slice::SliceDsl;
+use crate::proto::track::TrackDsl;
 
 macro_rules! impl_dsl {
     ($dsl_type:ident) => {
@@ -128,6 +129,7 @@ macro_rules! impl_multible_dsl {
     }
 }
 
-impl_multible_dsl!(BarDsl);
+impl_multible_dsl!(ToneDsl);
 impl_multible_dsl!(PickDsl);
 impl_multible_dsl!(ShapeDsl);
+impl_multible_dsl!(BarDsl);

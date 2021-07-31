@@ -8,78 +8,71 @@ use proc_macro::TokenStream;
 use quote::ToTokens;
 use syn::parse_macro_input;
 
-mod bar;
 mod context;
-mod entry;
-mod form;
+mod core;
 mod fretted;
-mod layer;
-mod line;
-mod section;
-mod slice;
-mod tab;
-mod track;
+mod proto;
 mod util;
 
 #[proc_macro]
 pub fn entry(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as entry::EntryDsl)
+    parse_macro_input!(input as proto::entry::EntryDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn line(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as line::LineDsl)
+    parse_macro_input!(input as proto::line::LineDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn slice(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as slice::SliceDsl)
+    parse_macro_input!(input as proto::slice::SliceDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn track(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as track::TrackDsl)
+    parse_macro_input!(input as proto::track::TrackDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn layer(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as layer::LayerDsl)
+    parse_macro_input!(input as proto::layer::LayerDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn bar(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as bar::BarDsl)
+    parse_macro_input!(input as proto::bar::BarDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn section(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as section::SectionDsl)
+    parse_macro_input!(input as proto::section::SectionDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn form(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as form::FormDsl)
+    parse_macro_input!(input as proto::form::FormDsl)
         .into_token_stream()
         .into()
 }
 
 #[proc_macro]
 pub fn tab(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as tab::TabDsl)
+    parse_macro_input!(input as proto::tab::TabDsl)
         .into_token_stream()
         .into()
 }

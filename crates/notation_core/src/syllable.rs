@@ -31,6 +31,29 @@ impl Display for Syllable {
     }
 }
 
+impl Syllable {
+    pub fn to_ident(&self) -> String {
+        format!("{}", self)
+    }
+    pub fn from_ident(ident: &str) -> Self {
+        match ident {
+            "Do" => Syllable::Do,
+            "Di" => Syllable::Di,
+            "Re" => Syllable::Re,
+            "Ri" => Syllable::Ri,
+            "Mi" => Syllable::Mi,
+            "Fa" => Syllable::Fa,
+            "Fi" => Syllable::Fi,
+            "So" => Syllable::So,
+            "Si" => Syllable::Si,
+            "La" => Syllable::La,
+            "Li" => Syllable::Li,
+            "Ti" => Syllable::Ti,
+            _ => Syllable::Do,
+        }
+    }
+}
+
 impl From<Syllable> for Semitones {
     fn from(v: Syllable) -> Self {
         match v {

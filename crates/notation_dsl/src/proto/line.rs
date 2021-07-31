@@ -3,7 +3,7 @@ use quote::{quote, ToTokens};
 use syn::parse::{ParseStream, Result};
 use syn::{Expr, LitStr};
 
-use crate::entry::EntryDsl;
+use crate::proto::entry::EntryDsl;
 
 pub struct LineDsl {
     pub key: LitStr,

@@ -16,32 +16,18 @@ pub fn new_tab_long_juan_feng() -> Tab {
             ]}
             {"picks" [
                 $duration = _1_8
-                "intro-6" Pick [ (6 3) 4 2 3 2@1 ]
-                $duration = _1_16
-                Pick [ 2 3 3@2 2 ]
-                $duration = _1_8
-                Pick [ 3@2 ]
-                "intro-5" Pick [ (5 3) 4 2 3 2@1 ]
-                $duration = _1_16
-                Pick [ 2 3 3@2 2 ]
-                $duration = _1_8
-                Pick [ 3@2 ]
-                "verse-6" Pick [ (6 3) 4 2 ]
-                $duration = _1_16
-                Pick [ 2 3 ]
-                $duration = _1_8
-                Pick [ (6 3) 4 ]
+                "intro-6" Pick [ (6 3) 4 2 3 2@1 2, 3, 3@2, 2, 3@2 ] "end"
+                "intro-5" Pick [ (5 3) 4 2 3 2@1 2, 3, 3@2, 2, 3@2 ] "end"
+                "verse-6" Pick [ (6 3) 4 2 2, 3, (6 3) 4 2@3* ] "end"
+                "verse-5" Pick [ (5 3) 4 2 2, 3, (5 3) 4 2@1* ] "end"
+            ]}
+            {"melody" [
+                $key = A
+                $scale = Major
                 $duration = _1_4
-                Pick [ 2@3 ]
-                $duration = _1_8
-                "verse-5" Pick [ (5 3) 4 2 ]
-                $duration = _1_16
-                Pick [ 2 3 ]
-                $duration = _1_8
-                Pick [ (5 3) 4 ]
-                $duration = _1_4
-                Pick [ 2@1 ]
-                $duration = _1_8
+                Tone [ .5 2 2, 1, 3 ]
+                Tone [ .6 3 3, 2, 4 ]
+                Tone [ .%6 3 3, 2, 4 ]
             ]}
         ]
         tracks: [
@@ -52,27 +38,27 @@ pub fn new_tab_long_juan_feng() -> Tab {
         layers: [
             {"G-Intro" [
                 "shapes" "G" 1
-                "picks" "intro-6" 12
+                "picks" "intro-6" "end"
             ] track: "guitar"}
             {"Em-Intro" [
                 "shapes" "Em" 1
-                "picks" "intro-6" 12
+                "picks" "intro-6" "end"
             ] track: "guitar"}
             {"C-Intro" [
                 "shapes" "G/C" 1
-                "picks" "intro-5" 12
+                "picks" "intro-5" "end"
             ] track: "guitar"}
             {"G-Verse" [
                 "shapes" "G" 1
-                "picks" "verse-6" 11
+                "picks" "verse-6" "end"
             ] track: "guitar"}
             {"Em-Verse" [
                 "shapes" "Em" 1
-                "picks" "verse-6" 11
+                "picks" "verse-6" "end"
             ] track: "guitar"}
             {"C-Verse" [
                 "shapes" "C" 1
-                "picks" "verse-5" 11
+                "picks" "verse-5" "end"
             ] track: "guitar"}
         ]
         sections: [

@@ -4,12 +4,12 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
 use syn::{Expr, Token};
 
-use crate::form::FormDsl;
+use crate::proto::form::FormDsl;
 
-use crate::layer::LayerDsl;
-use crate::line::LineDslOrExpr;
-use crate::section::SectionDsl;
-use crate::track::TrackDsl;
+use crate::proto::layer::LayerDsl;
+use crate::proto::line::LineDslOrExpr;
+use crate::proto::section::SectionDsl;
+use crate::proto::track::TrackDsl;
 
 pub struct TabDsl {
     meta: Expr,
