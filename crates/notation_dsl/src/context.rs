@@ -120,6 +120,7 @@ pub enum ContextDsl {
 impl Parse for ContextDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
+        input.parse::<Token![$]>()?;
         match input.parse::<Ident>()?.to_string().as_str() {
             "key" => {
                 input.parse::<Token![=]>()?;
@@ -142,8 +143,14 @@ impl Parse for ContextDsl {
                 let string_num = input.parse::<LitInt>()?.base10_parse::<usize>()?;
                 Self::StringNum(string_num)
             }
-            _ => throw!(Error::new(input.span(), "Invalid Field")),
+            _ => throw!(Error::new(input.span(), "Invalid Context")),
         }
+    }
+}
+
+impl ContextDsl {
+    pub fn peek(input: ParseStream) -> bool {
+        input.peek(Token![$])
     }
 }
 

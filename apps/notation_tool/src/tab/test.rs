@@ -3,8 +3,8 @@ use notation_proto::prelude::*;
 
 pub fn new_tab_test() -> Tab {
     tab! {
-        meta: TabMeta::new(Key::G, Scale::Major, Signature::_4_4, Tempo::Bpm(60))
-        lines: [
+        Meta: TabMeta::new(Key::G, Scale::Major, Signature::_4_4, Tempo::Bpm(60))
+        Lines: [
             {"shapes" [
                 $duration = _1
                 Shape [
@@ -24,30 +24,30 @@ pub fn new_tab_test() -> Tab {
                 Pick [ 4 3 2 1 2 3 ]
             ]}
         ]
-        tracks: [
+        Tracks: [
             {"guitar" Guitar [
                 Fretboard
             ]}
         ]
-        layers: [
+        Layers: [
             {"G" [
                 "shapes" 1 1
                 "picks" 1 12
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"Em" [
                 "shapes" 2 1
                 "picks" 1 12
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"C" [
                 "shapes" 3 1
                 "picks" 13 12
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"D" [
                 "shapes" 4 1
                 "picks" 25 12
-            ] track: "guitar"}
+            ] Track: "guitar"}
         ]
-        sections: [
+        Sections: [
             {"A" Verse [
                 ( "G" )
                 ( "Em" )
@@ -61,6 +61,6 @@ pub fn new_tab_test() -> Tab {
                 ( "Em" )
             ]}
         ]
-        form: "A" "A" "B" "A"
+        Form: "A" "A" "B" "A"
     }
 }

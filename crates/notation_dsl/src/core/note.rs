@@ -3,7 +3,6 @@ use notation_proto::prelude::{Pitch, Semitones, Syllable};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
-use syn::token::Semi;
 
 use crate::context::Context;
 

@@ -8,8 +8,10 @@ use syn::{Ident, LitStr};
 use crate::proto::bar::BarDsl;
 use crate::proto::entry::MultibleDsl;
 
+use super::id::IdDsl;
+
 pub struct SectionDsl {
-    pub key: LitStr,
+    pub id: IdDsl,
     pub kind: Ident,
     pub bars: MultibleDsl<BarDsl>,
 }
@@ -17,20 +19,20 @@ pub struct SectionDsl {
 impl SectionDsl {
     #[throws(Error)]
     pub fn parse_without_brace(input: ParseStream) -> Self {
-        let key = input.parse()?;
+        let id = input.parse()?;
         let kind = input.parse()?;
         let bars = input.parse()?;
-        SectionDsl { key, kind, bars }
+        SectionDsl { id, kind, bars }
     }
 }
 
 impl ToTokens for SectionDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let SectionDsl { key, kind, bars } = self;
+        let SectionDsl { id, kind, bars } = self;
         let kind_quote = kind.to_string();
         let bars_quote = BarDsl::quote_multible(bars);
         tokens.extend(quote! {
-            Section::new(#key.into(), SectionKind::from_ident(#kind_quote), #bars_quote)
+            Section::new(#id.into(), SectionKind::from_ident(#kind_quote), #bars_quote)
         });
     }
 }

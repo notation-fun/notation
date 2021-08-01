@@ -37,7 +37,7 @@ impl SectionKind {
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Section {
-    pub key: String,
+    pub id: String,
     pub kind: SectionKind,
     pub bars: Vec<Bar>,
 }
@@ -46,15 +46,15 @@ impl Display for Section {
         write!(
             f,
             "<Section>({} <{}> B:{})",
-            self.key,
+            self.id,
             self.kind,
             self.bars.len()
         )
     }
 }
 impl Section {
-    pub fn new(key: String, kind: SectionKind, bars: Vec<Bar>) -> Self {
-        Self { key, kind, bars }
+    pub fn new(id: String, kind: SectionKind, bars: Vec<Bar>) -> Self {
+        Self { id, kind, bars }
     }
 }
 

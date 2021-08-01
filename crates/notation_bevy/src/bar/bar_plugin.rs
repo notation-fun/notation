@@ -3,10 +3,7 @@ use bevy::prelude::*;
 
 use std::sync::Arc;
 
-use crate::prelude::{
-    AddEntryEvent, GridCol, GridRow, GuitarPlugin, LayerBundle, LyonShapeOp, NotationTheme,
-    WindowResizedEvent,
-};
+use crate::prelude::{AddEntryEvent, GridCol, GridRow, GuitarPlugin, LayerBundle, LyonShapeOp, NotationTheme, MelodyPlugin, WindowResizedEvent};
 use notation_model::prelude::{BarLayer, BarPosition, TabBar, TrackKind, Units};
 
 use super::bar_beat::{BarBeat, BarBeatData};
@@ -50,8 +47,13 @@ fn create_layers(
 ) {
     for (bar_entity, bar, grid_col) in query.iter() {
         for layer in &bar.bar.layers {
-            let layer_undle = LayerBundle::new(bar, layer.clone());
-            let mut layer_commands = commands.spawn_bundle(layer_undle);
+            if layer.rounds.is_some() {
+                if layer.rounds.clone().unwrap().iter().find(|&x| *x == bar.section_round).is_none() {
+                    continue;
+                }
+            }
+            let layer_bundle = LayerBundle::new(bar.clone(), layer.clone());
+            let mut layer_commands = commands.spawn_bundle(layer_bundle);
             BarPlugin::insert_layer_extra(&mut layer_commands, bar.clone(), layer.clone());
             let layer_entity = layer_commands.id();
             commands.entity(bar_entity).push_children(&[layer_entity]);
@@ -89,13 +91,17 @@ fn create_layers(
 impl BarPlugin {
     pub fn insert_layer_extra(
         commands: &mut EntityCommands,
-        bar: Arc<TabBar>,
+        _bar: Arc<TabBar>,
         layer: Arc<BarLayer>,
     ) {
         if let Some(track) = layer.track.clone() {
+            commands.insert(track.clone());
             match track.kind {
                 TrackKind::Guitar => {
-                    GuitarPlugin::insert_guitar_layer_extra(commands, bar, layer, track)
+                    GuitarPlugin::insert_guitar_layer_extra(commands, track)
+                }
+                TrackKind::Vocal => {
+                    MelodyPlugin::insert_melody_layer_extra(commands, track)
                 }
                 _ => (),
             }

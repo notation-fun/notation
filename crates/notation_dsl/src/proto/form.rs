@@ -3,17 +3,18 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
-use syn::LitStr;
+
+use super::id::IdDsl;
 
 pub struct FormDsl {
-    pub sections: Vec<LitStr>,
+    pub sections: Vec<IdDsl>,
 }
 
 impl Parse for FormDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
         let mut sections = Vec::new();
-        while input.peek(LitStr) {
+        while IdDsl::peek(input) {
             sections.push(input.parse()?);
         }
         FormDsl { sections }

@@ -10,7 +10,7 @@
     ),
     lines: [
         (
-            key: "shapes",
+            id: "shapes",
             entries: [
                 Extra(
                     "dsl::context::duration",
@@ -151,7 +151,7 @@
             ],
         ),// [0]
         (
-            key: "picks",
+            id: "picks",
             entries: [
                 Extra(
                     "dsl::context::duration",
@@ -267,7 +267,7 @@
                     )),
                     Simple(Eighth),
                 )),// [11]
-                Mark("end"),// [12]
+                Mark("|"),// [12]
                 Mark("intro-5"),// [13]
                 FrettedSix(Pick(
                     Double(
@@ -378,7 +378,7 @@
                     )),
                     Simple(Eighth),
                 )),// [23]
-                Mark("end"),// [24]
+                Mark("|"),// [24]
                 Mark("verse-6"),// [25]
                 FrettedSix(Pick(
                     Double(
@@ -478,7 +478,7 @@
                     )),
                     Simple(Quarter),
                 )),// [33]
-                Mark("end"),// [34]
+                Mark("|"),// [34]
                 Mark("verse-5"),// [35]
                 FrettedSix(Pick(
                     Double(
@@ -578,11 +578,11 @@
                     )),
                     Simple(Quarter),
                 )),// [43]
-                Mark("end"),
+                Mark("|"),
             ],
         ),// [1]
         (
-            key: "melody",
+            id: "melody",
             entries: [
                 Extra(
                     "dsl::context::key",
@@ -596,6 +596,7 @@
                     "dsl::context::duration",
                     "_1_4",
                 ),// [2]
+                Mark("1"),// [3]
                 Core(Tone(
                     Single((
                         octave: P3,
@@ -604,17 +605,6 @@
                             sign: Natural,
                         ),
                         syllable: Some(So),
-                    )),
-                    Simple(Quarter),
-                )),// [3]
-                Core(Tone(
-                    Single((
-                        octave: P4,
-                        pitch: (
-                            name: B,
-                            sign: Natural,
-                        ),
-                        syllable: Some(Re),
                     )),
                     Simple(Quarter),
                 )),// [4]
@@ -627,8 +617,19 @@
                         ),
                         syllable: Some(Re),
                     )),
-                    Simple(Eighth),
+                    Simple(Quarter),
                 )),// [5]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                        syllable: Some(Re),
+                    )),
+                    Simple(Eighth),
+                )),// [6]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -639,7 +640,7 @@
                         syllable: Some(Do),
                     )),
                     Simple(Eighth),
-                )),// [6]
+                )),// [7]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -650,7 +651,9 @@
                         syllable: Some(Mi),
                     )),
                     Simple(Quarter),
-                )),// [7]
+                )),// [8]
+                Mark("|"),// [9]
+                Mark("2"),// [10]
                 Core(Tone(
                     Single((
                         octave: P3,
@@ -661,7 +664,7 @@
                         syllable: Some(La),
                     )),
                     Simple(Quarter),
-                )),// [8]
+                )),// [11]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -672,7 +675,7 @@
                         syllable: Some(Mi),
                     )),
                     Simple(Quarter),
-                )),// [9]
+                )),// [12]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -683,7 +686,7 @@
                         syllable: Some(Mi),
                     )),
                     Simple(Eighth),
-                )),// [10]
+                )),// [13]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -694,7 +697,7 @@
                         syllable: Some(Re),
                     )),
                     Simple(Eighth),
-                )),// [11]
+                )),// [14]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -705,7 +708,9 @@
                         syllable: Some(Fa),
                     )),
                     Simple(Quarter),
-                )),// [12]
+                )),// [15]
+                Mark("|"),// [16]
+                Mark("3_1"),// [17]
                 Core(Tone(
                     Single((
                         octave: P3,
@@ -716,7 +721,7 @@
                         syllable: Some(Si),
                     )),
                     Simple(Quarter),
-                )),// [13]
+                )),// [18]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -726,8 +731,19 @@
                         ),
                         syllable: Some(Mi),
                     )),
-                    Simple(Quarter),
-                )),// [14]
+                    Dotted(Eighth),
+                )),// [19]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                        syllable: Some(Fa),
+                    )),
+                    Simple(Sixteenth),
+                )),// [20]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -738,7 +754,7 @@
                         syllable: Some(Mi),
                     )),
                     Simple(Eighth),
-                )),// [15]
+                )),// [21]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -749,7 +765,64 @@
                         syllable: Some(Re),
                     )),
                     Simple(Eighth),
-                )),// [16]
+                )),// [22]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                        syllable: Some(Do),
+                    )),
+                    Simple(Eighth),
+                )),// [23]
+                Core(Tone(
+                    Single((
+                        octave: P3,
+                        pitch: (
+                            name: F,
+                            sign: Natural,
+                        ),
+                        syllable: Some(Si),
+                    )),
+                    Simple(Sixteenth),
+                )),// [24]
+                Core(Tone(
+                    Single((
+                        octave: P3,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                        syllable: Some(So),
+                    )),
+                    Simple(Sixteenth),
+                )),// [25]
+                Mark("|"),// [26]
+                Mark("3_2"),// [27]
+                Core(Tone(
+                    Single((
+                        octave: P3,
+                        pitch: (
+                            name: F,
+                            sign: Natural,
+                        ),
+                        syllable: Some(Si),
+                    )),
+                    Simple(Quarter),
+                )),// [28]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                        syllable: Some(Mi),
+                    )),
+                    Dotted(Eighth),
+                )),// [29]
                 Core(Tone(
                     Single((
                         octave: P4,
@@ -759,14 +832,70 @@
                         ),
                         syllable: Some(Fa),
                     )),
-                    Simple(Quarter),
-                )),
+                    Simple(Sixteenth),
+                )),// [30]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                        syllable: Some(Mi),
+                    )),
+                    Simple(Eighth),
+                )),// [31]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                        syllable: Some(Re),
+                    )),
+                    Simple(Eighth),
+                )),// [32]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                        syllable: Some(Do),
+                    )),
+                    Simple(Eighth),
+                )),// [33]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                        syllable: Some(So),
+                    )),
+                    Simple(Sixteenth),
+                )),// [34]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: F,
+                            sign: Sharp,
+                        ),
+                        syllable: Some(La),
+                    )),
+                    Simple(Sixteenth),
+                )),// [35]
+                Mark("|"),
             ],
         ),
     ],
     tracks: [
         (
-            key: "guitar",
+            id: "guitar",
             kind: Guitar,
             entries: [
                 FrettedSix(Fretboard((
@@ -824,11 +953,16 @@
                     capo: 2,
                 ))),
             ],
+        ),// [0]
+        (
+            id: "vocal",
+            kind: Vocal,
+            entries: [],
         ),
     ],
     layers: [
         (
-            key: "G-Intro",
+            id: "G-Intro",
             slices: [
                 (
                     line: "shapes",
@@ -838,14 +972,14 @@
                 (
                     line: "picks",
                     begin: Mark("intro-6"),
-                    end: Mark("end"),
+                    end: Mark("|"),
                 ),
             ],
             track: Some("guitar"),
             rounds: None,
         ),// [0]
         (
-            key: "Em-Intro",
+            id: "Em-Intro",
             slices: [
                 (
                     line: "shapes",
@@ -855,14 +989,14 @@
                 (
                     line: "picks",
                     begin: Mark("intro-6"),
-                    end: Mark("end"),
+                    end: Mark("|"),
                 ),
             ],
             track: Some("guitar"),
             rounds: None,
         ),// [1]
         (
-            key: "C-Intro",
+            id: "C-Intro",
             slices: [
                 (
                     line: "shapes",
@@ -872,14 +1006,14 @@
                 (
                     line: "picks",
                     begin: Mark("intro-5"),
-                    end: Mark("end"),
+                    end: Mark("|"),
                 ),
             ],
             track: Some("guitar"),
             rounds: None,
         ),// [2]
         (
-            key: "G-Verse",
+            id: "G-Verse",
             slices: [
                 (
                     line: "shapes",
@@ -889,14 +1023,14 @@
                 (
                     line: "picks",
                     begin: Mark("verse-6"),
-                    end: Mark("end"),
+                    end: Mark("|"),
                 ),
             ],
             track: Some("guitar"),
             rounds: None,
         ),// [3]
         (
-            key: "Em-Verse",
+            id: "Em-Verse",
             slices: [
                 (
                     line: "shapes",
@@ -906,14 +1040,14 @@
                 (
                     line: "picks",
                     begin: Mark("verse-6"),
-                    end: Mark("end"),
+                    end: Mark("|"),
                 ),
             ],
             track: Some("guitar"),
             rounds: None,
         ),// [4]
         (
-            key: "C-Verse",
+            id: "C-Verse",
             slices: [
                 (
                     line: "shapes",
@@ -923,16 +1057,68 @@
                 (
                     line: "picks",
                     begin: Mark("verse-5"),
-                    end: Mark("end"),
+                    end: Mark("|"),
                 ),
             ],
             track: Some("guitar"),
             rounds: None,
+        ),// [5]
+        (
+            id: "1",
+            slices: [
+                (
+                    line: "melody",
+                    begin: Mark("1"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("vocal"),
+            rounds: None,
+        ),// [6]
+        (
+            id: "2",
+            slices: [
+                (
+                    line: "melody",
+                    begin: Mark("2"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("vocal"),
+            rounds: None,
+        ),// [7]
+        (
+            id: "3_1",
+            slices: [
+                (
+                    line: "melody",
+                    begin: Mark("3_1"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("vocal"),
+            rounds: Some([
+                1,
+            ]),
+        ),// [8]
+        (
+            id: "3_2",
+            slices: [
+                (
+                    line: "melody",
+                    begin: Mark("3_2"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("vocal"),
+            rounds: Some([
+                2,
+            ]),
         ),
     ],
     sections: [
         (
-            key: "Intro",
+            id: "intro",
             kind: Intro,
             bars: [
                 (
@@ -958,27 +1144,32 @@
             ],
         ),// [0]
         (
-            key: "Verse",
+            id: "verse",
             kind: Verse,
             bars: [
                 (
                     layers: [
-                        "G-Verse",
+                        "G-Verse",// [0]
+                        "1",
                     ],
                 ),// [0]
                 (
                     layers: [
-                        "Em-Verse",
+                        "Em-Verse",// [0]
+                        "1",
                     ],
                 ),// [1]
                 (
                     layers: [
-                        "C-Verse",
+                        "C-Verse",// [0]
+                        "2",
                     ],
                 ),// [2]
                 (
                     layers: [
-                        "G-Verse",
+                        "G-Verse",// [0]
+                        "3_1",// [1]
+                        "3_2",
                     ],
                 ),
             ],
@@ -986,9 +1177,9 @@
     ],
     form: (
         sections: [
-            "Intro",// [0]
-            "Verse",// [1]
-            "Verse",
+            "intro",// [0]
+            "verse",// [1]
+            "verse",
         ],
     ),
 )

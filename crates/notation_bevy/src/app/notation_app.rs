@@ -15,7 +15,6 @@ pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
     fn build(&mut self, group: &mut PluginGroupBuilder) {
         group.add(EntryPlugin);
-        group.add(LinePlugin);
         group.add(BarPlugin);
         group.add(FrettedPlugin);
         group.add(GuitarPlugin);

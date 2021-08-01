@@ -7,7 +7,7 @@ use crate::prelude::{Bar, BarLayer, ParseError, SectionKind};
 
 #[derive(Debug)]
 pub struct Section {
-    pub key: String,
+    pub id: String,
     pub kind: SectionKind,
     pub bars: Vec<Arc<Bar>>,
 }
@@ -16,15 +16,15 @@ impl Display for Section {
         write!(
             f,
             "<Section>({} <{}> B:{})",
-            self.key,
+            self.id,
             self.kind,
             self.bars.len()
         )
     }
 }
 impl Section {
-    pub fn new(key: String, kind: SectionKind, bars: Vec<Arc<Bar>>) -> Self {
-        Self { key, kind, bars }
+    pub fn new(id: String, kind: SectionKind, bars: Vec<Arc<Bar>>) -> Self {
+        Self { id, kind, bars }
     }
 }
 
@@ -46,7 +46,7 @@ impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
         for section in v.0.sections {
             sections.push(
                 v.1.iter()
-                    .find(|x| x.key == section)
+                    .find(|x| x.id == section)
                     .cloned()
                     .ok_or(ParseError::SectionNotFound(section))?,
             );
@@ -64,6 +64,6 @@ impl TryFrom<(notation_proto::prelude::Section, &Vec<Arc<BarLayer>>)> for Sectio
         for bar in v.0.bars {
             bars.push(Bar::try_from((bar, v.1)).map(Arc::new)?);
         }
-        Self::new(v.0.key, v.0.kind, bars)
+        Self::new(v.0.id, v.0.kind, bars)
     }
 }

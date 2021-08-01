@@ -28,8 +28,8 @@ impl Parse for DurationTweakDsl {
         half_num = min(max(half_num, -4), 4);
         let mut dotted = false;
         let mut triplet = false;
-        if input.peek(Token![.]) {
-            input.parse::<Token![.]>()?;
+        if input.peek(Token![+]) {
+            input.parse::<Token![+]>()?;
             dotted = true;
         } else if input.peek(Token![=]) {
             input.parse::<Token![=]>()?;
@@ -47,7 +47,7 @@ impl DurationTweakDsl {
     pub fn peek(input: ParseStream) -> bool {
         input.peek(Token![,])
             || input.peek(Token![*])
-            || input.peek(Token![.])
+            || input.peek(Token![+])
             || input.peek(Token![=])
             || input.peek(Token![-])
     }

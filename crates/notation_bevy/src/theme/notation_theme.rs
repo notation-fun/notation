@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use super::core_theme::CoreTheme;
+use super::melody_theme::MelodyTheme;
 use super::fretted_theme::FrettedTheme;
 use super::grid_theme::GridTheme;
 use super::guitar_theme::GuitarTheme;
@@ -15,6 +16,7 @@ pub struct NotationTheme {
     pub core: CoreTheme,
     pub grid: GridTheme,
     pub syllable: SyllableTheme,
+    pub melody: MelodyTheme,
     pub fretted: FrettedTheme,
     pub guitar: GuitarTheme,
 }
@@ -25,6 +27,7 @@ impl Default for NotationTheme {
             core: CoreTheme::default(),
             grid: GridTheme::default(),
             syllable: SyllableTheme::default(),
+            melody: MelodyTheme::default(),
             fretted: FrettedTheme::default(),
             guitar: GuitarTheme::default(),
         }

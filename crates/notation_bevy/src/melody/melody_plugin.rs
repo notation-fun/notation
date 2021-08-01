@@ -2,12 +2,12 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::prelude::GuitarLayerBundle;
+use crate::prelude::MelodyLayerBundle;
 use notation_model::prelude::{Track};
 
-pub struct GuitarPlugin;
+pub struct MelodyPlugin;
 
-impl Plugin for GuitarPlugin {
+impl Plugin for MelodyPlugin {
     fn build(&self, _app: &mut AppBuilder) {
         /*
         app
@@ -17,11 +17,11 @@ impl Plugin for GuitarPlugin {
     }
 }
 
-impl GuitarPlugin {
-    pub fn insert_guitar_layer_extra(
+impl MelodyPlugin {
+    pub fn insert_melody_layer_extra(
         commands: &mut EntityCommands,
         track: Arc<Track>,
     ) {
-        commands.insert_bundle(GuitarLayerBundle::new(track));
+        commands.insert_bundle(MelodyLayerBundle::new(track));
     }
 }

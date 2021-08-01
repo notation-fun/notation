@@ -6,7 +6,7 @@ use crate::prelude::ProtoEntry;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Line {
-    pub key: String,
+    pub id: String,
     pub entries: Vec<ProtoEntry>,
 }
 
@@ -29,8 +29,8 @@ pub struct Slice {
     pub end: SliceEnd,
 }
 impl Line {
-    pub fn new(key: String, entries: Vec<ProtoEntry>) -> Self {
-        Self { key, entries }
+    pub fn new(id: String, entries: Vec<ProtoEntry>) -> Self {
+        Self { id, entries }
     }
 }
 impl Slice {
@@ -40,7 +40,7 @@ impl Slice {
 }
 impl Display for Line {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<Line>({} E:{})", self.key, self.entries.len())
+        write!(f, "<Line>({} E:{})", self.id, self.entries.len())
     }
 }
 impl Display for SliceBegin {

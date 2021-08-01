@@ -10,7 +10,7 @@
     ),
     lines: [
         (
-            key: "shapes",
+            id: "shapes",
             entries: [
                 Extra(
                     "dsl::context::duration",
@@ -217,7 +217,7 @@
             ],
         ),// [0]
         (
-            key: "picks",
+            id: "picks",
             entries: [
                 Extra(
                     "dsl::context::duration",
@@ -472,7 +472,7 @@
     ],
     tracks: [
         (
-            key: "guitar",
+            id: "guitar",
             kind: Guitar,
             entries: [
                 FrettedSix(Fretboard((
@@ -534,7 +534,7 @@
     ],
     layers: [
         (
-            key: "Em",
+            id: "Em",
             slices: [
                 (
                     line: "shapes",
@@ -551,7 +551,7 @@
             rounds: None,
         ),// [0]
         (
-            key: "Em_1",
+            id: "Em_1",
             slices: [
                 (
                     line: "shapes",
@@ -568,7 +568,7 @@
             rounds: None,
         ),// [1]
         (
-            key: "Em_2",
+            id: "Em_2",
             slices: [
                 (
                     line: "shapes",
@@ -585,7 +585,7 @@
             rounds: None,
         ),// [2]
         (
-            key: "Adim",
+            id: "Adim",
             slices: [
                 (
                     line: "shapes",
@@ -602,7 +602,7 @@
             rounds: None,
         ),// [3]
         (
-            key: "B7",
+            id: "B7",
             slices: [
                 (
                     line: "shapes",
@@ -619,7 +619,7 @@
             rounds: None,
         ),// [4]
         (
-            key: "B7_1",
+            id: "B7_1",
             slices: [
                 (
                     line: "shapes",
@@ -636,7 +636,7 @@
             rounds: None,
         ),// [5]
         (
-            key: "G",
+            id: "G",
             slices: [
                 (
                     line: "shapes",
@@ -653,7 +653,7 @@
             rounds: None,
         ),// [6]
         (
-            key: "E",
+            id: "E",
             slices: [
                 (
                     line: "shapes",
@@ -670,7 +670,7 @@
             rounds: None,
         ),// [7]
         (
-            key: "E_1",
+            id: "E_1",
             slices: [
                 (
                     line: "shapes",
@@ -687,7 +687,7 @@
             rounds: None,
         ),// [8]
         (
-            key: "Am",
+            id: "Am",
             slices: [
                 (
                     line: "shapes",
@@ -704,7 +704,7 @@
             rounds: None,
         ),// [9]
         (
-            key: "G/B",
+            id: "G/B",
             slices: [
                 (
                     line: "shapes",
@@ -721,7 +721,7 @@
             rounds: None,
         ),// [10]
         (
-            key: "D",
+            id: "D",
             slices: [
                 (
                     line: "shapes",
@@ -740,7 +740,7 @@
     ],
     sections: [
         (
-            key: "A1",
+            id: "A1",
             kind: Verse,
             bars: [
                 (
@@ -786,7 +786,7 @@
             ],
         ),// [0]
         (
-            key: "A2",
+            id: "A2",
             kind: Verse,
             bars: [
                 (
@@ -832,7 +832,7 @@
             ],
         ),// [1]
         (
-            key: "B1",
+            id: "B1",
             kind: Chorus,
             bars: [
                 (
@@ -878,7 +878,7 @@
             ],
         ),// [2]
         (
-            key: "B2",
+            id: "B2",
             kind: Chorus,
             bars: [
                 (
@@ -924,7 +924,7 @@
             ],
         ),// [3]
         (
-            key: "O",
+            id: "O",
             kind: Outro,
             bars: [
                 (

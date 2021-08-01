@@ -4,6 +4,7 @@ pub struct NotationSettings {
     pub play_speed: f32,
     pub bars_in_row: u8,
     pub always_show_fret: bool,
+    pub melody_piano_mode: bool,
 }
 
 impl Default for NotationSettings {
@@ -14,6 +15,7 @@ impl Default for NotationSettings {
             play_speed: 1.0,
             bars_in_row: 4,
             always_show_fret: false,
+            melody_piano_mode: false,
         }
     }
 }

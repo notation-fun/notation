@@ -29,7 +29,7 @@ impl MidiHub {
         if let Some(output) = Self::new_output() {
             if output.port_count() > 0 {
                 #[cfg(target_os = "linux")]
-                let port = &output.ports()[1]; //TODO: Select port
+                let port = &output.ports()[if output.port_count() > 1 { 1 } else { 0 }]; //TODO: Select port
                 #[cfg(not(target_os = "linux"))]
                 let port = &output.ports()[0]; //TODO: Select port
                 output.connect(port, "MidiHub").ok()

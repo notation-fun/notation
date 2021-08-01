@@ -5,17 +5,19 @@ use notation_model::prelude::{BarLayer, TabBar};
 
 #[derive(Bundle)]
 pub struct LayerBundle {
-    pub tab: Arc<BarLayer>,
+    pub bar: Arc<TabBar>,
+    pub layer: Arc<BarLayer>,
     pub name: Name,
     pub transform: Transform,
     pub global_cransform: GlobalTransform,
 }
 
 impl LayerBundle {
-    pub fn new(bar: &TabBar, layer: Arc<BarLayer>) -> Self {
+    pub fn new(bar: Arc<TabBar>, layer: Arc<BarLayer>) -> Self {
         let name = format!("{} {}", bar.bar_ordinal, layer).as_str().into();
         Self {
-            tab: layer,
+            bar,
+            layer,
             name,
             transform: Transform::default(),
             global_cransform: GlobalTransform::default(),

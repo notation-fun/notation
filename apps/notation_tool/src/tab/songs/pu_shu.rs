@@ -3,8 +3,8 @@ use notation_proto::prelude::*;
 
 pub fn new_tab_bai_hua_lin() -> Tab {
     tab! {
-        meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(118))
-        lines: [
+        Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(118))
+        Lines: [
             {"shapes" [
                 $duration = _1
                 "Em" Shape ( 0 2 2 0 0 0 )
@@ -25,62 +25,62 @@ pub fn new_tab_bai_hua_lin() -> Tab {
                 "4-1" Pick [ 4 3 2 1 2 3 ]
             ]}
         ]
-        tracks: [
+        Tracks: [
             {"guitar" Guitar [
                 Fretboard
             ]}
         ]
-        layers: [
+        Layers: [
             {"Em" [
                 "shapes" "Em" 1
                 "picks" "6-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"Em_1" [
                 "shapes" "Em" 1
                 "picks" "5-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"Em_2" [
                 "shapes" "Em" 1
                 "picks" "4-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"Adim" [
                 "shapes" "Adim" 1
                 "picks" "5-2" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"B7" [
                 "shapes" "B7" 1
                 "picks" "5-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"B7_1" [
                 "shapes" "B7_1" 1
                 "picks" "5-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"G" [
                 "shapes" "G" 1
                 "picks" "6-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"E" [
                 "shapes" "E" 1
                 "picks" "6-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"E_1" [
                 "shapes" "E" 1
                 "picks" "4-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"Am" [
                 "shapes" "Am" 1
                 "picks" "5-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"G/B" [
                 "shapes" "G/B" 1
                 "picks" "5-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
             {"D" [
                 "shapes" "D" 1
                 "picks" "4-1" 6
-            ] track: "guitar"}
+            ] Track: "guitar"}
         ]
-        sections: [
+        Sections: [
             {"A1" Verse [
                 "Em" "Em_1" "Adim" "B7"
                 "Adim" "Adim" "B7" "Em"
@@ -100,7 +100,7 @@ pub fn new_tab_bai_hua_lin() -> Tab {
                 "Em"
             ]}
         ]
-        form: "A1"
+        Form: "A1"
             "A1" "A2" "A1" "A2" "B1" "B2"
             "A1" "A2" "A1" "A2" "B1" "B2"
             "A2" "A1" "A1" "O"

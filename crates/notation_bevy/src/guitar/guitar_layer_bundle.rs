@@ -1,7 +1,7 @@
 use crate::fretted::fretted_layer_bundle::FrettedLayerBundle;
 use crate::prelude::FrettedGrid;
 use notation_model::prelude::{
-    BarLayer, GuitarEntry, GuitarFretboard, GuitarUtil, ProtoEntry, TabBar, Track,
+    GuitarEntry, GuitarFretboard, GuitarUtil, ProtoEntry, Track,
     GUITAR_STRING_NUM,
 };
 use std::sync::Arc;
@@ -18,7 +18,7 @@ fn new_default_fretboard() -> GuitarFretboard {
 }
 
 impl GuitarLayerBundle {
-    pub fn new(bar: Arc<TabBar>, layer: Arc<BarLayer>, track: Arc<Track>) -> Self {
-        FrettedLayerBundle::_new(bar, layer, track, &as_fretted_entry, &new_default_fretboard)
+    pub fn new(track: Arc<Track>) -> Self {
+        FrettedLayerBundle::_new(track, &as_fretted_entry, &new_default_fretboard)
     }
 }

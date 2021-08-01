@@ -4,10 +4,10 @@ use std::fmt::Display;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct BarLayer {
-    pub key: String,
+    pub id: String,
     pub slices: Vec<Slice>,
     pub track: Option<String>,
-    pub rounds: Option<Vec<u16>>,
+    pub rounds: Option<Vec<usize>>,
 }
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Bar {
@@ -33,13 +33,13 @@ impl Display for Bar {
 }
 impl BarLayer {
     pub fn new(
-        key: String,
+        id: String,
         slices: Vec<Slice>,
         track: Option<String>,
-        rounds: Option<Vec<u16>>,
+        rounds: Option<Vec<usize>>,
     ) -> Self {
         Self {
-            key,
+            id,
             slices,
             track,
             rounds,
@@ -53,17 +53,17 @@ impl From<(String, Vec<Slice>)> for BarLayer {
 }
 impl From<(String, Vec<Slice>, &Track)> for BarLayer {
     fn from(v: (String, Vec<Slice>, &Track)) -> Self {
-        Self::new(v.0, v.1, Some(v.2.key.clone()), None)
+        Self::new(v.0, v.1, Some(v.2.id.clone()), None)
     }
 }
-impl From<(String, Vec<Slice>, Vec<u16>)> for BarLayer {
-    fn from(v: (String, Vec<Slice>, Vec<u16>)) -> Self {
+impl From<(String, Vec<Slice>, Vec<usize>)> for BarLayer {
+    fn from(v: (String, Vec<Slice>, Vec<usize>)) -> Self {
         Self::new(v.0, v.1, None, Some(v.2))
     }
 }
-impl From<(String, Vec<Slice>, &Track, Vec<u16>)> for BarLayer {
-    fn from(v: (String, Vec<Slice>, &Track, Vec<u16>)) -> Self {
-        Self::new(v.0, v.1, Some(v.2.key.clone()), Some(v.3))
+impl From<(String, Vec<Slice>, &Track, Vec<usize>)> for BarLayer {
+    fn from(v: (String, Vec<Slice>, &Track, Vec<usize>)) -> Self {
+        Self::new(v.0, v.1, Some(v.2.id.clone()), Some(v.3))
     }
 }
 impl From<Vec<String>> for Bar {

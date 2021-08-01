@@ -5,25 +5,27 @@ use syn::{Expr, LitStr};
 
 use crate::proto::entry::EntryDsl;
 
+use super::id::IdDsl;
+
 pub struct LineDsl {
-    pub key: LitStr,
+    pub id: IdDsl,
     pub entries: Vec<EntryDsl>,
 }
 
 impl LineDsl {
     pub fn parse_without_brace(input: ParseStream) -> Result<Self> {
-        let key = input.parse()?;
+        let id = input.parse()?;
         let entries = EntryDsl::parse_vec(input)?;
-        Ok(LineDsl { key, entries })
+        Ok(LineDsl { id, entries })
     }
 }
 
 impl ToTokens for LineDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let LineDsl { key, entries } = self;
+        let LineDsl { id, entries } = self;
         let entries_quote = EntryDsl::quote_vec(entries);
         tokens.extend(quote! {
-            Line::new(#key.into(), #entries_quote)
+            Line::new(#id.into(), #entries_quote)
         });
     }
 }

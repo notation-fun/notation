@@ -10,7 +10,7 @@
     ),
     lines: [
         (
-            key: "shapes",
+            id: "shapes",
             entries: [
                 Extra(
                     "dsl::context::duration",
@@ -61,7 +61,7 @@
             ],
         ),// [0]
         (
-            key: "picks",
+            id: "picks",
             entries: [
                 Extra(
                     "dsl::context::duration",
@@ -192,7 +192,7 @@
     ],
     tracks: [
         (
-            key: "guitar",
+            id: "guitar",
             kind: Guitar,
             entries: [
                 FrettedSix(Fretboard((
@@ -254,7 +254,7 @@
     ],
     layers: [
         (
-            key: "Em",
+            id: "Em",
             slices: [
                 (
                     line: "shapes",
@@ -271,7 +271,7 @@
             rounds: None,
         ),// [0]
         (
-            key: "G",
+            id: "G",
             slices: [
                 (
                     line: "shapes",
@@ -290,7 +290,7 @@
     ],
     sections: [
         (
-            key: "A",
+            id: "A",
             kind: Verse,
             bars: [
                 (

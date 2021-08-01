@@ -13,12 +13,12 @@ pub mod entry;
 pub mod tone;
 
 pub mod bar;
-pub mod line;
 pub mod play;
 pub mod tab;
 
 pub mod fretted;
 pub mod guitar;
+pub mod melody;
 
 pub mod settings;
 pub mod theme;
@@ -67,11 +67,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::guitar::guitar_plugin::GuitarPlugin;
     #[doc(hidden)]
-    pub use crate::line::line_bundle::LineBundle;
+    pub use crate::melody::melody_grid::MelodyGrid;
     #[doc(hidden)]
-    pub use crate::line::line_events::AddLineEvent;
+    pub use crate::melody::melody_layer_bundle::MelodyLayerBundle;
     #[doc(hidden)]
-    pub use crate::line::line_plugin::LinePlugin;
+    pub use crate::melody::melody_plugin::MelodyPlugin;
     #[doc(hidden)]
     pub use crate::play::play_plugin::PlayPlugin;
     #[doc(hidden)]
@@ -102,6 +102,8 @@ pub mod prelude {
     pub use crate::theme::notation_theme::NotationTheme;
     #[doc(hidden)]
     pub use crate::theme::syllable_theme::SyllableTheme;
+    #[doc(hidden)]
+    pub use crate::tone::tone_mode::ToneMode;
     #[doc(hidden)]
     pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]

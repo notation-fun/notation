@@ -6,6 +6,8 @@ use notation_model::prelude::Tone;
 pub struct ToneBundle {
     pub name: Name,
     pub tone: Tone,
+    pub transform: Transform,
+    pub global_cransform: GlobalTransform,
 }
 
 impl From<Tone> for ToneBundle {
@@ -13,6 +15,8 @@ impl From<Tone> for ToneBundle {
         ToneBundle {
             name: Name::from(format!("{}", v).as_str()),
             tone: v,
+            transform: Transform::default(),
+            global_cransform: GlobalTransform::default(),
         }
     }
 }

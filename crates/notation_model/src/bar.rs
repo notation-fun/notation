@@ -7,10 +7,10 @@ use std::sync::Arc;
 
 #[derive(Debug)]
 pub struct BarLayer {
-    pub key: String,
+    pub id: String,
     pub slices: Vec<Arc<Slice>>,
     pub track: Option<Arc<Track>>,
-    pub rounds: Option<Vec<u16>>,
+    pub rounds: Option<Vec<usize>>,
 }
 #[derive(Debug)]
 pub struct Bar {
@@ -36,13 +36,13 @@ impl Display for Bar {
 }
 impl BarLayer {
     pub fn new(
-        key: String,
+        id: String,
         slices: Vec<Arc<Slice>>,
         track: Option<Arc<Track>>,
-        rounds: Option<Vec<u16>>,
+        rounds: Option<Vec<usize>>,
     ) -> Self {
         Self {
-            key,
+            id,
             slices,
             track,
             rounds,
@@ -74,12 +74,12 @@ impl
             None => None,
             Some(track) => Some(
                 v.2.iter()
-                    .find(|x| x.key == track)
+                    .find(|x| x.id == track)
                     .cloned()
                     .ok_or(ParseError::TrackNotFound(track))?,
             ),
         };
-        Self::new(v.0.key, slices, track, v.0.rounds)
+        Self::new(v.0.id, slices, track, v.0.rounds)
     }
 }
 impl From<Vec<Arc<BarLayer>>> for Bar {
@@ -96,7 +96,7 @@ impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<BarLayer>>)> for Bar {
         for layer in v.0.layers {
             layers.push(
                 v.1.iter()
-                    .find(|x| x.key == layer)
+                    .find(|x| x.id == layer)
                     .cloned()
                     .ok_or(ParseError::LayerNotFound(layer))?,
             );

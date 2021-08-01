@@ -35,13 +35,13 @@ impl TrackKind {
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Track {
-    pub key: String,
+    pub id: String,
     pub kind: TrackKind,
     pub entries: Vec<ProtoEntry>,
 }
 impl Track {
-    pub fn new(key: String, kind: TrackKind, entries: Vec<ProtoEntry>) -> Self {
-        Self { kind, key, entries }
+    pub fn new(id: String, kind: TrackKind, entries: Vec<ProtoEntry>) -> Self {
+        Self { kind, id, entries }
     }
 }
 impl Display for Track {
@@ -49,7 +49,7 @@ impl Display for Track {
         write!(
             f,
             "<Track>({} <{}> E:{})",
-            self.key,
+            self.id,
             self.kind,
             self.entries.len()
         )

@@ -21,38 +21,38 @@ pub struct TabDsl {
 }
 
 mod kw {
-    syn::custom_keyword!(meta);
-    syn::custom_keyword!(lines);
-    syn::custom_keyword!(tracks);
-    syn::custom_keyword!(layers);
-    syn::custom_keyword!(sections);
-    syn::custom_keyword!(form);
+    syn::custom_keyword!(Meta);
+    syn::custom_keyword!(Lines);
+    syn::custom_keyword!(Tracks);
+    syn::custom_keyword!(Layers);
+    syn::custom_keyword!(Sections);
+    syn::custom_keyword!(Form);
 }
 
 impl Parse for TabDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
-        input.parse::<kw::meta>()?;
+        input.parse::<kw::Meta>()?;
         input.parse::<Token![:]>()?;
         let meta = input.parse()?;
 
-        input.parse::<kw::lines>()?;
+        input.parse::<kw::Lines>()?;
         input.parse::<Token![:]>()?;
         let lines = LineDslOrExpr::parse_vec(input)?;
 
-        input.parse::<kw::tracks>()?;
+        input.parse::<kw::Tracks>()?;
         input.parse::<Token![:]>()?;
         let tracks = TrackDsl::parse_vec(input)?;
 
-        input.parse::<kw::layers>()?;
+        input.parse::<kw::Layers>()?;
         input.parse::<Token![:]>()?;
         let layers = LayerDsl::parse_vec(input)?;
 
-        input.parse::<kw::sections>()?;
+        input.parse::<kw::Sections>()?;
         input.parse::<Token![:]>()?;
         let sections = SectionDsl::parse_vec(input)?;
 
-        input.parse::<kw::form>()?;
+        input.parse::<kw::Form>()?;
         input.parse::<Token![:]>()?;
         let form = input.parse()?;
 

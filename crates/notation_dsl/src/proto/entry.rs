@@ -9,14 +9,15 @@ use crate::core::tone::ToneDsl;
 use crate::fretted::fretboard::FretboardDsl;
 use crate::fretted::pick::PickDsl;
 use crate::fretted::shape::ShapeDsl;
+use crate::proto::mark::MarkDsl;
 
 pub struct MultibleDsl<T> {
     pub items: Vec<T>,
 }
 
 pub enum EntryDsl {
-    Mark(LitStr),
     Context(ContextDsl),
+    Mark(MarkDsl),
     Tone(MultibleDsl<ToneDsl>),
     Pick(MultibleDsl<PickDsl>),
     Shape(MultibleDsl<ShapeDsl>),
@@ -26,11 +27,10 @@ pub enum EntryDsl {
 impl EntryDsl {
     #[throws(Error)]
     pub fn parse_without_brace(input: ParseStream) -> Self {
-        if input.peek(LitStr) {
-            Self::Mark(input.parse()?)
-        } else if input.peek(Token![$]) {
-            input.parse::<Token![$]>()?;
+        if ContextDsl::peek(input) {
             Self::Context(input.parse()?)
+        } else if MarkDsl::peek(input) {
+            Self::Mark(input.parse()?)
         } else {
             match input.parse::<Ident>()?.to_string().as_str() {
                 "Tone" => Self::Tone(input.parse()?),

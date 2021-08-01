@@ -65,11 +65,11 @@ impl Tab {
         let mut bar_ordinal: usize = 1;
         let mut bars: Vec<Arc<TabBar>> = vec![];
         for section in form.sections.iter() {
-            let section_round = match section_rounds.get(&section.key) {
+            let section_round = match section_rounds.get(&section.id) {
                 Some(r) => r + 1,
                 None => 1,
             };
-            section_rounds.insert(section.key.clone(), section_round);
+            section_rounds.insert(section.id.clone(), section_round);
             bars.extend(section.new_tab_bars(
                 section.clone(),
                 weak_self.clone(),

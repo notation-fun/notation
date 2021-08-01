@@ -9,7 +9,7 @@ use crate::prelude::{ParseError, ProtoEntry};
 
 #[derive(Debug)]
 pub struct Line {
-    pub key: String,
+    pub id: String,
     pub entries: Vec<Arc<ProtoEntry>>,
 }
 #[derive(Debug)]
@@ -20,8 +20,8 @@ pub struct Slice {
     pub entries: Vec<Arc<ProtoEntry>>,
 }
 impl Line {
-    pub fn new(key: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
-        Self { key, entries }
+    pub fn new(id: String, entries: Vec<Arc<ProtoEntry>>) -> Self {
+        Self { id, entries }
     }
     pub fn index_of_mark(&self, begin: usize, mark: &String) -> Option<usize> {
         for i in begin..self.entries.len() {
@@ -84,7 +84,7 @@ impl Display for Line {
             f,
             "<{}>({} E:{})",
             stringify!(Line),
-            self.key,
+            self.id,
             self.entries.len()
         )
     }
@@ -95,7 +95,7 @@ impl Display for Slice {
             f,
             "<{}>({} {}-{})",
             stringify!($silce_type),
-            self.line.key,
+            self.line.id,
             self.begin,
             self.end,
         )
@@ -104,7 +104,7 @@ impl Display for Slice {
 impl From<notation_proto::prelude::Line> for Line {
     fn from(v: notation_proto::prelude::Line) -> Self {
         let entries: Vec<Arc<ProtoEntry>> = v.entries.into_iter().map(Arc::new).collect();
-        Self::new(v.key, entries)
+        Self::new(v.id, entries)
     }
 }
 impl TryFrom<(notation_proto::prelude::Slice, &Vec<Arc<Line>>)> for Slice {
@@ -112,7 +112,7 @@ impl TryFrom<(notation_proto::prelude::Slice, &Vec<Arc<Line>>)> for Slice {
 
     #[throws(Self::Error)]
     fn try_from(v: (notation_proto::prelude::Slice, &Vec<Arc<Line>>)) -> Self {
-        if let Some(line) = v.1.iter().find(|x| x.key == v.0.line) {
+        if let Some(line) = v.1.iter().find(|x| x.id == v.0.line) {
             Self::new(line, v.0.begin, v.0.end)
         } else {
             throw!(ParseError::LineNotFound(v.0.line));

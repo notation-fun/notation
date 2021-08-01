@@ -1,15 +1,19 @@
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
-use syn::{LitInt, LitStr};
+use syn::{LitInt, LitStr, Token};
+
+use crate::proto::mark::MarkDsl;
+
+use super::id::IdDsl;
 
 pub enum SliceBeginDsl {
-    Mark(LitStr),
+    Mark(MarkDsl),
     Index(usize),
 }
 impl Parse for SliceBeginDsl {
     fn parse(input: ParseStream) -> Result<Self> {
-        if input.peek(LitStr) {
+        if MarkDsl::peek(input) {
             Ok(Self::Mark(input.parse()?))
         } else {
             Ok(Self::Index(
@@ -20,12 +24,12 @@ impl Parse for SliceBeginDsl {
 }
 
 pub enum SliceEndDsl {
-    Mark(LitStr),
+    Mark(MarkDsl),
     Count(usize),
 }
 impl Parse for SliceEndDsl {
     fn parse(input: ParseStream) -> Result<Self> {
-        if input.peek(LitStr) {
+        if MarkDsl::peek(input) {
             Ok(Self::Mark(input.parse()?))
         } else {
             Ok(Self::Count(
@@ -36,7 +40,7 @@ impl Parse for SliceEndDsl {
 }
 
 pub struct SliceDsl {
-    pub line: LitStr,
+    pub line: IdDsl,
     pub begin: SliceBeginDsl,
     pub end: SliceEndDsl,
 }
@@ -53,7 +57,7 @@ impl SliceDsl {
 impl ToTokens for SliceBeginDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.extend(match self {
-            Self::Mark(x) => quote! { SliceBegin::Mark(#x.to_string()) },
+            Self::Mark(x) => quote! { SliceBegin::Mark(#x.to_owned()) },
             Self::Index(x) => quote! { SliceBegin::Index(#x) },
         });
     }
@@ -61,7 +65,7 @@ impl ToTokens for SliceBeginDsl {
 impl ToTokens for SliceEndDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.extend(match self {
-            Self::Mark(x) => quote! { SliceEnd::Mark(#x.to_string()) },
+            Self::Mark(x) => quote! { SliceEnd::Mark(#x.to_owned()) },
             Self::Count(x) => quote! { SliceEnd::Count(#x) },
         });
     }
