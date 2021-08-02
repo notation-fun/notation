@@ -11,7 +11,6 @@ use crate::fretted::shape::ShapeDsl;
 use crate::proto::bar::BarDsl;
 use crate::proto::entry::{EntryDsl, MultibleDsl};
 use crate::proto::layer::LayerDsl;
-use crate::proto::line::{LineDsl, LineDslOrExpr};
 use crate::proto::section::SectionDsl;
 use crate::proto::slice::SliceDsl;
 use crate::proto::track::TrackDsl;
@@ -57,11 +56,10 @@ macro_rules! impl_dsl {
 }
 
 impl_dsl!(EntryDsl);
-impl_dsl!(LineDsl);
-impl_dsl!(LineDslOrExpr);
 impl_dsl!(SliceDsl);
 impl_dsl!(TrackDsl);
 impl_dsl!(LayerDsl);
+impl_dsl!(BarDsl);
 impl_dsl!(SectionDsl);
 
 macro_rules! impl_multible_dsl {
@@ -134,4 +132,3 @@ impl_multible_dsl!(ToneDsl);
 impl_multible_dsl!(WordDsl);
 impl_multible_dsl!(PickDsl);
 impl_multible_dsl!(ShapeDsl);
-impl_multible_dsl!(BarDsl);

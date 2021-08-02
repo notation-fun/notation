@@ -6,6 +6,7 @@ use crate::prelude::ProtoEntry;
 
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum TrackKind {
+    Chord,
     Vocal,
     Lyrics,
     Guitar,
@@ -23,6 +24,7 @@ impl Display for TrackKind {
 impl TrackKind {
     pub fn from_ident(ident: &str) -> Self {
         match ident {
+            "Chord" => Self::Chord,
             "Vocal" => Self::Vocal,
             "Lyrics" => Self::Lyrics,
             "Guitar" => Self::Guitar,

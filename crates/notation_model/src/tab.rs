@@ -4,7 +4,7 @@ use std::sync::{Arc, Weak};
 use notation_proto::prelude::TabPosition;
 
 use crate::prelude::{
-    Bar, BarLayer, Form, Line, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track,
+    Bar, Form, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track,
     Unit, Units,
 };
 
@@ -21,9 +21,7 @@ pub struct TabBar {
 #[derive(Debug)]
 pub struct Tab {
     pub meta: Arc<TabMeta>,
-    pub lines: Vec<Arc<Line>>,
     pub tracks: Vec<Arc<Track>>,
-    pub layers: Vec<Arc<BarLayer>>,
     pub sections: Vec<Arc<Section>>,
     pub form: Form,
     pub bars: Vec<Arc<TabBar>>,
@@ -44,12 +42,10 @@ impl Display for Tab {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<{}>({} L:{} T:{} Y:{} S:{} F:{} B:{})",
+            "<{}>({} T:{} S:{} F:{} B:{})",
             stringify!(Tab),
             self.meta,
-            self.lines.len(),
             self.tracks.len(),
-            self.layers.len(),
             self.sections.len(),
             self.form.sections.len(),
             self.bars.len(),

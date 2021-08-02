@@ -3,21 +3,19 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::LitStr;
+
+use super::layer::LayerDsl;
 
 pub struct BarDsl {
-    pub layers: Vec<LitStr>,
+    pub layers: Vec<LayerDsl>,
 }
 
 impl BarDsl {
     #[throws(Error)]
-    pub fn parse_without_paren(input: ParseStream, multied: bool, with_paren: bool) -> Self {
+    pub fn parse_without_brace(input: ParseStream) -> Self {
         let mut layers = Vec::new();
-        while input.peek(LitStr) {
-            layers.push(input.parse::<LitStr>()?);
-            if multied && !with_paren {
-                break;
-            }
+        while LayerDsl::peek(input) {
+            layers.push(input.parse::<LayerDsl>()?);
         }
         BarDsl { layers }
     }

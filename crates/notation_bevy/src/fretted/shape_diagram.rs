@@ -22,7 +22,7 @@ impl<const S: usize> ShapeDiagramData<S> {
         tab_bar: &Arc<TabBar>,
         duration: Duration,
         position: BarPosition,
-        pick_note: HandShape<S>,
+        shape: HandShape<S>,
     ) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         ShapeDiagramData {
@@ -30,7 +30,7 @@ impl<const S: usize> ShapeDiagramData<S> {
             bar_ordinal,
             duration,
             position,
-            shape: pick_note,
+            shape,
         }
     }
 }

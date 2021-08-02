@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::FrettedGrid;
-use notation_model::prelude::{Fretboard, FrettedEntry, ProtoEntry, Track};
+use notation_model::prelude::{Fretboard, FrettedEntry, ModelEntry, Track};
 
 #[derive(Bundle)]
 pub struct FrettedLayerBundle<const S: usize> {
@@ -17,10 +17,10 @@ impl<const S: usize> FrettedLayerBundle<S> {
         new_default_fretboard: &F2,
     ) -> Self
     where
-        F1: Fn(&ProtoEntry) -> Option<&FrettedEntry<S>>,
+        F1: Fn(&ModelEntry) -> Option<&FrettedEntry<S>>,
         F2: Fn() -> Fretboard<S>,
     {
-        let fretboard_entry = track.get_entry(&|x: &ProtoEntry| {
+        let fretboard_entry = track.get_entry(&|x: &ModelEntry| {
             let fretted_entry = as_fretted_entry(x);
             fretted_entry.and_then(|y| y.as_fretboard()).is_some()
         });

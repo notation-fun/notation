@@ -13,17 +13,21 @@ pub enum ChordInversion {
 }
 
 // https://hellomusictheory.com/learn/types-of-chords/
+// https://www.earmaster.com/music-theory-online/ch05/chapter-5-4.html
+// https://en.wikipedia.org/wiki/Chord_names_and_symbols_(popular_music)
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum ChordQuality {
     Major,
     Minor,
     Diminished,
     Augmented,
+    Suspended2th,
+    Suspended4th,
     Major7th,
     Minor7th,
     Dominant7th,
-    Suspended2th,
-    Suspended4th,
+    Diminished7th,
+    HaldDiminished7th,
 }
 //Extended, Altered, Quartal and Quintal not supported
 

@@ -22,13 +22,6 @@ pub fn entry(input: TokenStream) -> TokenStream {
 }
 
 #[proc_macro]
-pub fn line(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::line::LineDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
 pub fn slice(input: TokenStream) -> TokenStream {
     parse_macro_input!(input as proto::slice::SliceDsl)
         .into_token_stream()
@@ -38,13 +31,6 @@ pub fn slice(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn track(input: TokenStream) -> TokenStream {
     parse_macro_input!(input as proto::track::TrackDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
-pub fn layer(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::layer::LayerDsl)
         .into_token_stream()
         .into()
 }

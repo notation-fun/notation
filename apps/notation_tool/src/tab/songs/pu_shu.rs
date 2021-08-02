@@ -4,8 +4,9 @@ use notation_proto::prelude::*;
 pub fn new_tab_bai_hua_lin() -> Tab {
     tab! {
         Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(118))
-        Lines: [
-            {"shapes" [
+        Tracks: [
+            {"guitar" Guitar [
+                Fretboard
                 $duration = _1
                 "Em" Shape ( 0 2 2 0 0 0 )
                 "Adim" Shape ( 0 0 1 2 1 0 )
@@ -16,8 +17,6 @@ pub fn new_tab_bai_hua_lin() -> Tab {
                 "Am" Shape ( 0 0 2 2 1 0 )
                 "G/B" Shape ( _ 2 0 0 0 3 )
                 "D" Shape ( 0 0 0 2 3 2 )
-            ]}
-            {"picks" [
                 $duration = _1_8
                 "6-1" Pick [ 6 3 2 1 2 3 ]
                 "5-1" Pick [ 5 3 2 1 2 3 ]
@@ -25,84 +24,173 @@ pub fn new_tab_bai_hua_lin() -> Tab {
                 "4-1" Pick [ 4 3 2 1 2 3 ]
             ]}
         ]
-        Tracks: [
-            {"guitar" Guitar [
-                Fretboard
-            ]}
-        ]
-        Layers: [
-            {"Em" [
-                "shapes" "Em" 1
-                "picks" "6-1" 6
-            ] Track: "guitar"}
-            {"Em_1" [
-                "shapes" "Em" 1
-                "picks" "5-1" 6
-            ] Track: "guitar"}
-            {"Em_2" [
-                "shapes" "Em" 1
-                "picks" "4-1" 6
-            ] Track: "guitar"}
-            {"Adim" [
-                "shapes" "Adim" 1
-                "picks" "5-2" 6
-            ] Track: "guitar"}
-            {"B7" [
-                "shapes" "B7" 1
-                "picks" "5-1" 6
-            ] Track: "guitar"}
-            {"B7_1" [
-                "shapes" "B7_1" 1
-                "picks" "5-1" 6
-            ] Track: "guitar"}
-            {"G" [
-                "shapes" "G" 1
-                "picks" "6-1" 6
-            ] Track: "guitar"}
-            {"E" [
-                "shapes" "E" 1
-                "picks" "6-1" 6
-            ] Track: "guitar"}
-            {"E_1" [
-                "shapes" "E" 1
-                "picks" "4-1" 6
-            ] Track: "guitar"}
-            {"Am" [
-                "shapes" "Am" 1
-                "picks" "5-1" 6
-            ] Track: "guitar"}
-            {"G/B" [
-                "shapes" "G/B" 1
-                "picks" "5-1" 6
-            ] Track: "guitar"}
-            {"D" [
-                "shapes" "D" 1
-                "picks" "4-1" 6
-            ] Track: "guitar"}
-        ]
         Sections: [
             {"A1" Verse [
-                "Em" "Em_1" "Adim" "B7"
-                "Adim" "Adim" "B7" "Em"
+                {
+                    guitar [
+                        "Em" 1
+                        "6-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Em" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Adim" 1
+                        "5-2" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "B7" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Adim" 1
+                        "5-2" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Adim" 1
+                        "5-2" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "B7" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Em" 1
+                        "6-1" 6
+                    ]
+                }
             ]}
             {"A2" Verse [
-                "E" "E_1" "Am" "G"
-                "G/B" "Am" "B7_1" "Em"
+                {
+                    guitar [
+                        "E" 1
+                        "6-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "E" 1
+                        "4-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Am" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "G" 1
+                        "6-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "G/B" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Am" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "B7" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Em" 1
+                        "6-1" 6
+                    ]
+                }
             ]}
-            {"B1" Chorus [
-                "Em" "Am" "D" "G"
-                "Em" "Am" "Adim" "B7_1"
-            ]}
-            {"B2" Chorus [
-                "Em" "Am" "D" "G" "Em" "Am" "B7_1" "Em"
+            {"B" Chorus [
+                {
+                    guitar [
+                        "Em" 1
+                        "6-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Am" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "D" 1
+                        "4-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "G" 1
+                        "6-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Em" 1
+                        "6-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Am" 1
+                        "5-1" 6
+                    ]
+                }
+                {
+                    guitar [
+                        "Adim" 1 @ 1 3
+                        "5-2" 6 @ 1 3
+                        "B7" 1 @ 2 4
+                        "5-2" 6 @ 2 4
+                    ]
+                }
+                {
+                    guitar [
+                        "B7" 1 @ 1 3
+                        "5-1" 6 @ 1 3
+                        "Em" 1 @ 2 4
+                        "6-1" 6 @ 2 4
+                    ]
+                }
             ]}
             {"O" Outro [
-                "Em"
+                {
+                    guitar [
+                        "Em" 1
+                        "6-1" 6
+                    ]
+                }
             ]}
         ]
         Form: "A1"
-            "A1" "A2" "A1" "A2" "B1" "B2"
-            "A1" "A2" "A1" "A2" "B1" "B2"
+            "A1" "A2" "A1" "A2" "B" "B"
+            "A1" "A2" "A1" "A2" "B" "B"
             "A2" "A1" "A1" "O"
     }
 }

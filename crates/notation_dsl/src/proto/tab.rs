@@ -7,24 +7,19 @@ use syn::{Expr, Token};
 use crate::proto::form::FormDsl;
 
 use crate::proto::layer::LayerDsl;
-use crate::proto::line::LineDslOrExpr;
 use crate::proto::section::SectionDsl;
 use crate::proto::track::TrackDsl;
 
 pub struct TabDsl {
     meta: Expr,
-    lines: Vec<LineDslOrExpr>,
     tracks: Vec<TrackDsl>,
-    layers: Vec<LayerDsl>,
     sections: Vec<SectionDsl>,
     form: FormDsl,
 }
 
 mod kw {
     syn::custom_keyword!(Meta);
-    syn::custom_keyword!(Lines);
     syn::custom_keyword!(Tracks);
-    syn::custom_keyword!(Layers);
     syn::custom_keyword!(Sections);
     syn::custom_keyword!(Form);
 }
@@ -36,17 +31,9 @@ impl Parse for TabDsl {
         input.parse::<Token![:]>()?;
         let meta = input.parse()?;
 
-        input.parse::<kw::Lines>()?;
-        input.parse::<Token![:]>()?;
-        let lines = LineDslOrExpr::parse_vec(input)?;
-
         input.parse::<kw::Tracks>()?;
         input.parse::<Token![:]>()?;
         let tracks = TrackDsl::parse_vec(input)?;
-
-        input.parse::<kw::Layers>()?;
-        input.parse::<Token![:]>()?;
-        let layers = LayerDsl::parse_vec(input)?;
 
         input.parse::<kw::Sections>()?;
         input.parse::<Token![:]>()?;
@@ -58,9 +45,7 @@ impl Parse for TabDsl {
 
         TabDsl {
             meta,
-            lines,
             tracks,
-            layers,
             sections,
             form,
         }
@@ -71,22 +56,16 @@ impl ToTokens for TabDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let TabDsl {
             meta,
-            lines,
             tracks,
-            layers,
             sections,
             form,
         } = self;
-        let lines_quote = LineDslOrExpr::quote_vec(lines);
         let tracks_quote = TrackDsl::quote_vec(tracks);
-        let layers_quote = LayerDsl::quote_vec(layers);
         let sections_quote = SectionDsl::quote_vec(sections);
         tokens.extend(quote! {
             Tab::new(
                 #meta,
-                #lines_quote,
                 #tracks_quote,
-                #layers_quote,
                 #sections_quote,
                 #form
             )

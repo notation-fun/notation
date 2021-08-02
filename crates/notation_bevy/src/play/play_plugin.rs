@@ -11,7 +11,7 @@ use std::time::Duration as StdDuration;
 use std::time::Instant as StdInstant;
 
 use bevy::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, ProtoEntry, Tab};
+use notation_model::prelude::{BarPosition, Duration, ModelEntry, Tab};
 
 use crate::prelude::{
     EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabState, WindowResizedEvent,
@@ -83,7 +83,7 @@ fn on_stop(
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut query: Query<(&Arc<Tab>, &TabState, &mut Transform), Changed<TabState>>,
-    mut entry_query: Query<(Entity, &Arc<ProtoEntry>, &BarPosition, &mut EntryState)>,
+    mut entry_query: Query<(Entity, &Arc<ModelEntry>, &BarPosition, &mut EntryState)>,
 ) {
     for (tab, state, mut transform) in query.iter_mut() {
         if !state.play_state.is_playing() {
@@ -111,7 +111,7 @@ fn on_time(
     mut query: Query<(&Arc<Tab>, &mut TabState, &mut Transform)>,
     mut entry_query: Query<(
         Entity,
-        &Arc<ProtoEntry>,
+        &Arc<ModelEntry>,
         &Duration,
         &BarPosition,
         &mut EntryState,

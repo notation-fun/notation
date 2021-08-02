@@ -50,27 +50,27 @@ fn create_layers(
 ) {
     for (bar_entity, bar, grid_col) in query.iter() {
         for layer in &bar.bar.layers {
-            if layer.rounds.is_some() {
-                if layer
-                    .rounds
-                    .clone()
-                    .unwrap()
-                    .iter()
-                    .find(|&x| *x == bar.section_round)
-                    .is_none()
-                {
-                    continue;
-                }
-            }
             let layer_bundle = LayerBundle::new(bar.clone(), layer.clone());
             let mut layer_commands = commands.spawn_bundle(layer_bundle);
             BarPlugin::insert_layer_extra(&mut layer_commands, bar.clone(), layer.clone());
             let layer_entity = layer_commands.id();
             commands.entity(bar_entity).push_children(&[layer_entity]);
-            for slice in &layer.slices {
+            for slice in layer.slices.iter() {
+                if slice.rounds.is_some() {
+                    if slice
+                        .rounds
+                        .clone()
+                        .unwrap()
+                        .iter()
+                        .find(|&x| *x == bar.section_round)
+                        .is_none()
+                    {
+                        continue;
+                    }
+                }
                 let mut pos = BarPosition::new(bar.bar_ordinal, Units(0.0));
                 for entry in slice.entries.iter() {
-                    let duration = entry.as_ref().duration();
+                    let duration = entry.as_ref().value.duration();
                     add_entry_evts.send(AddEntryEvent(layer_entity, entry.clone(), pos));
                     pos.in_bar_pos = pos.in_bar_pos + Units::from(duration);
                 }
@@ -104,14 +104,13 @@ impl BarPlugin {
         _bar: Arc<TabBar>,
         layer: Arc<BarLayer>,
     ) {
-        if let Some(track) = layer.track.clone() {
-            commands.insert(track.clone());
-            match track.kind {
-                TrackKind::Guitar => GuitarPlugin::insert_guitar_layer_extra(commands, track),
-                TrackKind::Vocal => MelodyPlugin::insert_melody_layer_extra(commands, track),
-                TrackKind::Lyrics => LyricsPlugin::insert_lyrics_layer_extra(commands, track),
-                _ => (),
-            }
+        commands.insert(layer.track.clone());
+        let track = layer.track.clone();
+        match track.kind {
+            TrackKind::Guitar => GuitarPlugin::insert_guitar_layer_extra(commands, track),
+            TrackKind::Vocal => MelodyPlugin::insert_melody_layer_extra(commands, track),
+            TrackKind::Lyrics => LyricsPlugin::insert_lyrics_layer_extra(commands, track),
+            _ => (),
         }
     }
 }

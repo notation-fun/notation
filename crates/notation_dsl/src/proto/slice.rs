@@ -1,11 +1,9 @@
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
-use syn::LitInt;
+use syn::{LitInt, Token};
 
 use crate::proto::mark::MarkDsl;
-
-use super::id::IdDsl;
 
 pub enum SliceBeginDsl {
     Mark(MarkDsl),
@@ -22,7 +20,12 @@ impl Parse for SliceBeginDsl {
         }
     }
 }
-
+impl SliceBeginDsl {
+    pub fn peek(input: ParseStream) -> bool {
+        MarkDsl::peek(input)
+            || input.peek(LitInt)
+    }
+}
 pub enum SliceEndDsl {
     Mark(MarkDsl),
     Count(usize),
@@ -40,17 +43,28 @@ impl Parse for SliceEndDsl {
 }
 
 pub struct SliceDsl {
-    pub line: IdDsl,
     pub begin: SliceBeginDsl,
     pub end: SliceEndDsl,
+    pub rounds: Option<Vec<usize>>,
 }
 
 impl SliceDsl {
     pub fn parse_without_brace(input: ParseStream) -> Result<Self> {
-        let line = input.parse()?;
         let begin = input.parse()?;
         let end = input.parse()?;
-        Ok(SliceDsl { line, begin, end })
+        let mut rounds = None;
+        if input.peek(Token![@]) {
+            input.parse::<Token![@]>()?;
+            let mut rounds_: Vec<usize> = Vec::new();
+            while input.peek(LitInt) {
+                rounds_.push(input.parse::<LitInt>()?.base10_parse::<usize>()?);
+            }
+            rounds = Some(rounds_);
+        }
+        Ok(SliceDsl { begin, end, rounds })
+    }
+    pub fn peek(input: ParseStream) -> bool {
+        SliceBeginDsl::peek(input)
     }
 }
 
@@ -72,9 +86,21 @@ impl ToTokens for SliceEndDsl {
 }
 impl ToTokens for SliceDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let SliceDsl { line, begin, end } = self;
+        let SliceDsl { begin, end , rounds } = self;
+        let rounds_quote = match rounds {
+            Some(rounds) => {
+                quote! {
+                    Some(vec![
+                        #(#rounds),*
+                    ])
+                }
+            }
+            None => {
+                quote! { None }
+            }
+        };
         tokens.extend(quote! {
-            Slice::new(#line.into(), #begin, #end)
+            Slice::new(#begin, #end, #rounds_quote)
         });
     }
 }

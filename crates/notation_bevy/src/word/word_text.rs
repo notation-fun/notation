@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, Note, Semitones, Syllable, Units};
+use notation_model::prelude::{BarPosition, Duration, Units};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;

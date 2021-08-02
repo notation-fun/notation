@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use std::fmt::Display;
 
-use crate::prelude::{BarLayer, Form, Line, Section, Track};
+use crate::prelude::{Form, Section, Track};
 use notation_core::prelude::{Key, Pitch, Scale, Signature, Syllable, Tempo};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -40,9 +40,7 @@ impl TabMeta {
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Tab {
     pub meta: TabMeta,
-    pub lines: Vec<Line>,
     pub tracks: Vec<Track>,
-    pub layers: Vec<BarLayer>,
     pub sections: Vec<Section>,
     pub form: Form,
 }
@@ -50,11 +48,9 @@ impl Display for Tab {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<Tab>({} L:{} T:{} Y:{} S:{} F:{})",
+            "<Tab>({} T:{} S:{} F:{})",
             self.meta,
-            self.lines.len(),
             self.tracks.len(),
-            self.layers.len(),
             self.sections.len(),
             self.form.sections.len(),
         )
@@ -63,17 +59,13 @@ impl Display for Tab {
 impl Tab {
     pub fn new(
         meta: TabMeta,
-        lines: Vec<Line>,
         tracks: Vec<Track>,
-        layers: Vec<BarLayer>,
         sections: Vec<Section>,
         form: Form,
     ) -> Self {
         Self {
             meta,
-            lines,
             tracks,
-            layers,
             sections,
             form,
         }

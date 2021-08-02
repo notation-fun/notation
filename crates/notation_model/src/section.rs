@@ -3,7 +3,7 @@ use std::convert::TryFrom;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{Bar, BarLayer, ParseError, SectionKind};
+use crate::prelude::{Bar, Track, ParseError, SectionKind};
 
 #[derive(Debug)]
 pub struct Section {
@@ -55,11 +55,11 @@ impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
     }
 }
 
-impl TryFrom<(notation_proto::prelude::Section, &Vec<Arc<BarLayer>>)> for Section {
+impl TryFrom<(notation_proto::prelude::Section, &Vec<Arc<Track>>)> for Section {
     type Error = ParseError;
 
     #[throws(Self::Error)]
-    fn try_from(v: (notation_proto::prelude::Section, &Vec<Arc<BarLayer>>)) -> Self {
+    fn try_from(v: (notation_proto::prelude::Section, &Vec<Arc<Track>>)) -> Self {
         let mut bars = Vec::new();
         for bar in v.0.bars {
             bars.push(Bar::try_from((bar, v.1)).map(Arc::new)?);

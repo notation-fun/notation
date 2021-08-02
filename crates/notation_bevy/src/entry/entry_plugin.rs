@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::{prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, ToneBundle}, word::word_bundle::WordBundle};
-use notation_model::prelude::{CoreEntry, ProtoEntry};
+use notation_model::prelude::{CoreEntry, ProtoEntry, ModelEntry};
 
 pub struct EntryPlugin;
 
@@ -41,8 +41,8 @@ impl EntryPlugin {
         };
     }
 
-    pub fn insert_entry_extra(commands: &mut EntityCommands, entry: Arc<ProtoEntry>) {
-        match entry.as_ref() {
+    pub fn insert_entry_extra(commands: &mut EntityCommands, entry: Arc<ModelEntry>) {
+        match entry.as_ref().value.as_ref() {
             ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
             ProtoEntry::FrettedSix(entry) => {
                 FrettedPlugin::insert_fretted_entry_extra(commands, entry);

@@ -33,6 +33,11 @@ pub struct FrettedTheme {
     pub shape_fret_space: f32,
     pub shape_finger_offset_x: f32,
     pub shape_finger_offset_y: f32,
+    pub shape_font_size: f32,
+    pub shape_font_color: Color,
+    pub shape_text_x: f32,
+    pub shape_text_y: f32,
+    pub shape_text_z: f32,
 }
 
 impl Default for FrettedTheme {
@@ -62,6 +67,11 @@ impl Default for FrettedTheme {
             shape_fret_space: 12.0,
             shape_finger_offset_x: 27.0,
             shape_finger_offset_y: 14.0,
+            shape_font_size: 24.0,
+            shape_font_color: Color::hex("F27D7A").unwrap(),
+            shape_text_x: 36.0,
+            shape_text_y: -12.0,
+            shape_text_z: 1.0,
         }
     }
 }
@@ -86,6 +96,28 @@ impl FrettedTheme {
         entity_commands.insert_bundle(Text2dBundle {
             text: Text::with_section(format!("{}", fret).as_str(), style, alignment),
             transform: Transform::from_xyz(self.fret_text_x, self.fret_text_y, self.fret_text_z),
+            ..Default::default()
+        });
+    }
+    pub fn insert_shape_text(
+        &self,
+        entity_commands: &mut EntityCommands,
+        asset_server: &AssetServer,
+        text: &String,
+    ) {
+        let font = asset_server.load("fonts/FiraMono-Medium.ttf");
+        let style = TextStyle {
+            font,
+            font_size: self.shape_font_size,
+            color: self.shape_font_color,
+        };
+        let alignment = TextAlignment {
+            vertical: VerticalAlign::Center,
+            horizontal: HorizontalAlign::Right,
+        };
+        entity_commands.insert_bundle(Text2dBundle {
+            text: Text::with_section(text.as_str(), style, alignment),
+            transform: Transform::from_xyz(self.shape_text_x, self.shape_text_y, self.shape_text_z),
             ..Default::default()
         });
     }
