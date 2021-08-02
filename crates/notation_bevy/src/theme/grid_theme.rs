@@ -39,15 +39,15 @@ impl Default for GridTheme {
             bar_size: 240.0,
             semitone_size: 10.0,
             header_height: 64.0,
-            bar_height: 260.0,
+            bar_height: 200.0,
             bar_separator_size: 3.0,
-            bar_separator_top: 0.0,
-            bar_separator_bottom: -140.0,
-            bar_beat_top: -10.0,
-            bar_beat_bottom: -130.0,
+            bar_separator_top: 100.0,
+            bar_separator_bottom: -90.0,
+            bar_beat_top: 90.0,
+            bar_beat_bottom: -80.0,
             pos_indicator_size: 2.0,
-            pos_indicator_top: 10.0,
-            pos_indicator_bottom: -150.0,
+            pos_indicator_top: 100.0,
+            pos_indicator_bottom: -90.0,
         }
     }
 }

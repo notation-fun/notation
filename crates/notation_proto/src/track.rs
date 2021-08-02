@@ -7,12 +7,12 @@ use crate::prelude::ProtoEntry;
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum TrackKind {
     Vocal,
-    Piano,
-    Guitar,
-    Bass,
-    Drums,
-    Synth,
     Lyrics,
+    Guitar,
+    Synth,
+    Piano,
+    Drums,
+    Bass,
     Custom(String),
 }
 impl Display for TrackKind {
@@ -24,12 +24,12 @@ impl TrackKind {
     pub fn from_ident(ident: &str) -> Self {
         match ident {
             "Vocal" => Self::Vocal,
-            "Piano" => Self::Piano,
-            "Guitar" => Self::Guitar,
-            "Bass" => Self::Bass,
-            "Drums" => Self::Drums,
-            "Synth" => Self::Synth,
             "Lyrics" => Self::Lyrics,
+            "Guitar" => Self::Guitar,
+            "Synth" => Self::Synth,
+            "Piano" => Self::Piano,
+            "Drums" => Self::Drums,
+            "Bass" => Self::Bass,
             _ => Self::Custom(ident.to_string()),
         }
     }
