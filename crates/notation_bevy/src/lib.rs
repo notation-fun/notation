@@ -11,6 +11,7 @@ pub use bevy_inspector_egui;
 pub mod chord;
 pub mod entry;
 pub mod tone;
+pub mod word;
 
 pub mod bar;
 pub mod play;
@@ -18,6 +19,7 @@ pub mod tab;
 
 pub mod fretted;
 pub mod guitar;
+pub mod lyrics;
 pub mod melody;
 
 pub mod settings;
@@ -67,7 +69,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::guitar::guitar_plugin::GuitarPlugin;
     #[doc(hidden)]
-    pub use crate::melody::melody_grid::MelodyGrid;
+    pub use crate::lyrics::lyrics_grid::LyricsGrid;
+    #[doc(hidden)]
+    pub use crate::lyrics::lyrics_layer_bundle::LyricsLayerBundle;
+    #[doc(hidden)]
+    pub use crate::lyrics::lyrics_plugin::LyricsPlugin;
+    #[doc(hidden)]
+    pub use crate::melody::melody_grid::MemoryGrid;
     #[doc(hidden)]
     pub use crate::melody::melody_layer_bundle::MelodyLayerBundle;
     #[doc(hidden)]
@@ -103,9 +111,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::theme::syllable_theme::SyllableTheme;
     #[doc(hidden)]
+    pub use crate::tone::tone_bundle::ToneBundle;
+    #[doc(hidden)]
     pub use crate::tone::tone_mode::ToneMode;
     #[doc(hidden)]
-    pub use crate::tone::tone_bundle::ToneBundle;
+    pub use crate::word::word_bundle::WordBundle;
     #[doc(hidden)]
     pub use crate::ui::NotationUiPlugin;
     #[doc(hidden)]

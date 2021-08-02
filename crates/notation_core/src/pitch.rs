@@ -211,7 +211,7 @@ impl Pitch {
 
 impl Pitch {
     pub fn new(name: PitchName, sign: PitchSign) -> Self {
-        Self { name, sign, }
+        Self { name, sign }
     }
 }
 

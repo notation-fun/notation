@@ -1,9 +1,9 @@
 use std::cmp::{max, min};
 
 use fehler::throws;
-use syn::parse::{Error, Parse, ParseStream};
-use syn::{Token};
 use notation_proto::prelude::Duration;
+use syn::parse::{Error, Parse, ParseStream};
+use syn::Token;
 
 #[derive(Debug)]
 pub struct DurationTweakDsl {
@@ -39,7 +39,11 @@ impl Parse for DurationTweakDsl {
             input.parse::<Token![-]>()?;
             triplet = true;
         }
-        DurationTweakDsl { half_num, dotted, triplet }
+        DurationTweakDsl {
+            half_num,
+            dotted,
+            triplet,
+        }
     }
 }
 

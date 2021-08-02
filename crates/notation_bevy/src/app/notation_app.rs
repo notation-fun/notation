@@ -15,6 +15,8 @@ pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
     fn build(&mut self, group: &mut PluginGroupBuilder) {
         group.add(EntryPlugin);
+        group.add(MelodyPlugin);
+        group.add(LyricsPlugin);
         group.add(BarPlugin);
         group.add(FrettedPlugin);
         group.add(GuitarPlugin);
@@ -66,7 +68,7 @@ impl NotationApp {
     }
 
     #[cfg(target_arch = "wasm32")]
-    pub fn get_tab_from_url() -> Result<String, String> {
+    pub fn get_tab_from_url() -> Result<Tone, Tone> {
         web_sys::window()
             .ok_or("No_Window".to_owned())
             .and_then(|x| x.document().ok_or("No_Document".to_owned()))

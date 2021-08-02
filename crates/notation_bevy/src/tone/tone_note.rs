@@ -39,7 +39,9 @@ impl ToneNoteData {
         }
     }
     pub fn syllable(&self) -> Syllable {
-        self.note.syllable.unwrap_or_else(|| Semitones::from(self.note.pitch).into())
+        self.note
+            .syllable
+            .unwrap_or_else(|| Semitones::from(self.note.pitch).into())
     }
 }
 pub struct ToneNoteShape<'a> {
@@ -49,27 +51,27 @@ pub struct ToneNoteShape<'a> {
 
 impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     fn get_name(&self) -> String {
-        format!(
-            "{}:{}",
-            self.data.bar_ordinal, self.data.note
-        )
+        format!("{}:{}", self.data.bar_ordinal, self.data.note)
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.theme.grid.bar_size / self.data.bar_units.0
                 * Units::from(self.data.duration).0
-                - self.theme.grid.note_outline * 2.0,
-            height: self.theme.grid.note_height,
+                - self.theme.melody.note_outline * 2.0,
+            height: self.theme.melody.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.syllable.color_of_syllable(self.data.syllable()))
+        ShapeColors::outlined(
+            self.theme.syllable.color_of_syllable(self.data.syllable()),
+            self.theme.melody.note_outline_color,
+        )
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(self.theme.grid.note_outline),
+            outline_options: StrokeOptions::default().with_line_width(self.theme.melody.note_outline),
         }
     }
     fn get_transform(&self) -> Transform {

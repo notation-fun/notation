@@ -1,8 +1,8 @@
 use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::Token;
 use syn::parse::{Error, ParseStream};
+use syn::Token;
 
 use crate::context::Context;
 
@@ -29,13 +29,19 @@ impl ToneDsl {
             }
         }
         let duration_tweak = DurationTweakDsl::try_parse(input);
-        ToneDsl { notes, duration_tweak }
+        ToneDsl {
+            notes,
+            duration_tweak,
+        }
     }
 }
 
 impl ToTokens for ToneDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let ToneDsl { notes, duration_tweak } = self;
+        let ToneDsl {
+            notes,
+            duration_tweak,
+        } = self;
         let duration_quote = Context::duration_quote(duration_tweak);
         if notes.len() == 0 {
             tokens.extend(quote! {
@@ -53,4 +59,3 @@ impl ToTokens for ToneDsl {
         }
     }
 }
-

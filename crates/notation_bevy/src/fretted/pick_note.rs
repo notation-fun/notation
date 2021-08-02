@@ -53,24 +53,27 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
         shapes::Rectangle {
             width: self.theme.grid.bar_size / self.data.bar_units.0
                 * Units::from(self.data.duration).0
-                - self.theme.grid.note_outline * 2.0,
-            height: self.theme.grid.note_height,
+                - self.theme.fretted.note_outline * 2.0,
+            height: self.theme.fretted.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.syllable.color_of_syllable(self.data.syllable))
+        ShapeColors::outlined(
+            self.theme.syllable.color_of_syllable(self.data.syllable),
+            self.theme.fretted.note_outline_color,
+        )
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(self.theme.grid.note_outline),
+            outline_options: StrokeOptions::default().with_line_width(self.theme.fretted.note_outline),
         }
     }
     fn get_transform(&self) -> Transform {
         let x = self.theme.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0;
         let y = -1.0 * self.theme.fretted.string_space * self.data.pick_note.string as f32
-            - self.theme.grid.note_height / 2.0;
+            - self.theme.fretted.note_height / 2.0;
         Transform::from_xyz(x, y, self.theme.fretted.pick_z)
     }
 }

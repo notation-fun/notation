@@ -1,13 +1,13 @@
 use std::sync::RwLock;
 
+use crate::core::duration::DurationTweakDsl;
+use crate::core::octave::OctaveTweakDsl;
 use fehler::{throw, throws};
-use notation_proto::prelude::{Duration, GUITAR_STRING_NUM, Key, Octave, Pitch, Scale, Syllable};
+use notation_proto::prelude::{Duration, Key, Octave, Pitch, Scale, Syllable, GUITAR_STRING_NUM};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
 use syn::{Ident, LitInt, Token};
-use crate::core::duration::DurationTweakDsl;
-use crate::core::octave::OctaveTweakDsl;
 
 lazy_static! {
     static ref CONTEXT: RwLock<Context> = RwLock::new(Context::default());
@@ -67,9 +67,7 @@ impl Context {
 impl Context {
     pub fn duration_quote(tweak: &Option<DurationTweakDsl>) -> TokenStream {
         let base = Self::duration();
-        let duration = tweak.as_ref()
-            .map(|t| t.tweak(&base))
-            .unwrap_or(base);
+        let duration = tweak.as_ref().map(|t| t.tweak(&base)).unwrap_or(base);
         let ident = duration.to_ident();
         quote! {
             Duration::from_ident(#ident)
@@ -77,9 +75,7 @@ impl Context {
     }
     pub fn octave_quote(tweak: &Option<OctaveTweakDsl>) -> TokenStream {
         let base = Self::octave();
-        let octave = tweak.as_ref()
-            .map(|t| t.tweak(&base))
-            .unwrap_or(base);
+        let octave = tweak.as_ref().map(|t| t.tweak(&base)).unwrap_or(base);
         let ident = octave.to_ident();
         quote! {
             Octave::from_ident(#ident)

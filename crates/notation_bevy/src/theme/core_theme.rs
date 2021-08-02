@@ -11,7 +11,6 @@ use bevy_inspector_egui::Inspectable;
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct CoreTheme {
     pub background_color: Color,
-    pub outline_color: Color,
     pub bar_separator_color: Color,
     pub bar_separator_z: f32,
     pub beat_color0: Option<Color>,
@@ -26,7 +25,6 @@ impl Default for CoreTheme {
     fn default() -> Self {
         Self {
             background_color: Color::hex("FFF9F2").unwrap(),
-            outline_color: Color::BLACK,
             bar_separator_color: Color::hex("D3B59C").unwrap(),
             bar_separator_z: 2.0,
             beat_color0: None,

@@ -11,23 +11,21 @@ pub struct MarkDsl {
 impl Parse for MarkDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
-        let mark =
-            if input.peek(Token![|]) {
-                input.parse::<Token![|]>()?;
-                "|".to_owned()
-            } else if input.peek(LitStr) {
-                input.parse::<LitStr>()?.value()
-            } else {
-                throw!(Error::new(input.span(), "Invalid Mark"))
-            };
+        let mark = if input.peek(Token![|]) {
+            input.parse::<Token![|]>()?;
+            "|".to_owned()
+        } else if input.peek(LitStr) {
+            input.parse::<LitStr>()?.value()
+        } else {
+            throw!(Error::new(input.span(), "Invalid Mark"))
+        };
         Self { mark }
     }
 }
 
 impl MarkDsl {
     pub fn peek(input: ParseStream) -> bool {
-        input.peek(Token![|])
-            || input.peek(LitStr)
+        input.peek(Token![|]) || input.peek(LitStr)
     }
 }
 

@@ -2,10 +2,11 @@ use fehler::{throw, throws};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::{Ident, LitStr, Token};
+use syn::Ident;
 
 use crate::context::ContextDsl;
 use crate::core::tone::ToneDsl;
+use crate::core::word::WordDsl;
 use crate::fretted::fretboard::FretboardDsl;
 use crate::fretted::pick::PickDsl;
 use crate::fretted::shape::ShapeDsl;
@@ -19,6 +20,7 @@ pub enum EntryDsl {
     Context(ContextDsl),
     Mark(MarkDsl),
     Tone(MultibleDsl<ToneDsl>),
+    Word(MultibleDsl<WordDsl>),
     Pick(MultibleDsl<PickDsl>),
     Shape(MultibleDsl<ShapeDsl>),
     Fretboard(FretboardDsl),
@@ -34,6 +36,7 @@ impl EntryDsl {
         } else {
             match input.parse::<Ident>()?.to_string().as_str() {
                 "Tone" => Self::Tone(input.parse()?),
+                "Word" => Self::Word(input.parse()?),
                 "Pick" => Self::Pick(input.parse()?),
                 "Shape" => Self::Shape(input.parse()?),
                 "Fretboard" => Self::Fretboard(input.parse()?),
@@ -49,6 +52,7 @@ impl ToTokens for EntryDsl {
             Self::Mark(x) => quote! { ProtoEntry::from(#x) },
             Self::Context(x) => quote! { #x },
             Self::Tone(x) => quote! { #x },
+            Self::Word(x) => quote! { #x },
             Self::Pick(x) => quote! { #x },
             Self::Shape(x) => quote! { #x },
             Self::Fretboard(x) => quote! { #x },

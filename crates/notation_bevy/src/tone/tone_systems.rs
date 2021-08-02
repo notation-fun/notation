@@ -6,11 +6,11 @@ use notation_model::prelude::{BarPosition, Duration, TabBar, Tone};
 
 use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme};
 
-use super::{tone_mode::ToneMode, tone_note::{ToneNoteData, ToneNoteShape}};
+use super::tone_mode::ToneMode;
+use super::tone_note::{ToneNoteData, ToneNoteShape};
 
 pub fn new_system_set() -> SystemSet {
-    SystemSet::new()
-        .with_system(create_tone_notes.system())
+    SystemSet::new().with_system(create_tone_notes.system())
 }
 
 fn create_tone_notes(
@@ -25,14 +25,8 @@ fn create_tone_notes(
         if let Ok((bar, mode)) = layer_query.get(parent.0) {
             let bar_units = bar.bar_units();
             for note in tone.get_notes() {
-                let data =
-                    ToneNoteData::new(bar_units, &bar, *duration, *pos, note, *mode);
-                ToneNoteShape::create(
-                    &mut commands,
-                    entity,
-                    &theme,
-                    data,
-                );
+                let data = ToneNoteData::new(bar_units, &bar, *duration, *pos, note, *mode);
+                ToneNoteShape::create(&mut commands, entity, &theme, data);
             }
         }
     }

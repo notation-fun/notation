@@ -12,6 +12,7 @@ pub enum TrackKind {
     Bass,
     Drums,
     Synth,
+    Lyrics,
     Custom(String),
 }
 impl Display for TrackKind {
@@ -26,8 +27,9 @@ impl TrackKind {
             "Piano" => Self::Piano,
             "Guitar" => Self::Guitar,
             "Bass" => Self::Bass,
-            "Drums" => Self::Guitar,
-            "Synth" => Self::Guitar,
+            "Drums" => Self::Drums,
+            "Synth" => Self::Synth,
+            "Lyrics" => Self::Lyrics,
             _ => Self::Custom(ident.to_string()),
         }
     }

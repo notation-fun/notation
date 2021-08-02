@@ -1,10 +1,9 @@
 use std::cmp::{max, min};
 
 use fehler::throws;
-use syn::{Error};
+use notation_proto::prelude::{Octave, Semitones};
 use syn::parse::{Parse, ParseStream};
-use syn::Token;
-use notation_proto::prelude::{Semitones, Octave};
+use syn::{Error, Token};
 
 #[derive(Debug)]
 pub struct OctaveTweakDsl {
@@ -31,8 +30,7 @@ impl Parse for OctaveTweakDsl {
 
 impl OctaveTweakDsl {
     pub fn peek(input: ParseStream) -> bool {
-        input.peek(Token![.])
-            || input.peek(Token![^])
+        input.peek(Token![.]) || input.peek(Token![^])
     }
     pub fn try_parse(input: ParseStream) -> Option<Self> {
         if Self::peek(input) {

@@ -2,7 +2,7 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, ToneBundle};
+use crate::{prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, ToneBundle}, word::word_bundle::WordBundle};
 use notation_model::prelude::{CoreEntry, ProtoEntry};
 
 pub struct EntryPlugin;
@@ -10,8 +10,9 @@ pub struct EntryPlugin;
 impl Plugin for EntryPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_event::<AddEntryEvent>()
-            .add_system(on_add_entry.system())
-            .add_system_set(crate::tone::tone_systems::new_system_set());
+            .add_system_set(crate::tone::tone_systems::new_system_set())
+            .add_system_set(crate::word::word_systems::new_system_set())
+            .add_system(on_add_entry.system());
     }
 }
 
@@ -50,6 +51,9 @@ impl EntryPlugin {
                 FrettedPlugin::insert_fretted_entry_extra(commands, entry);
             }
             ProtoEntry::Mark(_) => {}
+            ProtoEntry::Word(word, _) => {
+                commands.insert_bundle(WordBundle::from(word.clone()));
+            }
             ProtoEntry::Extra(_, _) => {}
         }
     }

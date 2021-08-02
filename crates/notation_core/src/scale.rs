@@ -135,7 +135,6 @@ impl Key {
     }
 }
 
-
 impl From<Key> for Semitones {
     fn from(v: Key) -> Self {
         match v {

@@ -29,13 +29,19 @@ impl PickDsl {
             }
         }
         let duration_tweak = DurationTweakDsl::try_parse(input);
-        PickDsl { notes, duration_tweak }
+        PickDsl {
+            notes,
+            duration_tweak,
+        }
     }
 }
 
 impl ToTokens for PickDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let PickDsl { notes, duration_tweak } = self;
+        let PickDsl {
+            notes,
+            duration_tweak,
+        } = self;
         let duration_quote = Context::duration_quote(duration_tweak);
         if notes.len() == 0 {
             tokens.extend(quote! {

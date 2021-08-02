@@ -30,12 +30,24 @@ pub fn new_tab_long_juan_feng() -> Tab {
                 "3_1" Tone [ .%6 3,+ 4,, 3, 2, 1, .%6,, .5,, ] |
                 "3_2" Tone [ .%6 3,+ 4,, 3, 2, 1, 5,, 6,, ] |
             ]}
+            {"lyrics" [
+                $duration = _1_4
+                "1:1" Word [ "爱" "像" "一", "阵", "风" ] |
+                "1:2" Word [ "吹" "完" "它", "就", "走" ] |
+                "1:3" Word [ "这" "样" "的", "节", "奏" ] |
+                "1:4" Word [ "谁" "都",+ "无",, "可", "奈", "何", "～",, "～",, ] |
+                "2:1" Word [ "没" "有" "你", "以", "后" ] |
+                "2:2" Word [ "我" "灵" "魂", "失", "控" ] |
+                "2:3" Word [ "黑" "云" "在", "降", "落" ] |
+                "2:4" Word [ "我" "被",+ "它",, "拖", "着", "走", "静",, "~",, ] |
+            ]}
         ]
         Tracks: [
             {guitar Guitar [
                 Fretboard capo: 2
             ]}
             {vocal Vocal}
+            {lyrics Lyrics}
         ]
         Layers: [
             {"G-Intro" [
@@ -74,14 +86,40 @@ pub fn new_tab_long_juan_feng() -> Tab {
             {"3_2" [
                 melody "3_2" |
             ] Track: vocal Rounds: 2}
+            {"1:1" [
+                lyrics "1:1" |
+            ] Track: lyrics Rounds: 1}
+            {"1:2" [
+                lyrics "1:2" |
+            ] Track: lyrics Rounds: 1}
+            {"1:3" [
+                lyrics "1:3" |
+            ] Track: lyrics Rounds: 1}
+            {"1:4" [
+                lyrics "1:4" |
+            ] Track: lyrics Rounds: 1}
+            {"2:1" [
+                lyrics "2:1" |
+            ] Track: lyrics Rounds: 2}
+            {"2:2" [
+                lyrics "2:2" |
+            ] Track: lyrics Rounds: 2}
+            {"2:3" [
+                lyrics "2:3" |
+            ] Track: lyrics Rounds: 2}
+            {"2:4" [
+                lyrics "2:4" |
+            ] Track: lyrics Rounds: 2}
         ]
         Sections: [
             {intro Intro [
                 "G-Intro" "Em-Intro" "C-Intro" "G-Intro"
             ]}
             {verse Verse [
-                ("G-Verse" "1") ("Em-Verse" "1")
-                ("C-Verse" "2") ("G-Verse" "3_1" "3_2")
+                ("G-Verse" "1" "1:1" "2:1")
+                ("Em-Verse" "1" "1:2" "2:2")
+                ("C-Verse" "2" "1:3" "2:3")
+                ("G-Verse" "3_1" "3_2" "1:4" "2:4")
             ]}
         ]
         Form: intro verse verse

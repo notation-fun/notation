@@ -3,7 +3,7 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::{Ident, LitStr};
+use syn::Ident;
 
 use crate::proto::entry::EntryDsl;
 

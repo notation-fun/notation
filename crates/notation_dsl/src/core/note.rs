@@ -1,4 +1,4 @@
-use fehler::{throws, throw};
+use fehler::throws;
 use notation_proto::prelude::{Pitch, Semitones, Syllable};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
@@ -22,24 +22,31 @@ impl Parse for NoteDsl {
         let octave_tweak = OctaveTweakDsl::try_parse(input);
         let pitch_sign = input.parse::<PitchSignDsl>()?;
         let pitch_name = input.parse::<PitchNameDsl>()?;
-        NoteDsl { octave_tweak, pitch_sign, pitch_name, }
+        NoteDsl {
+            octave_tweak,
+            pitch_sign,
+            pitch_name,
+        }
     }
 }
 
 impl NoteDsl {
     pub fn peek(input: ParseStream) -> bool {
-        OctaveTweakDsl::peek(input)
-            || PitchSignDsl::peek(input)
-            || PitchNameDsl::peek(input)
+        OctaveTweakDsl::peek(input) || PitchSignDsl::peek(input) || PitchNameDsl::peek(input)
     }
 }
 
 impl ToTokens for NoteDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let NoteDsl { octave_tweak, pitch_sign, pitch_name, } = self;
+        let NoteDsl {
+            octave_tweak,
+            pitch_sign,
+            pitch_name,
+        } = self;
         let octave_quote = Context::octave_quote(octave_tweak);
         if pitch_name.from_syllable {
-            let syllable = Syllable::from(Semitones::from(pitch_sign.sign) + Semitones::from(pitch_name.name));
+            let syllable =
+                Syllable::from(Semitones::from(pitch_sign.sign) + Semitones::from(pitch_name.name));
             let pitch_quote = Context::calc_pitch_quote(&syllable);
             let syllable_ident = syllable.to_ident();
             tokens.extend(quote! {
@@ -55,4 +62,3 @@ impl ToTokens for NoteDsl {
         }
     }
 }
-

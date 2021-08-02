@@ -59,9 +59,10 @@ impl<'a, const S: usize> LyonShape<shapes::SvgPathShape> for ShapeDiagramShape<'
     }
     fn get_transform(&self) -> Transform {
         let x = self.theme.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0
-            + 16.0;
-        let y = 32.0;
-        Transform::from_xyz(x, y, self.theme.fretted.string_z)
+            + self.theme.fretted.shape_x;
+        let mut trans = Transform::from_xyz(x, self.theme.fretted.shape_y, self.theme.fretted.shape_z);
+        trans.scale = Vec3::new(self.theme.fretted.shape_scale, self.theme.fretted.shape_scale, 1.0);
+        trans
     }
 }
 

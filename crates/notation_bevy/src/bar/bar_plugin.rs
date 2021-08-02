@@ -3,7 +3,10 @@ use bevy::prelude::*;
 
 use std::sync::Arc;
 
-use crate::prelude::{AddEntryEvent, GridCol, GridRow, GuitarPlugin, LayerBundle, LyonShapeOp, NotationTheme, MelodyPlugin, WindowResizedEvent};
+use crate::prelude::{
+    AddEntryEvent, GridCol, GridRow, GuitarPlugin, LayerBundle, LyonShapeOp, LyricsPlugin,
+    MelodyPlugin, NotationTheme, WindowResizedEvent,
+};
 use notation_model::prelude::{BarLayer, BarPosition, TabBar, TrackKind, Units};
 
 use super::bar_beat::{BarBeat, BarBeatData};
@@ -48,7 +51,14 @@ fn create_layers(
     for (bar_entity, bar, grid_col) in query.iter() {
         for layer in &bar.bar.layers {
             if layer.rounds.is_some() {
-                if layer.rounds.clone().unwrap().iter().find(|&x| *x == bar.section_round).is_none() {
+                if layer
+                    .rounds
+                    .clone()
+                    .unwrap()
+                    .iter()
+                    .find(|&x| *x == bar.section_round)
+                    .is_none()
+                {
                     continue;
                 }
             }
@@ -97,12 +107,9 @@ impl BarPlugin {
         if let Some(track) = layer.track.clone() {
             commands.insert(track.clone());
             match track.kind {
-                TrackKind::Guitar => {
-                    GuitarPlugin::insert_guitar_layer_extra(commands, track)
-                }
-                TrackKind::Vocal => {
-                    MelodyPlugin::insert_melody_layer_extra(commands, track)
-                }
+                TrackKind::Guitar => GuitarPlugin::insert_guitar_layer_extra(commands, track),
+                TrackKind::Vocal => MelodyPlugin::insert_melody_layer_extra(commands, track),
+                TrackKind::Lyrics => LyricsPlugin::insert_lyrics_layer_extra(commands, track),
                 _ => (),
             }
         }

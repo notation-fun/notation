@@ -2,18 +2,18 @@ use bevy::prelude::*;
 
 use std::sync::Arc;
 
-use crate::prelude::{LyonShapeOp, NotationTheme};
+use crate::prelude::NotationTheme;
 use notation_model::prelude::TabBar;
 
-pub struct MelodyGrid {}
+pub struct MemoryGrid {}
 
-impl MelodyGrid {
+impl MemoryGrid {
     pub fn add_octave(
         &self,
-        commands: &mut Commands,
-        theme: &NotationTheme,
-        entity: Entity,
-        tab_bar: &Arc<TabBar>,
+        _commands: &mut Commands,
+        _theme: &NotationTheme,
+        _entity: Entity,
+        _tab_bar: &Arc<TabBar>,
     ) {
         //TODO
     }

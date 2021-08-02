@@ -1,10 +1,11 @@
 use serde::{Deserialize, Serialize};
 
 use super::core_theme::CoreTheme;
-use super::melody_theme::MelodyTheme;
 use super::fretted_theme::FrettedTheme;
 use super::grid_theme::GridTheme;
 use super::guitar_theme::GuitarTheme;
+use super::melody_theme::MelodyTheme;
+use super::lyrics_theme::LyricsTheme;
 use super::syllable_theme::SyllableTheme;
 
 #[cfg(feature = "inspector")]
@@ -17,6 +18,7 @@ pub struct NotationTheme {
     pub grid: GridTheme,
     pub syllable: SyllableTheme,
     pub melody: MelodyTheme,
+    pub lyrics: LyricsTheme,
     pub fretted: FrettedTheme,
     pub guitar: GuitarTheme,
 }
@@ -28,6 +30,7 @@ impl Default for NotationTheme {
             grid: GridTheme::default(),
             syllable: SyllableTheme::default(),
             melody: MelodyTheme::default(),
+            lyrics: LyricsTheme::default(),
             fretted: FrettedTheme::default(),
             guitar: GuitarTheme::default(),
         }

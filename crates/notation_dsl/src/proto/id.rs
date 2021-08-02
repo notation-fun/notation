@@ -11,22 +11,20 @@ pub struct IdDsl {
 impl Parse for IdDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
-        let key =
-            if input.peek(Ident) {
-                input.parse::<Ident>()?.to_string()
-            } else if input.peek(LitStr) {
-                input.parse::<LitStr>()?.value()
-            } else {
-                throw!(Error::new(input.span(), "Invalid Key"))
-            };
+        let key = if input.peek(Ident) {
+            input.parse::<Ident>()?.to_string()
+        } else if input.peek(LitStr) {
+            input.parse::<LitStr>()?.value()
+        } else {
+            throw!(Error::new(input.span(), "Invalid Key"))
+        };
         Self { id: key }
     }
 }
 
 impl IdDsl {
     pub fn peek(input: ParseStream) -> bool {
-        input.peek(Ident)
-            || input.peek(LitStr)
+        input.peek(Ident) || input.peek(LitStr)
     }
 }
 

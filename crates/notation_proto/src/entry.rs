@@ -8,6 +8,7 @@ use notation_fretted::prelude::{Fretboard, HandShape};
 pub enum ProtoEntry {
     Mark(String),
     Core(CoreEntry),
+    Word(String, Duration),
     FrettedSix(FrettedEntry<6>),
     FrettedFour(FrettedEntry<4>),
     Extra(String, String),
@@ -18,6 +19,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => Duration::Zero,
             ProtoEntry::Core(entry) => entry.duration(),
+            ProtoEntry::Word(_, duration) => *duration,
             ProtoEntry::FrettedSix(entry) => entry.duration(),
             ProtoEntry::FrettedFour(entry) => entry.duration(),
             ProtoEntry::Extra(_, _) => Duration::Zero,
@@ -44,6 +46,10 @@ impl ProtoEntry {
     /// Returns `true` if the proto_entry is [`Core`].
     pub fn is_core(&self) -> bool {
         matches!(self, Self::Core(..))
+    }
+    /// Returns `true` if the proto_entry is [`Word`].
+    pub fn is_word(&self) -> bool {
+        matches!(self, Self::Word(..))
     }
     pub fn as_mark(&self) -> Option<&String> {
         if let Self::Mark(v) = self {
@@ -108,6 +114,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => false,
             ProtoEntry::Core(_) => false,
+            ProtoEntry::Word(_, _) => false,
             ProtoEntry::FrettedSix(_) => S == 6,
             ProtoEntry::FrettedFour(_) => S == 4,
             ProtoEntry::Extra(_, _) => false,
@@ -117,6 +124,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => None,
             ProtoEntry::Core(_) => None,
+            ProtoEntry::Word(_, _) => None,
             ProtoEntry::FrettedSix(x) => Some(x.clone_::<S>()),
             ProtoEntry::FrettedFour(x) => Some(x.clone_::<S>()),
             ProtoEntry::Extra(_, _) => None,
@@ -142,6 +150,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => false,
             ProtoEntry::Core(_) => false,
+            ProtoEntry::Word(_, _) => false,
             ProtoEntry::FrettedSix(_) => true,
             ProtoEntry::FrettedFour(_) => true,
             ProtoEntry::Extra(_, _) => false,
@@ -151,6 +160,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => false,
             ProtoEntry::Core(_) => false,
+            ProtoEntry::Word(_, _) => false,
             ProtoEntry::FrettedSix(x) => x.is_pick(),
             ProtoEntry::FrettedFour(x) => x.is_pick(),
             ProtoEntry::Extra(_, _) => false,
@@ -160,6 +170,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => false,
             ProtoEntry::Core(_) => false,
+            ProtoEntry::Word(_, _) => false,
             ProtoEntry::FrettedSix(x) => x.is_strum(),
             ProtoEntry::FrettedFour(x) => x.is_strum(),
             ProtoEntry::Extra(_, _) => false,
@@ -169,6 +180,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => false,
             ProtoEntry::Core(_) => false,
+            ProtoEntry::Word(_, _) => false,
             ProtoEntry::FrettedSix(x) => x.is_shape(),
             ProtoEntry::FrettedFour(x) => x.is_shape(),
             ProtoEntry::Extra(_, _) => false,
@@ -178,6 +190,7 @@ impl ProtoEntry {
         match self {
             ProtoEntry::Mark(_) => false,
             ProtoEntry::Core(_) => false,
+            ProtoEntry::Word(_, _) => false,
             ProtoEntry::FrettedSix(x) => x.is_fretboard(),
             ProtoEntry::FrettedFour(x) => x.is_fretboard(),
             ProtoEntry::Extra(_, _) => false,
@@ -200,6 +213,18 @@ impl From<String> for ProtoEntry {
 impl From<&str> for ProtoEntry {
     fn from(v: &str) -> Self {
         ProtoEntry::Mark(String::from(v))
+    }
+}
+
+impl From<(String, Duration)> for ProtoEntry {
+    fn from(v: (String, Duration)) -> Self {
+        ProtoEntry::Word(v.0, v.1)
+    }
+}
+
+impl From<(&str, Duration)> for ProtoEntry {
+    fn from(v: (&str, Duration)) -> Self {
+        ProtoEntry::Word(String::from(v.0), v.1)
     }
 }
 

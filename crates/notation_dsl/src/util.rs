@@ -5,10 +5,11 @@ use syn::parse::{Error, Parse, ParseStream, Result};
 use syn::{braced, bracketed, parenthesized, token};
 
 use crate::core::tone::ToneDsl;
+use crate::core::word::WordDsl;
 use crate::fretted::pick::PickDsl;
 use crate::fretted::shape::ShapeDsl;
-use crate::proto::entry::{EntryDsl, MultibleDsl};
 use crate::proto::bar::BarDsl;
+use crate::proto::entry::{EntryDsl, MultibleDsl};
 use crate::proto::layer::LayerDsl;
 use crate::proto::line::{LineDsl, LineDslOrExpr};
 use crate::proto::section::SectionDsl;
@@ -130,6 +131,7 @@ macro_rules! impl_multible_dsl {
 }
 
 impl_multible_dsl!(ToneDsl);
+impl_multible_dsl!(WordDsl);
 impl_multible_dsl!(PickDsl);
 impl_multible_dsl!(ShapeDsl);
 impl_multible_dsl!(BarDsl);

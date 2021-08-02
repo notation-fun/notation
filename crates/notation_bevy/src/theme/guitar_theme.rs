@@ -15,7 +15,7 @@ pub struct GuitarTheme {
 impl Default for GuitarTheme {
     fn default() -> Self {
         Self {
-            string_widthes: [2.3, 2.5, 2.7, 3.3, 3.6, 3.9],
+            string_widthes: [1.0, 1.2, 1.4, 2.0, 2.2, 2.4],
         }
     }
 }

@@ -1,8 +1,7 @@
 use crate::fretted::fretted_layer_bundle::FrettedLayerBundle;
 use crate::prelude::FrettedGrid;
 use notation_model::prelude::{
-    GuitarEntry, GuitarFretboard, GuitarUtil, ProtoEntry, Track,
-    GUITAR_STRING_NUM,
+    GuitarEntry, GuitarFretboard, GuitarUtil, ProtoEntry, Track, GUITAR_STRING_NUM,
 };
 use std::sync::Arc;
 

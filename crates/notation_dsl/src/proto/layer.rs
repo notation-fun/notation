@@ -3,7 +3,7 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::{LitInt, LitStr, Token};
+use syn::{LitInt, Token};
 
 use crate::proto::slice::SliceDsl;
 

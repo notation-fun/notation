@@ -891,6 +891,215 @@
                 )),// [35]
                 Mark("|"),
             ],
+        ),// [2]
+        (
+            id: "lyrics",
+            entries: [
+                Extra(
+                    "dsl::context::duration",
+                    "_1_4",
+                ),// [0]
+                Mark("1:1"),// [1]
+                Word(
+                    "爱",
+                    Simple(Quarter),
+                ),// [2]
+                Word(
+                    "像",
+                    Simple(Quarter),
+                ),// [3]
+                Word(
+                    "一",
+                    Simple(Eighth),
+                ),// [4]
+                Word(
+                    "阵",
+                    Simple(Eighth),
+                ),// [5]
+                Word(
+                    "风",
+                    Simple(Quarter),
+                ),// [6]
+                Mark("|"),// [7]
+                Mark("1:2"),// [8]
+                Word(
+                    "吹",
+                    Simple(Quarter),
+                ),// [9]
+                Word(
+                    "完",
+                    Simple(Quarter),
+                ),// [10]
+                Word(
+                    "它",
+                    Simple(Eighth),
+                ),// [11]
+                Word(
+                    "就",
+                    Simple(Eighth),
+                ),// [12]
+                Word(
+                    "走",
+                    Simple(Quarter),
+                ),// [13]
+                Mark("|"),// [14]
+                Mark("1:3"),// [15]
+                Word(
+                    "这",
+                    Simple(Quarter),
+                ),// [16]
+                Word(
+                    "样",
+                    Simple(Quarter),
+                ),// [17]
+                Word(
+                    "的",
+                    Simple(Eighth),
+                ),// [18]
+                Word(
+                    "节",
+                    Simple(Eighth),
+                ),// [19]
+                Word(
+                    "奏",
+                    Simple(Quarter),
+                ),// [20]
+                Mark("|"),// [21]
+                Mark("1:4"),// [22]
+                Word(
+                    "谁",
+                    Simple(Quarter),
+                ),// [23]
+                Word(
+                    "都",
+                    Dotted(Eighth),
+                ),// [24]
+                Word(
+                    "无",
+                    Simple(Sixteenth),
+                ),// [25]
+                Word(
+                    "可",
+                    Simple(Eighth),
+                ),// [26]
+                Word(
+                    "奈",
+                    Simple(Eighth),
+                ),// [27]
+                Word(
+                    "何",
+                    Simple(Eighth),
+                ),// [28]
+                Word(
+                    "～",
+                    Simple(Sixteenth),
+                ),// [29]
+                Word(
+                    "～",
+                    Simple(Sixteenth),
+                ),// [30]
+                Mark("|"),// [31]
+                Mark("2:1"),// [32]
+                Word(
+                    "没",
+                    Simple(Quarter),
+                ),// [33]
+                Word(
+                    "有",
+                    Simple(Quarter),
+                ),// [34]
+                Word(
+                    "你",
+                    Simple(Eighth),
+                ),// [35]
+                Word(
+                    "以",
+                    Simple(Eighth),
+                ),// [36]
+                Word(
+                    "后",
+                    Simple(Quarter),
+                ),// [37]
+                Mark("|"),// [38]
+                Mark("2:2"),// [39]
+                Word(
+                    "我",
+                    Simple(Quarter),
+                ),// [40]
+                Word(
+                    "灵",
+                    Simple(Quarter),
+                ),// [41]
+                Word(
+                    "魂",
+                    Simple(Eighth),
+                ),// [42]
+                Word(
+                    "失",
+                    Simple(Eighth),
+                ),// [43]
+                Word(
+                    "控",
+                    Simple(Quarter),
+                ),// [44]
+                Mark("|"),// [45]
+                Mark("2:3"),// [46]
+                Word(
+                    "黑",
+                    Simple(Quarter),
+                ),// [47]
+                Word(
+                    "云",
+                    Simple(Quarter),
+                ),// [48]
+                Word(
+                    "在",
+                    Simple(Eighth),
+                ),// [49]
+                Word(
+                    "降",
+                    Simple(Eighth),
+                ),// [50]
+                Word(
+                    "落",
+                    Simple(Quarter),
+                ),// [51]
+                Mark("|"),// [52]
+                Mark("2:4"),// [53]
+                Word(
+                    "我",
+                    Simple(Quarter),
+                ),// [54]
+                Word(
+                    "被",
+                    Dotted(Eighth),
+                ),// [55]
+                Word(
+                    "它",
+                    Simple(Sixteenth),
+                ),// [56]
+                Word(
+                    "拖",
+                    Simple(Eighth),
+                ),// [57]
+                Word(
+                    "着",
+                    Simple(Eighth),
+                ),// [58]
+                Word(
+                    "走",
+                    Simple(Eighth),
+                ),// [59]
+                Word(
+                    "静",
+                    Simple(Sixteenth),
+                ),// [60]
+                Word(
+                    "~",
+                    Simple(Sixteenth),
+                ),// [61]
+                Mark("|"),
+            ],
         ),
     ],
     tracks: [
@@ -957,6 +1166,11 @@
         (
             id: "vocal",
             kind: Vocal,
+            entries: [],
+        ),// [1]
+        (
+            id: "lyrics",
+            kind: Lyrics,
             entries: [],
         ),
     ],
@@ -1114,6 +1328,118 @@
             rounds: Some([
                 2,
             ]),
+        ),// [9]
+        (
+            id: "1:1",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("1:1"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                1,
+            ]),
+        ),// [10]
+        (
+            id: "1:2",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("1:2"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                1,
+            ]),
+        ),// [11]
+        (
+            id: "1:3",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("1:3"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                1,
+            ]),
+        ),// [12]
+        (
+            id: "1:4",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("1:4"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                1,
+            ]),
+        ),// [13]
+        (
+            id: "2:1",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("2:1"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                2,
+            ]),
+        ),// [14]
+        (
+            id: "2:2",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("2:2"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                2,
+            ]),
+        ),// [15]
+        (
+            id: "2:3",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("2:3"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                2,
+            ]),
+        ),// [16]
+        (
+            id: "2:4",
+            slices: [
+                (
+                    line: "lyrics",
+                    begin: Mark("2:4"),
+                    end: Mark("|"),
+                ),
+            ],
+            track: Some("lyrics"),
+            rounds: Some([
+                2,
+            ]),
         ),
     ],
     sections: [
@@ -1150,26 +1476,34 @@
                 (
                     layers: [
                         "G-Verse",// [0]
-                        "1",
+                        "1",// [1]
+                        "1:1",// [2]
+                        "2:1",
                     ],
                 ),// [0]
                 (
                     layers: [
                         "Em-Verse",// [0]
-                        "1",
+                        "1",// [1]
+                        "1:2",// [2]
+                        "2:2",
                     ],
                 ),// [1]
                 (
                     layers: [
                         "C-Verse",// [0]
-                        "2",
+                        "2",// [1]
+                        "1:3",// [2]
+                        "2:3",
                     ],
                 ),// [2]
                 (
                     layers: [
                         "G-Verse",// [0]
                         "3_1",// [1]
-                        "3_2",
+                        "3_2",// [2]
+                        "1:4",// [3]
+                        "2:4",
                     ],
                 ),
             ],

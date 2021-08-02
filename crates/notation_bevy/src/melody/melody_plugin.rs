@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::MelodyLayerBundle;
-use notation_model::prelude::{Track};
+use notation_model::prelude::Track;
 
 pub struct MelodyPlugin;
 
@@ -18,10 +18,7 @@ impl Plugin for MelodyPlugin {
 }
 
 impl MelodyPlugin {
-    pub fn insert_melody_layer_extra(
-        commands: &mut EntityCommands,
-        track: Arc<Track>,
-    ) {
+    pub fn insert_melody_layer_extra(commands: &mut EntityCommands, track: Arc<Track>) {
         commands.insert_bundle(MelodyLayerBundle::new(track));
     }
 }
