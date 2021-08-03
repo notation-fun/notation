@@ -37,7 +37,7 @@ impl NotationApp {
         insert_window_descriptor(&mut app, String::from(title));
         super::notation_app_events::add_notation_app_events(&mut app);
 
-        app.insert_resource(Msaa { samples: 8 });
+        app.insert_resource(Msaa { samples: 1 });
         app.add_plugins(DefaultPlugins);
         app.insert_resource(ClearColor(CoreTheme::default().background_color));
 
