@@ -18,8 +18,7 @@ impl Display for Track {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<{}>({:?}, {}, [{}])",
-            stringify!(Track),
+            "<Track>({:?}, {}, [{}])",
             self.kind,
             self.id,
             self.entries.len()

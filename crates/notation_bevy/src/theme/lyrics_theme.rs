@@ -21,7 +21,7 @@ pub struct LyricsTheme {
 impl Default for LyricsTheme {
     fn default() -> Self {
         Self {
-            text_x: 16.0,
+            text_x: 4.0,
             text_y: 12.0,
             text_z: 1.0,
             line_y: 36.0,
@@ -49,7 +49,7 @@ impl LyricsTheme {
         };
         let alignment = TextAlignment {
             vertical: VerticalAlign::Center,
-            horizontal: HorizontalAlign::Left,
+            horizontal: HorizontalAlign::Right,
         };
         entity_commands.insert_bundle(Text2dBundle {
             text: Text::with_section(text, style, alignment),

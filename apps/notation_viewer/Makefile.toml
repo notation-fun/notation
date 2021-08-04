@@ -48,6 +48,10 @@ dependencies = ["build-web", "basic-http-server"]
 [tasks.test]
 disabled = true
 
+[tasks.release-inspector]
+args = ["bundle", "--release", "--features", "inspector", "@@split(CARGO_RELEASE_ARGS, )"]
+command = "cargo"
+
 [tasks.release-to-amateurguitar-www]
 script_runner = "@shell"
 script = ["""

@@ -17,7 +17,8 @@ pub mod bar;
 pub mod play;
 pub mod tab;
 
-pub mod fretted;
+pub mod shapes;
+pub mod strings;
 pub mod guitar;
 pub mod lyrics;
 pub mod melody;
@@ -45,11 +46,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::app::notation_app_state::{NotationAppState, TabPathes};
     #[doc(hidden)]
+    pub use crate::bar::bar_layout::BarLayout;
+    #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
     pub use crate::bar::bar_plugin::BarPlugin;
     #[doc(hidden)]
-    pub use crate::bar::layer_bundle::LayerBundle;
+    pub use crate::bar::lane_bundle::LaneBundle;
     #[doc(hidden)]
     pub use crate::chord::chord_bundle::ChordBundle;
     #[doc(hidden)]
@@ -61,23 +64,25 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::entry_state::EntryState;
     #[doc(hidden)]
-    pub use crate::fretted::fretted_grid::FrettedGrid;
+    pub use crate::strings::strings_grid::StringsGrid;
     #[doc(hidden)]
-    pub use crate::fretted::fretted_plugin::FrettedPlugin;
+    pub use crate::strings::strings_plugin::StringsPlugin;
     #[doc(hidden)]
-    pub use crate::guitar::guitar_layer_bundle::GuitarLayerBundle;
+    pub use crate::shapes::shapes_plugin::ShapesPlugin;
+    #[doc(hidden)]
+    pub use crate::guitar::guitar_lane_bundle::{GuitarShapesLaneBundle, GuitarStringsLaneBundle};
     #[doc(hidden)]
     pub use crate::guitar::guitar_plugin::GuitarPlugin;
     #[doc(hidden)]
     pub use crate::lyrics::lyrics_grid::LyricsGrid;
     #[doc(hidden)]
-    pub use crate::lyrics::lyrics_layer_bundle::LyricsLayerBundle;
+    pub use crate::lyrics::lyrics_lane_bundle::LyricsLaneBundle;
     #[doc(hidden)]
     pub use crate::lyrics::lyrics_plugin::LyricsPlugin;
     #[doc(hidden)]
     pub use crate::melody::melody_grid::MemoryGrid;
     #[doc(hidden)]
-    pub use crate::melody::melody_layer_bundle::MelodyLayerBundle;
+    pub use crate::melody::melody_lane_bundle::MelodyLaneBundle;
     #[doc(hidden)]
     pub use crate::melody::melody_plugin::MelodyPlugin;
     #[doc(hidden)]
@@ -103,7 +108,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::theme::fretted_theme::FrettedTheme;
     #[doc(hidden)]
-    pub use crate::theme::grid_theme::{GridCol, GridRow, GridTheme};
+    pub use crate::theme::grid_theme::GridTheme;
     #[doc(hidden)]
     pub use crate::theme::guitar_theme::GuitarTheme;
     #[doc(hidden)]

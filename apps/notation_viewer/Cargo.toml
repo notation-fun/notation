@@ -2,6 +2,11 @@
 name = "notation_viewer"
 version = "0.1.0"
 edition = "2018"
+description = "Notation Viewer"
+
+[package.metadata.bundle]
+identifier = "fun.notation.viewer"
+resources = ["assets"]
 
 [features]
 native = [

@@ -8,29 +8,29 @@ use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
 
 #[derive(Clone, Debug)]
-pub struct FrettedStringData {
+pub struct SingleStringData {
     pub bar_ordinal: usize,
     pub bar_units: Units,
     pub string: u8,
 }
 
-impl FrettedStringData {
+impl SingleStringData {
     pub fn new(tab_bar: &Arc<TabBar>, string: u8) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         let bar_units = tab_bar.bar_units();
-        FrettedStringData {
+        SingleStringData {
             bar_ordinal,
             bar_units,
             string,
         }
     }
 }
-pub struct FrettedString<'a> {
+pub struct SingleString<'a> {
     theme: &'a NotationTheme,
-    data: FrettedStringData,
+    data: SingleStringData,
 }
 
-impl<'a> LyonShape<shapes::Line> for FrettedString<'a> {
+impl<'a> LyonShape<shapes::Line> for SingleString<'a> {
     fn get_name(&self) -> String {
         format!("{}:String {}", self.data.bar_ordinal, self.data.string)
     }
@@ -50,8 +50,8 @@ impl<'a> LyonShape<shapes::Line> for FrettedString<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, FrettedStringData, shapes::Line, FrettedString<'a>> for FrettedString<'a> {
-    fn new_shape(theme: &'a NotationTheme, data: FrettedStringData) -> FrettedString<'a> {
-        FrettedString::<'a> { theme, data }
+impl<'a> LyonShapeOp<'a, SingleStringData, shapes::Line, SingleString<'a>> for SingleString<'a> {
+    fn new_shape(theme: &'a NotationTheme, data: SingleStringData) -> SingleString<'a> {
+        SingleString::<'a> { theme, data }
     }
 }

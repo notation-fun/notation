@@ -6,12 +6,12 @@ use notation_model::prelude::Track;
 use crate::prelude::{MemoryGrid, ToneMode};
 
 #[derive(Bundle)]
-pub struct MelodyLayerBundle {
+pub struct MelodyLaneBundle {
     grid: MemoryGrid,
     mode: ToneMode,
 }
 
-impl MelodyLayerBundle {
+impl MelodyLaneBundle {
     pub fn new(_track: Arc<Track>) -> Self {
         Self {
             grid: MemoryGrid {},

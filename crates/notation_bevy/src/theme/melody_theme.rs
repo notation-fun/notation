@@ -22,7 +22,7 @@ impl Default for MelodyTheme {
     fn default() -> Self {
         Self {
             syllable_mode: true,
-            note_height: 4.0,
+            note_height: 3.0,
             note_outline: 1.0,
             note_outline_color: Color::hex("AAAAAA").unwrap(),
             center_y: 64.0,

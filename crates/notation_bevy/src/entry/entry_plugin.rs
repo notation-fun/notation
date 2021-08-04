@@ -2,7 +2,7 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::{prelude::{AddEntryEvent, EntryBundle, FrettedPlugin, ToneBundle}, word::word_bundle::WordBundle};
+use crate::{prelude::{AddEntryEvent, EntryBundle, StringsPlugin, ShapesPlugin, ToneBundle}, word::word_bundle::WordBundle};
 use notation_model::prelude::{CoreEntry, ProtoEntry, ModelEntry};
 
 pub struct EntryPlugin;
@@ -21,10 +21,10 @@ fn on_add_entry(mut commands: Commands, mut evts: EventReader<AddEntryEvent>) {
         let parent = evt.0;
         let entry = evt.1.clone();
         let entry_bundle = EntryBundle::from((entry.clone(), evt.2));
-        let mut entry_commands = commands.spawn_bundle(entry_bundle);
-        EntryPlugin::insert_entry_extra(&mut entry_commands, entry);
-        let entry_entity = entry_commands.id();
+        let entry_entity = commands.spawn_bundle(entry_bundle).id();
         commands.entity(parent).push_children(&[entry_entity]);
+        let mut entry_commands = commands.entity(entry_entity);
+        EntryPlugin::insert_entry_extra(&mut entry_commands, entry);
     }
 }
 
@@ -45,10 +45,12 @@ impl EntryPlugin {
         match entry.as_ref().value.as_ref() {
             ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
             ProtoEntry::FrettedSix(entry) => {
-                FrettedPlugin::insert_fretted_entry_extra(commands, entry);
+                ShapesPlugin::insert_entry_extra(commands, entry);
+                StringsPlugin::insert_entry_extra(commands, entry);
             }
             ProtoEntry::FrettedFour(entry) => {
-                FrettedPlugin::insert_fretted_entry_extra(commands, entry);
+                ShapesPlugin::insert_entry_extra(commands, entry);
+                StringsPlugin::insert_entry_extra(commands, entry);
             }
             ProtoEntry::Mark(_) => {}
             ProtoEntry::Word(word, _) => {

@@ -52,7 +52,7 @@ impl Default for FrettedTheme {
             note_outline_color: Color::hex("AAAAAA").unwrap(),
             fret_font_size: 18.0,
             fret_font_color: Color::hex("000000").unwrap(),
-            fret_text_x: 12.0,
+            fret_text_x: 4.0,
             fret_text_y: 4.0,
             fret_text_z: 1.0,
             shape_x: 12.0,
@@ -91,7 +91,7 @@ impl FrettedTheme {
         };
         let alignment = TextAlignment {
             vertical: VerticalAlign::Center,
-            horizontal: HorizontalAlign::Left,
+            horizontal: HorizontalAlign::Right,
         };
         entity_commands.insert_bundle(Text2dBundle {
             text: Text::with_section(format!("{}", fret).as_str(), style, alignment),

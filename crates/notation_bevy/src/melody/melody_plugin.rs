@@ -2,7 +2,7 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::{prelude::{LyonShapeOp, MelodyLayerBundle, NotationTheme, WindowResizedEvent}, tone::tone_note::{ToneNoteData, ToneNoteShape}};
+use crate::{prelude::{LyonShapeOp, MelodyLaneBundle, NotationTheme, WindowResizedEvent}, tone::tone_note::{ToneNoteData, ToneNoteShape}};
 use notation_model::prelude::Track;
 
 pub struct MelodyPlugin;
@@ -27,7 +27,7 @@ fn on_config_changed(
 }
 
 impl MelodyPlugin {
-    pub fn insert_melody_layer_extra(commands: &mut EntityCommands, track: Arc<Track>) {
-        commands.insert_bundle(MelodyLayerBundle::new(track));
+    pub fn insert_melody_lane_extra(commands: &mut EntityCommands, track: Arc<Track>) {
+        commands.insert_bundle(MelodyLaneBundle::new(track));
     }
 }

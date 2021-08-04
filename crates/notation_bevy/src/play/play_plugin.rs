@@ -4,6 +4,9 @@ use std::sync::Arc;
 use instant::Duration as StdDuration;
 #[cfg(target_arch = "wasm32")]
 use instant::Instant as StdInstant;
+use notation_midi::prelude::PlayToneEvent;
+use notation_midi::prelude::StopToneEvent;
+use notation_model::prelude::Tone;
 
 #[cfg(not(target_arch = "wasm32"))]
 use std::time::Duration as StdDuration;
@@ -52,6 +55,7 @@ impl Plugin for PlayPlugin {
         app.add_system(on_add_tab_state.system());
         app.add_system(on_stop.system());
         app.add_system(on_time.system());
+        app.add_system(play_stop_tone.system());
     }
 }
 
@@ -138,6 +142,24 @@ fn on_time(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+fn play_stop_tone(
+    mut _commands: Commands,
+    _theme: Res<NotationTheme>,
+    query: Query<(&Tone, &EntryState), Changed<EntryState>>,
+    mut play_note_evts: EventWriter<PlayToneEvent>,
+    mut stop_note_evts: EventWriter<StopToneEvent>,
+) {
+    for (tone, state) in query.iter() {
+        if !tone.is_none() {
+            if state.is_played() || state.is_idle() {
+                stop_note_evts.send(StopToneEvent(*tone));
+            } else if state.is_playing() {
+                play_note_evts.send(PlayToneEvent(*tone));
             }
         }
     }

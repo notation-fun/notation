@@ -1,18 +1,12 @@
-use notation_model::prelude::{Tab, TabBar, TabPosition};
+use notation_model::prelude::{Tab, TabPosition};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-pub struct GridRow(pub usize);
-
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-pub struct GridCol(pub usize);
-
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::prelude::NotationSettings;
+use crate::prelude::{BarLayout, NotationSettings};
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -54,43 +48,18 @@ impl Default for GridTheme {
 
 impl GridTheme {
     pub fn resize(&mut self, settings: &NotationSettings) {
-        let bar_size = (settings.window_width - self.margin * 2.0) / settings.bars_in_row as f32;
+        let bar_size = (settings.window_width - self.margin * 2.0) / settings.layout.bars_in_window as f32;
         self.bar_size = bar_size;
     }
     pub fn calc_tab_transform(&self, settings: &NotationSettings) -> Transform {
-        let x = (self.bar_size * settings.bars_in_row as f32) * -0.5;
+        let x = (self.bar_size * settings.layout.bars_in_window as f32) * -0.5;
         let y = settings.window_height / 2.0 - self.margin - self.header_height;
         Transform::from_xyz(x, y, 0.0)
     }
-    pub fn calc_row_col(&self, settings: &NotationSettings, index: usize) -> (GridRow, GridCol) {
-        let row = GridRow(index / settings.bars_in_row as usize);
-        let col = GridCol(index % settings.bars_in_row as usize);
-        (row, col)
-    }
-    pub fn calc_bar_row_col(
-        &self,
-        settings: &NotationSettings,
-        bar: &TabBar,
-    ) -> (GridRow, GridCol) {
-        self.calc_row_col(settings, bar.bar_ordinal - 1)
-    }
-    pub fn calc_bar_transform(&self, row: &GridRow, col: &GridCol) -> Transform {
-        let x = self.bar_size * col.0 as f32;
-        let y = -1.0 * self.bar_height * row.0 as f32;
+    pub fn calc_bar_transform(&self, layout: &BarLayout) -> Transform {
+        let x = self.bar_size * layout.col as f32;
+        let y = -1.0 * self.bar_height * layout.row as f32;
         Transform::from_xyz(x, y, 0.0)
-    }
-    pub fn calc_pos_row_col(
-        &self,
-        settings: &NotationSettings,
-        tab: &Tab,
-        pos: TabPosition,
-    ) -> (GridRow, GridCol) {
-        let bar_units = tab.bar_units();
-        let mut index = (pos.in_tab_pos.0 / bar_units.0) as usize;
-        if index >= tab.bars.len() {
-            index = tab.bars.len() - 1;
-        }
-        self.calc_row_col(settings, index)
     }
     pub fn calc_pos_transform(
         &self,
@@ -98,13 +67,13 @@ impl GridTheme {
         tab: &Tab,
         pos: TabPosition,
     ) -> Transform {
-        let (row, col) = self.calc_pos_row_col(settings, tab, pos);
-        let bar_x = self.bar_size * col.0 as f32;
-        let bars = row.0 * settings.bars_in_row as usize + col.0;
+        let bar_layout = settings.layout.calc_pos_layout(tab, pos);
+        let bar_x = self.bar_size * bar_layout.col as f32;
+        let bars = bar_layout.row * settings.layout.bars_in_window as usize + bar_layout.col;
         let bar_units = tab.bar_units();
         let offset_units = pos.in_tab_pos.0 - bar_units.0 * bars as f32;
         let x = bar_x + offset_units * self.bar_size / bar_units.0;
-        let y = -1.0 * self.bar_height * row.0 as f32;
+        let y = -1.0 * self.bar_height * bar_layout.row as f32;
         Transform::from_xyz(x, y, 0.0)
     }
 }

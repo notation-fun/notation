@@ -1,23 +1,23 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_model::prelude::{BarLayer, TabBar};
+use notation_model::prelude::{BarLane, TabBar};
 
 #[derive(Bundle)]
-pub struct LayerBundle {
+pub struct LaneBundle {
     pub bar: Arc<TabBar>,
-    pub layer: Arc<BarLayer>,
+    pub lane: Arc<BarLane>,
     pub name: Name,
     pub transform: Transform,
     pub global_cransform: GlobalTransform,
 }
 
-impl LayerBundle {
-    pub fn new(bar: Arc<TabBar>, layer: Arc<BarLayer>) -> Self {
-        let name = format!("{} {}", bar.bar_ordinal, layer).as_str().into();
+impl LaneBundle {
+    pub fn new(bar: Arc<TabBar>, lane: Arc<BarLane>) -> Self {
+        let name = format!("{} {}", bar.bar_ordinal, lane).as_str().into();
         Self {
             bar,
-            layer,
+            lane,
             name,
             transform: Transform::default(),
             global_cransform: GlobalTransform::default(),

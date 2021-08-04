@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
 use notation_midi::prelude::{PlayToneEvent, StopToneEvent};
-use notation_model::prelude::{BarPosition, TabBar};
+use notation_model::prelude::{BarLane, BarPosition, ModelEntry, TabBar, Tone};
 use std::sync::Arc;
 
-use crate::prelude::{EntryState, FrettedPlugin, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{EntryState, StringsPlugin, LyonShapeOp, NotationSettings, NotationTheme};
 use notation_model::prelude::{Duration, Fretboard, HandShape, Pick};
 
 use super::pick_note::{PickNoteData, PickNoteShape};
@@ -13,8 +13,6 @@ pub fn new_system_set() -> SystemSet {
     SystemSet::new()
         .with_system(create_pick_notes::<6>.system())
         .with_system(create_pick_notes::<4>.system())
-        .with_system(play_pick_tone::<6>.system())
-        .with_system(play_pick_tone::<4>.system())
 }
 
 fn create_pick_notes<const S: usize>(
@@ -22,13 +20,18 @@ fn create_pick_notes<const S: usize>(
     asset_server: Res<AssetServer>,
     theme: Res<NotationTheme>,
     settings: Res<NotationSettings>,
-    query: Query<(&Parent, Entity, &Pick, &Duration, &BarPosition), Added<Pick>>,
-    layer_query: Query<(&Arc<TabBar>, &Fretboard<S>, &Children)>,
-    shape_query: Query<&HandShape<S>>,
+    query: Query<(Entity, &Pick, &Duration, &BarPosition), Added<Pick>>,
+    lane_queries_0: Query<&Parent>,
+    lane_queries_1: Query<&Children>,
+    lane_queries_2: Query<&Arc<BarLane>>,
+    shape_queries_0: Query<(&Arc<TabBar>, &Arc<BarLane>, &Fretboard<S>, &Children)>,
+    shape_queries_1: Query<&HandShape<S>>,
 ) {
-    for (parent, entity, pick, duration, pos) in query.iter() {
+    for (entity, pick, duration, pos) in query.iter() {
         if let Some((bar, fretboard, shape)) =
-            FrettedPlugin::get_fretted_shape(&layer_query, &shape_query, parent.0, pos)
+            StringsPlugin::get_fretted_shape::<S>(entity, pos,
+                    (&lane_queries_0, &lane_queries_1, &lane_queries_2),
+                    (&shape_queries_0, &shape_queries_1))
         {
             let bar_units = bar.bar_units();
             for pick_note in pick.get_notes() {
@@ -51,30 +54,9 @@ fn create_pick_notes<const S: usize>(
                     );
                 }
             }
-        }
-    }
-}
-
-fn play_pick_tone<const S: usize>(
-    mut _commands: Commands,
-    _theme: Res<NotationTheme>,
-    query: Query<(&Parent, &Pick, &BarPosition, &EntryState), Changed<EntryState>>,
-    layer_query: Query<(&Arc<TabBar>, &Fretboard<S>, &Children)>,
-    shape_query: Query<&HandShape<S>>,
-    mut play_note_evts: EventWriter<PlayToneEvent>,
-    mut stop_note_evts: EventWriter<StopToneEvent>,
-) {
-    for (parent, pick, pos, state) in query.iter() {
-        if let Some((_bar, fretboard, shape)) =
-            FrettedPlugin::get_fretted_shape(&layer_query, &shape_query, parent.0, pos)
-        {
             let tone = fretboard.pick_tone(&shape, pick);
             if !tone.is_none() {
-                if state.is_played() || state.is_idle() {
-                    stop_note_evts.send(StopToneEvent(tone));
-                } else if state.is_playing() {
-                    play_note_evts.send(PlayToneEvent(tone));
-                }
+                commands.entity(entity).insert(tone);
             }
         }
     }

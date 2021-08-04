@@ -4,6 +4,7 @@ pub use notation_proto;
 
 pub mod entry;
 pub mod bar;
+pub mod lane;
 pub mod slice;
 pub mod parse;
 pub mod section;
@@ -14,6 +15,8 @@ pub mod util;
 pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::ModelEntry;
+    #[doc(hidden)]
+    pub use crate::lane::{LaneKind, BarLane};
     #[doc(hidden)]
     pub use crate::bar::{Bar, BarLayer};
     #[doc(hidden)]

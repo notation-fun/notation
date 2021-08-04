@@ -1,6 +1,6 @@
 use fehler::throws;
 
-use crate::prelude::{ParseError, Slice, Track};
+use crate::prelude::{BarLane, ParseError, Slice, Track};
 use std::convert::TryFrom;
 use std::fmt::Display;
 use std::sync::Arc;
@@ -13,15 +13,16 @@ pub struct BarLayer {
 #[derive(Debug)]
 pub struct Bar {
     pub layers: Vec<Arc<BarLayer>>,
+    pub lanes: Vec<Arc<BarLane>>,
 }
 impl Display for BarLayer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<BarLayer>({} S: {})", self.track, self.slices.len())
+        write!(f, "<BarLayer>({} S:{})", self.track, self.slices.len())
     }
 }
 impl Display for Bar {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<{}>(L:{})", stringify!(Bar), self.layers.len())
+        write!(f, "<{}>(Y:{} N:{})", stringify!(Bar), self.layers.len(), self.lanes.len())
     }
 }
 impl BarLayer {
@@ -62,11 +63,6 @@ impl
         Self::new(track, slices)
     }
 }
-impl From<Vec<Arc<BarLayer>>> for Bar {
-    fn from(v: Vec<Arc<BarLayer>>) -> Self {
-        Self { layers: v }
-    }
-}
 impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<Track>>)> for Bar {
     type Error = ParseError;
 
@@ -76,6 +72,14 @@ impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<Track>>)> for Bar {
         for layer in v.0.layers {
             layers.push(BarLayer::try_from((layer, v.1)).map(Arc::new)?);
         }
-        Self::from(layers)
+        let mut lanes = Vec::new();
+        for layer in layers.iter() {
+            for slice in layer.slices.iter() {
+                if let Some(lane) = BarLane::try_from_slice(slice.clone()) {
+                    lanes.push(Arc::new(lane));
+                }
+            }
+        }
+        Self { layers, lanes, }
     }
 }

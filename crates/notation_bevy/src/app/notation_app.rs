@@ -18,7 +18,8 @@ impl PluginGroup for NotationPlugins {
         group.add(MelodyPlugin);
         group.add(LyricsPlugin);
         group.add(BarPlugin);
-        group.add(FrettedPlugin);
+        group.add(StringsPlugin);
+        group.add(ShapesPlugin);
         group.add(GuitarPlugin);
         group.add(TabPlugin);
         group.add(PlayPlugin);
@@ -151,8 +152,10 @@ fn update_camera(
             if mouse_input.pressed(MouseButton::Left) {
                 let (mut cam, _) = get_cam.single_mut().unwrap();
                 let trans = cam.translation;
+                let delta_x = 0.0; // trans.x + event.delta.x;
+                let delta_y = trans.y + event.delta.y;
                 *cam =
-                    Transform::from_xyz(trans.x - event.delta.x, trans.y + event.delta.y, trans.z);
+                    Transform::from_xyz(delta_x, delta_y, trans.z);
             }
         }
     }

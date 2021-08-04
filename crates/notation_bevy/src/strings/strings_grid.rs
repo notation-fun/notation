@@ -5,11 +5,11 @@ use std::sync::Arc;
 use crate::prelude::{LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
 
-use super::fretted_string::{FrettedString, FrettedStringData};
+use super::single_string::{SingleString, SingleStringData};
 
-pub struct FrettedGrid<const S: usize> {}
+pub struct StringsGrid<const S: usize> {}
 
-impl<const S: usize> FrettedGrid<S> {
+impl<const S: usize> StringsGrid<S> {
     pub fn add_strings(
         &self,
         commands: &mut Commands,
@@ -18,11 +18,11 @@ impl<const S: usize> FrettedGrid<S> {
         tab_bar: &Arc<TabBar>,
     ) {
         for string in 1..=S {
-            FrettedString::create(
+            SingleString::create(
                 commands,
                 entity,
                 theme,
-                FrettedStringData::new(tab_bar, string as u8),
+                SingleStringData::new(tab_bar, string as u8),
             );
         }
     }

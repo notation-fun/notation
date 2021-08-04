@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::prelude::FrettedGrid;
+use crate::prelude::StringsGrid;
 use notation_model::prelude::{Fretboard, FrettedEntry, ModelEntry, Track};
 
 #[derive(Bundle)]
-pub struct FrettedLayerBundle<const S: usize> {
+pub struct StringsLaneBundle<const S: usize> {
     fretboard: Fretboard<S>,
-    grid: FrettedGrid<S>,
+    grid: StringsGrid<S>,
 }
 
-impl<const S: usize> FrettedLayerBundle<S> {
+impl<const S: usize> StringsLaneBundle<S> {
     pub fn _new<F1, F2>(
         track: Arc<Track>,
         as_fretted_entry: &F1,
@@ -31,7 +31,7 @@ impl<const S: usize> FrettedLayerBundle<S> {
             .unwrap_or_else(|| new_default_fretboard());
         Self {
             fretboard,
-            grid: FrettedGrid::<S> {},
+            grid: StringsGrid::<S> {},
         }
     }
 }

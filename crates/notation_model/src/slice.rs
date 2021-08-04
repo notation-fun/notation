@@ -4,7 +4,7 @@ use std::convert::TryFrom;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{Track, ParseError, ModelEntry};
+use crate::prelude::{LaneKind, ModelEntry, ParseError, Track};
 
 #[derive(Debug)]
 pub struct Slice {
@@ -38,6 +38,14 @@ impl Slice {
         rounds: Option<Vec<usize>>,
     ) -> Arc<Self> {
         Arc::new(Self::new(track, begin, end, rounds))
+    }
+    pub fn calc_lane_kind(&self) -> Option<LaneKind> {
+        for entry in self.entries.iter() {
+            if let Some(lane) = LaneKind::calc_lane_kind(&self.track.kind, &entry.value) {
+                return Some(lane);
+            }
+        }
+        None
     }
 }
 impl Display for Slice {
