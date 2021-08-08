@@ -7,6 +7,8 @@ use notation_model::prelude::*;
 pub struct TabPathes(pub Vec<String>);
 
 pub struct NotationAppState {
+    pub window_width: f32,
+    pub window_height: f32,
     pub tab_path: String,
     pub tab_asset: Handle<TabAsset>,
     pub tab: Option<Arc<Tab>>,
@@ -18,6 +20,8 @@ impl NotationAppState {
     pub fn new(asset_server: &AssetServer, tab_path: String, camera_panning: bool) -> Self {
         let tab_asset = asset_server.load(tab_path.as_str());
         Self {
+            window_width: 1280.0,
+            window_height: 720.0,
             tab_path,
             tab_asset,
             tab: None,
@@ -37,6 +41,6 @@ impl FromWorld for NotationAppState {
     fn from_world(world: &mut World) -> Self {
         let server = world.get_resource::<AssetServer>().unwrap();
         let tab_pathes = world.get_resource::<TabPathes>().unwrap();
-        Self::new(server, tab_pathes.0[0].clone(), false)
+        Self::new(server, tab_pathes.0[0].clone(), true)
     }
 }

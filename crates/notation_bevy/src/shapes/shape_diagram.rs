@@ -50,18 +50,23 @@ impl<'a, const S: usize> LyonShape<shapes::SvgPathShape> for ShapeDiagramShape<'
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.fretted.shape_color)
+        ShapeColors::new(self.theme.shapes.shape_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Stroke(
-            StrokeOptions::default().with_line_width(self.theme.fretted.shape_line_width),
+            StrokeOptions::default().with_line_width(self.theme.shapes.shape_line_width),
         )
     }
     fn get_transform(&self) -> Transform {
         let x = self.theme.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0
-            + self.theme.fretted.shape_x;
-        let mut trans = Transform::from_xyz(x, self.theme.fretted.shape_y, self.theme.fretted.shape_z);
-        trans.scale = Vec3::new(self.theme.fretted.shape_scale, self.theme.fretted.shape_scale, 1.0);
+            + self.theme.shapes.shape_x;
+        let mut trans =
+            Transform::from_xyz(x, self.theme.shapes.shape_y, self.theme.shapes.shape_z);
+        trans.scale = Vec3::new(
+            self.theme.shapes.shape_scale,
+            self.theme.shapes.shape_scale,
+            1.0,
+        );
         trans
     }
 }

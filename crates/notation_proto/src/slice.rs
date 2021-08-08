@@ -20,11 +20,7 @@ pub struct Slice {
     pub rounds: Option<Vec<usize>>,
 }
 impl Slice {
-    pub fn new(
-        begin: SliceBegin,
-        end: SliceEnd,
-        rounds: Option<Vec<usize>>,
-    ) -> Self {
+    pub fn new(begin: SliceBegin, end: SliceEnd, rounds: Option<Vec<usize>>) -> Self {
         Self { begin, end, rounds }
     }
 }

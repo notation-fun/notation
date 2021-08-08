@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use bevy::prelude::*;
+use serde::{Deserialize, Serialize};
 
 use notation_model::prelude::{Note, Octave, Semitones};
 
@@ -10,10 +10,10 @@ use bevy_inspector_egui::Inspectable;
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MelodyTheme {
     pub syllable_mode: bool,
+    pub center_y: f32,
     pub note_height: f32,
     pub note_outline: f32,
     pub note_outline_color: Color,
-    pub center_y: f32,
     pub octave_height: f32,
     pub semitone_height: f32,
 }
@@ -22,10 +22,10 @@ impl Default for MelodyTheme {
     fn default() -> Self {
         Self {
             syllable_mode: true,
+            center_y: -18.0,
             note_height: 3.0,
             note_outline: 1.0,
             note_outline_color: Color::hex("AAAAAA").unwrap(),
-            center_y: 64.0,
             octave_height: 12.0,
             semitone_height: 1.0,
         }

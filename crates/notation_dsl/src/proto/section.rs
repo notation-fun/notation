@@ -6,7 +6,6 @@ use syn::parse::{Error, ParseStream};
 use syn::Ident;
 
 use crate::proto::bar::BarDsl;
-use crate::proto::entry::MultibleDsl;
 
 use super::id::IdDsl;
 

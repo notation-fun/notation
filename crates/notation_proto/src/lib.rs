@@ -4,9 +4,9 @@ pub use {notation_core, notation_fretted, notation_guitar};
 
 pub mod bar;
 pub mod entry;
-pub mod slice;
 pub mod position;
 pub mod section;
+pub mod slice;
 pub mod tab;
 pub mod track;
 
@@ -16,11 +16,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::ProtoEntry;
     #[doc(hidden)]
-    pub use crate::slice::{Slice, SliceBegin, SliceEnd};
-    #[doc(hidden)]
     pub use crate::position::{BarPosition, Position, TabPosition};
     #[doc(hidden)]
     pub use crate::section::{Form, Section, SectionKind};
+    #[doc(hidden)]
+    pub use crate::slice::{Slice, SliceBegin, SliceEnd};
     #[doc(hidden)]
     pub use crate::tab::{Tab, TabMeta};
     #[doc(hidden)]

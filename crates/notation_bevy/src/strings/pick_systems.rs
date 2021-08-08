@@ -1,10 +1,9 @@
 use bevy::prelude::*;
 
-use notation_midi::prelude::{PlayToneEvent, StopToneEvent};
-use notation_model::prelude::{BarLane, BarPosition, ModelEntry, TabBar, Tone};
+use notation_model::prelude::{BarLane, BarPosition, TabBar};
 use std::sync::Arc;
 
-use crate::prelude::{EntryState, StringsPlugin, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme, StringsPlugin};
 use notation_model::prelude::{Duration, Fretboard, HandShape, Pick};
 
 use super::pick_note::{PickNoteData, PickNoteShape};
@@ -28,11 +27,12 @@ fn create_pick_notes<const S: usize>(
     shape_queries_1: Query<&HandShape<S>>,
 ) {
     for (entity, pick, duration, pos) in query.iter() {
-        if let Some((bar, fretboard, shape)) =
-            StringsPlugin::get_fretted_shape::<S>(entity, pos,
-                    (&lane_queries_0, &lane_queries_1, &lane_queries_2),
-                    (&shape_queries_0, &shape_queries_1))
-        {
+        if let Some((bar, fretboard, shape)) = StringsPlugin::get_fretted_shape::<S>(
+            entity,
+            pos,
+            (&lane_queries_0, &lane_queries_1, &lane_queries_2),
+            (&shape_queries_0, &shape_queries_1),
+        ) {
             let bar_units = bar.bar_units();
             for pick_note in pick.get_notes() {
                 if let Some((fret, note)) = fretboard.shape_pick_fret_note(&shape, pick_note) {
@@ -47,7 +47,7 @@ fn create_pick_notes<const S: usize>(
                         |child_commands| {
                             if settings.always_show_fret || pick_note.fret.is_some() {
                                 theme
-                                    .fretted
+                                    .strings
                                     .insert_fret_text(child_commands, &asset_server, fret);
                             }
                         },

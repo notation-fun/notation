@@ -22,40 +22,30 @@ impl Display for BarLayer {
 }
 impl Display for Bar {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<{}>(Y:{} N:{})", stringify!(Bar), self.layers.len(), self.lanes.len())
+        write!(
+            f,
+            "<{}>(Y:{} N:{})",
+            stringify!(Bar),
+            self.layers.len(),
+            self.lanes.len()
+        )
     }
 }
 impl BarLayer {
-    pub fn new(
-        track: Arc<Track>,
-        slices: Vec<Arc<Slice>>,
-    ) -> Self {
-        Self {
-            track,
-            slices,
-        }
+    pub fn new(track: Arc<Track>, slices: Vec<Arc<Slice>>) -> Self {
+        Self { track, slices }
     }
 }
-impl
-    TryFrom<(
-        notation_proto::prelude::BarLayer,
-        &Vec<Arc<Track>>,
-    )> for BarLayer
-{
+impl TryFrom<(notation_proto::prelude::BarLayer, &Vec<Arc<Track>>)> for BarLayer {
     type Error = ParseError;
 
     #[throws(Self::Error)]
-    fn try_from(
-        v: (
-            notation_proto::prelude::BarLayer,
-            &Vec<Arc<Track>>,
-        ),
-    ) -> Self {
+    fn try_from(v: (notation_proto::prelude::BarLayer, &Vec<Arc<Track>>)) -> Self {
         let track =
-                v.1.iter()
-                    .find(|x| x.id == v.0.track)
-                    .cloned()
-                    .ok_or(ParseError::TrackNotFound(v.0.track))?;
+            v.1.iter()
+                .find(|x| x.id == v.0.track)
+                .cloned()
+                .ok_or(ParseError::TrackNotFound(v.0.track))?;
         let mut slices = Vec::new();
         for slice in v.0.slices {
             slices.push(Slice::try_from((&track, slice)).map(Arc::new)?);
@@ -80,6 +70,6 @@ impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<Track>>)> for Bar {
                 }
             }
         }
-        Self { layers, lanes, }
+        Self { layers, lanes }
     }
 }

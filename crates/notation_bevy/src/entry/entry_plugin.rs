@@ -2,8 +2,9 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::{prelude::{AddEntryEvent, EntryBundle, StringsPlugin, ShapesPlugin, ToneBundle}, word::word_bundle::WordBundle};
-use notation_model::prelude::{CoreEntry, ProtoEntry, ModelEntry};
+use crate::prelude::{AddEntryEvent, EntryBundle, ShapesPlugin, StringsPlugin, ToneBundle};
+use crate::word::word_bundle::WordBundle;
+use notation_model::prelude::{CoreEntry, ModelEntry, ProtoEntry};
 
 pub struct EntryPlugin;
 

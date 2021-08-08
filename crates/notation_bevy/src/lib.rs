@@ -13,15 +13,16 @@ pub mod entry;
 pub mod tone;
 pub mod word;
 
+pub mod lane;
 pub mod bar;
 pub mod play;
 pub mod tab;
 
-pub mod shapes;
-pub mod strings;
 pub mod guitar;
 pub mod lyrics;
 pub mod melody;
+pub mod shapes;
+pub mod strings;
 
 pub mod settings;
 pub mod theme;
@@ -46,13 +47,17 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::app::notation_app_state::{NotationAppState, TabPathes};
     #[doc(hidden)]
-    pub use crate::bar::bar_layout::BarLayout;
-    #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
+    #[doc(hidden)]
+    pub use crate::bar::bar_layout::BarLayout;
     #[doc(hidden)]
     pub use crate::bar::bar_plugin::BarPlugin;
     #[doc(hidden)]
-    pub use crate::bar::lane_bundle::LaneBundle;
+    pub use crate::lane::lane_bundle::LaneBundle;
+    #[doc(hidden)]
+    pub use crate::lane::lane_layout::LaneLayout;
+    #[doc(hidden)]
+    pub use crate::lane::lane_plugin::LanePlugin;
     #[doc(hidden)]
     pub use crate::chord::chord_bundle::ChordBundle;
     #[doc(hidden)]
@@ -63,12 +68,6 @@ pub mod prelude {
     pub use crate::entry::entry_plugin::EntryPlugin;
     #[doc(hidden)]
     pub use crate::entry::entry_state::EntryState;
-    #[doc(hidden)]
-    pub use crate::strings::strings_grid::StringsGrid;
-    #[doc(hidden)]
-    pub use crate::strings::strings_plugin::StringsPlugin;
-    #[doc(hidden)]
-    pub use crate::shapes::shapes_plugin::ShapesPlugin;
     #[doc(hidden)]
     pub use crate::guitar::guitar_lane_bundle::{GuitarShapesLaneBundle, GuitarStringsLaneBundle};
     #[doc(hidden)]
@@ -92,6 +91,12 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::settings::notation_settings::NotationSettings;
     #[doc(hidden)]
+    pub use crate::shapes::shapes_plugin::ShapesPlugin;
+    #[doc(hidden)]
+    pub use crate::strings::strings_grid::StringsGrid;
+    #[doc(hidden)]
+    pub use crate::strings::strings_plugin::StringsPlugin;
+    #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
     pub use crate::tab::tab_bundle::TabBundle;
@@ -106,13 +111,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::theme::core_theme::CoreTheme;
     #[doc(hidden)]
-    pub use crate::theme::fretted_theme::FrettedTheme;
-    #[doc(hidden)]
     pub use crate::theme::grid_theme::GridTheme;
     #[doc(hidden)]
     pub use crate::theme::guitar_theme::GuitarTheme;
     #[doc(hidden)]
     pub use crate::theme::notation_theme::NotationTheme;
+    #[doc(hidden)]
+    pub use crate::theme::strings_theme::StringsTheme;
     #[doc(hidden)]
     pub use crate::theme::syllable_theme::SyllableTheme;
     #[doc(hidden)]
@@ -120,11 +125,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tone::tone_mode::ToneMode;
     #[doc(hidden)]
-    pub use crate::word::word_bundle::WordBundle;
-    #[doc(hidden)]
     pub use crate::ui::NotationUiPlugin;
     #[doc(hidden)]
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
     #[doc(hidden)]
     pub use crate::viewer::run_notation_viewer;
+    #[doc(hidden)]
+    pub use crate::word::word_bundle::WordBundle;
 }

@@ -34,23 +34,22 @@ impl<'a> LyonShape<shapes::Circle> for ShapeFingerShape<'a> {
     }
     fn get_shape(&self) -> shapes::Circle {
         shapes::Circle {
-            radius: self.theme.fretted.shape_finger_radius,
+            radius: self.theme.shapes.shape_finger_radius,
             center: Vec2::ZERO,
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.fretted.shape_finger_color)
+        ShapeColors::new(self.theme.shapes.shape_finger_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
-        let fretted = self.theme.fretted;
-        let x =
-            fretted.shape_finger_offset_x - fretted.shape_string_space * self.data.string as f32;
-        let y = fretted.shape_finger_offset_y
-            - fretted.shape_fret_space * self.data.fret.unwrap_or(0) as f32;
-        Transform::from_xyz(x, y, self.theme.fretted.pick_z)
+        let shapes = self.theme.shapes;
+        let x = shapes.shape_finger_offset_x - shapes.shape_string_space * self.data.string as f32;
+        let y = shapes.shape_finger_offset_y
+            - shapes.shape_fret_space * self.data.fret.unwrap_or(0) as f32;
+        Transform::from_xyz(x, y, self.theme.strings.pick_z)
     }
 }
 

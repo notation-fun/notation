@@ -57,12 +57,7 @@ impl Display for Tab {
     }
 }
 impl Tab {
-    pub fn new(
-        meta: TabMeta,
-        tracks: Vec<Track>,
-        sections: Vec<Section>,
-        form: Form,
-    ) -> Self {
+    pub fn new(meta: TabMeta, tracks: Vec<Track>, sections: Vec<Section>, form: Form) -> Self {
         Self {
             meta,
             tracks,

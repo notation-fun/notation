@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{ModelEntry, TrackKind, SliceBegin, SliceEnd};
+use crate::prelude::{ModelEntry, SliceBegin, SliceEnd, TrackKind};
 
 #[derive(Debug)]
 pub struct Track {

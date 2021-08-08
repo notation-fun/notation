@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use notation_model::prelude::{TabBar, TabPosition};
 
-use crate::prelude::{BarLayout};
+use crate::prelude::BarLayout;
 
 #[derive(Bundle)]
 pub struct BarBundle {

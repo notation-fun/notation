@@ -3,13 +3,13 @@ use std::sync::Arc;
 
 use notation_model::prelude::Tab;
 
-use crate::prelude::{NotationSettings, NotationTheme};
+use crate::prelude::{BarLayout, NotationAppState, NotationSettings, NotationTheme};
 
 use super::tab_state::TabState;
 
-#[derive(Bundle)]
+#[derive(Bundle, Debug)]
 pub struct TabStateBundle {
-    pub tab: Arc<Tab>,
+    pub bar_layouts: Arc<Vec<BarLayout>>,
     pub name: Name,
     pub state: TabState,
     pub transform: Transform,
@@ -17,15 +17,17 @@ pub struct TabStateBundle {
 }
 
 impl TabStateBundle {
-    pub fn new(settings: &NotationSettings, theme: &NotationTheme, tab: Arc<Tab>) -> Self {
+    pub fn new(
+        tab: Arc<Tab>,
+        bar_layouts: Arc<Vec<BarLayout>>,
+    ) -> Self {
         let name = format!("State: {}", tab).as_str().into();
         let state = TabState::new(&tab);
-        let transform = theme.grid.calc_tab_transform(settings);
         Self {
-            tab,
+            bar_layouts,
             name,
             state,
-            transform,
+            transform: Transform::default(),
             global_cransform: GlobalTransform::default(),
         }
     }

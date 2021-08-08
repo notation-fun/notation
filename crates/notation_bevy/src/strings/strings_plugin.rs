@@ -4,11 +4,11 @@ use bevy::prelude::*;
 use notation_model::prelude::{BarLane, BarPosition, LaneKind};
 use std::sync::Arc;
 
-use super::strings_grid::StringsGrid;
-use super::single_string::{SingleString, SingleStringData};
 use super::pick_bundle::PickBundle;
 use super::pick_note::{PickNoteData, PickNoteShape};
-use crate::prelude::{ShapesPlugin, BarPlugin, LyonShapeOp, NotationTheme, WindowResizedEvent};
+use super::single_string::{SingleString, SingleStringData};
+use super::strings_grid::StringsGrid;
+use crate::prelude::{BarPlugin, LyonShapeOp, NotationTheme, ShapesPlugin, WindowResizedEvent};
 use notation_model::prelude::{Fretboard, FrettedEntry, HandShape, TabBar};
 
 pub struct StringsPlugin;
@@ -42,13 +42,10 @@ fn on_config_changed(
 fn on_add_fretted_grid<const S: usize>(
     mut commands: Commands,
     theme: Res<NotationTheme>,
-    query: Query<(&Parent, Entity, &StringsGrid<S>), Added<StringsGrid<S>>>,
-    parent_query: Query<&Arc<TabBar>>,
+    query: Query<(Entity, &Arc<TabBar>, &StringsGrid<S>), Added<StringsGrid<S>>>,
 ) {
-    for (parent, entity, fretted_grid) in query.iter() {
-        if let Ok(tab_bar) = parent_query.get(parent.0) {
-            fretted_grid.add_strings(&mut commands, &theme, entity, tab_bar);
-        }
+    for (entity, tab_bar, strings_grid) in query.iter() {
+        strings_grid.add_strings(&mut commands, &theme, entity, tab_bar);
     }
 }
 
@@ -68,10 +65,14 @@ impl StringsPlugin {
         entry_entity: Entity,
         position: &BarPosition,
         lane_queries: (&Query<&Parent>, &Query<&Children>, &Query<&Arc<BarLane>>),
-        shape_queries: (&Query<(&Arc<TabBar>, &Arc<BarLane>, &Fretboard<S>, &Children)>, &Query<&HandShape<S>>),
+        shape_queries: (
+            &Query<(&Arc<TabBar>, &Arc<BarLane>, &Fretboard<S>, &Children)>,
+            &Query<&HandShape<S>>,
+        ),
     ) -> Option<(Arc<TabBar>, Fretboard<S>, HandShape<S>)> {
         if let Some((shapes_lane_entity, _shapes_lane)) =
-                BarPlugin::get_lane(entry_entity, 2, LaneKind::Shapes, lane_queries) {
+            BarPlugin::get_lane(entry_entity, 2, LaneKind::Shapes, lane_queries)
+        {
             ShapesPlugin::get_fretted_shape::<S>(shapes_lane_entity, position, shape_queries)
         } else {
             None

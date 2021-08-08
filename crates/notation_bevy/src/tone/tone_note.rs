@@ -71,7 +71,8 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(self.theme.melody.note_outline),
+            outline_options: StrokeOptions::default()
+                .with_line_width(self.theme.melody.note_outline),
         }
     }
     fn get_transform(&self) -> Transform {
@@ -81,7 +82,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         } else {
             0.0
         };
-        Transform::from_xyz(x, y, self.theme.fretted.pick_z)
+        Transform::from_xyz(x, y, self.theme.strings.pick_z)
     }
 }
 

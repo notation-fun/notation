@@ -1,4 +1,4 @@
-use crate::prelude::{Slice};
+use crate::prelude::Slice;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
@@ -22,14 +22,8 @@ impl Display for Bar {
     }
 }
 impl BarLayer {
-    pub fn new(
-        track: String,
-        slices: Vec<Slice>,
-    ) -> Self {
-        Self {
-            track,
-            slices,
-        }
+    pub fn new(track: String, slices: Vec<Slice>) -> Self {
+        Self { track, slices }
     }
 }
 impl From<(String, Vec<Slice>)> for BarLayer {

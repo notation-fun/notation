@@ -45,12 +45,9 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
     }
     fn get_shape(&self) -> shapes::Line {
         let width = self.theme.grid.bar_size / self.data.bar_units.0
-                * Units::from(self.data.duration).0
-                - self.theme.lyrics.word_gap;
-        shapes::Line(
-            Vec2::ZERO,
-            Vec2::new(width, 0.0),
-        )
+            * Units::from(self.data.duration).0
+            - self.theme.lyrics.word_gap;
+        shapes::Line(Vec2::ZERO, Vec2::new(width, 0.0))
     }
     fn get_colors(&self) -> ShapeColors {
         ShapeColors::new(self.theme.lyrics.line_color)
@@ -61,8 +58,8 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
     }
     fn get_transform(&self) -> Transform {
         let x = self.theme.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0;
-        let y = self.theme.lyrics.line_y;
-        Transform::from_xyz(x, y, self.theme.fretted.pick_z)
+        let y = 0.0;
+        Transform::from_xyz(x, y, self.theme.strings.pick_z)
     }
 }
 

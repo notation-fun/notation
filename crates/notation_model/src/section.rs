@@ -3,7 +3,7 @@ use std::convert::TryFrom;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{Bar, Track, ParseError, SectionKind};
+use crate::prelude::{Bar, ParseError, SectionKind, Track};
 
 #[derive(Debug)]
 pub struct Section {

@@ -4,7 +4,8 @@ use bevy::prelude::*;
 use notation_model::prelude::{BarLane, BarPosition};
 use std::sync::Arc;
 
-use super::{hand_bundles::HandShapeBundle, shape_diagram::{ShapeDiagramShape, ShapeDiagramData}};
+use super::hand_bundles::HandShapeBundle;
+use super::shape_diagram::{ShapeDiagramData, ShapeDiagramShape};
 use crate::prelude::{LyonShapeOp, NotationTheme, WindowResizedEvent};
 use notation_model::prelude::{Fretboard, FrettedEntry, HandShape, TabBar};
 
@@ -18,7 +19,7 @@ impl Plugin for ShapesPlugin {
     }
 }
 
-fn on_config_changed<const S:usize>(
+fn on_config_changed<const S: usize>(
     mut commands: Commands,
     mut evts: EventReader<WindowResizedEvent>,
     theme: Res<NotationTheme>,
@@ -46,7 +47,10 @@ impl ShapesPlugin {
     pub fn get_fretted_shape<const S: usize>(
         lane_entity: Entity,
         _position: &BarPosition,
-        shape_queries: (&Query<(&Arc<TabBar>, &Arc<BarLane>, &Fretboard<S>, &Children)>, &Query<&HandShape<S>>),
+        shape_queries: (
+            &Query<(&Arc<TabBar>, &Arc<BarLane>, &Fretboard<S>, &Children)>,
+            &Query<&HandShape<S>>,
+        ),
     ) -> Option<(Arc<TabBar>, Fretboard<S>, HandShape<S>)> {
         if let Ok((bar, _lane, fretboard, children)) = shape_queries.0.get(lane_entity) {
             let mut matched_shape = None;

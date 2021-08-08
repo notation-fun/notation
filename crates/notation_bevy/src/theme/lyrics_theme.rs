@@ -1,5 +1,6 @@
+use bevy::ecs::system::EntityCommands;
+use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
-use bevy::{ecs::system::EntityCommands, prelude::*};
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
@@ -10,7 +11,6 @@ pub struct LyricsTheme {
     pub text_x: f32,
     pub text_y: f32,
     pub text_z: f32,
-    pub line_y: f32,
     pub line_size: f32,
     pub line_color: Color,
     pub word_gap: f32,
@@ -22,9 +22,8 @@ impl Default for LyricsTheme {
     fn default() -> Self {
         Self {
             text_x: 4.0,
-            text_y: 12.0,
+            text_y: -8.0,
             text_z: 1.0,
-            line_y: 36.0,
             line_size: 2.0,
             line_color: Color::hex("555555").unwrap(),
             word_gap: 1.0,

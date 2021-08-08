@@ -99,15 +99,13 @@ impl Section {
 }
 impl ModelEntry {
     pub fn new_entries(v: Vec<ProtoEntry>) -> Vec<Arc<ModelEntry>> {
-        let _entries: Vec<Arc<ProtoEntry>> =
-            v.into_iter()
-            .map(Arc::new)
-            .collect();
+        let _entries: Vec<Arc<ProtoEntry>> = v.into_iter().map(Arc::new).collect();
         let entries = Arc::new(_entries.clone());
-        _entries.into_iter().enumerate()
-            .map(|(index, entry)|
-                ModelEntry::new(entries.clone(), index, entry)
-            ).map(Arc::new)
+        _entries
+            .into_iter()
+            .enumerate()
+            .map(|(index, entry)| ModelEntry::new(entries.clone(), index, entry))
+            .map(Arc::new)
             .collect()
     }
 }

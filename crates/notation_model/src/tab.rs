@@ -4,8 +4,7 @@ use std::sync::{Arc, Weak};
 use notation_proto::prelude::TabPosition;
 
 use crate::prelude::{
-    Bar, Form, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track,
-    Unit, Units,
+    Bar, Form, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit, Units,
 };
 
 #[derive(Debug)]

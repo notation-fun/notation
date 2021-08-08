@@ -3,7 +3,6 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::{LitInt, Token, token};
 
 use crate::proto::slice::SliceDsl;
 
@@ -23,10 +22,7 @@ impl LayerDsl {
     pub fn parse_without_brace(input: ParseStream) -> Self {
         let track = input.parse()?;
         let slices = SliceDsl::parse_vec(input)?;
-        LayerDsl {
-            track,
-            slices,
-        }
+        LayerDsl { track, slices }
     }
     pub fn peek(input: ParseStream) -> bool {
         IdDsl::peek(input)
@@ -34,10 +30,7 @@ impl LayerDsl {
 }
 impl ToTokens for LayerDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let LayerDsl {
-            track,
-            slices,
-        } = self;
+        let LayerDsl { track, slices } = self;
         let slices_quote = SliceDsl::quote_vec(slices);
         tokens.extend(quote! {
             BarLayer::new(#track.into(), #slices_quote)

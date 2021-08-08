@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
+use bevy::render::camera::OrthographicProjection;
 use bevy_egui::egui::{self, Slider};
 use bevy_egui::EguiContext;
 use float_eq::float_ne;
@@ -14,17 +15,21 @@ pub fn reload_tab(
     commands: &mut Commands,
     app_state: &mut NotationAppState,
     tab_query: &Query<Entity, With<Arc<Tab>>>,
+    get_cam: &mut Query<(&mut Transform, &mut OrthographicProjection)>,
 ) {
     for tab in tab_query.iter() {
         commands.entity(tab).despawn_recursive();
     }
     app_state.tab = None;
+    let (mut cam, _) = get_cam.single_mut().unwrap();
+    let trans = cam.translation;
+    *cam = Transform::from_xyz(0.0, 0.0, trans.z);
 }
 
 pub fn sync_play_speed(
-    commands: &mut Commands,
+    _commands: &mut Commands,
     settings: &NotationSettings,
-    tab_state_query: &mut Query<&mut TabState>
+    tab_state_query: &mut Query<&mut TabState>,
 ) {
     for mut tab_state in tab_state_query.iter_mut() {
         tab_state.play_speed = settings.play_speed;
@@ -38,6 +43,7 @@ pub fn top_panel_ui(
     mut app_state: ResMut<NotationAppState>,
     mut settings: ResMut<NotationSettings>,
     mut tab_state_query: Query<&mut TabState>,
+    mut get_cam: Query<(&mut Transform, &mut OrthographicProjection)>,
     tab_query: Query<Entity, With<Arc<Tab>>>,
     tab_pathes: Res<TabPathes>,
 ) {
@@ -65,16 +71,16 @@ pub fn top_panel_ui(
             }
             let play_speed = settings.play_speed;
             ui.add(Slider::new(&mut settings.play_speed, 0.1..=2.0).text("Play Speed"));
-            if float_ne!(play_speed, settings.play_speed, abs<=0.01) {
+            if float_ne!(play_speed, settings.play_speed, abs <= 0.01) {
                 sync_play_speed(&mut commands, &settings, &mut tab_state_query)
             }
             let always_show_fret = settings.always_show_fret;
             ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
             if always_show_fret != settings.always_show_fret {
-                reload_tab(&mut commands, &mut app_state, &tab_query);
+                reload_tab(&mut commands, &mut app_state, &tab_query, &mut get_cam);
             }
             if ui.button("Reload Tab").clicked() {
-                reload_tab(&mut commands, &mut app_state, &tab_query);
+                reload_tab(&mut commands, &mut app_state, &tab_query, &mut get_cam);
             }
             if tab_pathes.0.len() > 1 {
                 egui::ComboBox::from_label("Select Tab:")

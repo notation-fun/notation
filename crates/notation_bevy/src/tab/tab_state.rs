@@ -1,6 +1,7 @@
 use crate::prelude::PlayState;
 use notation_model::prelude::{BarPosition, Bpm, Position, Tab, Units};
 
+#[derive(Debug)]
 pub struct TabState {
     pub second_to_units: f32,
     pub pos: Position,

@@ -4,8 +4,7 @@ use std::sync::Arc;
 use instant::Duration as StdDuration;
 #[cfg(target_arch = "wasm32")]
 use instant::Instant as StdInstant;
-use notation_midi::prelude::PlayToneEvent;
-use notation_midi::prelude::StopToneEvent;
+use notation_midi::prelude::{PlayToneEvent, StopToneEvent};
 use notation_model::prelude::Tone;
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -16,6 +15,7 @@ use std::time::Instant as StdInstant;
 use bevy::prelude::*;
 use notation_model::prelude::{BarPosition, Duration, ModelEntry, Tab};
 
+use crate::prelude::BarLayout;
 use crate::prelude::{
     EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabState, WindowResizedEvent,
 };
@@ -75,23 +75,31 @@ fn on_config_changed(
 fn on_add_tab_state(
     mut commands: Commands,
     theme: Res<NotationTheme>,
-    state_query: Query<(Entity, &TabState), Added<TabState>>,
+    state_query: Query<(&Parent, Entity, &Arc<Vec<BarLayout>>), Added<TabState>>,
+    tab_query: Query<&Arc<Tab>>,
 ) {
-    for (entity, _state) in state_query.iter() {
-        PosIndicator::create(&mut commands, entity, &theme, PosIndicatorData::default());
+    for (parent, entity, bar_layouts) in state_query.iter() {
+        if let Ok(tab) = tab_query.get(parent.0) {
+            if let Some(bar_layout) = bar_layouts.get(0) {
+                let data = PosIndicatorData::new(tab.bar_units(), bar_layout);
+                PosIndicator::create(&mut commands, entity, &theme, data);
+            }
+        }
     }
 }
 
 fn on_stop(
-    _commands: Commands,
+    mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
-    mut query: Query<(&Arc<Tab>, &TabState, &mut Transform), Changed<TabState>>,
+    mut query: Query<(&Arc<Vec<BarLayout>>, &TabState, &Children)>,
+    mut pos_indicator_query: Query<&mut PosIndicatorData>,
     mut entry_query: Query<(Entity, &Arc<ModelEntry>, &BarPosition, &mut EntryState)>,
 ) {
-    for (tab, state, mut transform) in query.iter_mut() {
+    for (bar_layouts, state, children) in query.iter_mut() {
         if !state.play_state.is_playing() {
-            *transform = theme.grid.calc_pos_transform(&settings, tab, state.pos.tab);
+            PosIndicator::update_pos(&mut commands, &theme, children,
+                &settings, &mut pos_indicator_query, bar_layouts, state.pos);
             for (_entity, _entry, position, mut entry_state) in entry_query.iter_mut() {
                 if state.play_state.is_stopped() {
                     if state.is_in_range(position) {
@@ -108,11 +116,12 @@ fn on_stop(
 }
 
 fn on_time(
-    _commands: Commands,
+    mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut time: ResMut<NotationTime>,
-    mut query: Query<(&Arc<Tab>, &mut TabState, &mut Transform)>,
+    mut query: Query<(&Arc<Vec<BarLayout>>, &mut TabState, &Children)>,
+    mut pos_indicator_query: Query<&mut PosIndicatorData>,
     mut entry_query: Query<(
         Entity,
         &Arc<ModelEntry>,
@@ -122,10 +131,11 @@ fn on_time(
     )>,
 ) {
     time.tick();
-    for (tab, mut state, mut transform) in query.iter_mut() {
+    for (bar_layouts, mut state, children) in query.iter_mut() {
         let (changed, end_passed) = state.tick(time.delta_seconds());
         if changed {
-            *transform = theme.grid.calc_pos_transform(&settings, tab, state.pos.tab);
+            PosIndicator::update_pos(&mut commands, &theme, children,
+                &settings, &mut pos_indicator_query, bar_layouts, state.pos);
             for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
                 if state.is_in_range(position) {
                     if entry_state.is_playing() && state.pos.is_passed_with(position, duration) {

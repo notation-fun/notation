@@ -17,6 +17,7 @@ impl PluginGroup for NotationPlugins {
         group.add(EntryPlugin);
         group.add(MelodyPlugin);
         group.add(LyricsPlugin);
+        group.add(LanePlugin);
         group.add(BarPlugin);
         group.add(StringsPlugin);
         group.add(ShapesPlugin);
@@ -140,6 +141,7 @@ fn update_camera(
     keyboard_input: Res<Input<KeyCode>>,
     mouse_input: Res<Input<MouseButton>>,
     mut state: ResMut<NotationAppState>,
+    settings: Res<NotationSettings>,
     mut mouse_motion_events: EventReader<MouseMotion>,
     mut get_cam: Query<(&mut Transform, &mut OrthographicProjection)>,
 ) {
@@ -152,10 +154,15 @@ fn update_camera(
             if mouse_input.pressed(MouseButton::Left) {
                 let (mut cam, _) = get_cam.single_mut().unwrap();
                 let trans = cam.translation;
-                let delta_x = 0.0; // trans.x + event.delta.x;
-                let delta_y = trans.y + event.delta.y;
-                *cam =
-                    Transform::from_xyz(delta_x, delta_y, trans.z);
+                let (x, y) = match settings.layout.mode {
+                    crate::settings::layout_settings::LayoutMode::Grid => {
+                        (trans.x, trans.y + event.delta.y)
+                    }
+                    crate::settings::layout_settings::LayoutMode::Line => {
+                        (trans.x - event.delta.x, trans.y)
+                    }
+                };
+                *cam = Transform::from_xyz(x, y, trans.z);
             }
         }
     }
@@ -163,18 +170,20 @@ fn update_camera(
 
 fn setup_window_size(
     window: Res<WindowDescriptor>,
-    mut settings: ResMut<NotationSettings>,
+    mut app_state: ResMut<NotationAppState>,
+    settings: Res<NotationSettings>,
     mut theme: ResMut<NotationTheme>,
 ) {
-    settings.window_width = window.width;
-    settings.window_height = window.height;
-    theme.grid.resize(&settings);
+    app_state.window_width = window.width;
+    app_state.window_height = window.height;
+    theme.grid.resize(&app_state, &settings);
 }
 
 fn on_window_resized(
     mut window: ResMut<WindowDescriptor>,
     mut evts: EventReader<WindowResized>,
-    mut settings: ResMut<NotationSettings>,
+    mut app_state: ResMut<NotationAppState>,
+    settings: Res<NotationSettings>,
     mut theme: ResMut<NotationTheme>,
     mut config_evts: EventWriter<WindowResizedEvent>,
 ) {
@@ -184,9 +193,9 @@ fn on_window_resized(
         {
             window.width = evt.width;
             window.height = evt.height;
-            settings.window_width = evt.width;
-            settings.window_height = evt.height;
-            theme.grid.resize(&settings);
+            app_state.window_width = evt.width;
+            app_state.window_height = evt.height;
+            theme.grid.resize(&app_state, &settings);
             config_evts.send(WindowResizedEvent());
         }
     }

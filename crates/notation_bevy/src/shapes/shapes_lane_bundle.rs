@@ -27,8 +27,6 @@ impl<const S: usize> ShapesLaneBundle<S> {
                 as_fretted_entry(x.as_ref()).and_then(|x| x.as_fretboard().map(|z| z.to_owned()))
             })
             .unwrap_or_else(|| new_default_fretboard());
-        Self {
-            fretboard,
-        }
+        Self { fretboard }
     }
 }

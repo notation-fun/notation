@@ -2,7 +2,8 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::{prelude::{LyonShapeOp, LyricsLaneBundle, NotationTheme, WindowResizedEvent}, word::word_text::{WordTextData, WordTextShape}};
+use crate::prelude::{LyonShapeOp, LyricsLaneBundle, NotationTheme, WindowResizedEvent};
+use crate::word::word_text::{WordTextData, WordTextShape};
 use notation_model::prelude::Track;
 
 pub struct LyricsPlugin;

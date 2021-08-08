@@ -2,7 +2,8 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::{prelude::{LyonShapeOp, MelodyLaneBundle, NotationTheme, WindowResizedEvent}, tone::tone_note::{ToneNoteData, ToneNoteShape}};
+use crate::prelude::{LyonShapeOp, MelodyLaneBundle, NotationTheme, WindowResizedEvent};
+use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
 use notation_model::prelude::Track;
 
 pub struct MelodyPlugin;

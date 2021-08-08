@@ -38,15 +38,15 @@ impl<'a> LyonShape<shapes::Line> for SingleString<'a> {
         shapes::Line(Vec2::ZERO, Vec2::new(self.theme.grid.bar_size, 0.0))
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.fretted.string_color)
+        ShapeColors::new(self.theme.strings.string_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
         let line_width = self.theme.guitar.get_string_width(self.data.string);
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let y = -1.0 * self.data.string as f32 * self.theme.fretted.string_space;
-        Transform::from_xyz(0.0, y, self.theme.fretted.string_z)
+        let y = -1.0 * (self.data.string as f32 - 0.5) * self.theme.strings.string_space;
+        Transform::from_xyz(0.0, y, self.theme.strings.string_z)
     }
 }
 

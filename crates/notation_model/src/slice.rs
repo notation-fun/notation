@@ -1,4 +1,4 @@
-use fehler::{throw, throws};
+use fehler::throws;
 use notation_proto::prelude::{SliceBegin, SliceEnd};
 use std::convert::TryFrom;
 use std::fmt::Display;
@@ -50,13 +50,7 @@ impl Slice {
 }
 impl Display for Slice {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "<Slice>({} {}-{}",
-            self.track.id,
-            self.begin,
-            self.end,
-        )?;
+        write!(f, "<Slice>({} {}-{}", self.track.id, self.begin, self.end,)?;
         if let Some(ref rounds) = self.rounds {
             write!(f, " R:{:?}", rounds)?;
         }

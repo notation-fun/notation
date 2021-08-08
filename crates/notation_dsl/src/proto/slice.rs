@@ -22,8 +22,7 @@ impl Parse for SliceBeginDsl {
 }
 impl SliceBeginDsl {
     pub fn peek(input: ParseStream) -> bool {
-        MarkDsl::peek(input)
-            || input.peek(LitInt)
+        MarkDsl::peek(input) || input.peek(LitInt)
     }
 }
 pub enum SliceEndDsl {
@@ -86,7 +85,7 @@ impl ToTokens for SliceEndDsl {
 }
 impl ToTokens for SliceDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let SliceDsl { begin, end , rounds } = self;
+        let SliceDsl { begin, end, rounds } = self;
         let rounds_quote = match rounds {
             Some(rounds) => {
                 quote! {

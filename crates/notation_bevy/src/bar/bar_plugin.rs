@@ -3,8 +3,11 @@ use bevy::prelude::*;
 
 use std::sync::Arc;
 
-use crate::prelude::{AddEntryEvent, BarLayout, GuitarPlugin, LaneBundle, LyonShapeOp, LyricsPlugin, MelodyPlugin, NotationTheme, WindowResizedEvent};
-use notation_model::prelude::{BarLane, BarLayer, BarPosition, LaneKind, TabBar, TrackKind, Units};
+use crate::prelude::{
+    AddEntryEvent, BarLayout, GuitarPlugin, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin,
+    MelodyPlugin, NotationAppState, NotationSettings, NotationTheme, WindowResizedEvent,
+};
+use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar, TrackKind, Units};
 
 use super::bar_beat::{BarBeat, BarBeatData};
 use super::bar_separator::{BarSeparator, BarSeparatorData};
@@ -50,36 +53,47 @@ impl BarPlugin {
             if let Ok(parent) = lane_queries.0.get(current_entity) {
                 current_entity = parent.0;
             } else {
-                println!("BarPlugin::get_lane({:?}, {}, {}) Parent Not Found: {}", entity, depth, lane_kind, i);
+                println!(
+                    "BarPlugin::get_lane({:?}, {}, {}) Parent Not Found: {}",
+                    entity, depth, lane_kind, i
+                );
                 return None;
             }
         }
         if let Ok(children) = lane_queries.1.get(current_entity) {
             if children.len() == 0 {
-                println!("BarPlugin::get_lane({:?}, {}, {}) Children Is Empty: {:?}", entity, depth, lane_kind, current_entity);
+                println!(
+                    "BarPlugin::get_lane({:?}, {}, {}) Children Is Empty: {:?}",
+                    entity, depth, lane_kind, current_entity
+                );
             }
             for &child in children.iter() {
                 if let Ok(lane) = lane_queries.2.get(child) {
                     if lane.kind == lane_kind {
                         //println!("BarPlugin::get_lane({:?}, {}, {}) Found: {}", entity, depth, lane_kind, lane);
-                        return Some((child, lane.clone()))
+                        return Some((child, lane.clone()));
                     } else {
-                        println!("BarPlugin::get_lane({:?}, {}, {}) BarLane Not Matched: {}", entity, depth, lane_kind, lane);
+                        println!(
+                            "BarPlugin::get_lane({:?}, {}, {}) BarLane Not Matched: {}",
+                            entity, depth, lane_kind, lane
+                        );
                     }
                 } else {
-                    println!("BarPlugin::get_lane({:?}, {}, {}) BarLane Not Found: {:?}", entity, depth, lane_kind, child);
+                    println!(
+                        "BarPlugin::get_lane({:?}, {}, {}) BarLane Not Found: {:?}",
+                        entity, depth, lane_kind, child
+                    );
                 }
             }
         } else {
-            println!("BarPlugin::get_lane({:?}, {}, {}) Children Not Found: {:?}", entity, depth, lane_kind, current_entity);
+            println!(
+                "BarPlugin::get_lane({:?}, {}, {}) Children Not Found: {:?}",
+                entity, depth, lane_kind, current_entity
+            );
         }
         None
     }
-    fn insert_lane_extra(
-        commands: &mut EntityCommands,
-        _bar: Arc<TabBar>,
-        lane: Arc<BarLane>,
-    ) {
+    fn insert_lane_extra(commands: &mut EntityCommands, _bar: Arc<TabBar>, lane: Arc<BarLane>) {
         commands.insert(lane.slice.track.clone());
         let track = lane.slice.track.clone();
         match lane.kind {
@@ -100,21 +114,20 @@ impl BarPlugin {
     }
     fn create_lane(
         commands: &mut Commands,
+        _app_state: &NotationAppState,
+        _settings: &NotationSettings,
         _theme: &NotationTheme,
         bar_entity: Entity,
         bar: &Arc<TabBar>,
         _bar_layout: &BarLayout,
         add_entry_evts: &mut EventWriter<AddEntryEvent>,
         lane: &Arc<BarLane>,
+        lane_layout: &LaneLayout,
     ) {
-        if lane.slice.rounds.is_some()
-            && lane.slice.rounds.clone().unwrap()
-                .iter()
-                .find(|&x| *x == bar.section_round)
-                .is_none() {
+        if lane.not_in_round(bar.section_round) {
             return;
         }
-        let layer_bundle = LaneBundle::new(bar.clone(), lane.clone());
+        let layer_bundle = LaneBundle::new(bar.clone(), lane.clone(), *lane_layout);
         let mut layer_commands = commands.spawn_bundle(layer_bundle);
         BarPlugin::insert_lane_extra(&mut layer_commands, bar.clone(), lane.clone());
         let layer_entity = layer_commands.id();
@@ -128,34 +141,48 @@ impl BarPlugin {
     }
     pub fn create_lanes(
         commands: &mut Commands,
+        app_state: &NotationAppState,
+        settings: &NotationSettings,
         theme: &NotationTheme,
         bar_entity: Entity,
         bar: Arc<TabBar>,
         bar_layout: &BarLayout,
         add_entry_evts: &mut EventWriter<AddEntryEvent>,
     ) {
-        for lane in &bar.bar.lanes {
-            Self::create_lane(commands, theme, bar_entity, &bar, bar_layout, add_entry_evts, lane);
+        for lane in bar.bar.lanes.iter() {
+            if let Some(lane_layout) = bar_layout.lane_layouts.get(&lane.id()) {
+                Self::create_lane(
+                    commands,
+                    app_state,
+                    settings,
+                    theme,
+                    bar_entity,
+                    &bar,
+                    bar_layout,
+                    add_entry_evts,
+                    lane,
+                    lane_layout,
+                );
+            }
         }
-        if bar_layout.col == 0 {
+        if bar_layout.data.col == 0 {
             BarSeparator::create(
                 commands,
                 bar_entity,
                 &theme,
-                BarSeparatorData::new(&bar, true),
+                BarSeparatorData::new(&bar, bar_layout, true),
             );
         }
         BarSeparator::create(
             commands,
             bar_entity,
             &theme,
-            BarSeparatorData::new(&bar, false),
+            BarSeparatorData::new(&bar, bar_layout, false),
         );
         let signature = bar.signature();
         for beat in 0..signature.beats_per_bar {
-            BarBeatData::may_new(&theme, &bar, &signature, beat)
-                .map(|data| BarBeat::create(commands, bar_entity, &theme, data));
+            BarBeatData::may_new(&theme, &bar, &signature, bar_layout, beat)
+                .map(|data| BarBeat::create(commands, bar_entity, theme, data));
         }
     }
 }
-
