@@ -44,7 +44,10 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
             Vec2::new(0.0, self.theme.grid.bar_separator_extra),
-            Vec2::new(0.0, -self.data.bar_height - self.theme.grid.bar_separator_extra),
+            Vec2::new(
+                0.0,
+                -self.data.bar_height - self.theme.grid.bar_separator_extra,
+            ),
         )
     }
     fn get_colors(&self) -> ShapeColors {

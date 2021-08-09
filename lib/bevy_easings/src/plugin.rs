@@ -1,5 +1,6 @@
+use bevy::ecs::component::Component;
+use bevy::prelude::*;
 use bevy::reflect::TypeUuid;
-use bevy::{ecs::component::Component, prelude::*};
 
 use crate::MyEaser;
 

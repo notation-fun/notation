@@ -1,8 +1,10 @@
-use std::collections::HashMap;
-use std::sync::Arc;
-use bevy::{ecs::system::EntityCommands, prelude::*, render::camera::OrthographicProjection};
+use bevy::ecs::system::EntityCommands;
+use bevy::prelude::*;
+use bevy::render::camera::OrthographicProjection;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
 use float_eq::float_ne;
+use std::collections::HashMap;
+use std::sync::Arc;
 
 use notation_model::prelude::{BarLane, LaneKind, Position, Tab, TabBar, TabPosition};
 use serde::{Deserialize, Serialize};
@@ -10,7 +12,9 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::{bar::bar_layout::BarLayoutData, lane::lane_layout::LaneLayoutData, prelude::{BarLayout, LaneLayout, NotationAppState}};
+use crate::bar::bar_layout::BarLayoutData;
+use crate::lane::lane_layout::LaneLayoutData;
+use crate::prelude::{BarLayout, LaneLayout, NotationAppState};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -96,13 +100,12 @@ impl LayoutSettings {
         app_state: &NotationAppState,
         bar: &TabBar,
     ) -> HashMap<String, LaneLayoutData> {
-        bar.bar.lanes
+        bar.bar
+            .lanes
             .iter()
             .filter(|lane| lane.in_round(bar.section_round))
             .map(|lane| (lane, self.calc_lane_layout_data(app_state, lane)))
-            .filter_map(|(lane, layout)| {
-                layout.map(|layout| (lane.id(), layout))
-            })
+            .filter_map(|(lane, layout)| layout.map(|layout| (lane.id(), layout)))
             .collect()
     }
     fn calc_lane_layouts(
@@ -110,12 +113,8 @@ impl LayoutSettings {
         _app_state: &NotationAppState,
         lane_layouts_data: HashMap<String, LaneLayoutData>,
     ) -> HashMap<String, LaneLayout> {
-        let mut layouts: Vec<(String, LaneLayoutData)> = lane_layouts_data
-            .into_iter()
-            .collect();
-        layouts.sort_by(|(_, a), (_, b)| {
-            a.order.cmp(&b.order)
-        });
+        let mut layouts: Vec<(String, LaneLayoutData)> = lane_layouts_data.into_iter().collect();
+        layouts.sort_by(|(_, a), (_, b)| a.order.cmp(&b.order));
         let mut y: f32 = 0.0;
         layouts
             .into_iter()
@@ -139,12 +138,14 @@ impl LayoutSettings {
             LayoutMode::Line => (0, index),
         }
     }
-    fn calc_bar_layout_data(&self,
-            app_state: &NotationAppState,
-            bar: &TabBar
-        ) -> BarLayoutData {
+    fn calc_bar_layout_data(&self, app_state: &NotationAppState, bar: &TabBar) -> BarLayoutData {
         let (row, col) = self._calc_bar_row_col(bar.bar_ordinal - 1);
-        BarLayoutData::new(self.bar_margin, row, col, Arc::new(self.calc_lane_layouts_data(app_state, bar)))
+        BarLayoutData::new(
+            self.bar_margin,
+            row,
+            col,
+            Arc::new(self.calc_lane_layouts_data(app_state, bar)),
+        )
     }
     pub fn calc_pos_layout(&self, tab: &Tab, pos: TabPosition) -> (usize, usize) {
         let bar_units = tab.bar_units();
@@ -154,7 +155,8 @@ impl LayoutSettings {
         }
         self._calc_bar_row_col(index)
     }
-    fn merge_row_lane_layouts_data(&self,
+    fn merge_row_lane_layouts_data(
+        &self,
         row_lane_layouts_data: &mut HashMap<String, LaneLayoutData>,
         bar_layout_data: &BarLayoutData,
     ) {
@@ -164,7 +166,8 @@ impl LayoutSettings {
             }
         }
     }
-    fn calc_lane_layouts_height(&self,
+    fn calc_lane_layouts_height(
+        &self,
         _app_state: &NotationAppState,
         lane_layouts_data: &HashMap<String, LaneLayoutData>,
     ) -> f32 {
@@ -177,46 +180,51 @@ impl LayoutSettings {
         }
         height
     }
-    pub fn calc_bar_layouts(&self,
-        app_state: &NotationAppState,
-        tab: &Tab
-    ) -> Vec<BarLayout> {
-        let with_layouts_data: Vec<(&Arc<TabBar>, BarLayoutData)> = tab.bars.iter()
-            .map(|bar| {
-                (bar, self.calc_bar_layout_data(app_state, bar))
-            }).collect();
+    pub fn calc_bar_layouts(&self, app_state: &NotationAppState, tab: &Tab) -> Vec<BarLayout> {
+        let with_layouts_data: Vec<(&Arc<TabBar>, BarLayoutData)> = tab
+            .bars
+            .iter()
+            .map(|bar| (bar, self.calc_bar_layout_data(app_state, bar)))
+            .collect();
         let mut rows_lane_layouts_data: Vec<HashMap<String, LaneLayoutData>> = Vec::new();
         for (_bar, bar_layout_data) in with_layouts_data.iter() {
             while rows_lane_layouts_data.len() < bar_layout_data.row + 1 {
                 rows_lane_layouts_data.push(HashMap::new());
             }
-            let mut row_lane_layouts_data = rows_lane_layouts_data.get_mut(bar_layout_data.row).unwrap();
+            let mut row_lane_layouts_data =
+                rows_lane_layouts_data.get_mut(bar_layout_data.row).unwrap();
             self.merge_row_lane_layouts_data(&mut row_lane_layouts_data, &bar_layout_data);
         }
         let mut y: f32 = 0.0;
         let rows_lane_layouts: Vec<(f32, f32, Arc<HashMap<String, LaneLayout>>)> =
-            rows_lane_layouts_data.into_iter().map(|data|{
-                let offset = y;
-                let height = self.calc_lane_layouts_height(app_state, &data);
-                let lane_layouts = self.calc_lane_layouts(app_state, data);
-                y -= height + self.bar_margin;
-                (offset, height, Arc::new(lane_layouts))
-            }).collect();
-        with_layouts_data.into_iter()
+            rows_lane_layouts_data
+                .into_iter()
+                .map(|data| {
+                    let offset = y;
+                    let height = self.calc_lane_layouts_height(app_state, &data);
+                    let lane_layouts = self.calc_lane_layouts(app_state, data);
+                    y -= height + self.bar_margin;
+                    (offset, height, Arc::new(lane_layouts))
+                })
+                .collect();
+        with_layouts_data
+            .into_iter()
             .map(|(_bar, bar_layout_data)| {
-                let (offset, height, lane_layouts) = rows_lane_layouts.get(bar_layout_data.row).unwrap();
+                let (offset, height, lane_layouts) =
+                    rows_lane_layouts.get(bar_layout_data.row).unwrap();
                 BarLayout::new(bar_layout_data, *offset, *height, lane_layouts.clone())
-            }).collect()
+            })
+            .collect()
     }
     pub fn bar_layout_of_pos(
         &self,
         bar_layouts: &Arc<Vec<BarLayout>>,
         pos: Position,
     ) -> Option<BarLayout> {
-        bar_layouts.get(pos.bar.bar_ordinal - 1)
-            .map(|x| x.clone())
+        bar_layouts.get(pos.bar.bar_ordinal - 1).map(|x| x.clone())
     }
-    pub fn pan_camera(&self,
+    pub fn pan_camera(
+        &self,
         camera_query: &mut Query<(&mut Transform, &OrthographicProjection)>,
         delta_x: f32,
         delta_y: f32,
@@ -224,27 +232,26 @@ impl LayoutSettings {
         if let Ok((mut camera_transform, _)) = camera_query.single_mut() {
             let trans = camera_transform.translation;
             let (x, y) = match self.mode {
-                LayoutMode::Grid => {
-                    (trans.x, trans.y + delta_y)
-                }
-                LayoutMode::Line => {
-                    (trans.x - delta_x, trans.y)
-                }
+                LayoutMode::Grid => (trans.x, trans.y + delta_y),
+                LayoutMode::Line => (trans.x - delta_x, trans.y),
             };
             *camera_transform = Transform::from_xyz(x, y, trans.z);
         }
     }
-    pub fn set_camera_xy(&self,
+    pub fn set_camera_xy(
+        &self,
         camera_query: &mut Query<(&mut Transform, &OrthographicProjection)>,
         x: Option<f32>,
         y: Option<f32>,
     ) {
         if let Ok((mut camera_transform, _)) = camera_query.single_mut() {
             let trans = camera_transform.translation;
-            *camera_transform = Transform::from_xyz(x.unwrap_or(trans.x), y.unwrap_or(trans.y), trans.z);
+            *camera_transform =
+                Transform::from_xyz(x.unwrap_or(trans.x), y.unwrap_or(trans.y), trans.z);
         }
     }
-    pub fn ease_camera_xy(&self,
+    pub fn ease_camera_xy(
+        &self,
         commands: &mut Commands,
         camera_query: &Query<(Entity, &Transform, &OrthographicProjection)>,
         x: Option<f32>,
@@ -256,21 +263,23 @@ impl LayoutSettings {
             let from = camera_transform.translation;
             let to = Vec3::new(x.unwrap_or(from.x), y.unwrap_or(from.y), from.z);
             if float_ne!(from.x, to.x, abs <= 0.01) || float_ne!(from.y, to.y, abs <= 0.01) {
-                println!("ease_camera_xy: {}, {} -> {}, {}", from.x, from.y, to.x, to.y);
-                let ease_function = EaseFunction::CubicOut;
-                camera_commands.insert(
-                    camera_transform.ease_to(
-                        Transform::from_translation(to),
-                        ease_function,
-                        EasingType::Once {
-                            duration: std::time::Duration::from_millis(self.focus_camera_ease_ms),
-                        },
-                    ),
+                println!(
+                    "ease_camera_xy: {}, {} -> {}, {}",
+                    from.x, from.y, to.x, to.y
                 );
+                let ease_function = EaseFunction::CubicIn;
+                camera_commands.insert(camera_transform.ease_to(
+                    Transform::from_translation(to),
+                    ease_function,
+                    EasingType::Once {
+                        duration: std::time::Duration::from_millis(self.focus_camera_ease_ms),
+                    },
+                ));
             }
         }
     }
-    pub fn focus_camera(&self,
+    pub fn focus_camera(
+        &self,
         camera_query: &mut Query<(&mut Transform, &OrthographicProjection)>,
         bar_layouts: &Arc<Vec<BarLayout>>,
         pos: Position,
@@ -278,17 +287,14 @@ impl LayoutSettings {
     ) {
         if let Some(bar_layout) = bar_layouts.get(pos.bar.bar_ordinal - 1) {
             let (x, y) = match self.mode {
-                LayoutMode::Grid => {
-                    (None, Some(bar_layout.offset))
-                }
-                LayoutMode::Line => {
-                    (Some(bar_layout.data.col as f32 * bar_size), None)
-                }
+                LayoutMode::Grid => (None, Some(bar_layout.offset)),
+                LayoutMode::Line => (Some(bar_layout.data.col as f32 * bar_size), None),
             };
             self.set_camera_xy(camera_query, x, y);
         }
     }
-    pub fn focus_camera_by_ease(&self,
+    pub fn focus_camera_by_ease(
+        &self,
         commands: &mut Commands,
         camera_query: &Query<(Entity, &Transform, &OrthographicProjection)>,
         bar_layouts: &Arc<Vec<BarLayout>>,
@@ -297,12 +303,8 @@ impl LayoutSettings {
     ) {
         if let Some(bar_layout) = bar_layouts.get(pos.bar.bar_ordinal - 1) {
             let (x, y) = match self.mode {
-                LayoutMode::Grid => {
-                    (None, Some(bar_layout.offset))
-                }
-                LayoutMode::Line => {
-                    (Some(bar_layout.data.col as f32 * bar_size), None)
-                }
+                LayoutMode::Grid => (None, Some(bar_layout.offset)),
+                LayoutMode::Line => (Some(bar_layout.data.col as f32 * bar_size), None),
             };
             self.ease_camera_xy(commands, camera_query, x, y);
         }

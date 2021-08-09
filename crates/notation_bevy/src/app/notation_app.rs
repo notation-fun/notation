@@ -154,7 +154,9 @@ fn update_camera(
     if state.camera_panning {
         for event in mouse_motion_events.iter() {
             if mouse_input.pressed(MouseButton::Left) {
-                settings.layout.pan_camera(&mut camera_query, event.delta.x, event.delta.y);
+                settings
+                    .layout
+                    .pan_camera(&mut camera_query, event.delta.x, event.delta.y);
             }
         }
     }

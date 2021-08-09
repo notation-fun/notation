@@ -23,10 +23,7 @@ pub struct LaneLayout {
 }
 impl LaneLayout {
     pub fn new(data: LaneLayoutData, offset: f32) -> Self {
-        Self {
-            data,
-            offset,
-        }
+        Self { data, offset }
     }
     pub fn calc_transform(&self) -> Transform {
         Transform::from_xyz(0.0, self.offset, 0.0)

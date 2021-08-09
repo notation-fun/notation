@@ -16,7 +16,12 @@ pub struct BarBeatData {
 }
 
 impl BarBeatData {
-    pub fn new(tab_bar: &Arc<TabBar>, signature: &Signature, bar_layout: &BarLayout, beat: u8) -> Self {
+    pub fn new(
+        tab_bar: &Arc<TabBar>,
+        signature: &Signature,
+        bar_layout: &BarLayout,
+        beat: u8,
+    ) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
         let bar_beats = tab_bar.bar_beats();
         let bar_height = bar_layout.height;

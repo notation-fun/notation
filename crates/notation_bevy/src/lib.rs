@@ -13,8 +13,8 @@ pub mod entry;
 pub mod tone;
 pub mod word;
 
-pub mod lane;
 pub mod bar;
+pub mod lane;
 pub mod play;
 pub mod tab;
 
@@ -53,12 +53,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar::bar_plugin::BarPlugin;
     #[doc(hidden)]
-    pub use crate::lane::lane_bundle::LaneBundle;
-    #[doc(hidden)]
-    pub use crate::lane::lane_layout::LaneLayout;
-    #[doc(hidden)]
-    pub use crate::lane::lane_plugin::LanePlugin;
-    #[doc(hidden)]
     pub use crate::chord::chord_bundle::ChordBundle;
     #[doc(hidden)]
     pub use crate::entry::entry_bundle::EntryBundle;
@@ -72,6 +66,12 @@ pub mod prelude {
     pub use crate::guitar::guitar_lane_bundle::{GuitarShapesLaneBundle, GuitarStringsLaneBundle};
     #[doc(hidden)]
     pub use crate::guitar::guitar_plugin::GuitarPlugin;
+    #[doc(hidden)]
+    pub use crate::lane::lane_bundle::LaneBundle;
+    #[doc(hidden)]
+    pub use crate::lane::lane_layout::LaneLayout;
+    #[doc(hidden)]
+    pub use crate::lane::lane_plugin::LanePlugin;
     #[doc(hidden)]
     pub use crate::lyrics::lyrics_grid::LyricsGrid;
     #[doc(hidden)]

@@ -72,7 +72,8 @@ fn on_add_tab(
                         BarBundle::new(bar.clone(), bar_layout.clone(), transform),
                     )
                 })
-            }).collect();
+            })
+            .collect();
         for (bar_layout, bar_bundle) in bar_bundles.into_iter() {
             let bar = bar_bundle.bar.clone();
             let bar_entity = commands.spawn_bundle(bar_bundle).id();

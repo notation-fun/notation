@@ -17,10 +17,7 @@ pub struct TabStateBundle {
 }
 
 impl TabStateBundle {
-    pub fn new(
-        tab: Arc<Tab>,
-        bar_layouts: Arc<Vec<BarLayout>>,
-    ) -> Self {
+    pub fn new(tab: Arc<Tab>, bar_layouts: Arc<Vec<BarLayout>>) -> Self {
         let name = format!("State: {}", tab).as_str().into();
         let state = TabState::new(&tab);
         Self {

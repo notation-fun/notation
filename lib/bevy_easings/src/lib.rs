@@ -9,7 +9,6 @@
     unused_qualifications,
     missing_docs
 )]
-
 #![feature(float_interpolation)]
 
 //! Ease plugin for Bevy
@@ -19,11 +18,11 @@ use std::time::Duration;
 #[cfg(feature = "ease_handle")]
 use rand::Rng;
 
-use bevy::{reflect::TypeUuid, prelude::*};
+use bevy::prelude::*;
+use bevy::reflect::TypeUuid;
 
 use interpolation::Ease as IEase;
-pub use interpolation::EaseFunction;
-pub use interpolation::Lerp;
+pub use interpolation::{EaseFunction, Lerp};
 
 mod plugin;
 pub use plugin::{custom_ease_system, EasingsPlugin};

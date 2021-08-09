@@ -1,6 +1,6 @@
 use crate::prelude::PlayState;
-use notation_model::prelude::{BarPosition, Bpm, Position, Tab, Units};
 use bevy::prelude::*;
+use notation_model::prelude::{BarPosition, Bpm, Position, Tab, Units};
 
 #[derive(Debug)]
 pub struct TabPlayStateChanged();
@@ -65,7 +65,12 @@ impl TabState {
             true
         }
     }
-    pub fn tick(&mut self, commands: &mut Commands, entity: Entity, delta_seconds: f32) -> (bool, bool) {
+    pub fn tick(
+        &mut self,
+        commands: &mut Commands,
+        entity: Entity,
+        delta_seconds: f32,
+    ) -> (bool, bool) {
         if self.play_state.is_playing() {
             let delta_units = delta_seconds * self.second_to_units;
             self.pos.tick(Units(delta_units * self.play_speed));

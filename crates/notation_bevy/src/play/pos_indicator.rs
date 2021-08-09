@@ -45,7 +45,10 @@ impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
             Vec2::new(0.0, self.theme.grid.pos_indicator_extra),
-            Vec2::new(0.0, -self.data.bar_height - self.theme.grid.pos_indicator_extra),
+            Vec2::new(
+                0.0,
+                -self.data.bar_height - self.theme.grid.pos_indicator_extra,
+            ),
         )
     }
     fn get_colors(&self) -> ShapeColors {
@@ -79,7 +82,9 @@ impl<'a> PosIndicator<'a> {
         bar_layouts: &Arc<Vec<BarLayout>>,
         pos: Position,
     ) {
-        settings.layout.bar_layout_of_pos(bar_layouts, pos)
+        settings
+            .layout
+            .bar_layout_of_pos(bar_layouts, pos)
             .map(|bar_layout| {
                 for &child in children.iter() {
                     if let Ok(mut data) = pos_indicator_query.get_mut(child) {

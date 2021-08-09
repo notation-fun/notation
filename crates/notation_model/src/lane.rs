@@ -65,7 +65,9 @@ impl BarLane {
     }
     pub fn not_in_round(&self, round: usize) -> bool {
         self.slice.rounds.is_some()
-            && self.slice.rounds
+            && self
+                .slice
+                .rounds
                 .clone()
                 .unwrap()
                 .iter()
