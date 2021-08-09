@@ -1,5 +1,9 @@
 use crate::prelude::PlayState;
 use notation_model::prelude::{BarPosition, Bpm, Position, Tab, Units};
+use bevy::prelude::*;
+
+#[derive(Debug)]
+pub struct TabPlayStateChanged();
 
 #[derive(Debug)]
 pub struct TabState {
@@ -26,33 +30,42 @@ impl TabState {
             play_speed: 1.0,
         }
     }
-    pub fn play(&mut self) -> bool {
+    pub fn clear_play_state_changed(commands: &mut Commands, entity: Entity) {
+        commands.entity(entity).remove::<TabPlayStateChanged>();
+    }
+    fn add_play_state_changed(commands: &mut Commands, entity: Entity) {
+        commands.entity(entity).insert(TabPlayStateChanged());
+    }
+    pub fn play(&mut self, commands: &mut Commands, entity: Entity) -> bool {
         if self.play_state.is_playing() {
             false
         } else {
             self.play_state = PlayState::Playing;
+            Self::add_play_state_changed(commands, entity);
             true
         }
     }
-    pub fn pause(&mut self) -> bool {
+    pub fn pause(&mut self, commands: &mut Commands, entity: Entity) -> bool {
         if self.play_state.is_paused() {
             false
         } else {
             self.play_state = PlayState::Paused;
             self.pos.set_in_bar(self.pos.bar.bar_ordinal, Units(0.0));
+            Self::add_play_state_changed(commands, entity);
             true
         }
     }
-    pub fn stop(&mut self) -> bool {
+    pub fn stop(&mut self, commands: &mut Commands, entity: Entity) -> bool {
         if self.play_state.is_stopped() {
             false
         } else {
             self.play_state = PlayState::Stopped;
             self.pos.set_in_bar(self.begin_bar_ordinal, Units(0.0));
+            Self::add_play_state_changed(commands, entity);
             true
         }
     }
-    pub fn tick(&mut self, delta_seconds: f32) -> (bool, bool) {
+    pub fn tick(&mut self, commands: &mut Commands, entity: Entity, delta_seconds: f32) -> (bool, bool) {
         if self.play_state.is_playing() {
             let delta_units = delta_seconds * self.second_to_units;
             self.pos.tick(Units(delta_units * self.play_speed));
@@ -62,10 +75,10 @@ impl TabState {
                     self.pos
                         .set_in_bar(self.begin_bar_ordinal, self.pos.bar.in_bar_pos);
                     if self.pos.bar.bar_ordinal > self.end_bar_ordinal {
-                        self.stop(); //Corner case for too smal range
+                        self.stop(commands, entity); //Corner case for too smal range
                     }
                 } else {
-                    self.stop();
+                    self.stop(commands, entity);
                 }
             }
             (true, end_passed)

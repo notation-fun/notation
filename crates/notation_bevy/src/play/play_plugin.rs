@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use bevy::render::camera::OrthographicProjection;
 #[cfg(target_arch = "wasm32")]
 use instant::Duration as StdDuration;
 #[cfg(target_arch = "wasm32")]
@@ -19,6 +20,7 @@ use crate::prelude::BarLayout;
 use crate::prelude::{
     EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabState, WindowResizedEvent,
 };
+use crate::tab::tab_state::TabPlayStateChanged;
 
 use super::pos_indicator::{PosIndicator, PosIndicatorData};
 
@@ -92,14 +94,17 @@ fn on_stop(
     mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
-    mut query: Query<(&Arc<Vec<BarLayout>>, &TabState, &Children)>,
+    mut query: Query<(Entity,&Arc<Vec<BarLayout>>, &TabState, &Children), Added<TabPlayStateChanged>>,
     mut pos_indicator_query: Query<&mut PosIndicatorData>,
     mut entry_query: Query<(Entity, &Arc<ModelEntry>, &BarPosition, &mut EntryState)>,
+    mut camera_query: Query<(&mut Transform, &OrthographicProjection)>,
 ) {
-    for (bar_layouts, state, children) in query.iter_mut() {
+    for (state_entity, bar_layouts, state, children) in query.iter_mut() {
+        TabState::clear_play_state_changed(&mut commands, state_entity);
         if !state.play_state.is_playing() {
             PosIndicator::update_pos(&mut commands, &theme, children,
                 &settings, &mut pos_indicator_query, bar_layouts, state.pos);
+            settings.layout.focus_camera(&mut camera_query, bar_layouts, state.pos, theme.grid.bar_size);
             for (_entity, _entry, position, mut entry_state) in entry_query.iter_mut() {
                 if state.play_state.is_stopped() {
                     if state.is_in_range(position) {
@@ -120,7 +125,7 @@ fn on_time(
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut time: ResMut<NotationTime>,
-    mut query: Query<(&Arc<Vec<BarLayout>>, &mut TabState, &Children)>,
+    mut query: Query<(Entity, &Arc<Vec<BarLayout>>, &mut TabState, &Children)>,
     mut pos_indicator_query: Query<&mut PosIndicatorData>,
     mut entry_query: Query<(
         Entity,
@@ -129,13 +134,19 @@ fn on_time(
         &BarPosition,
         &mut EntryState,
     )>,
+    camera_query: Query<(Entity, &Transform, &OrthographicProjection)>,
 ) {
     time.tick();
-    for (bar_layouts, mut state, children) in query.iter_mut() {
-        let (changed, end_passed) = state.tick(time.delta_seconds());
+    for (state_entity, bar_layouts, mut state, children) in query.iter_mut() {
+        let old_position = state.pos;
+        let (changed, end_passed) = state.tick(&mut commands, state_entity, time.delta_seconds());
         if changed {
             PosIndicator::update_pos(&mut commands, &theme, children,
                 &settings, &mut pos_indicator_query, bar_layouts, state.pos);
+            //settings.layout.focus_camera(&mut camera_query, bar_layouts, state.pos, theme.grid.bar_size);
+            if old_position.bar.bar_ordinal != state.pos.bar.bar_ordinal {
+                settings.layout.focus_camera_by_ease(&mut commands, &camera_query, bar_layouts, state.pos, theme.grid.bar_size);
+            }
             for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
                 if state.is_in_range(position) {
                     if entry_state.is_playing() && state.pos.is_passed_with(position, duration) {

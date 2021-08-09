@@ -41,6 +41,6 @@ impl FromWorld for NotationAppState {
     fn from_world(world: &mut World) -> Self {
         let server = world.get_resource::<AssetServer>().unwrap();
         let tab_pathes = world.get_resource::<TabPathes>().unwrap();
-        Self::new(server, tab_pathes.0[0].clone(), true)
+        Self::new(server, tab_pathes.0[0].clone(), false)
     }
 }

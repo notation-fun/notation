@@ -5,6 +5,7 @@ use bevy::render::camera::OrthographicProjection;
 use bevy::window::WindowResized;
 
 use crate::prelude::*;
+use crate::settings::layout_settings::LayoutSettings;
 use notation_midi::prelude::MidiPlugin;
 use notation_model::prelude::*;
 
@@ -42,6 +43,7 @@ impl NotationApp {
         app.insert_resource(Msaa { samples: 1 });
         app.add_plugins(DefaultPlugins);
         app.insert_resource(ClearColor(CoreTheme::default().background_color));
+        app.add_plugin(bevy_easings::EasingsPlugin);
 
         app.init_resource::<NotationTheme>();
         app.init_resource::<NotationSettings>();
@@ -143,7 +145,7 @@ fn update_camera(
     mut state: ResMut<NotationAppState>,
     settings: Res<NotationSettings>,
     mut mouse_motion_events: EventReader<MouseMotion>,
-    mut get_cam: Query<(&mut Transform, &mut OrthographicProjection)>,
+    mut camera_query: Query<(&mut Transform, &OrthographicProjection)>,
 ) {
     if keyboard_input.just_released(KeyCode::Space) {
         state.camera_panning = !state.camera_panning;
@@ -152,17 +154,7 @@ fn update_camera(
     if state.camera_panning {
         for event in mouse_motion_events.iter() {
             if mouse_input.pressed(MouseButton::Left) {
-                let (mut cam, _) = get_cam.single_mut().unwrap();
-                let trans = cam.translation;
-                let (x, y) = match settings.layout.mode {
-                    crate::settings::layout_settings::LayoutMode::Grid => {
-                        (trans.x, trans.y + event.delta.y)
-                    }
-                    crate::settings::layout_settings::LayoutMode::Line => {
-                        (trans.x - event.delta.x, trans.y)
-                    }
-                };
-                *cam = Transform::from_xyz(x, y, trans.z);
+                settings.layout.pan_camera(&mut camera_query, event.delta.x, event.delta.y);
             }
         }
     }
