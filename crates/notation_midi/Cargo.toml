@@ -12,3 +12,7 @@ notation_proto = { path = "../notation_proto" }
 midir = "0.7"
 bevy = { version = "0.5.0", default-features = false }
 helgoboss-midi = "0.2"
+bevy_kira_audio = "0.5.1"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+fluidlite = { version = "0.2.0" }

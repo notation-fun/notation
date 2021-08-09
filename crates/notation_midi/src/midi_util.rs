@@ -13,7 +13,7 @@ impl MidiUtil {
     pub fn note_midi_on_msg(note: &Note) -> Option<StructuredShortMessage> {
         Self::note_midi_key_number(note).map(|key_number| -> StructuredShortMessage {
             StructuredShortMessage::NoteOn {
-                channel: Channel::new(1),
+                channel: Channel::new(0),
                 key_number,
                 velocity: U7::new(127),
             }
@@ -21,7 +21,7 @@ impl MidiUtil {
     }
     pub fn note_midi_off_msg(note: &Note) -> Option<StructuredShortMessage> {
         Self::note_midi_key_number(note).map(|key_number| StructuredShortMessage::NoteOff {
-            channel: Channel::new(1),
+            channel: Channel::new(0),
             key_number,
             velocity: U7::new(127),
         })
