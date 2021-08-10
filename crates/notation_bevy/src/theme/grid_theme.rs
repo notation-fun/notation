@@ -1,4 +1,4 @@
-use notation_model::prelude::{Tab, TabPosition};
+
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;

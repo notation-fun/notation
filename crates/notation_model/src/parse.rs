@@ -20,7 +20,7 @@ impl Tab {
     #[throws(ParseError)]
     pub fn try_parse_arc(v: notation_proto::prelude::Tab) -> Arc<Self> {
         let meta = Arc::new(v.meta);
-        let tracks = v.tracks.into_iter().map(|x| Arc::new(x.into())).collect();
+        let tracks = v.tracks.into_iter().map(Track::new_arc).collect();
         let mut sections = Vec::new();
         for section in v.sections {
             sections.push(Section::try_from((section, &tracks)).map(Arc::new)?);
@@ -98,13 +98,11 @@ impl Section {
     }
 }
 impl ModelEntry {
-    pub fn new_entries(v: Vec<ProtoEntry>) -> Vec<Arc<ModelEntry>> {
-        let _entries: Vec<Arc<ProtoEntry>> = v.into_iter().map(Arc::new).collect();
-        let entries = Arc::new(_entries.clone());
-        _entries
-            .into_iter()
+    pub fn new_entries(v: Vec<ProtoEntry>, track: &Weak<Track>) -> Vec<Arc<ModelEntry>> {
+        v.into_iter()
+            .map(Arc::new)
             .enumerate()
-            .map(|(index, entry)| ModelEntry::new(entries.clone(), index, entry))
+            .map(|(index, entry)| ModelEntry::new(track.clone(), index, entry))
             .map(Arc::new)
             .collect()
     }

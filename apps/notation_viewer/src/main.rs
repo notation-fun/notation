@@ -1,6 +1,6 @@
 fn main() {
     #[cfg(target_arch = "wasm32")]
-    let tabs = vec![notation_bevy::prelude::get_tab_from_url()
+    let tabs = vec![notation_bevy::prelude::NotationApp::get_tab_from_url()
         .unwrap_or("beginner/1_right_hand.ron".to_owned())];
 
     #[cfg(not(target_arch = "wasm32"))]

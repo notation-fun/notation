@@ -1,4 +1,6 @@
-use crate::prelude::{MidiAudioStream, MidiHub, MidiSettings, MidiUtil, PlayToneEvent, StopToneEvent};
+use crate::prelude::{
+    MidiAudioStream, MidiHub, MidiSettings, MidiState, PlayToneEvent, StopToneEvent,
+};
 use bevy::prelude::*;
 use bevy_kira_audio::{AudioPlugin, AudioStreamPlugin, StreamedAudio};
 pub struct MidiPlugin;
@@ -10,6 +12,7 @@ impl Plugin for MidiPlugin {
         app.add_event::<PlayToneEvent>();
         app.add_event::<StopToneEvent>();
         app.init_resource::<MidiSettings>();
+        app.init_resource::<MidiState>();
         app.init_non_send_resource::<MidiHub>();
         app.add_startup_system(setup_audio_stream.system());
         app.add_system(on_play_tone.system());
@@ -29,9 +32,7 @@ fn setup_audio_stream(
     }
 }
 
-fn check_synth_buffer(
-    mut hub: NonSendMut<MidiHub>,
-) {
+fn check_synth_buffer(mut hub: NonSendMut<MidiHub>) {
     hub.check_synth_buffer();
 }
 
@@ -43,7 +44,7 @@ fn on_play_tone(
 ) {
     for evt in evts.iter() {
         //println!("on_play_tone: {}", evt.0);
-        for msg in MidiUtil::tone_midi_on_msgs(&evt.0) {
+        for msg in evt.to_midi_msgs() {
             hub.send(&settings, msg);
         }
     }
@@ -57,7 +58,7 @@ fn on_stop_tone(
 ) {
     for evt in evts.iter() {
         //println!("on_stop_tone: {}", evt.0);
-        for msg in MidiUtil::tone_midi_off_msgs(&evt.0) {
+        for msg in evt.to_midi_msgs() {
             hub.send(&settings, msg);
         }
     }

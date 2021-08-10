@@ -1,17 +1,18 @@
-use std::sync::Arc;
+use std::sync::{Arc, Weak};
 
-use notation_proto::prelude::{Entry, ProtoEntry};
+use crate::prelude::Track;
+use notation_proto::prelude::{Entry, ProtoEntry, TrackKind};
 
 #[derive(Debug)]
 pub struct ModelEntry {
-    pub entries: Arc<Vec<Arc<ProtoEntry>>>,
+    pub track: Weak<Track>,
     pub index: usize,
     pub value: Arc<ProtoEntry>,
 }
 impl ModelEntry {
-    pub fn new(entries: Arc<Vec<Arc<ProtoEntry>>>, index: usize, value: Arc<ProtoEntry>) -> Self {
+    pub fn new(track: Weak<Track>, index: usize, value: Arc<ProtoEntry>) -> Self {
         Self {
-            entries,
+            track,
             index,
             value,
         }
@@ -23,13 +24,39 @@ impl Entry for ModelEntry {
     }
 }
 impl ModelEntry {
-    pub fn prev(&self) -> Option<&Arc<ProtoEntry>> {
-        self.entries.get(self.index - 1)
+    pub fn prev(&self) -> Option<Arc<ModelEntry>> {
+        if let Some(track) = self.track.upgrade() {
+            track.entries.get(self.index - 1).map(|x| x.clone())
+        } else {
+            None
+        }
     }
-    pub fn next(&self) -> Option<&Arc<ProtoEntry>> {
-        self.entries.get(self.index + 1)
+    pub fn next(&self) -> Option<Arc<ModelEntry>> {
+        if let Some(track) = self.track.upgrade() {
+            track.entries.get(self.index + 1).map(|x| x.clone())
+        } else {
+            None
+        }
     }
-    pub fn prev_as_mark(&self) -> Option<&String> {
-        self.prev().and_then(|x| x.as_mark())
+    pub fn prev_as_mark(&self) -> Option<String> {
+        if let Some(entry) = self.prev() {
+            entry.value.as_mark().map(|x| x.clone())
+        } else {
+            None
+        }
+    }
+    pub fn track_id(&self) -> String {
+        if let Some(track) = self.track.upgrade() {
+            track.id.clone()
+        } else {
+            "".to_owned()
+        }
+    }
+    pub fn track_kind(&self) -> TrackKind {
+        if let Some(track) = self.track.upgrade() {
+            track.kind.clone()
+        } else {
+            TrackKind::Custom("".to_owned())
+        }
     }
 }

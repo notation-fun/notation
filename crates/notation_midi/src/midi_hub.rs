@@ -1,8 +1,8 @@
 use helgoboss_midi::{ShortMessage, StructuredShortMessage};
 use midir::{MidiOutput, MidiOutputConnection};
-use std::sync::{Arc, Mutex};
+use std::sync::{Mutex};
 
-use crate::prelude::{AudioBuffer, DoubleAudioBuffer, MidiSettings, MidiSynth};
+use crate::prelude::{DoubleAudioBuffer, MidiSettings, MidiSynth};
 
 pub struct MidiHub {
     output_conn: Option<Mutex<MidiOutputConnection>>,
@@ -52,8 +52,7 @@ impl MidiHub {
         }
     }
     #[cfg(target_arch = "wasm32")]
-    fn check_output_synth(&mut self) {
-    }
+    fn check_output_synth(&mut self) {}
     #[cfg(not(target_arch = "wasm32"))]
     fn check_output_synth(&mut self) {
         if self.output_synth.is_none() {
@@ -70,7 +69,7 @@ impl MidiHub {
     pub fn get_synth_buffer(&mut self, settings: &MidiSettings) -> Option<DoubleAudioBuffer> {
         self.check_output(settings);
         if let Some(synth) = &self.output_synth {
-            Some(synth.get_buffer())
+            synth.get_buffer()
         } else {
             None
         }

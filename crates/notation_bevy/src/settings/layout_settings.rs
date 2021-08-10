@@ -1,4 +1,4 @@
-use bevy::ecs::system::EntityCommands;
+
 use bevy::prelude::*;
 use bevy::render::camera::OrthographicProjection;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
@@ -6,7 +6,7 @@ use float_eq::float_ne;
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use notation_model::prelude::{BarLane, LaneKind, Position, Tab, TabBar, TabPosition};
+use notation_model::prelude::{BarLane, LaneKind, Position, Tab, TabBar, TabPosition, Units};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -14,7 +14,7 @@ use bevy_inspector_egui::Inspectable;
 
 use crate::bar::bar_layout::BarLayoutData;
 use crate::lane::lane_layout::LaneLayoutData;
-use crate::prelude::{BarLayout, LaneLayout, NotationAppState};
+use crate::prelude::{BarLayout, LaneLayout, NotationAppState, TabState};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -225,11 +225,11 @@ impl LayoutSettings {
     }
     pub fn pan_camera(
         &self,
-        camera_query: &mut Query<(&mut Transform, &OrthographicProjection)>,
+        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
         delta_x: f32,
         delta_y: f32,
     ) {
-        if let Ok((mut camera_transform, _)) = camera_query.single_mut() {
+        if let Ok((_, mut camera_transform, _)) = camera_query.single_mut() {
             let trans = camera_transform.translation;
             let (x, y) = match self.mode {
                 LayoutMode::Grid => (trans.x, trans.y + delta_y),
@@ -240,11 +240,11 @@ impl LayoutSettings {
     }
     pub fn set_camera_xy(
         &self,
-        camera_query: &mut Query<(&mut Transform, &OrthographicProjection)>,
+        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
         x: Option<f32>,
         y: Option<f32>,
     ) {
-        if let Ok((mut camera_transform, _)) = camera_query.single_mut() {
+        if let Ok((_, mut camera_transform, _)) = camera_query.single_mut() {
             let trans = camera_transform.translation;
             *camera_transform =
                 Transform::from_xyz(x.unwrap_or(trans.x), y.unwrap_or(trans.y), trans.z);
@@ -253,11 +253,11 @@ impl LayoutSettings {
     pub fn ease_camera_xy(
         &self,
         commands: &mut Commands,
-        camera_query: &Query<(Entity, &Transform, &OrthographicProjection)>,
+        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
         x: Option<f32>,
         y: Option<f32>,
     ) {
-        if let Ok((camera_entity, camera_transform, _)) = camera_query.single() {
+        if let Ok((camera_entity, camera_transform, _)) = camera_query.single_mut() {
             let mut camera_commands = commands.entity(camera_entity);
             camera_commands.remove::<EasingComponent<Transform>>();
             let from = camera_transform.translation;
@@ -267,7 +267,7 @@ impl LayoutSettings {
                     "ease_camera_xy: {}, {} -> {}, {}",
                     from.x, from.y, to.x, to.y
                 );
-                let ease_function = EaseFunction::CubicIn;
+                let ease_function = EaseFunction::CubicOut;
                 camera_commands.insert(camera_transform.ease_to(
                     Transform::from_translation(to),
                     ease_function,
@@ -278,35 +278,52 @@ impl LayoutSettings {
             }
         }
     }
-    pub fn focus_camera(
-        &self,
-        camera_query: &mut Query<(&mut Transform, &OrthographicProjection)>,
-        bar_layouts: &Arc<Vec<BarLayout>>,
-        pos: Position,
-        bar_size: f32,
-    ) {
-        if let Some(bar_layout) = bar_layouts.get(pos.bar.bar_ordinal - 1) {
-            let (x, y) = match self.mode {
-                LayoutMode::Grid => (None, Some(bar_layout.offset)),
-                LayoutMode::Line => (Some(bar_layout.data.col as f32 * bar_size), None),
-            };
-            self.set_camera_xy(camera_query, x, y);
+    pub fn should_focus_camera(&self, old: &Position, new: &Position) -> bool {
+        self.mode == LayoutMode::Line
+            || old.bar.bar_ordinal != new.bar.bar_ordinal
+    }
+    fn calc_grid_focus_y(&self, bar_layouts: &Arc<Vec<BarLayout>>, bar_layout: &BarLayout, _pos: &Position) -> f32 {
+        if bar_layout.data.row > 0 {
+            for layout in bar_layouts.iter() {
+                if layout.data.row == bar_layout.data.row - 1 {
+                    return layout.offset;
+                }
+            }
+            bar_layout.offset
+        } else {
+            bar_layout.offset
         }
     }
-    pub fn focus_camera_by_ease(
+    fn calc_line_focus_x_units(&self, bar_layout: &BarLayout, pos: &Position) -> Units {
+        Units(if bar_layout.data.col > 0 {
+            bar_layout.data.col as f32 - 1.0 + pos.bar.in_bar_pos.0 / pos.bar_units.0
+        } else {
+            bar_layout.data.col as f32
+        })
+    }
+    pub fn focus_camera(
         &self,
         commands: &mut Commands,
-        camera_query: &Query<(Entity, &Transform, &OrthographicProjection)>,
+        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
         bar_layouts: &Arc<Vec<BarLayout>>,
-        pos: Position,
         bar_size: f32,
+        state: &TabState,
     ) {
-        if let Some(bar_layout) = bar_layouts.get(pos.bar.bar_ordinal - 1) {
-            let (x, y) = match self.mode {
-                LayoutMode::Grid => (None, Some(bar_layout.offset)),
-                LayoutMode::Line => (Some(bar_layout.data.col as f32 * bar_size), None),
+        if let Some(bar_layout) = bar_layouts.get(state.pos.bar.bar_ordinal - 1) {
+            match self.mode {
+                LayoutMode::Grid => {
+                    let y = self.calc_grid_focus_y(bar_layouts, bar_layout, &state.pos);
+                    self.ease_camera_xy(commands, camera_query, None, Some(y));
+                }
+                LayoutMode::Line => {
+                    let x_units = self.calc_line_focus_x_units(bar_layout, &state.pos);
+                    if state.play_state.is_playing() {
+                        self.set_camera_xy(camera_query, Some(x_units.0 * bar_size), None);
+                    } else {
+                        self.ease_camera_xy(commands, camera_query, Some(x_units.0 * bar_size), None);
+                    }
+                }
             };
-            self.ease_camera_xy(commands, camera_query, x, y);
         }
     }
 }

@@ -1,13 +1,12 @@
-use bevy::ecs::system::EntityCommands;
+
 use bevy::prelude::*;
 
 use std::sync::Arc;
 
 use crate::prelude::{
-    AddEntryEvent, BarLayout, GuitarPlugin, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin,
-    MelodyPlugin, NotationAppState, NotationSettings, NotationTheme, WindowResizedEvent,
+    LaneLayout, LyonShapeOp, NotationTheme, WindowResizedEvent,
 };
-use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar, TrackKind, Units};
+use notation_model::prelude::{TabBar};
 
 use super::lane_back::{LaneBack, LaneBackData};
 

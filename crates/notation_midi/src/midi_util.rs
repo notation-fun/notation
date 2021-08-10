@@ -1,7 +1,7 @@
 use std::convert::TryFrom;
 
 use helgoboss_midi::{Channel, KeyNumber, StructuredShortMessage, U7};
-use notation_proto::prelude::{Note, Semitones, Tone};
+use notation_proto::prelude::{Note, Semitones};
 
 pub struct MidiUtil();
 
@@ -25,17 +25,5 @@ impl MidiUtil {
             key_number,
             velocity: U7::new(127),
         })
-    }
-    pub fn tone_midi_on_msgs(tone: &Tone) -> Vec<StructuredShortMessage> {
-        tone.get_notes()
-            .iter()
-            .flat_map(|x| Self::note_midi_on_msg(x))
-            .collect()
-    }
-    pub fn tone_midi_off_msgs(tone: &Tone) -> Vec<StructuredShortMessage> {
-        tone.get_notes()
-            .iter()
-            .flat_map(|x| Self::note_midi_off_msg(x))
-            .collect()
     }
 }

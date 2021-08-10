@@ -11,7 +11,7 @@ impl Default for MidiSettings {
 }
 
 impl MidiSettings {
-    fn default_use_internal_synth() ->bool {
+    fn default_use_internal_synth() -> bool {
         #[cfg(not(target_arch = "wasm32"))]
         return true;
         #[cfg(target_arch = "wasm32")]

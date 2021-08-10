@@ -20,7 +20,10 @@ impl DoubleAudioBuffer {
             buffer_2: Arc::new(Mutex::new((false, [0f32; AUDIO_BUFFER_SIZE]))),
         }
     }
-    pub fn write_buffer<F>(&mut self, mut action: F) where F: FnMut(&mut [f32]) {
+    pub fn write_buffer<F>(&mut self, mut action: F)
+    where
+        F: FnMut(&mut [f32]),
+    {
         let buffer = if self.use_buffer_2 {
             self.buffer_2.as_ref()
         } else {
@@ -34,7 +37,10 @@ impl DoubleAudioBuffer {
             }
         }
     }
-    pub fn read_buffer<F>(&mut self, mut action: F) where F: FnMut(&AudioBuffer) {
+    pub fn read_buffer<F>(&mut self, mut action: F)
+    where
+        F: FnMut(&AudioBuffer),
+    {
         let buffer = if self.use_buffer_2 {
             self.buffer_2.as_ref()
         } else {
@@ -75,7 +81,7 @@ impl MidiAudioStream {
     fn check_synth_buffer(&mut self) {
         let buffer = &mut self.buffer;
         let index = &mut self.index;
-        self.synth_buffer.read_buffer(|data|{
+        self.synth_buffer.read_buffer(|data| {
             for i in 0..AUDIO_BUFFER_SIZE {
                 buffer[i] = data[i];
             }

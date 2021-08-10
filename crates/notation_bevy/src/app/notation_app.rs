@@ -5,7 +5,7 @@ use bevy::render::camera::OrthographicProjection;
 use bevy::window::WindowResized;
 
 use crate::prelude::*;
-use crate::settings::layout_settings::LayoutSettings;
+
 use notation_midi::prelude::MidiPlugin;
 use notation_model::prelude::*;
 
@@ -72,7 +72,7 @@ impl NotationApp {
     }
 
     #[cfg(target_arch = "wasm32")]
-    pub fn get_tab_from_url() -> Result<Tone, Tone> {
+    pub fn get_tab_from_url() -> Result<String, String> {
         web_sys::window()
             .ok_or("No_Window".to_owned())
             .and_then(|x| x.document().ok_or("No_Document".to_owned()))
@@ -145,7 +145,7 @@ fn update_camera(
     mut state: ResMut<NotationAppState>,
     settings: Res<NotationSettings>,
     mut mouse_motion_events: EventReader<MouseMotion>,
-    mut camera_query: Query<(&mut Transform, &OrthographicProjection)>,
+    mut camera_query: Query<(Entity, &mut Transform, &OrthographicProjection)>,
 ) {
     if keyboard_input.just_released(KeyCode::Space) {
         state.camera_panning = !state.camera_panning;

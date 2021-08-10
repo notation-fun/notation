@@ -1,6 +1,6 @@
 use helgoboss_midi::StructuredShortMessage;
 
-use crate::prelude::{DoubleAudioBuffer};
+use crate::prelude::DoubleAudioBuffer;
 
 pub struct MidiSynth {
     synth: fluidlite::Synth,
@@ -16,39 +16,69 @@ impl MidiSynth {
     pub fn try_new() -> Option<MidiSynth> {
         fluidlite::Settings::new()
             .and_then(fluidlite::Synth::new)
-            .and_then(|synth| {
-                synth.sfload("assets/gm.sf2", true).map(|_| synth)
-            }).map(Self::new)
+            .and_then(|synth| synth.sfload("assets/gm.sf2", true).map(|_| synth))
+            .map(Self::new)
             .map_err(|err| {
                 println!("MidiSynth try_new() failed: {:?}", err);
                 err
-            }).ok()
+            })
+            .ok()
     }
-    pub fn get_buffer(&self) -> DoubleAudioBuffer {
-        self.buffer.clone()
+    pub fn get_buffer(&self) -> Option<DoubleAudioBuffer> {
+        Some(self.buffer.clone())
     }
     pub fn check_buffer(&mut self) {
         let synth = &self.synth;
-        self.buffer.write_buffer(|mut data| {
-            println!("NativeMidiSynth writing buffer: [{}]", data.len());
+        // let use_buffer_2 = self.buffer.use_buffer_2;
+        self.buffer.write_buffer(|data| {
+            /*
+            println!("NativeMidiSynth writing buffer: {} [{}]",
+                if use_buffer_2 { 2 } else { 1 },
+                data.len());
+             */
             synth.write(data).unwrap();
         });
     }
     pub fn send(&self, msg: StructuredShortMessage) -> Result<(), String> {
         match msg {
-            StructuredShortMessage::NoteOff { channel, key_number, velocity } =>
-                self.synth.note_off(channel.into(), key_number.into()),
-            StructuredShortMessage::NoteOn { channel, key_number, velocity } =>
-                self.synth.note_on(channel.into(), key_number.into(), velocity.into()),
-            StructuredShortMessage::PolyphonicKeyPressure { channel, key_number, pressure_amount } => todo!(),
-            StructuredShortMessage::ControlChange { channel, controller_number, control_value } => todo!(),
-            StructuredShortMessage::ProgramChange { channel, program_number } => todo!(),
-            StructuredShortMessage::ChannelPressure { channel, pressure_amount } => todo!(),
-            StructuredShortMessage::PitchBendChange { channel, pitch_bend_value } => todo!(),
+            StructuredShortMessage::NoteOff {
+                channel,
+                key_number,
+                velocity: _,
+            } => self.synth.note_off(channel.into(), key_number.into()),
+            StructuredShortMessage::NoteOn {
+                channel,
+                key_number,
+                velocity,
+            } => self
+                .synth
+                .note_on(channel.into(), key_number.into(), velocity.into()),
+            StructuredShortMessage::PolyphonicKeyPressure {
+                channel: _,
+                key_number: _,
+                pressure_amount: _,
+            } => todo!(),
+            StructuredShortMessage::ControlChange {
+                channel: _,
+                controller_number: _,
+                control_value: _,
+            } => todo!(),
+            StructuredShortMessage::ProgramChange {
+                channel: _,
+                program_number: _,
+            } => todo!(),
+            StructuredShortMessage::ChannelPressure {
+                channel: _,
+                pressure_amount: _,
+            } => todo!(),
+            StructuredShortMessage::PitchBendChange {
+                channel: _,
+                pitch_bend_value: _,
+            } => todo!(),
             StructuredShortMessage::SystemExclusiveStart => todo!(),
             StructuredShortMessage::TimeCodeQuarterFrame(_) => todo!(),
-            StructuredShortMessage::SongPositionPointer { position } => todo!(),
-            StructuredShortMessage::SongSelect { song_number } => todo!(),
+            StructuredShortMessage::SongPositionPointer { position: _ } => todo!(),
+            StructuredShortMessage::SongSelect { song_number: _ } => todo!(),
             StructuredShortMessage::TuneRequest => todo!(),
             StructuredShortMessage::SystemExclusiveEnd => todo!(),
             StructuredShortMessage::TimingClock => todo!(),
@@ -61,10 +91,7 @@ impl MidiSynth {
             StructuredShortMessage::SystemCommonUndefined2 => todo!(),
             StructuredShortMessage::SystemRealTimeUndefined1 => todo!(),
             StructuredShortMessage::SystemRealTimeUndefined2 => todo!(),
-        }.map_err(|err| {
-            format!("{:?}", err)
-        })
+        }
+        .map_err(|err| format!("{:?}", err))
     }
 }
-
-

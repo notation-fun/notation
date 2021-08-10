@@ -44,7 +44,7 @@ fn on_add_shape_diagram<const S: usize>(
                     if let Some(mark) = entry.prev_as_mark() {
                         theme
                             .shapes
-                            .insert_shape_text(child_commands, &asset_server, mark);
+                            .insert_shape_text(child_commands, &asset_server, &mark);
                     }
                 },
             );

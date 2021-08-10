@@ -25,10 +25,12 @@ impl Display for Track {
         )
     }
 }
-impl From<notation_proto::prelude::Track> for Track {
-    fn from(v: notation_proto::prelude::Track) -> Self {
-        let entries = ModelEntry::new_entries(v.entries);
-        Self::new(v.id, v.kind, entries)
+impl Track {
+    pub fn new_arc(v: notation_proto::prelude::Track) -> Arc<Self> {
+        Arc::<Self>::new_cyclic(|weak_self| {
+            let entries = ModelEntry::new_entries(v.entries, weak_self);
+            Self::new(v.id, v.kind, entries)
+        })
     }
 }
 impl Track {
