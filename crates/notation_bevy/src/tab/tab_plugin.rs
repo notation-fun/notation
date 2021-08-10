@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
+use notation_midi::prelude::SwitchTabEvent;
 use notation_model::prelude::Tab;
 
 use crate::prelude::{
@@ -46,6 +47,7 @@ fn on_add_tab(
     theme: Res<NotationTheme>,
     mut evts: EventReader<AddTabEvent>,
     mut add_entry_evts: EventWriter<AddEntryEvent>,
+    mut switch_tab_evts: EventWriter<SwitchTabEvent>,
 ) {
     for evt in evts.iter() {
         let tab = evt.0.clone();
@@ -89,5 +91,6 @@ fn on_add_tab(
                 &mut add_entry_evts,
             );
         }
+        switch_tab_evts.send(SwitchTabEvent::new(evt.0.clone()));
     }
 }

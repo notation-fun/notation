@@ -42,14 +42,14 @@ impl CoreTheme {
         if beat == 0 {
             return self.beat_color0;
         }
-        if signature.beats_per_bar % 4 == 0 {
+        if signature.bar_beats % 4 == 0 {
             match beat % 4 {
                 1 => self.beat_color1,
                 2 => self.beat_color2,
                 3 => self.beat_color1,
                 _ => self.beat_color0,
             }
-        } else if signature.beats_per_bar % 3 == 0 {
+        } else if signature.bar_beats % 3 == 0 {
             match beat % 3 {
                 1 => self.beat_color1,
                 2 => self.beat_color2,

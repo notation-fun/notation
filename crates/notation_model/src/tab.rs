@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use notation_proto::prelude::TabPosition;
+use notation_proto::prelude::{Note, SyllableNote, TabPosition};
 
 use crate::prelude::{
     Bar, Form, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit, Units,
@@ -56,7 +56,7 @@ impl Tab {
         Units::from(self.meta.signature)
     }
     pub fn bar_beats(&self) -> u8 {
-        self.meta.signature.beats_per_bar
+        self.meta.signature.bar_beats
     }
     pub fn signature(&self) -> Signature {
         self.meta.signature
@@ -67,60 +67,40 @@ impl Tab {
     pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
         self.meta.calc_syllable(pitch)
     }
+    pub fn calc_syllable_note(&self, note: &Note) -> SyllableNote {
+        self.meta.calc_syllable_note(note)
+    }
 }
 
 impl TabBar {
     pub fn tab_pos(&self) -> TabPosition {
         TabPosition::new(Units((self.bar_ordinal - 1) as f32 * self.bar_units().0))
     }
-    pub fn bar_units(&self) -> Units {
+    pub fn tab_meta(&self) -> Arc<TabMeta> {
         match self.tab.upgrade() {
-            Some(tab) => tab.bar_units(),
+            Some(tab) => tab.meta.clone(),
             None => {
-                println!("<{}>.bar_units() tab missing: {}", stringify!(TabBar), self);
-                Units::from(Unit::Whole)
+                println!("<TabBar>.bar_units() tab_meta missing: {}", self);
+                Arc::new(TabMeta::default())
             }
         }
+    }
+    pub fn bar_units(&self) -> Units {
+        Units::from(self.tab_meta().signature)
     }
     pub fn bar_beats(&self) -> u8 {
-        match self.tab.upgrade() {
-            Some(tab) => tab.bar_beats(),
-            None => {
-                println!("<{}>.bar_beats() tab missing: {}", stringify!(TabBar), self);
-                4 as u8
-            }
-        }
+        self.tab_meta().signature.bar_beats
     }
     pub fn signature(&self) -> Signature {
-        match self.tab.upgrade() {
-            Some(tab) => tab.signature(),
-            None => {
-                println!("<{}>.signature() tab missing: {}", stringify!(TabBar), self);
-                Signature::_4_4
-            }
-        }
+        self.tab_meta().signature
     }
     pub fn beat_unit(&self) -> Unit {
-        match self.tab.upgrade() {
-            Some(tab) => tab.beat_unit(),
-            None => {
-                println!("<{}>.beat_unit() tab missing: {}", stringify!(TabBar), self);
-                Unit::Quarter
-            }
-        }
+        self.tab_meta().signature.beat_unit
     }
     pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
-        match self.tab.upgrade() {
-            Some(tab) => tab.calc_syllable(pitch),
-            None => {
-                println!(
-                    "<{}>.calc_syllable({}) tab missing: {}",
-                    stringify!(TabBar),
-                    pitch,
-                    self
-                );
-                Syllable::from(Semitones::from(*pitch))
-            }
-        }
+        self.tab_meta().calc_syllable(pitch)
+    }
+    pub fn calc_syllable_note(&self, note: &Note) -> SyllableNote {
+        self.tab_meta().calc_syllable_note(note)
     }
 }

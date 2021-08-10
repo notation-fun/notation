@@ -16,7 +16,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::midi_audio_stream::{AudioBuffer, DoubleAudioBuffer, MidiAudioStream};
     #[doc(hidden)]
-    pub use crate::midi_events::{PlayToneEvent, StopToneEvent};
+    pub use crate::midi_events::{PlayToneEvent, StopToneEvent, SwitchTabEvent};
     #[doc(hidden)]
     pub use crate::midi_hub::MidiHub;
     #[doc(hidden)]

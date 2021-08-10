@@ -64,9 +64,9 @@ impl MidiSynth {
                 control_value: _,
             } => todo!(),
             StructuredShortMessage::ProgramChange {
-                channel: _,
-                program_number: _,
-            } => todo!(),
+                channel,
+                program_number,
+            } => self.synth.program_change(channel.into(), program_number.into()),
             StructuredShortMessage::ChannelPressure {
                 channel: _,
                 pressure_amount: _,

@@ -8,6 +8,7 @@ pub mod pitch;
 pub mod rhythm;
 pub mod scale;
 pub mod syllable;
+pub mod syllable_note;
 pub mod tone;
 
 pub mod prelude {
@@ -29,6 +30,8 @@ pub mod prelude {
     pub use crate::scale::{Key, Scale};
     #[doc(hidden)]
     pub use crate::syllable::Syllable;
+    #[doc(hidden)]
+    pub use crate::syllable_note::SyllableNote;
     #[doc(hidden)]
     pub use crate::tone::Tone;
 }

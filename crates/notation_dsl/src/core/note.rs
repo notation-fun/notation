@@ -43,21 +43,17 @@ impl ToTokens for NoteDsl {
             pitch_sign,
             pitch_name,
         } = self;
-        let octave_quote = Context::octave_quote(octave_tweak);
         if pitch_name.from_syllable {
             let syllable =
                 Syllable::from(Semitones::from(pitch_sign.sign) + Semitones::from(pitch_name.name));
-            let pitch_quote = Context::calc_pitch_quote(&syllable);
-            let syllable_ident = syllable.to_ident();
-            tokens.extend(quote! {
-                Note::new(#octave_quote, #pitch_quote, Some(Syllable::from_ident(#syllable_ident)))
-            });
+            let note_quote = Context::calc_note_quote(octave_tweak, &syllable);
+            tokens.extend(note_quote);
         } else {
+            let octave_quote = Context::octave_quote(octave_tweak);
             let pitch = Pitch::new(pitch_name.name, pitch_sign.sign);
             let pitch_text = pitch.to_text();
-            let syllable_quote = Context::calc_syllable_quote(&pitch);
             tokens.extend(quote! {
-                Note::new(#octave_quote, Pitch::from_text(#pitch_text), Some(#syllable_quote))
+                Note::new(#octave_quote, Pitch::from_text(#pitch_text))
             });
         }
     }

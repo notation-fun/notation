@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use notation_model::prelude::{Note, Octave, Semitones};
+use notation_model::prelude::{Note, Octave, Semitones, SyllableNote};
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
@@ -14,7 +14,6 @@ pub struct MelodyTheme {
     pub note_height: f32,
     pub note_outline: f32,
     pub note_outline_color: Color,
-    pub octave_height: f32,
     pub semitone_height: f32,
 }
 
@@ -26,28 +25,22 @@ impl Default for MelodyTheme {
             note_height: 3.0,
             note_outline: 1.0,
             note_outline_color: Color::hex("AAAAAA").unwrap(),
-            octave_height: 12.0,
             semitone_height: 1.0,
         }
     }
 }
 
 impl MelodyTheme {
-    pub fn calc_note_y(&self, note: Note) -> f32 {
+    pub fn calc_note_y(&self, note: Note, syllable_note: SyllableNote) -> f32 {
         let center_octave = Octave::default(); //TODO
-        let octave_diff = Semitones::from(note.octave) - Semitones::from(center_octave);
-        let semitones = note
-            .syllable
-            .and_then(|s| {
-                if self.syllable_mode {
-                    Some(Semitones::from(s))
-                } else {
-                    None
-                }
-            })
-            .unwrap_or(Semitones::from(note.pitch));
+        let center_semitons = Semitones::from(center_octave);
+        let offset_semitones =
+            if self.syllable_mode {
+                Semitones::from(syllable_note)
+            } else {
+                Semitones::from(note)
+            } - center_semitons;
         self.center_y
-            + self.octave_height * (octave_diff.0 as f32 / 12.0)
-            + self.semitone_height * semitones.0 as f32
+            + self.semitone_height * offset_semitones.0 as f32
     }
 }

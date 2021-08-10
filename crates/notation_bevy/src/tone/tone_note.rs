@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, Note, Semitones, Syllable, Units};
+use notation_model::prelude::{BarPosition, Duration, Key, Note, Scale, Semitones, Syllable, SyllableNote, Units};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
@@ -17,6 +17,7 @@ pub struct ToneNoteData {
     pub position: BarPosition,
     pub note: Note,
     pub mode: ToneMode,
+    pub syllable_note: SyllableNote,
 }
 
 impl ToneNoteData {
@@ -29,6 +30,7 @@ impl ToneNoteData {
         mode: ToneMode,
     ) -> Self {
         let bar_ordinal = tab_bar.bar_ordinal;
+        let syllable_note = tab_bar.calc_syllable_note(&note);
         ToneNoteData {
             bar_units,
             bar_ordinal,
@@ -36,12 +38,11 @@ impl ToneNoteData {
             position,
             note,
             mode,
+            syllable_note,
         }
     }
     pub fn syllable(&self) -> Syllable {
-        self.note
-            .syllable
-            .unwrap_or_else(|| Semitones::from(self.note.pitch).into())
+        self.syllable_note.syllable
     }
 }
 pub struct ToneNoteShape<'a> {
@@ -78,7 +79,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     fn get_transform(&self) -> Transform {
         let x = self.theme.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0;
         let y = if self.data.mode.is_melody() {
-            self.theme.melody.calc_note_y(self.data.note)
+            self.theme.melody.calc_note_y(self.data.note, self.data.syllable_note)
         } else {
             0.0
         };

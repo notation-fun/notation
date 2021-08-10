@@ -21,6 +21,7 @@ dev = [
 
 inspector = [
     "bevy-inspector-egui",
+    "notation_midi/inspector",
 ]
 
 native = [

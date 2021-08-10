@@ -180,7 +180,7 @@ impl BarPlugin {
             BarSeparatorData::new(&bar, bar_layout, false),
         );
         let signature = bar.signature();
-        for beat in 0..signature.beats_per_bar {
+        for beat in 0..signature.bar_beats {
             BarBeatData::may_new(&theme, &bar, &signature, bar_layout, beat)
                 .map(|data| BarBeat::create(commands, bar_entity, theme, data));
         }

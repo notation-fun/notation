@@ -79,11 +79,11 @@ impl From<Bpm> for Tempo {
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Signature {
     pub beat_unit: Unit,
-    pub beats_per_bar: u8,
+    pub bar_beats: u8,
 }
 impl Display for Signature {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}/{}", self.beats_per_bar, match self.beat_unit {
+        write!(f, "{}/{}", self.bar_beats, match self.beat_unit {
             Unit::Whole => 1,
             Unit::Half => 2,
             Unit::Quarter => 4,
@@ -101,7 +101,7 @@ impl Signature {
     pub fn new(beat_unit: Unit, beats_per_bar: u8) -> Self {
         Self {
             beat_unit,
-            beats_per_bar,
+            bar_beats: beats_per_bar,
         }
     }
 }
@@ -109,19 +109,19 @@ impl Signature {
 impl Signature {
     pub const _4_4: Self = Self {
         beat_unit: Unit::Quarter,
-        beats_per_bar: 4,
+        bar_beats: 4,
     };
     pub const _3_4: Self = Self {
         beat_unit: Unit::Quarter,
-        beats_per_bar: 3,
+        bar_beats: 3,
     };
     pub const _2_4: Self = Self {
         beat_unit: Unit::Quarter,
-        beats_per_bar: 2,
+        bar_beats: 2,
     };
     pub const _6_8: Self = Self {
         beat_unit: Unit::Eighth,
-        beats_per_bar: 6,
+        bar_beats: 6,
     };
 }
 
@@ -133,13 +133,13 @@ impl From<f32> for Beats {
 
 impl From<Signature> for Units {
     fn from(v: Signature) -> Self {
-        Self::from(Units::from(v.beat_unit).0 * (v.beats_per_bar as f32))
+        Self::from(Units::from(v.beat_unit).0 * (v.bar_beats as f32))
     }
 }
 
 impl From<Signature> for Beats {
     fn from(v: Signature) -> Self {
-        Self::from(v.beats_per_bar as f32)
+        Self::from(v.bar_beats as f32)
     }
 }
 

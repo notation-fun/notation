@@ -3,7 +3,7 @@ use std::sync::RwLock;
 use crate::core::duration::DurationTweakDsl;
 use crate::core::octave::OctaveTweakDsl;
 use fehler::{throw, throws};
-use notation_proto::prelude::{Duration, Key, Octave, Pitch, Scale, Syllable, GUITAR_STRING_NUM};
+use notation_proto::prelude::{Duration, GUITAR_STRING_NUM, Key, Note, Octave, Pitch, Scale, Syllable, SyllableNote};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
@@ -56,7 +56,7 @@ impl Context {
     pub fn duration() -> Duration {
         CONTEXT.read().unwrap().duration
     }
-    pub fn octave() -> Octave {
+    pub fn base_octave() -> Octave {
         CONTEXT.read().unwrap().octave
     }
     pub fn fretted() -> FrettedContext {
@@ -73,34 +73,28 @@ impl Context {
             Duration::from_ident(#ident)
         }
     }
+    pub fn octave(tweak: &Option<OctaveTweakDsl>) -> Octave {
+        let base = Self::base_octave();
+        tweak.as_ref().map(|t| t.tweak(&base)).unwrap_or(base)
+    }
     pub fn octave_quote(tweak: &Option<OctaveTweakDsl>) -> TokenStream {
-        let base = Self::octave();
-        let octave = tweak.as_ref().map(|t| t.tweak(&base)).unwrap_or(base);
-        let ident = octave.to_ident();
+        let ident = Self::octave(tweak).to_ident();
         quote! {
             Octave::from_ident(#ident)
         }
     }
-    pub fn calc_syllable(pitch: &Pitch) -> Syllable {
+    pub fn calc_note(tweak: &Option<OctaveTweakDsl>, syllable: &Syllable) -> Note {
+        let octave = Self::octave(tweak);
         let key = Self::key();
         let scale = Self::scale();
-        scale.calc_syllable(&key, pitch)
+        scale.calc_note(&key, &SyllableNote::new(octave, *syllable))
     }
-    pub fn calc_pitch(syllable: &Syllable) -> Pitch {
-        let key = Self::key();
-        let scale = Self::scale();
-        scale.calc_pitch(&key, syllable)
-    }
-    pub fn calc_syllable_quote(pitch: &Pitch) -> TokenStream {
-        let syllable_ident = Self::calc_syllable(pitch).to_ident();
+    pub fn calc_note_quote(tweak: &Option<OctaveTweakDsl>, syllable: &Syllable) -> TokenStream {
+        let note = Self::calc_note(tweak, syllable);
+        let octave_ident = note.octave.to_ident();
+        let pitch_text = note.pitch.to_text();
         quote! {
-            Syllable::from_ident(#syllable_ident)
-        }
-    }
-    pub fn calc_pitch_quote(syllable: &Syllable) -> TokenStream {
-        let pitch_text = Self::calc_pitch(syllable).to_text();
-        quote! {
-            Pitch::from_text(#pitch_text)
+            Note::new(Octave::from_ident(#octave_ident), Pitch::from_text(#pitch_text))
         }
     }
 }
@@ -176,7 +170,7 @@ impl ToTokens for ContextDsl {
             }
             Self::Octave(x) => {
                 CONTEXT.write().unwrap().octave = Octave::from_ident(x.to_string().as_str());
-                let comment = format!("{}", Context::octave());
+                let comment = format!("{}", Context::base_octave());
                 quote! {
                     ProtoEntry::from(("dsl::context::octave", #comment))
                 }
