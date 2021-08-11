@@ -19,6 +19,7 @@ bevy = { version = "0.5.0", default-features = false }
 helgoboss-midi = "0.2"
 bevy_kira_audio = "0.5.1"
 midi-msg = "0.3.0"
+dmsort = "1.0.1"
 
 bevy-inspector-egui = { version = "0.5.1", optional = true }
 

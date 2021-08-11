@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use notation_model::prelude::Tab;
 
-use crate::prelude::{BarLayout};
+use crate::prelude::BarLayout;
 
 use super::tab_state::TabState;
 

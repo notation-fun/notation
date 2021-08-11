@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum PlayState {
     Playing,
     Paused,

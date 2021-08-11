@@ -18,10 +18,7 @@ impl Display for Note {
 
 impl Note {
     pub fn new(octave: Octave, pitch: Pitch) -> Self {
-        Self {
-            octave,
-            pitch,
-        }
+        Self { octave, pitch }
     }
 }
 
@@ -753,4 +750,3 @@ impl Note {
         octave: Octave::P9,
     };
 }
-

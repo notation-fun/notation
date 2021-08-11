@@ -4,7 +4,7 @@ use std::sync::{Arc, Weak};
 use notation_proto::prelude::{Note, SyllableNote, TabPosition};
 
 use crate::prelude::{
-    Bar, Form, Pitch, Section, Semitones, Signature, Syllable, TabMeta, Track, Unit, Units,
+    Bar, Form, Pitch, Section, Signature, Syllable, TabMeta, Track, Unit, Units,
 };
 
 #[derive(Debug)]
@@ -53,7 +53,7 @@ impl Display for Tab {
 }
 impl Tab {
     pub fn bar_units(&self) -> Units {
-        Units::from(self.meta.signature)
+        self.meta.bar_units()
     }
     pub fn bar_beats(&self) -> u8 {
         self.meta.signature.bar_beats
@@ -86,7 +86,7 @@ impl TabBar {
         }
     }
     pub fn bar_units(&self) -> Units {
-        Units::from(self.tab_meta().signature)
+        self.tab_meta().bar_units()
     }
     pub fn bar_beats(&self) -> u8 {
         self.tab_meta().signature.bar_beats

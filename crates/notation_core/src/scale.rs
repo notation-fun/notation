@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use crate::prelude::{Pitch, PitchName, Note, Semitones, Syllable, SyllableNote};
+use crate::prelude::{Note, Pitch, PitchName, Semitones, Syllable, SyllableNote};
 
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]

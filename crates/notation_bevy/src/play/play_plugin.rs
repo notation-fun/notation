@@ -1,64 +1,31 @@
 use std::sync::Arc;
 
 use bevy::render::camera::OrthographicProjection;
-#[cfg(target_arch = "wasm32")]
-use instant::Duration as StdDuration;
-#[cfg(target_arch = "wasm32")]
-use instant::Instant as StdInstant;
-use notation_midi::prelude::{PlayToneEvent, StopToneEvent};
-use notation_model::prelude::Tone;
-
-#[cfg(not(target_arch = "wasm32"))]
-use std::time::Duration as StdDuration;
-#[cfg(not(target_arch = "wasm32"))]
-use std::time::Instant as StdInstant;
+use notation_midi::prelude::{AddToneEvent, PlayControlEvt};
+use notation_model::play::play_control::TickResult;
+use notation_model::prelude::{PlayState, Position, Tone};
 
 use bevy::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, ModelEntry, Tab};
+use notation_model::prelude::{BarPosition, Duration, ModelEntry};
 
 use crate::prelude::{
     BarLayout, EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabState,
     WindowResizedEvent,
 };
-use crate::settings::layout_settings::LayoutMode;
+
 use crate::tab::tab_state::TabPlayStateChanged;
 
 use super::pos_indicator::{PosIndicator, PosIndicatorData};
 
 pub struct PlayPlugin;
 
-pub struct NotationTime {
-    last: StdInstant,
-    pub delta: StdDuration,
-}
-
-impl Default for NotationTime {
-    fn default() -> Self {
-        NotationTime {
-            last: StdInstant::now(),
-            delta: StdDuration::new(0, 0),
-        }
-    }
-}
-impl NotationTime {
-    pub fn tick(&mut self) {
-        let now = StdInstant::now();
-        self.delta = now.duration_since(self.last);
-        self.last = now;
-    }
-    pub fn delta_seconds(&self) -> f32 {
-        self.delta.as_secs_f32()
-    }
-}
-
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.init_resource::<NotationTime>();
         app.add_system(on_config_changed.system());
         app.add_system(on_add_tab_state.system());
-        app.add_system(on_stop.system());
-        app.add_system(on_time.system());
-        app.add_system(play_stop_tone.system());
+        app.add_system(on_tab_play_state_changed.system());
+        app.add_system(on_play_control_evt.system());
+        app.add_system(add_midi_tone.system());
     }
 }
 
@@ -82,13 +49,14 @@ fn on_add_tab_state(
 ) {
     for (entity, bar_layouts, state) in state_query.iter() {
         if let Some(bar_layout) = bar_layouts.get(0) {
-            let data = PosIndicatorData::new(state.pos.bar_units, bar_layout);
+            let pos = state.play_control.position;
+            let data = PosIndicatorData::new(pos.bar.bar_units, bar_layout);
             PosIndicator::create(&mut commands, entity, &theme, data);
         }
     }
 }
 
-fn on_stop(
+fn on_tab_play_state_changed(
     mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
@@ -102,7 +70,7 @@ fn on_stop(
 ) {
     for (state_entity, bar_layouts, state, children) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
-        if !state.play_state.is_playing() {
+        if !state.play_control.play_state.is_playing() {
             PosIndicator::update_pos(
                 &mut commands,
                 &theme,
@@ -110,7 +78,7 @@ fn on_stop(
                 &settings,
                 &mut pos_indicator_query,
                 bar_layouts,
-                state.pos,
+                state.play_control.position,
             );
             settings.layout.focus_camera(
                 &mut commands,
@@ -120,12 +88,12 @@ fn on_stop(
                 &state,
             );
             for (_entity, _entry, position, mut entry_state) in entry_query.iter_mut() {
-                if state.play_state.is_stopped() {
+                if state.play_control.play_state.is_stopped() {
                     if state.is_in_range(position) {
                         *entry_state = EntryState::Idle;
                     }
-                } else if state.play_state.is_paused() {
-                    if position.bar_ordinal == state.pos.bar.bar_ordinal {
+                } else if state.play_control.play_state.is_paused() {
+                    if position.bar_ordinal == state.play_control.position.bar.bar_ordinal {
                         *entry_state = EntryState::Idle;
                     }
                 }
@@ -134,11 +102,79 @@ fn on_stop(
     }
 }
 
-fn on_time(
+fn on_tick(
+    commands: &mut Commands,
+    settings: &NotationSettings,
+    theme: &NotationTheme,
+    pos_indicator_query: &mut Query<&mut PosIndicatorData>,
+    entry_query: &mut Query<(
+        Entity,
+        &Arc<ModelEntry>,
+        &Duration,
+        &BarPosition,
+        &mut EntryState,
+    )>,
+    camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
+    state_entity: Entity,
+    bar_layouts: &Arc<Vec<BarLayout>>,
+    state: &mut TabState,
+    children: &Children,
+    new_position: &Position,
+    tick_result: &TickResult,
+) {
+    let old_position = state.play_control.position;
+    state.set_position(*new_position);
+    let TickResult {
+        changed,
+        end_passed,
+        stopped,
+    } = tick_result;
+    if *stopped {
+        state.set_play_state(commands, state_entity, PlayState::Stopped);
+    } else if *changed {
+        let pos = state.play_control.position;
+        PosIndicator::update_pos(
+            commands,
+            theme,
+            children,
+            settings,
+            pos_indicator_query,
+            bar_layouts,
+            pos,
+        );
+        //settings.layout.focus_camera(&mut camera_query, bar_layouts, state.pos, theme.grid.bar_size);
+        if settings.layout.should_focus_camera(&old_position, &pos) {
+            settings.layout.focus_camera(
+                commands,
+                camera_query,
+                bar_layouts,
+                theme.grid.bar_size,
+                state,
+            );
+        }
+        for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
+            if state.is_in_range(position) {
+                if entry_state.is_playing() && pos.is_passed_with(position, duration) {
+                    *entry_state = EntryState::Played;
+                }
+                if entry_state.is_idle() && pos.is_passed(position) {
+                    *entry_state = EntryState::Playing;
+                }
+                if *end_passed {
+                    if entry_state.is_played() || position.bar_ordinal > pos.bar.bar_ordinal {
+                        *entry_state = EntryState::Idle;
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn on_play_control_evt(
     mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
-    mut time: ResMut<NotationTime>,
+    mut evts: EventReader<PlayControlEvt>,
     mut query: Query<(Entity, &Arc<Vec<BarLayout>>, &mut TabState, &Children)>,
     mut pos_indicator_query: Query<&mut PosIndicatorData>,
     mut entry_query: Query<(
@@ -150,51 +186,39 @@ fn on_time(
     )>,
     mut camera_query: Query<(Entity, &mut Transform, &OrthographicProjection)>,
 ) {
-    time.tick();
-    for (state_entity, bar_layouts, mut state, children) in query.iter_mut() {
-        let old_position = state.pos;
-        let (changed, end_passed) = state.tick(&mut commands, state_entity, time.delta_seconds());
-        if changed {
-            PosIndicator::update_pos(
-                &mut commands,
-                &theme,
-                children,
-                &settings,
-                &mut pos_indicator_query,
-                bar_layouts,
-                state.pos,
-            );
-            //settings.layout.focus_camera(&mut camera_query, bar_layouts, state.pos, theme.grid.bar_size);
-            if settings.layout.should_focus_camera(&old_position, &state.pos) {
-                settings.layout.focus_camera(
-                    &mut commands,
-                    &mut camera_query,
-                    bar_layouts,
-                    theme.grid.bar_size,
-                    &state,
-                );
+    for evt in evts.iter() {
+        for (state_entity, bar_layouts, mut state, children) in query.iter_mut() {
+            if !state.under_control {
+                continue;
             }
-            for (_entity, _entry, duration, position, mut entry_state) in entry_query.iter_mut() {
-                if state.is_in_range(position) {
-                    if entry_state.is_playing() && state.pos.is_passed_with(position, duration) {
-                        *entry_state = EntryState::Played;
-                    }
-                    if entry_state.is_idle() && state.pos.is_passed(position) {
-                        *entry_state = EntryState::Playing;
-                    }
-                    if end_passed {
-                        if entry_state.is_played()
-                            || position.bar_ordinal > state.pos.bar.bar_ordinal
-                        {
-                            *entry_state = EntryState::Idle;
-                        }
-                    }
+            match evt {
+                PlayControlEvt::OnTick {
+                    position,
+                    tick_result,
+                } => on_tick(
+                    &mut commands,
+                    &settings,
+                    &theme,
+                    &mut pos_indicator_query,
+                    &mut entry_query,
+                    &mut camera_query,
+                    state_entity,
+                    bar_layouts,
+                    &mut state,
+                    children,
+                    position,
+                    tick_result,
+                ),
+                PlayControlEvt::OnPlayState(play_state) => {
+                    state.set_play_state(&mut commands, state_entity, *play_state);
                 }
+                PlayControlEvt::OnPlaySpeed(play_speed) => state.set_play_speed(*play_speed),
             }
         }
     }
 }
 
+/*
 fn play_stop_tone(
     mut _commands: Commands,
     _theme: Res<NotationTheme>,
@@ -217,6 +241,24 @@ fn play_stop_tone(
                     *tone,
                 ));
             }
+        }
+    }
+}
+*/
+
+fn add_midi_tone(
+    query: Query<(&Arc<ModelEntry>, &Tone, &BarPosition, &Duration), Added<Tone>>,
+    mut add_note_evts: EventWriter<AddToneEvent>,
+) {
+    for (entry, tone, position, duration) in query.iter() {
+        if !tone.is_none() {
+            add_note_evts.send(AddToneEvent::new(
+                entry.track_id(),
+                entry.track_kind(),
+                *tone,
+                *position,
+                *duration,
+            ));
         }
     }
 }

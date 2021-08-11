@@ -10,3 +10,6 @@ edition = "2018"
 notation_proto = { path = "../notation_proto" }
 thiserror = "1.0"
 fehler = "1.0"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+instant = "0.1"

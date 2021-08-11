@@ -6,6 +6,7 @@ pub mod bar;
 pub mod entry;
 pub mod lane;
 pub mod parse;
+pub mod play;
 pub mod section;
 pub mod slice;
 pub mod tab;
@@ -21,6 +22,12 @@ pub mod prelude {
     pub use crate::lane::{BarLane, LaneKind};
     #[doc(hidden)]
     pub use crate::parse::ParseError;
+    #[doc(hidden)]
+    pub use crate::play::play_control::PlayControl;
+    #[doc(hidden)]
+    pub use crate::play::play_state::PlayState;
+    #[doc(hidden)]
+    pub use crate::play::play_clock::PlayClock;
     #[doc(hidden)]
     pub use crate::section::{Form, Section};
     #[doc(hidden)]

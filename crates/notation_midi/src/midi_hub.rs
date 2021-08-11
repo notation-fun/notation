@@ -1,6 +1,6 @@
 use helgoboss_midi::{ShortMessage, StructuredShortMessage};
 use midir::{MidiOutput, MidiOutputConnection};
-use std::sync::{Mutex};
+use std::sync::Mutex;
 
 use crate::prelude::{DoubleAudioBuffer, MidiSettings, MidiState, MidiSynth};
 
@@ -77,17 +77,6 @@ impl MidiHub {
     pub fn check_synth_buffer(&mut self) {
         if let Some(synth) = self.output_synth.as_mut() {
             synth.check_buffer();
-        }
-    }
-    pub fn setup_channels(&mut self, settings: &MidiSettings, state: &MidiState) {
-        for channel in &state.channels {
-            if channel.track.is_some() {
-                let msg = StructuredShortMessage::ProgramChange {
-                    channel: channel.channel,
-                    program_number: channel.program,
-                };
-                self.send(settings, msg);
-            }
         }
     }
     pub fn send(&mut self, settings: &MidiSettings, msg: StructuredShortMessage) {

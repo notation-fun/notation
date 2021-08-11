@@ -19,9 +19,15 @@ impl TabPosition {
         Self { in_tab_pos }
     }
 }
+impl From<TabPosition> for Units {
+    fn from(v: TabPosition) -> Self {
+        v.in_tab_pos
+    }
+}
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 pub struct BarPosition {
+    pub bar_units: Units,
     pub bar_ordinal: usize,
     pub in_bar_pos: Units,
 }
@@ -34,9 +40,15 @@ impl Display for BarPosition {
         )
     }
 }
+impl From<BarPosition> for Units {
+    fn from(v: BarPosition) -> Self {
+        Units(v.bar_ordinal as f32 * v.bar_units.0 + v.in_bar_pos.0)
+    }
+}
 impl BarPosition {
-    pub fn new(bar_ordinal: usize, in_bar_pos: Units) -> Self {
+    pub fn new(bar_units: Units, bar_ordinal: usize, in_bar_pos: Units) -> Self {
         Self {
+            bar_units,
             bar_ordinal,
             in_bar_pos,
         }
@@ -45,7 +57,6 @@ impl BarPosition {
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 pub struct Position {
-    pub bar_units: Units,
     pub tab: TabPosition,
     pub bar: BarPosition,
 }
@@ -58,20 +69,25 @@ impl Display for Position {
         )
     }
 }
+impl From<Position> for Units {
+    fn from(v: Position) -> Self {
+        v.tab.in_tab_pos
+    }
+}
+
 impl Position {
     pub fn new(bar_units: Units) -> Self {
         Self {
-            bar_units,
             tab: TabPosition::new(Units(0.0)),
-            bar: BarPosition::new(1, Units(0.0)),
+            bar: BarPosition::new(bar_units, 1, Units(0.0)),
         }
     }
     pub fn calc_bar_ordinal(&self, pos: Units) -> usize {
-        let bar = pos.0 / self.bar_units.0;
+        let bar = pos.0 / self.bar.bar_units.0;
         bar.trunc() as usize + 1
     }
     pub fn cal_bar_pos(&self, bar_ordinal: usize) -> Units {
-        Units((bar_ordinal - 1) as f32 * self.bar_units.0)
+        Units((bar_ordinal - 1) as f32 * self.bar.bar_units.0)
     }
     pub fn tick(&mut self, delta_units: Units) {
         self.set_in_tab(self.tab.in_tab_pos + delta_units);

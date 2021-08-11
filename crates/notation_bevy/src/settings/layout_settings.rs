@@ -1,4 +1,3 @@
-
 use bevy::prelude::*;
 use bevy::render::camera::OrthographicProjection;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
@@ -279,10 +278,14 @@ impl LayoutSettings {
         }
     }
     pub fn should_focus_camera(&self, old: &Position, new: &Position) -> bool {
-        self.mode == LayoutMode::Line
-            || old.bar.bar_ordinal != new.bar.bar_ordinal
+        self.mode == LayoutMode::Line || old.bar.bar_ordinal != new.bar.bar_ordinal
     }
-    fn calc_grid_focus_y(&self, bar_layouts: &Arc<Vec<BarLayout>>, bar_layout: &BarLayout, _pos: &Position) -> f32 {
+    fn calc_grid_focus_y(
+        &self,
+        bar_layouts: &Arc<Vec<BarLayout>>,
+        bar_layout: &BarLayout,
+        _pos: &Position,
+    ) -> f32 {
         if bar_layout.data.row > 0 {
             for layout in bar_layouts.iter() {
                 if layout.data.row == bar_layout.data.row - 1 {
@@ -296,7 +299,7 @@ impl LayoutSettings {
     }
     fn calc_line_focus_x_units(&self, bar_layout: &BarLayout, pos: &Position) -> Units {
         Units(if bar_layout.data.col > 0 {
-            bar_layout.data.col as f32 - 1.0 + pos.bar.in_bar_pos.0 / pos.bar_units.0
+            bar_layout.data.col as f32 - 1.0 + pos.bar.in_bar_pos.0 / pos.bar.bar_units.0
         } else {
             bar_layout.data.col as f32
         })
@@ -309,18 +312,24 @@ impl LayoutSettings {
         bar_size: f32,
         state: &TabState,
     ) {
-        if let Some(bar_layout) = bar_layouts.get(state.pos.bar.bar_ordinal - 1) {
+        let pos = state.play_control.position;
+        if let Some(bar_layout) = bar_layouts.get(pos.bar.bar_ordinal - 1) {
             match self.mode {
                 LayoutMode::Grid => {
-                    let y = self.calc_grid_focus_y(bar_layouts, bar_layout, &state.pos);
+                    let y = self.calc_grid_focus_y(bar_layouts, bar_layout, &pos);
                     self.ease_camera_xy(commands, camera_query, None, Some(y));
                 }
                 LayoutMode::Line => {
-                    let x_units = self.calc_line_focus_x_units(bar_layout, &state.pos);
-                    if state.play_state.is_playing() {
+                    let x_units = self.calc_line_focus_x_units(bar_layout, &pos);
+                    if state.play_control.play_state.is_playing() {
                         self.set_camera_xy(camera_query, Some(x_units.0 * bar_size), None);
                     } else {
-                        self.ease_camera_xy(commands, camera_query, Some(x_units.0 * bar_size), None);
+                        self.ease_camera_xy(
+                            commands,
+                            camera_query,
+                            Some(x_units.0 * bar_size),
+                            None,
+                        );
                     }
                 }
             };

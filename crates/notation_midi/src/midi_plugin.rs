@@ -1,8 +1,10 @@
 use crate::prelude::{
-    MidiAudioStream, MidiHub, MidiSettings, MidiState, PlayToneEvent, StopToneEvent, SwitchTabEvent
+    AddToneEvent, MidiAudioStream, MidiHub, MidiSettings, MidiState, PlayControlEvt, PlayToneEvent,
+    StopToneEvent, SwitchTabEvent,
 };
 use bevy::prelude::*;
 use bevy_kira_audio::{AudioPlugin, AudioStreamPlugin, StreamedAudio};
+use notation_model::prelude::PlayClock;
 pub struct MidiPlugin;
 
 impl Plugin for MidiPlugin {
@@ -10,16 +12,21 @@ impl Plugin for MidiPlugin {
         app.add_plugin(AudioPlugin);
         app.add_plugin(AudioStreamPlugin::<MidiAudioStream>::default());
         app.add_event::<SwitchTabEvent>();
+        app.add_event::<AddToneEvent>();
+        app.add_event::<PlayControlEvt>();
         app.add_event::<PlayToneEvent>();
         app.add_event::<StopToneEvent>();
+        app.init_resource::<PlayClock>();
         app.init_resource::<MidiSettings>();
         app.init_resource::<MidiState>();
         app.init_non_send_resource::<MidiHub>();
         app.add_startup_system(setup_audio_stream.system());
         app.add_system(on_switch_tab.system());
+        app.add_system(on_add_tone.system());
         app.add_system(on_play_tone.system());
         app.add_system(on_stop_tone.system());
         app.add_system(check_synth_buffer.system());
+        app.add_system(do_tick.system());
     }
 }
 
@@ -46,16 +53,25 @@ fn on_switch_tab(
     mut state: ResMut<MidiState>,
 ) {
     for evt in evts.iter() {
-        state.switch_tab(&settings, evt.tab.clone());
-        hub.setup_channels(&settings, &state);
+        state.switch_tab(&settings, &mut hub, evt.tab.clone());
+    }
+}
+
+fn on_add_tone(
+    mut _commands: Commands,
+    mut evts: EventReader<AddToneEvent>,
+    mut state: ResMut<MidiState>,
+) {
+    for evt in evts.iter() {
+        state.add_tone(evt);
     }
 }
 
 fn on_play_tone(
     mut _commands: Commands,
     mut evts: EventReader<PlayToneEvent>,
-    mut hub: NonSendMut<MidiHub>,
     settings: Res<MidiSettings>,
+    mut hub: NonSendMut<MidiHub>,
     state: Res<MidiState>,
 ) {
     for evt in evts.iter() {
@@ -70,9 +86,9 @@ fn on_play_tone(
 fn on_stop_tone(
     mut _commands: Commands,
     mut evts: EventReader<StopToneEvent>,
-    mut hub: NonSendMut<MidiHub>,
     settings: Res<MidiSettings>,
     state: Res<MidiState>,
+    mut hub: NonSendMut<MidiHub>,
 ) {
     for evt in evts.iter() {
         if let Some(channel) = state.get_channel(&evt.track_id, &evt.track_kind) {
@@ -80,5 +96,19 @@ fn on_stop_tone(
                 hub.send(&settings, msg);
             }
         }
+    }
+}
+
+fn do_tick (
+    settings: Res<MidiSettings>,
+    mut state: ResMut<MidiState>,
+    mut hub: NonSendMut<MidiHub>,
+    mut clock: ResMut<PlayClock>,
+    mut play_control_evts: EventWriter<PlayControlEvt>,
+) {
+    clock.tick();
+    let tick_result = state.tick(&settings, &mut hub, clock.delta_seconds());
+    if tick_result.changed {
+        play_control_evts.send(PlayControlEvt::on_tick(state.play_control.position, tick_result));
     }
 }

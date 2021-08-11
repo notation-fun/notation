@@ -87,8 +87,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_plugin::PlayPlugin;
     #[doc(hidden)]
-    pub use crate::play::play_state::PlayState;
-    #[doc(hidden)]
     pub use crate::settings::notation_settings::NotationSettings;
     #[doc(hidden)]
     pub use crate::shapes::shapes_plugin::ShapesPlugin;

@@ -18,10 +18,7 @@ impl Display for SyllableNote {
 
 impl SyllableNote {
     pub fn new(octave: Octave, syllable: Syllable) -> Self {
-        Self {
-            octave,
-            syllable,
-        }
+        Self { octave, syllable }
     }
 }
 

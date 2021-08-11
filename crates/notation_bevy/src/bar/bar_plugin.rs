@@ -132,7 +132,7 @@ impl BarPlugin {
         BarPlugin::insert_lane_extra(&mut layer_commands, bar.clone(), lane.clone());
         let layer_entity = layer_commands.id();
         commands.entity(bar_entity).push_children(&[layer_entity]);
-        let mut pos = BarPosition::new(bar.bar_ordinal, Units(0.0));
+        let mut pos = BarPosition::new(bar.bar_units(), bar.bar_ordinal, Units(0.0));
         for entry in lane.slice.entries.iter() {
             let duration = entry.as_ref().value.duration();
             add_entry_evts.send(AddEntryEvent(layer_entity, entry.clone(), pos));

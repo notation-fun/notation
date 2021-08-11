@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
-use notation_model::prelude::{TabBar};
+use notation_model::prelude::TabBar;
 
 use super::lane_layout::LaneLayout;
 

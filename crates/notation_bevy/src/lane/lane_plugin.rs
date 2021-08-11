@@ -1,12 +1,9 @@
-
 use bevy::prelude::*;
 
 use std::sync::Arc;
 
-use crate::prelude::{
-    LaneLayout, LyonShapeOp, NotationTheme, WindowResizedEvent,
-};
-use notation_model::prelude::{TabBar};
+use crate::prelude::{LaneLayout, LyonShapeOp, NotationTheme, WindowResizedEvent};
+use notation_model::prelude::TabBar;
 
 use super::lane_back::{LaneBack, LaneBackData};
 

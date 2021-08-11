@@ -34,13 +34,11 @@ impl MelodyTheme {
     pub fn calc_note_y(&self, note: Note, syllable_note: SyllableNote) -> f32 {
         let center_octave = Octave::default(); //TODO
         let center_semitons = Semitones::from(center_octave);
-        let offset_semitones =
-            if self.syllable_mode {
-                Semitones::from(syllable_note)
-            } else {
-                Semitones::from(note)
-            } - center_semitons;
-        self.center_y
-            + self.semitone_height * offset_semitones.0 as f32
+        let offset_semitones = if self.syllable_mode {
+            Semitones::from(syllable_note)
+        } else {
+            Semitones::from(note)
+        } - center_semitons;
+        self.center_y + self.semitone_height * offset_semitones.0 as f32
     }
 }

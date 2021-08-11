@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
 use crate::prelude::{Form, Section, Track};
-use notation_core::prelude::{Key, Note, Pitch, Scale, Signature, Syllable, SyllableNote, Tempo};
+use notation_core::prelude::{
+    Key, Note, Pitch, Scale, Signature, Syllable, SyllableNote, Tempo, Units,
+};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct TabMeta {
@@ -13,6 +15,9 @@ pub struct TabMeta {
     pub tempo: Tempo,
 }
 impl TabMeta {
+    pub fn bar_units(&self) -> Units {
+        Units::from(self.signature)
+    }
     pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
         self.scale.calc_syllable(&self.key, pitch)
     }

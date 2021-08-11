@@ -14,6 +14,5 @@ impl MidiSynth {
     pub fn get_buffer(&self) -> Option<DoubleAudioBuffer> {
         None
     }
-    pub fn check_buffer(&mut self) {
-    }
+    pub fn check_buffer(&mut self) {}
 }

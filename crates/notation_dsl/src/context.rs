@@ -3,7 +3,9 @@ use std::sync::RwLock;
 use crate::core::duration::DurationTweakDsl;
 use crate::core::octave::OctaveTweakDsl;
 use fehler::{throw, throws};
-use notation_proto::prelude::{Duration, GUITAR_STRING_NUM, Key, Note, Octave, Pitch, Scale, Syllable, SyllableNote};
+use notation_proto::prelude::{
+    Duration, Key, Note, Octave, Scale, Syllable, SyllableNote, GUITAR_STRING_NUM,
+};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};

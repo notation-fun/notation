@@ -5,9 +5,10 @@ use bevy::render::camera::OrthographicProjection;
 use bevy_egui::egui::{self, Slider};
 use bevy_egui::EguiContext;
 use float_eq::float_ne;
-use notation_model::prelude::Tab;
+use notation_midi::prelude::{MidiState, PlayControlEvt};
+use notation_model::prelude::{PlayState, Tab};
 
-use crate::prelude::{NotationSettings, TabState};
+use crate::prelude::{NotationSettings};
 
 use super::notation_app_state::{NotationAppState, TabPathes};
 
@@ -27,13 +28,19 @@ pub fn reload_tab(
 }
 
 pub fn sync_play_speed(
-    _commands: &mut Commands,
     settings: &NotationSettings,
-    tab_state_query: &mut Query<(Entity, &mut TabState)>,
+    midi_state: &mut ResMut<MidiState>,
+    play_control_evts: &mut EventWriter<PlayControlEvt>,
 ) {
-    for (_, mut tab_state) in tab_state_query.iter_mut() {
-        tab_state.play_speed = settings.play_speed;
-    }
+    midi_state.play_control.play_speed = settings.play_speed;
+    play_control_evts.send(PlayControlEvt::on_play_speed(settings.play_speed));
+}
+
+pub fn send_play_state_evt(
+    play_control_evts: &mut EventWriter<PlayControlEvt>,
+    play_state: PlayState,
+) {
+    play_control_evts.send(PlayControlEvt::on_play_state(play_state));
 }
 
 pub fn top_panel_ui(
@@ -42,37 +49,41 @@ pub fn top_panel_ui(
     asset_server: Res<AssetServer>,
     mut app_state: ResMut<NotationAppState>,
     mut settings: ResMut<NotationSettings>,
-    mut tab_state_query: Query<(Entity, &mut TabState)>,
     mut get_cam: Query<(&mut Transform, &mut OrthographicProjection)>,
     tab_query: Query<Entity, With<Arc<Tab>>>,
     tab_pathes: Res<TabPathes>,
+    mut midi_state: ResMut<MidiState>,
+    mut play_control_evts: EventWriter<PlayControlEvt>,
 ) {
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         ui.horizontal(|ui| {
             ui.checkbox(&mut app_state.camera_panning, "Panning");
-            if let Ok((tab_state_entity, mut tab_state)) = tab_state_query.single_mut() {
-                let play_title = if tab_state.play_state.is_playing() {
-                    "Pause"
+            let play_title = if midi_state.play_control.play_state.is_playing() {
+                "Pause"
+            } else {
+                "Play"
+            };
+            if ui.button(play_title).clicked() {
+                if midi_state.play_control.play_state.is_playing() {
+                    if midi_state.play_control.pause() {
+                        send_play_state_evt(
+                            &mut play_control_evts,
+                            midi_state.play_control.play_state,
+                        );
+                    }
                 } else {
-                    "Play"
-                };
-                if ui.button(play_title).clicked() {
-                    if tab_state.play_state.is_playing() {
-                        tab_state.pause(&mut commands, tab_state_entity);
-                    } else {
-                        tab_state.play(&mut commands, tab_state_entity);
-                    }
+                    if midi_state.play_control.play() {}
                 }
-                if !tab_state.play_state.is_stopped() {
-                    if ui.button("Stop").clicked() {
-                        tab_state.stop(&mut commands, tab_state_entity);
-                    }
+            }
+            if !midi_state.play_control.play_state.is_stopped() {
+                if ui.button("Stop").clicked() {
+                    if midi_state.play_control.stop() {}
                 }
             }
             let play_speed = settings.play_speed;
             ui.add(Slider::new(&mut settings.play_speed, 0.1..=2.0).text("Play Speed"));
             if float_ne!(play_speed, settings.play_speed, abs <= 0.01) {
-                sync_play_speed(&mut commands, &settings, &mut tab_state_query)
+                sync_play_speed(&settings, &mut &mut midi_state, &mut play_control_evts)
             }
             let always_show_fret = settings.always_show_fret;
             ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
