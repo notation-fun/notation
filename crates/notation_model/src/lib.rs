@@ -23,7 +23,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::parse::ParseError;
     #[doc(hidden)]
-    pub use crate::play::play_control::PlayControl;
+    pub use crate::play::play_control::{TickResult, PlayControl};
     #[doc(hidden)]
     pub use crate::play::play_state::PlayState;
     #[doc(hidden)]

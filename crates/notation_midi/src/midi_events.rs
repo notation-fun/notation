@@ -22,7 +22,7 @@ pub struct AddToneEvent {
     pub track_kind: TrackKind,
     pub tone: Tone,
     pub position: BarPosition,
-    pub duration: Duration,
+    pub units: Units,
 }
 
 #[derive(Debug)]
@@ -69,14 +69,14 @@ impl AddToneEvent {
         track_kind: TrackKind,
         tone: Tone,
         position: BarPosition,
-        duration: Duration,
+        units: Units,
     ) -> Self {
         Self {
             track_id,
             track_kind,
             tone,
             position,
-            duration,
+            units,
         }
     }
     pub fn to_midi_msgs(
@@ -93,7 +93,7 @@ impl AddToneEvent {
         let stop_position = BarPosition::new(
             self.position.bar_units,
             self.position.bar_ordinal,
-            self.position.in_bar_pos + Units::from(self.duration),
+            self.position.in_bar_pos + self.units,
         );
         let mut stop_msgs: Vec<(BarPosition, StructuredShortMessage)> = self
             .tone

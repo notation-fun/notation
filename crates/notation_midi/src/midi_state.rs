@@ -19,7 +19,7 @@ pub struct MidiChannel {
     pub velocity: U7,
     pub messages: Vec<(BarPosition, StructuredShortMessage)>,
     need_sort: bool,
-    next_index: Option<usize>,
+    next_index: usize,
 }
 impl MidiChannel {
     pub fn new(channel: u8) -> Self {
@@ -30,7 +30,7 @@ impl MidiChannel {
             velocity: U7::new(DEFAULT_VELOCITY),
             messages: Vec::new(),
             need_sort: false,
-            next_index: None,
+            next_index: 0,
         }
     }
     pub fn reset(&mut self) {
@@ -39,6 +39,7 @@ impl MidiChannel {
         self.program = U7::new(DEFAULT_VELOCITY);
         self.messages.clear();
         self.need_sort = false;
+        self.next_index = 0;
     }
     pub fn add_message(&mut self, msg: (BarPosition, StructuredShortMessage)) {
         self.messages.push(msg);
@@ -64,31 +65,32 @@ impl MidiChannel {
         }
     }
     fn calc_next_index(&mut self, position: &BarPosition) {
-        self.next_index = None;
         for (index, value) in self.messages.iter().enumerate() {
-            if Units::from(value.0) > Units::from(*position) {
-                self.next_index = Some(index);
+            if Units::from(value.0) >= Units::from(*position) {
+                self.next_index = index;
                 return;
             }
         }
+        self.next_index = self.messages.len();
     }
     pub fn send_passed_msgs(&mut self, settings: &MidiSettings, hub: &mut MidiHub,
         old_position: &Position, play_control: &PlayControl, end_passed: bool,
     ) -> usize {
-        if self.ensure_sorted() {
-            self.calc_next_index(&old_position.bar);
+        if self.messages.len() == 0 {
+            return 0;
         }
         if end_passed {
             self.init_channel(settings, hub);
-            self.next_index = Some(0);
+        }
+        if self.ensure_sorted() || end_passed {
+            self.calc_next_index(&old_position.bar);
         }
         let mut count = 0;
-        while self.next_index.is_some() {
-            let next_index = self.next_index.unwrap();
-            if let Some(&next) = self.messages.get(next_index) {
+        loop {
+            if let Some(&next) = self.messages.get(self.next_index) {
                 if play_control.is_in_range(&next.0)
                     && play_control.position.is_passed(&next.0) {
-                    self.next_index = Some(next_index + 1);
+                    self.next_index += 1;
                     count += 1;
                     hub.send(settings, next.1);
                 } else {
@@ -100,7 +102,7 @@ impl MidiChannel {
         }
         count
     }
-    fn init_channel(&self, settings: &MidiSettings, hub: &mut MidiHub) {
+    fn init_channel(&mut self, settings: &MidiSettings, hub: &mut MidiHub) {
         let msg = StructuredShortMessage::ProgramChange {
             channel: self.channel,
             program_number: self.program,
@@ -205,5 +207,13 @@ impl MidiState {
             }
         }
         tick_result
+    }
+    pub fn init_channels(&mut self, settings: &MidiSettings, hub: &mut MidiHub) {
+        for channel in self.channels.iter_mut() {
+            if channel.track.is_some() {
+                channel.init_channel(settings, hub);
+                channel.calc_next_index(&self.play_control.position.bar);
+            }
+        }
     }
 }

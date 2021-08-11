@@ -110,6 +110,12 @@ impl ProtoEntry {
     }
 }
 impl ProtoEntry {
+    pub fn is_core_tie(&self) -> bool {
+        self.as_core().map(|x| x.is_tie()).unwrap_or(false)
+    }
+
+}
+impl ProtoEntry {
     pub fn is_size_fretted<const S: usize>(&self) -> bool {
         match self {
             ProtoEntry::Mark(_) => false,

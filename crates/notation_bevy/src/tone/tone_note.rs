@@ -16,6 +16,7 @@ pub struct ToneNoteData {
     pub bar_units: Units,
     pub bar_ordinal: usize,
     pub duration: Duration,
+    pub tied_units: Units,
     pub position: BarPosition,
     pub note: Note,
     pub mode: ToneMode,
@@ -27,6 +28,7 @@ impl ToneNoteData {
         bar_units: Units,
         tab_bar: &Arc<TabBar>,
         duration: Duration,
+        tied_units: Units,
         position: BarPosition,
         note: Note,
         mode: ToneMode,
@@ -37,6 +39,7 @@ impl ToneNoteData {
             bar_units,
             bar_ordinal,
             duration,
+            tied_units,
             position,
             note,
             mode,
@@ -45,6 +48,10 @@ impl ToneNoteData {
     }
     pub fn syllable(&self) -> Syllable {
         self.syllable_note.syllable
+    }
+    pub fn units(&self) -> Units {
+        //Units::from(self.duration)
+        self.tied_units
     }
 }
 pub struct ToneNoteShape<'a> {
@@ -59,7 +66,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.theme.grid.bar_size / self.data.bar_units.0
-                * Units::from(self.data.duration).0
+                * self.data.units().0
                 - self.theme.melody.note_outline * 2.0,
             height: self.theme.melody.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,

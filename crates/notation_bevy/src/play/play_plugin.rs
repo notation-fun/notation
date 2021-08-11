@@ -2,8 +2,7 @@ use std::sync::Arc;
 
 use bevy::render::camera::OrthographicProjection;
 use notation_midi::prelude::{AddToneEvent, PlayControlEvt};
-use notation_model::play::play_control::TickResult;
-use notation_model::prelude::{PlayState, Position, Tone};
+use notation_model::prelude::{PlayState, Position, Tone, Units, Entry, TickResult};
 
 use bevy::prelude::*;
 use notation_model::prelude::{BarPosition, Duration, ModelEntry};
@@ -247,17 +246,17 @@ fn play_stop_tone(
 */
 
 fn add_midi_tone(
-    query: Query<(&Arc<ModelEntry>, &Tone, &BarPosition, &Duration), Added<Tone>>,
+    query: Query<(&Arc<ModelEntry>, &Tone, &BarPosition, &Units), Added<Tone>>,
     mut add_note_evts: EventWriter<AddToneEvent>,
 ) {
-    for (entry, tone, position, duration) in query.iter() {
-        if !tone.is_none() {
+    for (entry, tone, position, tied_units) in query.iter() {
+        if !tone.is_none() && !entry.as_ref().prev_is_tie() {
             add_note_evts.send(AddToneEvent::new(
                 entry.track_id(),
                 entry.track_kind(),
                 *tone,
                 *position,
-                *duration,
+                *tied_units,
             ));
         }
     }

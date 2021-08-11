@@ -6,6 +6,7 @@ use bevy_egui::egui::{self, Slider};
 use bevy_egui::EguiContext;
 use float_eq::float_ne;
 use notation_midi::prelude::{MidiState, PlayControlEvt};
+use notation_model::play::play_control::TickResult;
 use notation_model::prelude::{PlayState, Tab};
 
 use crate::prelude::{NotationSettings};
@@ -29,7 +30,7 @@ pub fn reload_tab(
 
 pub fn sync_play_speed(
     settings: &NotationSettings,
-    midi_state: &mut ResMut<MidiState>,
+    midi_state: &mut MidiState,
     play_control_evts: &mut EventWriter<PlayControlEvt>,
 ) {
     midi_state.play_control.play_speed = settings.play_speed;
@@ -38,9 +39,15 @@ pub fn sync_play_speed(
 
 pub fn send_play_state_evt(
     play_control_evts: &mut EventWriter<PlayControlEvt>,
-    play_state: PlayState,
+    midi_state: &MidiState,
 ) {
-    play_control_evts.send(PlayControlEvt::on_play_state(play_state));
+    play_control_evts.send(PlayControlEvt::on_play_state(midi_state.play_control.play_state));
+    let tick_result = TickResult {
+        changed: true,
+        end_passed: false,
+        stopped: midi_state.play_control.play_state.is_stopped()
+    };
+    play_control_evts.send(PlayControlEvt::on_tick(midi_state.play_control.position, tick_result));
 }
 
 pub fn top_panel_ui(
@@ -68,16 +75,26 @@ pub fn top_panel_ui(
                     if midi_state.play_control.pause() {
                         send_play_state_evt(
                             &mut play_control_evts,
-                            midi_state.play_control.play_state,
+                            &midi_state,
                         );
                     }
                 } else {
-                    if midi_state.play_control.play() {}
+                    if midi_state.play_control.play() {
+                        send_play_state_evt(
+                            &mut play_control_evts,
+                            &midi_state,
+                        );
+                    }
                 }
             }
             if !midi_state.play_control.play_state.is_stopped() {
                 if ui.button("Stop").clicked() {
-                    if midi_state.play_control.stop() {}
+                    if midi_state.play_control.stop() {
+                        send_play_state_evt(
+                            &mut play_control_evts,
+                            &midi_state,
+                        );
+                    }
                 }
             }
             let play_speed = settings.play_speed;

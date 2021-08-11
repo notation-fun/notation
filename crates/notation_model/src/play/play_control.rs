@@ -110,4 +110,7 @@ impl PlayControl {
             && pos.bar_ordinal >= self.begin_bar_ordinal
             && pos.bar_ordinal <= self.end_bar_ordinal
     }
+    pub fn begin_bar_position(&self) -> BarPosition {
+        BarPosition::new(self.position.bar.bar_units, self.begin_bar_ordinal, Units(0.0))
+    }
 }

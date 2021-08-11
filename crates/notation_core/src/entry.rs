@@ -1,15 +1,25 @@
 use serde::{Deserialize, Serialize};
 
-use crate::prelude::{Chord, Duration, Signature, Tempo, Tone};
+use crate::prelude::{Chord, Duration, Signature, Tempo, Tone, Units};
 
 pub trait Entry {
     fn duration(&self) -> Duration {
         Duration::Zero
     }
+    fn prev_is_tie(&self) -> bool {
+        false
+    }
+    fn next_is_tie(&self) -> bool {
+        false
+    }
+    fn tied_units(&self) -> Units {
+        self.duration().into()
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum CoreEntry {
+    Tie,
     Rest(Duration),
     Tone(Tone, Duration),
     Chord(Chord, Duration),
@@ -20,6 +30,7 @@ pub enum CoreEntry {
 impl CoreEntry {
     pub fn duration(&self) -> Duration {
         match self {
+            CoreEntry::Tie => Duration::Zero,
             CoreEntry::Rest(duration) => *duration,
             CoreEntry::Tone(_, duration) => *duration,
             CoreEntry::Chord(_, duration) => *duration,
@@ -36,6 +47,11 @@ impl Entry for CoreEntry {
 }
 
 impl CoreEntry {
+    /// Returns `true` if the core_entry is [`Tie`].
+    pub fn is_tie(&self) -> bool {
+        matches!(self, Self::Tie)
+    }
+
     /// Returns `true` if the entry is [`Rest`].
     pub fn is_rest(&self) -> bool {
         matches!(self, Self::Rest(..))
@@ -85,6 +101,12 @@ impl CoreEntry {
         } else {
             None
         }
+    }
+}
+
+impl From<()> for CoreEntry {
+    fn from(_: ()) -> Self {
+        Self::Tie
     }
 }
 

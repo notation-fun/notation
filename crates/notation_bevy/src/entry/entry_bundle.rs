@@ -9,6 +9,7 @@ use crate::prelude::EntryState;
 pub struct EntryBundle {
     pub entry: Arc<ModelEntry>,
     pub duration: Duration,
+    pub tied_units: Units,
     pub position: BarPosition,
     pub state: EntryState,
 }
@@ -16,9 +17,11 @@ pub struct EntryBundle {
 impl From<(Arc<ModelEntry>, BarPosition)> for EntryBundle {
     fn from(v: (Arc<ModelEntry>, BarPosition)) -> Self {
         let duration = v.0.duration();
+        let tied_units = v.0.tied_units();
         EntryBundle {
             entry: v.0,
             duration,
+            tied_units,
             position: v.1,
             state: EntryState::default(),
         }

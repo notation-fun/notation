@@ -1623,56 +1623,38 @@
                             sign: Natural,
                         ),
                     )),
-                    Simple(Sixteenth),
+                    Dotted(Eighth),
                 )),// [65]
                 Core(Tone(
                     Single((
                         octave: P4,
                         pitch: (
-                            name: A,
+                            name: B,
                             sign: Natural,
                         ),
                     )),
-                    Simple(Eighth),
+                    Simple(Sixteenth),
                 )),// [66]
                 Core(Tone(
                     Single((
-                        octave: P4,
+                        octave: P5,
                         pitch: (
-                            name: B,
-                            sign: Natural,
+                            name: C,
+                            sign: Sharp,
                         ),
                     )),
                     Simple(Sixteenth),
                 )),// [67]
-                Core(Tone(
-                    Single((
-                        octave: P5,
-                        pitch: (
-                            name: C,
-                            sign: Sharp,
-                        ),
-                    )),
-                    Simple(Sixteenth),
-                )),// [68]
+                Core(Tie),// [68]
                 Mark("|"),// [69]
                 Mark("b:4"),// [70]
+                Core(Tie),// [71]
                 Core(Tone(
                     Single((
                         octave: P5,
                         pitch: (
                             name: C,
                             sign: Sharp,
-                        ),
-                    )),
-                    Simple(Eighth),
-                )),// [71]
-                Core(Tone(
-                    Single((
-                        octave: P4,
-                        pitch: (
-                            name: B,
-                            sign: Natural,
                         ),
                     )),
                     Simple(Eighth),
@@ -1685,8 +1667,19 @@
                             sign: Natural,
                         ),
                     )),
-                    Simple(Half),
+                    Simple(Eighth),
                 )),// [73]
+                Core(Tie),// [74]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Half),
+                )),// [75]
                 Core(Tone(
                     Single((
                         octave: P5,
@@ -1696,7 +1689,7 @@
                         ),
                     )),
                     Simple(Eighth),
-                )),// [74]
+                )),// [76]
                 Core(Tone(
                     Single((
                         octave: P5,
@@ -1706,7 +1699,7 @@
                         ),
                     )),
                     Simple(Eighth),
-                )),// [75]
+                )),// [77]
                 Mark("|"),
             ],
         ),// [1]
@@ -1807,252 +1800,232 @@
                 ),// [27]
                 Word(
                     "何",
-                    Simple(Eighth),
+                    Simple(Quarter),
                 ),// [28]
-                Word(
-                    "～",
-                    Simple(Sixteenth),
-                ),// [29]
-                Word(
-                    "～",
-                    Simple(Sixteenth),
-                ),// [30]
-                Mark("|"),// [31]
-                Mark("2:1"),// [32]
+                Mark("|"),// [29]
+                Mark("2:1"),// [30]
                 Word(
                     "没",
                     Simple(Quarter),
-                ),// [33]
+                ),// [31]
                 Word(
                     "有",
                     Simple(Quarter),
-                ),// [34]
+                ),// [32]
                 Word(
                     "你",
                     Simple(Eighth),
-                ),// [35]
+                ),// [33]
                 Word(
                     "以",
                     Simple(Eighth),
-                ),// [36]
+                ),// [34]
                 Word(
                     "后",
                     Simple(Quarter),
-                ),// [37]
-                Mark("|"),// [38]
-                Mark("2:2"),// [39]
+                ),// [35]
+                Mark("|"),// [36]
+                Mark("2:2"),// [37]
                 Word(
                     "我",
                     Simple(Quarter),
-                ),// [40]
+                ),// [38]
                 Word(
                     "灵",
                     Simple(Quarter),
-                ),// [41]
+                ),// [39]
                 Word(
                     "魂",
                     Simple(Eighth),
-                ),// [42]
+                ),// [40]
                 Word(
                     "失",
                     Simple(Eighth),
-                ),// [43]
+                ),// [41]
                 Word(
                     "控",
                     Simple(Quarter),
-                ),// [44]
-                Mark("|"),// [45]
-                Mark("2:3"),// [46]
+                ),// [42]
+                Mark("|"),// [43]
+                Mark("2:3"),// [44]
                 Word(
                     "黑",
                     Simple(Quarter),
-                ),// [47]
+                ),// [45]
                 Word(
                     "云",
                     Simple(Quarter),
-                ),// [48]
+                ),// [46]
                 Word(
                     "在",
                     Simple(Eighth),
-                ),// [49]
+                ),// [47]
                 Word(
                     "降",
                     Simple(Eighth),
-                ),// [50]
+                ),// [48]
                 Word(
                     "落",
                     Simple(Quarter),
-                ),// [51]
-                Mark("|"),// [52]
-                Mark("2:4"),// [53]
+                ),// [49]
+                Mark("|"),// [50]
+                Mark("2:4"),// [51]
                 Word(
                     "我",
                     Simple(Quarter),
-                ),// [54]
+                ),// [52]
                 Word(
                     "被",
                     Dotted(Eighth),
-                ),// [55]
+                ),// [53]
                 Word(
                     "它",
                     Simple(Sixteenth),
-                ),// [56]
+                ),// [54]
                 Word(
                     "拖",
                     Simple(Eighth),
-                ),// [57]
+                ),// [55]
                 Word(
                     "着",
                     Simple(Eighth),
-                ),// [58]
+                ),// [56]
                 Word(
                     "走",
                     Simple(Eighth),
-                ),// [59]
+                ),// [57]
                 Word(
                     "静",
-                    Simple(Sixteenth),
-                ),// [60]
-                Word(
-                    "~",
-                    Simple(Sixteenth),
-                ),// [61]
-                Mark("|"),// [62]
+                    Simple(Eighth),
+                ),// [58]
+                Mark("|"),// [59]
                 Extra(
                     "dsl::context::duration",
                     "_1_8",
-                ),// [63]
-                Mark("b:1"),// [64]
+                ),// [60]
+                Mark("b:1"),// [61]
                 Word(
                     "静",
                     Simple(Eighth),
-                ),// [65]
+                ),// [62]
                 Word(
                     "悄",
+                    Simple(Eighth),
+                ),// [63]
+                Word(
+                    "悄",
+                    Simple(Eighth),
+                ),// [64]
+                Word(
+                    "默",
+                    Simple(Eighth),
+                ),// [65]
+                Word(
+                    "默",
                     Simple(Eighth),
                 ),// [66]
                 Word(
-                    "悄",
+                    "离",
                     Simple(Eighth),
                 ),// [67]
                 Word(
-                    "默",
+                    "开",
                     Simple(Eighth),
                 ),// [68]
                 Word(
-                    "默",
-                    Simple(Eighth),
-                ),// [69]
-                Word(
-                    "离",
-                    Simple(Eighth),
-                ),// [70]
-                Word(
-                    "开",
-                    Simple(Eighth),
-                ),// [71]
-                Word(
                     "陷",
                     Simple(Eighth),
-                ),// [72]
-                Mark("|"),// [73]
-                Mark("b:2"),// [74]
+                ),// [69]
+                Mark("|"),// [70]
+                Mark("b:2"),// [71]
                 Word(
                     "入",
                     Simple(Eighth),
-                ),// [75]
+                ),// [72]
                 Word(
                     "了",
                     Simple(Eighth),
-                ),// [76]
+                ),// [73]
                 Word(
                     "危",
                     Simple(Eighth),
-                ),// [77]
+                ),// [74]
                 Word(
                     "险",
                     Simple(Eighth),
-                ),// [78]
+                ),// [75]
                 Word(
                     "边",
                     Simple(Eighth),
-                ),// [79]
+                ),// [76]
                 Word(
                     "缘",
                     Simple(Eighth),
-                ),// [80]
+                ),// [77]
                 Word(
                     "Ba-",
                     Simple(Eighth),
-                ),// [81]
+                ),// [78]
                 Word(
                     "by",
                     Simple(Eighth),
-                ),// [82]
-                Mark("|"),// [83]
-                Mark("b:3"),// [84]
-                Word(
-                    "",
-                    Simple(Eighth),
-                ),// [85]
+                ),// [79]
+                Mark("|"),// [80]
+                Mark("b:3"),// [81]
+                Core(Rest(Simple(Eighth))),// [82]
                 Word(
                     "我",
                     Simple(Eighth),
-                ),// [86]
+                ),// [83]
                 Word(
                     "的",
                     Simple(Eighth),
-                ),// [87]
+                ),// [84]
                 Word(
                     "世",
                     Simple(Eighth),
-                ),// [88]
+                ),// [85]
                 Word(
                     "界",
                     Simple(Eighth),
-                ),// [89]
+                ),// [86]
                 Word(
                     "已",
                     Simple(Sixteenth),
-                ),// [90]
+                ),// [87]
                 Word(
                     "狂",
-                    Simple(Sixteenth),
-                ),// [91]
-                Word(
-                    "~",
-                    Simple(Eighth),
-                ),// [92]
+                    Dotted(Eighth),
+                ),// [88]
                 Word(
                     "风",
                     Simple(Sixteenth),
-                ),// [93]
+                ),// [89]
                 Word(
                     "暴",
                     Simple(Sixteenth),
-                ),// [94]
-                Mark("|"),// [95]
-                Mark("b:4"),// [96]
+                ),// [90]
+                Core(Tie),// [91]
+                Mark("|"),// [92]
+                Mark("b:4"),// [93]
+                Core(Tie),// [94]
                 Word(
-                    "~",
+                    "",
                     Simple(Eighth),
-                ),// [97]
+                ),// [95]
                 Word(
                     "雨",
                     Simple(Eighth),
-                ),// [98]
-                Word(
-                    "~",
-                    Simple(Quarter),
-                ),// [99]
+                ),// [96]
+                Core(Tie),// [97]
                 Word(
                     "",
-                    Simple(Quarter),
-                ),// [100]
+                    Simple(Half),
+                ),// [98]
                 Word(
                     "呜",
                     Simple(Quarter),
-                ),// [101]
+                ),// [99]
                 Mark("|"),
             ],
         ),

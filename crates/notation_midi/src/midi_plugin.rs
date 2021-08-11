@@ -4,7 +4,7 @@ use crate::prelude::{
 };
 use bevy::prelude::*;
 use bevy_kira_audio::{AudioPlugin, AudioStreamPlugin, StreamedAudio};
-use notation_model::prelude::PlayClock;
+use notation_model::{play::{self, play_control::TickResult}, prelude::{PlayClock, PlayState}};
 pub struct MidiPlugin;
 
 impl Plugin for MidiPlugin {
@@ -26,6 +26,7 @@ impl Plugin for MidiPlugin {
         app.add_system(on_play_tone.system());
         app.add_system(on_stop_tone.system());
         app.add_system(check_synth_buffer.system());
+        app.add_system(on_play_control_evt.system());
         app.add_system(do_tick.system());
     }
 }
@@ -95,6 +96,24 @@ fn on_stop_tone(
             for msg in evt.to_midi_msgs(channel) {
                 hub.send(&settings, msg);
             }
+        }
+    }
+}
+
+fn on_play_control_evt(
+    settings: Res<MidiSettings>,
+    mut state: ResMut<MidiState>,
+    mut hub: NonSendMut<MidiHub>,
+    mut evts: EventReader<PlayControlEvt>,
+) {
+    for evt in evts.iter() {
+        match evt {
+            PlayControlEvt::OnPlayState(play_state) => {
+                if !play_state.is_playing() {
+                    state.init_channels(&settings, &mut hub);
+                }
+            }
+            _ => (),
         }
     }
 }
