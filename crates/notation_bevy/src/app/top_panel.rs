@@ -7,9 +7,9 @@ use bevy_egui::EguiContext;
 use float_eq::float_ne;
 use notation_midi::prelude::{MidiState, PlayControlEvt};
 use notation_model::play::play_control::TickResult;
-use notation_model::prelude::{PlayState, Tab};
+use notation_model::prelude::Tab;
 
-use crate::prelude::{NotationSettings};
+use crate::prelude::NotationSettings;
 
 use super::notation_app_state::{NotationAppState, TabPathes};
 
@@ -41,13 +41,18 @@ pub fn send_play_state_evt(
     play_control_evts: &mut EventWriter<PlayControlEvt>,
     midi_state: &MidiState,
 ) {
-    play_control_evts.send(PlayControlEvt::on_play_state(midi_state.play_control.play_state));
+    play_control_evts.send(PlayControlEvt::on_play_state(
+        midi_state.play_control.play_state,
+    ));
     let tick_result = TickResult {
         changed: true,
         end_passed: false,
-        stopped: midi_state.play_control.play_state.is_stopped()
+        stopped: midi_state.play_control.play_state.is_stopped(),
     };
-    play_control_evts.send(PlayControlEvt::on_tick(midi_state.play_control.position, tick_result));
+    play_control_evts.send(PlayControlEvt::on_tick(
+        midi_state.play_control.position,
+        tick_result,
+    ));
 }
 
 pub fn top_panel_ui(
@@ -73,27 +78,18 @@ pub fn top_panel_ui(
             if ui.button(play_title).clicked() {
                 if midi_state.play_control.play_state.is_playing() {
                     if midi_state.play_control.pause() {
-                        send_play_state_evt(
-                            &mut play_control_evts,
-                            &midi_state,
-                        );
+                        send_play_state_evt(&mut play_control_evts, &midi_state);
                     }
                 } else {
                     if midi_state.play_control.play() {
-                        send_play_state_evt(
-                            &mut play_control_evts,
-                            &midi_state,
-                        );
+                        send_play_state_evt(&mut play_control_evts, &midi_state);
                     }
                 }
             }
             if !midi_state.play_control.play_state.is_stopped() {
                 if ui.button("Stop").clicked() {
                     if midi_state.play_control.stop() {
-                        send_play_state_evt(
-                            &mut play_control_evts,
-                            &midi_state,
-                        );
+                        send_play_state_evt(&mut play_control_evts, &midi_state);
                     }
                 }
             }

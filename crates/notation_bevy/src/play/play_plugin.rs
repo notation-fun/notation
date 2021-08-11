@@ -2,10 +2,10 @@ use std::sync::Arc;
 
 use bevy::render::camera::OrthographicProjection;
 use notation_midi::prelude::{AddToneEvent, PlayControlEvt};
-use notation_model::prelude::{PlayState, Position, Tone, Units, Entry, TickResult};
+use notation_model::prelude::{Entry, PlayState, Position, SliceEntry, TickResult, Tone, Units};
 
 use bevy::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, ModelEntry};
+use notation_model::prelude::{BarPosition, Duration};
 
 use crate::prelude::{
     BarLayout, EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabState,
@@ -24,7 +24,7 @@ impl Plugin for PlayPlugin {
         app.add_system(on_add_tab_state.system());
         app.add_system(on_tab_play_state_changed.system());
         app.add_system(on_play_control_evt.system());
-        app.add_system(add_midi_tone.system());
+        //app.add_system(add_midi_tone.system());
     }
 }
 
@@ -64,7 +64,7 @@ fn on_tab_play_state_changed(
         Added<TabPlayStateChanged>,
     >,
     mut pos_indicator_query: Query<&mut PosIndicatorData>,
-    mut entry_query: Query<(Entity, &Arc<ModelEntry>, &BarPosition, &mut EntryState)>,
+    mut entry_query: Query<(Entity, &Arc<SliceEntry>, &BarPosition, &mut EntryState)>,
     mut camera_query: Query<(Entity, &mut Transform, &OrthographicProjection)>,
 ) {
     for (state_entity, bar_layouts, state, children) in query.iter_mut() {
@@ -108,7 +108,7 @@ fn on_tick(
     pos_indicator_query: &mut Query<&mut PosIndicatorData>,
     entry_query: &mut Query<(
         Entity,
-        &Arc<ModelEntry>,
+        &Arc<SliceEntry>,
         &Duration,
         &BarPosition,
         &mut EntryState,
@@ -178,7 +178,7 @@ fn on_play_control_evt(
     mut pos_indicator_query: Query<&mut PosIndicatorData>,
     mut entry_query: Query<(
         Entity,
-        &Arc<ModelEntry>,
+        &Arc<SliceEntry>,
         &Duration,
         &BarPosition,
         &mut EntryState,
@@ -221,7 +221,7 @@ fn on_play_control_evt(
 fn play_stop_tone(
     mut _commands: Commands,
     _theme: Res<NotationTheme>,
-    query: Query<(&Arc<ModelEntry>, &Tone, &EntryState), Changed<EntryState>>,
+    query: Query<(&Arc<SliceEntry>, &Tone, &EntryState), Changed<EntryState>>,
     mut play_note_evts: EventWriter<PlayToneEvent>,
     mut stop_note_evts: EventWriter<StopToneEvent>,
 ) {
@@ -243,10 +243,9 @@ fn play_stop_tone(
         }
     }
 }
-*/
 
 fn add_midi_tone(
-    query: Query<(&Arc<ModelEntry>, &Tone, &BarPosition, &Units), Added<Tone>>,
+    query: Query<(&Arc<SliceEntry>, &Tone, &BarPosition, &Units), Added<Tone>>,
     mut add_note_evts: EventWriter<AddToneEvent>,
 ) {
     for (entry, tone, position, tied_units) in query.iter() {
@@ -261,3 +260,4 @@ fn add_midi_tone(
         }
     }
 }
+*/

@@ -13,7 +13,6 @@ pub enum ProtoEntry {
     FrettedFour(FrettedEntry<4>),
     Extra(String, String),
 }
-
 impl ProtoEntry {
     pub fn duration(&self) -> Duration {
         match self {
@@ -113,7 +112,6 @@ impl ProtoEntry {
     pub fn is_core_tie(&self) -> bool {
         self.as_core().map(|x| x.is_tie()).unwrap_or(false)
     }
-
 }
 impl ProtoEntry {
     pub fn is_size_fretted<const S: usize>(&self) -> bool {

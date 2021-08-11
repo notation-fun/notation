@@ -1,12 +1,15 @@
 use fehler::throws;
-use notation_proto::prelude::ProtoEntry;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 
 use std::sync::{Arc, Weak};
 use thiserror::Error;
 
-use crate::prelude::{Form, ModelEntry, Section, Tab, TabBar, TabMeta, Track};
+use crate::prelude::{
+    Form, ModelEntry, ModelEntryProps, Section, Slice, SliceEntry, SliceEntryProps, Tab, TabBar,
+    TabMeta, Track,
+};
+use notation_proto::prelude::{Duration, Entry, ProtoEntry, Units};
 
 #[derive(Error, Debug)]
 pub enum ParseError {
@@ -98,11 +101,51 @@ impl Section {
     }
 }
 impl ModelEntry {
+    pub fn calc_tied_units(entries: &Vec<ProtoEntry>, index: usize) -> Units {
+        let mut units = Units(0.0);
+        if let Some(entry) = entries.get(index) {
+            units = units + Units::from(entry.duration());
+            if let Some(next_entry) = entries.get(index + 1) {
+                if next_entry.is_core_tie() {
+                    for i in index + 2..entries.len() {
+                        let peek_entry = entries.get(i).unwrap();
+                        if peek_entry.duration() != Duration::Zero {
+                            return units + Self::calc_tied_units(entries, i);
+                        }
+                    }
+                }
+            }
+        }
+        units
+    }
     pub fn new_entries(v: Vec<ProtoEntry>, track: &Weak<Track>) -> Vec<Arc<ModelEntry>> {
+        let entries = v.clone();
         v.into_iter()
             .map(Arc::new)
             .enumerate()
-            .map(|(index, entry)| ModelEntry::new(track.clone(), index, entry))
+            .map(|(index, entry)| {
+                let props = ModelEntryProps {
+                    tied_units: Self::calc_tied_units(&entries, index),
+                };
+                ModelEntry::new(track.clone(), index, entry, props)
+            })
+            .map(Arc::new)
+            .collect()
+    }
+}
+impl SliceEntry {
+    pub fn new_entries(v: Vec<Arc<ModelEntry>>, slice: &Weak<Slice>) -> Vec<Arc<SliceEntry>> {
+        let mut pos = 0.0;
+        let _entries = v.clone();
+        v.into_iter()
+            .enumerate()
+            .map(|(index, entry)| {
+                let props = SliceEntryProps {
+                    in_bar_pos: Units(pos),
+                };
+                pos += Units::from(entry.as_ref().duration()).0;
+                SliceEntry::new(slice.clone(), index, entry, props)
+            })
             .map(Arc::new)
             .collect()
     }

@@ -2,7 +2,7 @@ use helgoboss_midi::{ShortMessage, StructuredShortMessage};
 use midir::{MidiOutput, MidiOutputConnection};
 use std::sync::Mutex;
 
-use crate::prelude::{DoubleAudioBuffer, MidiSettings, MidiState, MidiSynth};
+use crate::prelude::{DoubleAudioBuffer, MidiSettings, MidiSynth};
 
 pub struct MidiHub {
     output_conn: Option<Mutex<MidiOutputConnection>>,

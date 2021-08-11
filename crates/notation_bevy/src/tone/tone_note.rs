@@ -2,9 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{
-    BarPosition, Duration, Note, Syllable, SyllableNote, Units,
-};
+use notation_model::prelude::{BarPosition, Duration, Note, Syllable, SyllableNote, Units};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
@@ -65,8 +63,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.theme.grid.bar_size / self.data.bar_units.0
-                * self.data.units().0
+            width: self.theme.grid.bar_size / self.data.bar_units.0 * self.data.units().0
                 - self.theme.melody.note_outline * 2.0,
             height: self.theme.melody.note_height,
             origin: shapes::RectangleOrigin::BottomLeft,

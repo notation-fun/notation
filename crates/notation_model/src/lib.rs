@@ -9,7 +9,9 @@ pub mod parse;
 pub mod play;
 pub mod section;
 pub mod slice;
+pub mod slice_entry;
 pub mod tab;
+pub mod tab_bar;
 pub mod track;
 pub mod util;
 
@@ -17,23 +19,27 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar::{Bar, BarLayer};
     #[doc(hidden)]
-    pub use crate::entry::ModelEntry;
+    pub use crate::entry::{ModelEntry, ModelEntryProps};
     #[doc(hidden)]
     pub use crate::lane::{BarLane, LaneKind};
     #[doc(hidden)]
     pub use crate::parse::ParseError;
     #[doc(hidden)]
-    pub use crate::play::play_control::{TickResult, PlayControl};
+    pub use crate::play::play_clock::PlayClock;
+    #[doc(hidden)]
+    pub use crate::play::play_control::{PlayControl, TickResult};
     #[doc(hidden)]
     pub use crate::play::play_state::PlayState;
-    #[doc(hidden)]
-    pub use crate::play::play_clock::PlayClock;
     #[doc(hidden)]
     pub use crate::section::{Form, Section};
     #[doc(hidden)]
     pub use crate::slice::Slice;
     #[doc(hidden)]
-    pub use crate::tab::{Tab, TabBar};
+    pub use crate::slice_entry::{SliceEntry, SliceEntryProps};
+    #[doc(hidden)]
+    pub use crate::tab::Tab;
+    #[doc(hidden)]
+    pub use crate::tab_bar::TabBar;
     #[doc(hidden)]
     pub use crate::track::Track;
     #[doc(hidden)]

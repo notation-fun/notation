@@ -1,12 +1,13 @@
-
 use std::cmp::Ordering;
 use std::convert::TryInto;
 use std::sync::Arc;
 
-use helgoboss_midi::{Channel, ControllerNumber, ShortMessage, StructuredShortMessage, U7, controller_numbers};
-use notation_model::{play::play_control::TickResult, prelude::*};
+use helgoboss_midi::{controller_numbers, Channel, ShortMessage, StructuredShortMessage, U7};
+use notation_model::play::play_control::TickResult;
+use notation_model::prelude::*;
 
-use crate::{midi_hub::MidiHub, prelude::{AddToneEvent, MidiSettings}};
+use crate::midi_hub::MidiHub;
+use crate::prelude::{AddToneEvent, MidiSettings, MidiUtil};
 
 pub const DEFAULT_PROGRAM: u8 = 0;
 pub const DEFAULT_VELOCITY: u8 = 64;
@@ -73,8 +74,13 @@ impl MidiChannel {
         }
         self.next_index = self.messages.len();
     }
-    pub fn send_passed_msgs(&mut self, settings: &MidiSettings, hub: &mut MidiHub,
-        old_position: &Position, play_control: &PlayControl, end_passed: bool,
+    pub fn send_passed_msgs(
+        &mut self,
+        settings: &MidiSettings,
+        hub: &mut MidiHub,
+        old_position: &Position,
+        play_control: &PlayControl,
+        end_passed: bool,
     ) -> usize {
         if self.messages.len() == 0 {
             return 0;
@@ -88,8 +94,7 @@ impl MidiChannel {
         let mut count = 0;
         loop {
             if let Some(&next) = self.messages.get(self.next_index) {
-                if play_control.is_in_range(&next.0)
-                    && play_control.position.is_passed(&next.0) {
+                if play_control.is_in_range(&next.0) && play_control.position.is_passed(&next.0) {
                     self.next_index += 1;
                     count += 1;
                     hub.send(settings, next.1);
@@ -115,7 +120,13 @@ impl MidiChannel {
         };
         hub.send(settings, msg);
     }
-    pub fn setup(&mut self, settings: &MidiSettings, hub: &mut MidiHub, params: (u8, u8), track: &Track) {
+    pub fn setup(
+        &mut self,
+        settings: &MidiSettings,
+        hub: &mut MidiHub,
+        params: (u8, u8),
+        track: &Track,
+    ) {
         self.track = Some((track.id.clone(), track.kind.clone()));
         self.program = U7::new(params.0);
         self.velocity = U7::new(params.1);
@@ -189,6 +200,22 @@ impl MidiState {
                 }
             }
         }
+        for bar in tab.bars.iter() {
+            for lane in bar.bar.lanes.iter() {
+                if lane.not_in_round(bar.section_round) {
+                    continue;
+                }
+                if let Some(channel) = self.get_channel_mut(&lane.slice.track.id, &lane.slice.track.kind) {
+                    for entry in lane.slice.entries.iter() {
+                        if let Some(msgs) = MidiUtil::get_midi_msgs(channel, bar, &entry) {
+                            for msg in msgs {
+                                channel.add_message(msg);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         self.play_control = PlayControl::new(&tab);
     }
     pub fn add_tone(&mut self, evt: &AddToneEvent) {
@@ -198,12 +225,23 @@ impl MidiState {
             }
         }
     }
-    pub fn tick(&mut self, settings: &MidiSettings, hub: &mut MidiHub, delta_seconds: f32) -> TickResult {
+    pub fn tick(
+        &mut self,
+        settings: &MidiSettings,
+        hub: &mut MidiHub,
+        delta_seconds: f32,
+    ) -> TickResult {
         let old_position = self.play_control.position;
         let tick_result = self.play_control.tick(delta_seconds);
         if tick_result.changed {
             for channel in self.channels.iter_mut() {
-                channel.send_passed_msgs(settings, hub, &old_position, &self.play_control, tick_result.end_passed);
+                channel.send_passed_msgs(
+                    settings,
+                    hub,
+                    &old_position,
+                    &self.play_control,
+                    tick_result.end_passed,
+                );
             }
         }
         tick_result

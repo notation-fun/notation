@@ -1,6 +1,6 @@
 use fehler::{throw, throws};
 use proc_macro2::TokenStream;
-use quote::{quote};
+use quote::quote;
 use syn::parse::{Error, Parse, ParseStream};
 use syn::Token;
 

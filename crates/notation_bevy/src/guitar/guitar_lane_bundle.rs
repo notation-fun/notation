@@ -11,22 +11,14 @@ pub type GuitarShapesLaneBundle = ShapesLaneBundle<GUITAR_STRING_NUM>;
 pub type GuitarStringsGrid = StringsGrid<GUITAR_STRING_NUM>;
 pub type GuitarStringsLaneBundle = StringsLaneBundle<GUITAR_STRING_NUM>;
 
-fn as_fretted_entry(v: &ModelEntry) -> Option<&GuitarEntry> {
-    v.value.as_fretted_six()
-}
-
-fn new_default_fretboard() -> GuitarFretboard {
-    GuitarUtil::new_acoustic_guitar_fretboard(None)
-}
-
 impl GuitarShapesLaneBundle {
     pub fn new(track: Arc<Track>) -> Self {
-        ShapesLaneBundle::_new(track, &as_fretted_entry, &new_default_fretboard)
+        ShapesLaneBundle::_new(track, &ModelEntry::as_fretted_six, &GuitarUtil::new_default_fretboard)
     }
 }
 
 impl GuitarStringsLaneBundle {
     pub fn new(track: Arc<Track>) -> Self {
-        StringsLaneBundle::_new(track, &as_fretted_entry, &new_default_fretboard)
+        StringsLaneBundle::_new(track, &ModelEntry::as_fretted_six, &GuitarUtil::new_default_fretboard)
     }
 }

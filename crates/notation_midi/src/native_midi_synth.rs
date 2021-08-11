@@ -62,7 +62,11 @@ impl MidiSynth {
                 channel,
                 controller_number,
                 control_value,
-            } => self.synth.cc(channel.into(), controller_number.into(), control_value.into()),
+            } => self.synth.cc(
+                channel.into(),
+                controller_number.into(),
+                control_value.into(),
+            ),
             StructuredShortMessage::ProgramChange {
                 channel,
                 program_number,

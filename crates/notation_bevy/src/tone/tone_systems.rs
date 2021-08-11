@@ -25,7 +25,8 @@ fn create_tone_notes(
         if let Ok((bar, mode)) = layer_query.get(parent.0) {
             let bar_units = bar.bar_units();
             for note in tone.get_notes() {
-                let data = ToneNoteData::new(bar_units, &bar, *duration, *tied_units, *pos, note, *mode);
+                let data =
+                    ToneNoteData::new(bar_units, &bar, *duration, *tied_units, *pos, note, *mode);
                 ToneNoteShape::create(&mut commands, entity, &theme, data);
             }
         }

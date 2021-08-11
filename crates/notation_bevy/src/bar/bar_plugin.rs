@@ -7,7 +7,7 @@ use crate::prelude::{
     AddEntryEvent, BarLayout, GuitarPlugin, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin,
     MelodyPlugin, NotationAppState, NotationSettings, NotationTheme, WindowResizedEvent,
 };
-use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar, TrackKind, Units};
+use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar, TrackKind};
 
 use super::bar_beat::{BarBeat, BarBeatData};
 use super::bar_separator::{BarSeparator, BarSeparatorData};
@@ -132,11 +132,12 @@ impl BarPlugin {
         BarPlugin::insert_lane_extra(&mut layer_commands, bar.clone(), lane.clone());
         let layer_entity = layer_commands.id();
         commands.entity(bar_entity).push_children(&[layer_entity]);
-        let mut pos = BarPosition::new(bar.bar_units(), bar.bar_ordinal, Units(0.0));
         for entry in lane.slice.entries.iter() {
-            let duration = entry.as_ref().value.duration();
-            add_entry_evts.send(AddEntryEvent(layer_entity, entry.clone(), pos));
-            pos.in_bar_pos = pos.in_bar_pos + Units::from(duration);
+            add_entry_evts.send(AddEntryEvent(
+                layer_entity,
+                entry.clone(),
+                BarPosition::new(bar.bar_units(), bar.bar_ordinal, entry.props.in_bar_pos),
+            ));
         }
     }
     pub fn create_lanes(

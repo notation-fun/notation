@@ -1,10 +1,10 @@
 use fehler::throws;
 use notation_proto::prelude::{SliceBegin, SliceEnd};
-use std::convert::TryFrom;
+
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{LaneKind, ModelEntry, ParseError, Track};
+use crate::prelude::{LaneKind, ParseError, SliceEntry, Track};
 
 #[derive(Debug)]
 pub struct Slice {
@@ -12,36 +12,30 @@ pub struct Slice {
     pub begin: SliceBegin,
     pub end: SliceEnd,
     pub rounds: Option<Vec<usize>>,
-    pub entries: Vec<Arc<ModelEntry>>,
+    pub entries: Vec<Arc<SliceEntry>>,
 }
 
 impl Slice {
-    pub fn new(
-        track: &Arc<Track>,
-        begin: SliceBegin,
-        end: SliceEnd,
-        rounds: Option<Vec<usize>>,
-    ) -> Self {
-        let entries = track.get_entries(&begin, &end);
-        Self {
-            track: track.clone(),
-            begin,
-            end,
-            rounds,
-            entries,
-        }
-    }
     pub fn new_arc(
         track: &Arc<Track>,
         begin: SliceBegin,
         end: SliceEnd,
         rounds: Option<Vec<usize>>,
     ) -> Arc<Self> {
-        Arc::new(Self::new(track, begin, end, rounds))
+        Arc::<Self>::new_cyclic(|weak_self| {
+            let entries = SliceEntry::new_entries(track.get_entries(&begin, &end), weak_self);
+            Self {
+                track: track.clone(),
+                begin,
+                end,
+                rounds,
+                entries,
+            }
+        })
     }
     pub fn calc_lane_kind(&self) -> Option<LaneKind> {
         for entry in self.entries.iter() {
-            if let Some(lane) = LaneKind::calc_lane_kind(&self.track.kind, &entry.value) {
+            if let Some(lane) = LaneKind::calc_lane_kind(&self.track.kind, &entry.model.proto) {
                 return Some(lane);
             }
         }
@@ -55,13 +49,5 @@ impl Display for Slice {
             write!(f, " R:{:?}", rounds)?;
         }
         write!(f, ")")
-    }
-}
-impl TryFrom<(&Arc<Track>, notation_proto::prelude::Slice)> for Slice {
-    type Error = ParseError;
-
-    #[throws(Self::Error)]
-    fn try_from(v: (&Arc<Track>, notation_proto::prelude::Slice)) -> Self {
-        Self::new(v.0, v.1.begin, v.1.end, v.1.rounds)
     }
 }

@@ -4,7 +4,7 @@ use crate::prelude::{
 };
 use bevy::prelude::*;
 use bevy_kira_audio::{AudioPlugin, AudioStreamPlugin, StreamedAudio};
-use notation_model::{play::{self, play_control::TickResult}, prelude::{PlayClock, PlayState}};
+use notation_model::prelude::PlayClock;
 pub struct MidiPlugin;
 
 impl Plugin for MidiPlugin {
@@ -118,7 +118,7 @@ fn on_play_control_evt(
     }
 }
 
-fn do_tick (
+fn do_tick(
     settings: Res<MidiSettings>,
     mut state: ResMut<MidiState>,
     mut hub: NonSendMut<MidiHub>,
@@ -128,6 +128,9 @@ fn do_tick (
     clock.tick();
     let tick_result = state.tick(&settings, &mut hub, clock.delta_seconds());
     if tick_result.changed {
-        play_control_evts.send(PlayControlEvt::on_tick(state.play_control.position, tick_result));
+        play_control_evts.send(PlayControlEvt::on_tick(
+            state.play_control.position,
+            tick_result,
+        ));
     }
 }

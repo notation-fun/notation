@@ -5,7 +5,7 @@ use syn::parse::{Error, ParseStream};
 use syn::Ident;
 
 use crate::context::ContextDsl;
-use crate::core::empty::EmptyDsl;
+
 use crate::core::tone::ToneDsl;
 use crate::core::word::WordDsl;
 use crate::fretted::fretboard::FretboardDsl;

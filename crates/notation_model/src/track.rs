@@ -37,7 +37,7 @@ impl Track {
     pub fn index_of_mark(&self, begin: usize, mark: &String) -> Option<usize> {
         for i in begin..self.entries.len() {
             let entry = self.entries.get(i);
-            if entry.is_some() && entry.unwrap().value.is_mark_string(mark) {
+            if entry.is_some() && entry.unwrap().proto.is_mark_string(mark) {
                 return Some(i);
             }
         }

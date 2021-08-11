@@ -54,10 +54,6 @@ fn create_pick_notes<const S: usize>(
                     );
                 }
             }
-            let tone = fretboard.pick_tone(&shape, pick);
-            if !tone.is_none() {
-                commands.entity(entity).insert(tone);
-            }
         }
     }
 }

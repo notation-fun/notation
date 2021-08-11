@@ -2,13 +2,12 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::Token;
 
 use crate::context::Context;
 
 use super::duration::DurationTweakDsl;
-use super::note::NoteDsl;
 use super::empty::EmptyDsl;
+use super::note::NoteDsl;
 
 pub struct ToneDsl {
     pub empty: Option<EmptyDsl>,

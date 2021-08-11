@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use helgoboss_midi::{StructuredShortMessage};
+use helgoboss_midi::StructuredShortMessage;
 use notation_model::play::play_control::TickResult;
 use notation_model::prelude::*;
 

@@ -1,6 +1,7 @@
 use fehler::throws;
+use notation_proto::prelude::{Fretboard, FrettedEntry, HandShape};
 
-use crate::prelude::{BarLane, ParseError, Slice, Track};
+use crate::prelude::{BarLane, LaneKind, ModelEntry, ParseError, Slice, SliceEntry, Track};
 use std::convert::TryFrom;
 use std::fmt::Display;
 use std::sync::Arc;
@@ -48,7 +49,7 @@ impl TryFrom<(notation_proto::prelude::BarLayer, &Vec<Arc<Track>>)> for BarLayer
                 .ok_or(ParseError::TrackNotFound(v.0.track))?;
         let mut slices = Vec::new();
         for slice in v.0.slices {
-            slices.push(Slice::try_from((&track, slice)).map(Arc::new)?);
+            slices.push(Slice::new_arc(&track, slice.begin, slice.end, slice.rounds));
         }
         Self::new(track, slices)
     }
@@ -71,5 +72,52 @@ impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<Track>>)> for Bar {
             }
         }
         Self { layers, lanes }
+    }
+}
+
+impl Bar {
+    pub fn get_lane_of_kind(&self, kind: LaneKind) -> Option<Arc<BarLane>> {
+        for lane in self.lanes.iter() {
+            if lane.kind == kind {
+                return Some(lane.clone());
+            }
+        }
+        None
+    }
+    pub fn get_fretted_shape<F1, F2, const S: usize>(&self,
+        as_fretted_entry: &F1,
+        new_default_fretboard: &F2,
+        entry: &SliceEntry,
+    ) -> Option<(Fretboard<S>, HandShape<S>)>
+    where
+        F1: Fn(&ModelEntry) -> Option<&FrettedEntry<S>>,
+        F2: Fn() -> Fretboard<S>,
+    {
+        if let Some(shapes_lane) = self.get_lane_of_kind(LaneKind::Shapes) {
+            for lane_entry in shapes_lane.slice.entries.iter() {
+                if entry.props.in_bar_pos > lane_entry.props.in_bar_pos + lane_entry.model().props.tied_units{
+                    continue;
+                }
+                if entry.props.in_bar_pos < lane_entry.props.in_bar_pos {
+                    break;
+                }
+                if let Some(fretted_entry) = as_fretted_entry(lane_entry.model()) {
+                    if let Some((shape, _duration)) = fretted_entry.as_shape() {
+                        let fretboard_entry = entry.get_track_entry(&|x: &ModelEntry| {
+                            let fretted_entry = as_fretted_entry(x);
+                            fretted_entry.and_then(|y| y.as_fretboard()).is_some()
+                        });
+                        let fretboard = fretboard_entry
+                            .and_then(|x| {
+                                as_fretted_entry(x.as_ref()).and_then(|x| x.as_fretboard().map(|z| z.to_owned()))
+                            })
+                            .unwrap_or_else(|| new_default_fretboard());
+                        return Some((fretboard, shape.clone()));
+                        //TODO: check shape duration aganst position
+                    }
+                }
+            }
+        }
+        None
     }
 }

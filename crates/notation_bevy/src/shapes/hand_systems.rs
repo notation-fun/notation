@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarPosition, Duration, ModelEntry};
+use notation_model::prelude::{BarPosition, Duration, SliceEntry};
 use std::sync::Arc;
 
 use super::shape_diagram::{ShapeDiagramData, ShapeDiagramShape};
@@ -22,7 +22,7 @@ fn on_add_shape_diagram<const S: usize>(
         (
             &Parent,
             Entity,
-            &Arc<ModelEntry>,
+            &Arc<SliceEntry>,
             &HandShape<S>,
             &Duration,
             &BarPosition,

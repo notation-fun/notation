@@ -37,4 +37,8 @@ impl GuitarUtil {
     pub fn new_electric_guitar_fretboard(tuning: Option<GuitarTuning>) -> GuitarFretboard {
         Self::new_guitar_fretboard(GUITAR_FRET_NUM_ELECTRIC, tuning.unwrap_or_default().into())
     }
+
+    pub fn new_default_fretboard() -> GuitarFretboard {
+        GuitarUtil::new_acoustic_guitar_fretboard(None)
+    }
 }
