@@ -99,10 +99,8 @@ impl LayoutSettings {
         app_state: &NotationAppState,
         bar: &TabBar,
     ) -> HashMap<String, LaneLayoutData> {
-        bar.bar
-            .lanes
+        bar.lanes
             .iter()
-            .filter(|lane| lane.in_round(bar.section_round))
             .map(|lane| (lane, self.calc_lane_layout_data(app_state, lane)))
             .filter_map(|(lane, layout)| layout.map(|layout| (lane.id(), layout)))
             .collect()

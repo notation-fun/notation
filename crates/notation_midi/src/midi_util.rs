@@ -3,7 +3,7 @@ use std::convert::TryFrom;
 use helgoboss_midi::{Channel, KeyNumber, StructuredShortMessage, U7};
 use notation_model::prelude::{
     BarPosition, CoreEntry, Entry, FrettedEntry4, FrettedEntry6, LaneKind, ModelEntry, Note, Pick,
-    Semitones, SliceEntry, TabBar, Tone, Units,
+    Semitones, LaneEntry, TabBar, Tone, Units,
 };
 
 use crate::prelude::MidiChannel;
@@ -42,7 +42,7 @@ impl MidiUtil {
     pub fn get_tone_midi_msgs(
         channel: &MidiChannel,
         bar: &TabBar,
-        entry: &SliceEntry,
+        entry: &LaneEntry,
         tone: &Tone,
     ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
         if tone.is_none() || entry.prev_is_tie() {
@@ -77,7 +77,7 @@ impl MidiUtil {
     pub fn get_core_midi_msgs(
         channel: &MidiChannel,
         bar: &TabBar,
-        entry: &SliceEntry,
+        entry: &LaneEntry,
         core_entry: &CoreEntry,
     ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
         match core_entry {
@@ -88,7 +88,7 @@ impl MidiUtil {
     pub fn get_midi_msgs(
         channel: &MidiChannel,
         bar: &TabBar,
-        entry: &SliceEntry,
+        entry: &LaneEntry,
     ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
         match entry.proto() {
             notation_model::prelude::ProtoEntry::Core(core_entry) => {
@@ -111,7 +111,7 @@ macro_rules! impl_get_pick_midi_msgs {
             pub fn $name(
                 channel: &MidiChannel,
                 bar: &TabBar,
-                entry: &SliceEntry,
+                entry: &LaneEntry,
                 pick: &Pick,
             ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
                 if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
@@ -131,7 +131,7 @@ macro_rules! impl_get_fretted_midi_msgs {
             pub fn $name(
                 channel: &MidiChannel,
                 bar: &TabBar,
-                entry: &SliceEntry,
+                entry: &LaneEntry,
                 fretted_entry: &$fretted_entry,
             ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
                 match fretted_entry {

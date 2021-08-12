@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarLane, BarPosition, SliceEntry, TabBar, Entry};
+use notation_model::prelude::{BarLane, BarPosition, LaneEntry, TabBar, Entry};
 use std::sync::Arc;
 
 use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme, StringsPlugin};
@@ -26,7 +26,7 @@ macro_rules! impl_pick_system {
                 (
                     &Parent,
                     Entity,
-                    &Arc<SliceEntry>,
+                    &Arc<LaneEntry>,
                     &Pick,
                     &Duration,
                     &BarPosition,

@@ -5,10 +5,7 @@ use std::convert::TryFrom;
 use std::sync::{Arc, Weak};
 use thiserror::Error;
 
-use crate::prelude::{
-    Form, ModelEntry, ModelEntryProps, Section, Slice, SliceEntry, SliceEntryProps, Tab, TabBar,
-    TabMeta, Track,
-};
+use crate::prelude::{BarLane, Form, LaneEntry, LaneEntryProps, ModelEntry, ModelEntryProps, Section, Tab, TabBar, TabMeta, Track};
 use notation_proto::prelude::{Duration, Entry, ProtoEntry, Units};
 
 #[derive(Error, Debug)]
@@ -87,16 +84,17 @@ impl Section {
         self.bars
             .iter()
             .enumerate()
-            .map(|(bar_index, bar)| TabBar {
-                tab: tab.clone(),
-                section: arc_section.clone(),
-                section_round,
-                section_ordinal,
-                bar: bar.clone(),
-                bar_index,
-                bar_ordinal: section_bar_ordinal + bar_index,
+            .map(|(bar_index, bar)| {
+                TabBar::new_arc(
+                    tab.clone(),
+                    arc_section.clone(),
+                    section_round,
+                    section_ordinal,
+                    bar.clone(),
+                    bar_index,
+                    section_bar_ordinal + bar_index,
+                )
             })
-            .map(Arc::new)
             .collect()
     }
 }
@@ -133,18 +131,17 @@ impl ModelEntry {
             .collect()
     }
 }
-impl SliceEntry {
-    pub fn new_entries(v: Vec<Arc<ModelEntry>>, slice: &Weak<Slice>) -> Vec<Arc<SliceEntry>> {
+impl LaneEntry {
+    pub fn new_entries(v: Vec<Arc<ModelEntry>>, lane: &Weak<BarLane>) -> Vec<Arc<LaneEntry>> {
         let mut pos = 0.0;
-        let _entries = v.clone();
         v.into_iter()
             .enumerate()
             .map(|(index, entry)| {
-                let props = SliceEntryProps {
+                let props = LaneEntryProps {
                     in_bar_pos: Units(pos),
                 };
                 pos += Units::from(entry.as_ref().duration()).0;
-                SliceEntry::new(slice.clone(), index, entry, props)
+                LaneEntry::new(lane.clone(), index, entry, props)
             })
             .map(Arc::new)
             .collect()

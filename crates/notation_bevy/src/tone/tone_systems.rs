@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarPosition, Duration, SliceEntry, TabBar, Tone, Units, Entry};
+use notation_model::prelude::{BarPosition, Duration, LaneEntry, TabBar, Tone, Units, Entry};
 
 use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme};
 
@@ -18,7 +18,7 @@ fn create_tone_notes(
     _asset_server: Res<AssetServer>,
     theme: Res<NotationTheme>,
     _settings: Res<NotationSettings>,
-    query: Query<(&Parent, Entity, &Arc<SliceEntry>, &Tone, &Duration, &Units, &BarPosition), Added<Tone>>,
+    query: Query<(&Parent, Entity, &Arc<LaneEntry>, &Tone, &Duration, &Units, &BarPosition), Added<Tone>>,
     layer_query: Query<(&Arc<TabBar>, &ToneMode)>,
 ) {
     for (parent, entity, entry, tone, duration, tied_units, pos) in query.iter() {

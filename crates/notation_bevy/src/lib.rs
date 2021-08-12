@@ -17,6 +17,7 @@ pub mod bar;
 pub mod lane;
 pub mod play;
 pub mod tab;
+pub mod minimap;
 
 pub mod lyrics;
 pub mod melody;
@@ -92,8 +93,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
-    pub use crate::tab::tab_bundle::TabBundle;
-    #[doc(hidden)]
     pub use crate::tab::tab_events::AddTabEvent;
     #[doc(hidden)]
     pub use crate::tab::tab_plugin::TabPlugin;
@@ -121,6 +120,8 @@ pub mod prelude {
     pub use crate::ui::NotationUiPlugin;
     #[doc(hidden)]
     pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
+    #[doc(hidden)]
+    pub use crate::utils::single_bundle::SingleBundle;
     #[doc(hidden)]
     pub use crate::viewer::run_notation_viewer;
     #[doc(hidden)]

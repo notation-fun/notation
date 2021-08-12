@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::prelude::{AddEntryEvent, EntryBundle, ShapesPlugin, StringsPlugin, ToneBundle};
 use crate::word::word_bundle::WordBundle;
-use notation_model::prelude::{CoreEntry, ProtoEntry, SliceEntry};
+use notation_model::prelude::{CoreEntry, ProtoEntry, LaneEntry};
 
 pub struct EntryPlugin;
 
@@ -43,7 +43,7 @@ impl EntryPlugin {
         };
     }
 
-    pub fn insert_entry_extra(commands: &mut EntityCommands, entry: Arc<SliceEntry>) {
+    pub fn insert_entry_extra(commands: &mut EntityCommands, entry: Arc<LaneEntry>) {
         match entry.as_ref().model.proto.as_ref() {
             ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
             ProtoEntry::Fretted6(entry) => {

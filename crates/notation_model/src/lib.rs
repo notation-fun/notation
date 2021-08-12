@@ -8,8 +8,7 @@ pub mod lane;
 pub mod parse;
 pub mod play;
 pub mod section;
-pub mod slice;
-pub mod slice_entry;
+pub mod lane_entry;
 pub mod tab;
 pub mod tab_bar;
 pub mod track;
@@ -33,9 +32,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::section::{Form, Section};
     #[doc(hidden)]
-    pub use crate::slice::Slice;
-    #[doc(hidden)]
-    pub use crate::slice_entry::{SliceEntry, SliceEntryProps};
+    pub use crate::lane_entry::{LaneEntry, LaneEntryProps};
     #[doc(hidden)]
     pub use crate::tab::Tab;
     #[doc(hidden)]

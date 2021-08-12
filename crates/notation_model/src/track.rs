@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use crate::prelude::{
-    Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, SliceEntry, TrackKind,
+    Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, LaneEntry, TrackKind,
 };
 
 #[derive(Debug)]

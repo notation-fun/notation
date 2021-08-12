@@ -96,8 +96,8 @@ impl BarPlugin {
         None
     }
     fn insert_lane_extra(commands: &mut EntityCommands, _bar: Arc<TabBar>, lane: Arc<BarLane>) {
-        commands.insert(lane.slice.track.clone());
-        let track = lane.slice.track.clone();
+        commands.insert(lane.track.clone());
+        let track = lane.track.clone();
         match lane.kind {
             LaneKind::Lyrics => LyricsPlugin::insert_lyrics_lane_extra(commands, track),
             LaneKind::Melody => MelodyPlugin::insert_melody_lane_extra(commands, track),
@@ -126,15 +126,12 @@ impl BarPlugin {
         lane: &Arc<BarLane>,
         lane_layout: &LaneLayout,
     ) {
-        if lane.not_in_round(bar.section_round) {
-            return;
-        }
         let layer_bundle = LaneBundle::new(bar.clone(), lane.clone(), *lane_layout);
         let mut layer_commands = commands.spawn_bundle(layer_bundle);
         BarPlugin::insert_lane_extra(&mut layer_commands, bar.clone(), lane.clone());
         let layer_entity = layer_commands.id();
         commands.entity(bar_entity).push_children(&[layer_entity]);
-        for entry in lane.slice.entries.iter() {
+        for entry in lane.entries.iter() {
             add_entry_evts.send(AddEntryEvent(
                 layer_entity,
                 entry.clone(),
@@ -152,7 +149,7 @@ impl BarPlugin {
         bar_layout: &BarLayout,
         add_entry_evts: &mut EventWriter<AddEntryEvent>,
     ) {
-        for lane in bar.bar.lanes.iter() {
+        for lane in bar.lanes.iter() {
             if let Some(lane_layout) = bar_layout.lane_layouts.get(&lane.id()) {
                 Self::create_lane(
                     commands,

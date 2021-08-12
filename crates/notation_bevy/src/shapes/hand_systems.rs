@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarPosition, Duration, SliceEntry};
+use notation_model::prelude::{BarPosition, Duration, LaneEntry};
 use std::sync::Arc;
 
 use super::shape_diagram::{ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6};
@@ -24,7 +24,7 @@ macro_rules! impl_on_add_hand_shape {
                 (
                     &Parent,
                     Entity,
-                    &Arc<SliceEntry>,
+                    &Arc<LaneEntry>,
                     &$hand_shape,
                     &Duration,
                     &BarPosition,

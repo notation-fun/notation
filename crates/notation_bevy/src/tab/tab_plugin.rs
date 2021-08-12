@@ -4,13 +4,9 @@ use bevy::prelude::*;
 use notation_midi::prelude::SwitchTabEvent;
 use notation_model::prelude::Tab;
 
-use crate::prelude::{
-    AddEntryEvent, AddTabEvent, BarBundle, BarLayout, BarPlugin, NotationAppState,
-    NotationSettings, NotationTheme, TabAsset, WindowResizedEvent,
-};
+use crate::prelude::{AddEntryEvent, AddTabEvent, BarBundle, BarLayout, BarPlugin, NotationAppState, NotationSettings, NotationTheme, SingleBundle, TabAsset, WindowResizedEvent};
 
 use super::tab_asset::TabAssetLoader;
-use super::tab_bundle::TabBundle;
 
 use super::tab_state_bundle::TabStateBundle;
 
@@ -40,6 +36,11 @@ fn on_config_changed(
     }
 }
 
+fn new_tab_bundle(app_state: &NotationAppState, settings: &NotationSettings, theme: &NotationTheme, tab: Arc<Tab>) -> SingleBundle<Arc<Tab>> {
+    let transform = theme.grid.calc_tab_transform(app_state, settings);
+    (tab, transform).into()
+}
+
 fn on_add_tab(
     mut commands: Commands,
     app_state: Res<NotationAppState>,
@@ -53,7 +54,7 @@ fn on_add_tab(
         let tab = evt.0.clone();
         let bar_layouts = settings.layout.calc_bar_layouts(&app_state, &tab);
         let tab_entity = commands
-            .spawn_bundle(TabBundle::new(&app_state, &settings, &theme, tab.clone()))
+            .spawn_bundle(new_tab_bundle(&app_state, &settings, &theme, tab.clone()))
             .id();
         let state_entity = commands
             .spawn_bundle(TabStateBundle::new(
