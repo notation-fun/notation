@@ -4,13 +4,12 @@ use bevy::prelude::*;
 use notation_model::prelude::{BarLane, BarPosition};
 use std::sync::Arc;
 
-use super::hand_bundles::HandShapeBundle6;
-use super::hand_bundles::HandShapeBundle4;
-use super::shape_diagram::{ShapeDiagramData6, ShapeDiagram6};
-use super::shape_diagram::{ShapeDiagramData4, ShapeDiagram4};
+use super::hand_bundles::{HandShapeBundle4, HandShapeBundle6};
+use super::shape_diagram::{ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6};
 use crate::prelude::{LyonShapeOp, NotationTheme, WindowResizedEvent};
-use notation_model::prelude::{Fretboard6, FrettedEntry6, HandShape6, TabBar};
-use notation_model::prelude::{Fretboard4, FrettedEntry4, HandShape4};
+use notation_model::prelude::{
+    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, HandShape4, HandShape6, TabBar,
+};
 
 pub struct ShapesPlugin;
 
@@ -41,10 +40,7 @@ macro_rules! impl_shapes_plugin {
         }
 
         impl ShapesPlugin {
-            pub fn $insert_entry_extra(
-                commands: &mut EntityCommands,
-                entry: &$fretted_entry,
-            ) {
+            pub fn $insert_entry_extra(commands: &mut EntityCommands, entry: &$fretted_entry) {
                 match entry {
                     $fretted_entry::Shape(shape, _) => {
                         commands.insert_bundle($hand_shape_bundle::from(*shape));
@@ -53,10 +49,26 @@ macro_rules! impl_shapes_plugin {
                 }
             }
         }
-    }
+    };
 }
 
-impl_shapes_plugin!(on_config_changed6, insert_entry_extra6,
-    FrettedEntry6, Fretboard6, HandShape6, ShapeDiagram6, ShapeDiagramData6, HandShapeBundle6);
-impl_shapes_plugin!(on_config_changed4, insert_entry_extra4,
-    FrettedEntry4, Fretboard4, HandShape4, ShapeDiagram4, ShapeDiagramData4, HandShapeBundle4);
+impl_shapes_plugin!(
+    on_config_changed6,
+    insert_entry_extra6,
+    FrettedEntry6,
+    Fretboard6,
+    HandShape6,
+    ShapeDiagram6,
+    ShapeDiagramData6,
+    HandShapeBundle6
+);
+impl_shapes_plugin!(
+    on_config_changed4,
+    insert_entry_extra4,
+    FrettedEntry4,
+    Fretboard4,
+    HandShape4,
+    ShapeDiagram4,
+    ShapeDiagramData4,
+    HandShapeBundle4
+);

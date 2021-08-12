@@ -80,14 +80,20 @@ impl SliceEntry {
     pub fn track_kind(&self) -> TrackKind {
         self.model.track_kind()
     }
-    pub fn get_slice_entry<F: Fn(&SliceEntry) -> bool>(&self, predicate: &F) -> Option<Arc<SliceEntry>> {
+    pub fn get_slice_entry<F: Fn(&SliceEntry) -> bool>(
+        &self,
+        predicate: &F,
+    ) -> Option<Arc<SliceEntry>> {
         if let Some(slice) = self.slice.upgrade() {
             slice.get_entry(predicate)
         } else {
             None
         }
     }
-    pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(&self, predicate: &F) -> Option<Arc<ModelEntry>> {
+    pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(
+        &self,
+        predicate: &F,
+    ) -> Option<Arc<ModelEntry>> {
         if let Some(slice) = self.slice.upgrade() {
             slice.track.get_entry(predicate)
         } else {

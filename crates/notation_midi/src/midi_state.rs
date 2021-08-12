@@ -205,7 +205,9 @@ impl MidiState {
                 if lane.not_in_round(bar.section_round) {
                     continue;
                 }
-                if let Some(channel) = self.get_channel_mut(&lane.slice.track.id, &lane.slice.track.kind) {
+                if let Some(channel) =
+                    self.get_channel_mut(&lane.slice.track.id, &lane.slice.track.kind)
+                {
                     for entry in lane.slice.entries.iter() {
                         if let Some(msgs) = MidiUtil::get_midi_msgs(channel, bar, &entry) {
                             for msg in msgs {

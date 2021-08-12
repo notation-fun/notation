@@ -86,7 +86,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::shapes::shapes_plugin::ShapesPlugin;
     #[doc(hidden)]
-    pub use crate::strings::strings_grid::{StringsGrid6, StringsGrid4};
+    pub use crate::strings::strings_grid::{StringsGrid4, StringsGrid6};
     #[doc(hidden)]
     pub use crate::strings::strings_plugin::StringsPlugin;
     #[doc(hidden)]

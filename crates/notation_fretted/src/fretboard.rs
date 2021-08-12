@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::pick::PickNote;
 use crate::prelude::Pick;
 
-use super::prelude::{HandShape6, HandShape4};
+use super::prelude::{HandShape4, HandShape6};
 use notation_core::prelude::{Note, Semitones, Tone};
 
 macro_rules! impl_fretboard {
@@ -70,7 +70,11 @@ macro_rules! impl_fretboard {
                     .string_fret(string)
                     .and_then(|fret| self.fretted_note(string, fret).map(|n| (fret, n)))
             }
-            pub fn shape_pick_note(&self, shape: &$hand_shape, pick_note: PickNote) -> Option<Note> {
+            pub fn shape_pick_note(
+                &self,
+                shape: &$hand_shape,
+                pick_note: PickNote,
+            ) -> Option<Note> {
                 match pick_note.fret {
                     Some(fret) => self.fretted_note(pick_note.string, fret),
                     None => self.shape_note(shape, pick_note.string),
@@ -118,9 +122,8 @@ macro_rules! impl_fretboard {
                 notes.into()
             }
         }
-    }
+    };
 }
 
 impl_fretboard!(Fretboard6, 6, HandShape6);
 impl_fretboard!(Fretboard4, 4, HandShape4);
-

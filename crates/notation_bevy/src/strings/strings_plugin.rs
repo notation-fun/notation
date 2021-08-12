@@ -7,10 +7,11 @@ use std::sync::Arc;
 use super::pick_bundle::PickBundle;
 use super::pick_note::{PickNoteData, PickNoteShape};
 use super::single_string::{SingleString, SingleStringData};
-use super::strings_grid::StringsGrid6;
-use super::strings_grid::StringsGrid4;
+use super::strings_grid::{StringsGrid4, StringsGrid6};
 use crate::prelude::{BarPlugin, LyonShapeOp, NotationTheme, ShapesPlugin, WindowResizedEvent};
-use notation_model::prelude::{Fretboard6, FrettedEntry6, HandShape6, Fretboard4, FrettedEntry4, HandShape4, TabBar};
+use notation_model::prelude::{
+    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, HandShape4, HandShape6, TabBar,
+};
 
 pub struct StringsPlugin;
 
@@ -55,10 +56,7 @@ macro_rules! impl_strings_plugin {
         }
 
         impl StringsPlugin {
-            pub fn $insert_entry_extra(
-                commands: &mut EntityCommands,
-                entry: &$fretted_entry,
-            ) {
+            pub fn $insert_entry_extra(commands: &mut EntityCommands, entry: &$fretted_entry) {
                 match entry {
                     $fretted_entry::Pick(pick, _duration) => {
                         commands.insert_bundle(PickBundle::from(*pick));
@@ -67,8 +65,18 @@ macro_rules! impl_strings_plugin {
                 }
             }
         }
-    }
+    };
 }
 
-impl_strings_plugin!(on_add_fretted_grid6, insert_entry_extra6, FrettedEntry6, StringsGrid6);
-impl_strings_plugin!(on_add_fretted_grid4, insert_entry_extra4, FrettedEntry4, StringsGrid4);
+impl_strings_plugin!(
+    on_add_fretted_grid6,
+    insert_entry_extra6,
+    FrettedEntry6,
+    StringsGrid6
+);
+impl_strings_plugin!(
+    on_add_fretted_grid4,
+    insert_entry_extra4,
+    FrettedEntry4,
+    StringsGrid4
+);

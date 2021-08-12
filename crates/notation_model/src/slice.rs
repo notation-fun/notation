@@ -1,4 +1,3 @@
-
 use notation_proto::prelude::{SliceBegin, SliceEnd};
 
 use std::fmt::Display;

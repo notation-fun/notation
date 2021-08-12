@@ -1,6 +1,5 @@
 use fehler::throws;
-use notation_proto::prelude::{Fretboard6, HandShape6};
-use notation_proto::prelude::{Fretboard4, HandShape4};
+use notation_proto::prelude::{Fretboard4, Fretboard6, HandShape4, HandShape6};
 
 use crate::prelude::{BarLane, LaneKind, ParseError, Slice, SliceEntry, Track};
 use std::convert::TryFrom;
@@ -93,7 +92,9 @@ macro_rules! impl_get_fretted_shape {
             pub fn $name(&self, entry: &SliceEntry) -> Option<($fretboard, $hand_shape)> {
                 if let Some(shapes_lane) = self.get_lane_of_kind(LaneKind::Shapes) {
                     for lane_entry in shapes_lane.slice.entries.iter() {
-                        if entry.props.in_bar_pos > lane_entry.props.in_bar_pos + lane_entry.model().props.tied_units{
+                        if entry.props.in_bar_pos
+                            > lane_entry.props.in_bar_pos + lane_entry.model().props.tied_units
+                        {
                             continue;
                         }
                         if entry.props.in_bar_pos < lane_entry.props.in_bar_pos {
@@ -113,8 +114,22 @@ macro_rules! impl_get_fretted_shape {
                 None
             }
         }
-    }
+    };
 }
 
-impl_get_fretted_shape!(get_fretted_shape6, 6, as_fretted6, get_fretboard6, Fretboard6, HandShape6);
-impl_get_fretted_shape!(get_fretted_shape4, 4, as_fretted4, get_fretboard4, Fretboard4, HandShape4);
+impl_get_fretted_shape!(
+    get_fretted_shape6,
+    6,
+    as_fretted6,
+    get_fretboard6,
+    Fretboard6,
+    HandShape6
+);
+impl_get_fretted_shape!(
+    get_fretted_shape4,
+    4,
+    as_fretted4,
+    get_fretboard4,
+    Fretboard4,
+    HandShape4
+);

@@ -1,9 +1,13 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use notation_proto::prelude::{Fretboard6, HandShape6, Fretboard4, HandShape4, Note, SyllableNote, TabPosition};
+use notation_proto::prelude::{
+    Fretboard4, Fretboard6, HandShape4, HandShape6, Note, SyllableNote, TabPosition,
+};
 
-use crate::prelude::{Bar, Pitch, Section, Signature, SliceEntry, Syllable, Tab, TabMeta, Unit, Units};
+use crate::prelude::{
+    Bar, Pitch, Section, Signature, SliceEntry, Syllable, Tab, TabMeta, Unit, Units,
+};
 
 #[derive(Debug)]
 pub struct TabBar {
@@ -66,8 +70,20 @@ macro_rules! impl_get_fretted_shape {
                 self.bar.$get_fretted_shape(entry)
             }
         }
-    }
+    };
 }
 
-impl_get_fretted_shape!(get_fretted_shape6, 6, get_fretted_shape6, Fretboard6, HandShape6);
-impl_get_fretted_shape!(get_fretted_shape4, 4, get_fretted_shape4, Fretboard4, HandShape4);
+impl_get_fretted_shape!(
+    get_fretted_shape6,
+    6,
+    get_fretted_shape6,
+    Fretboard6,
+    HandShape6
+);
+impl_get_fretted_shape!(
+    get_fretted_shape4,
+    4,
+    get_fretted_shape4,
+    Fretboard4,
+    HandShape4
+);

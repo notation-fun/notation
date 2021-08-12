@@ -1,7 +1,10 @@
 use std::convert::TryFrom;
 
 use helgoboss_midi::{Channel, KeyNumber, StructuredShortMessage, U7};
-use notation_model::prelude::{BarPosition, CoreEntry, Entry, FrettedEntry6, FrettedEntry4, LaneKind, ModelEntry, Note, Pick, Semitones, SliceEntry, TabBar, Tone, Units};
+use notation_model::prelude::{
+    BarPosition, CoreEntry, Entry, FrettedEntry4, FrettedEntry6, LaneKind, ModelEntry, Note, Pick,
+    Semitones, SliceEntry, TabBar, Tone, Units,
+};
 
 use crate::prelude::MidiChannel;
 
@@ -45,8 +48,8 @@ impl MidiUtil {
         if tone.is_none() || entry.prev_is_tie() {
             return None;
         }
-        let start_position = BarPosition::new(
-            bar.bar_units(), bar.bar_ordinal, entry.props.in_bar_pos);
+        let start_position =
+            BarPosition::new(bar.bar_units(), bar.bar_ordinal, entry.props.in_bar_pos);
         let mut play_msgs: Vec<(BarPosition, StructuredShortMessage)> = tone
             .get_notes()
             .iter()
@@ -54,8 +57,10 @@ impl MidiUtil {
             .map(|x| (start_position, x))
             .collect();
         let stop_position = BarPosition::new(
-            bar.bar_units(), bar.bar_ordinal,
-            entry.props.in_bar_pos + entry.model.tied_units());
+            bar.bar_units(),
+            bar.bar_ordinal,
+            entry.props.in_bar_pos + entry.model.tied_units(),
+        );
         let mut stop_msgs: Vec<(BarPosition, StructuredShortMessage)> = tone
             .get_notes()
             .iter()
@@ -73,11 +78,10 @@ impl MidiUtil {
         channel: &MidiChannel,
         bar: &TabBar,
         entry: &SliceEntry,
-        core_entry: &CoreEntry
+        core_entry: &CoreEntry,
     ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
         match core_entry {
-            CoreEntry::Tone(tone, _) =>
-                Self::get_tone_midi_msgs(channel, bar, entry, tone),
+            CoreEntry::Tone(tone, _) => Self::get_tone_midi_msgs(channel, bar, entry, tone),
             _ => None,
         }
     }
@@ -87,17 +91,19 @@ impl MidiUtil {
         entry: &SliceEntry,
     ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
         match entry.proto() {
-            notation_model::prelude::ProtoEntry::Core(core_entry) =>
-                Self::get_core_midi_msgs(channel, bar, entry, core_entry),
-            notation_model::prelude::ProtoEntry::Fretted6(fretted_entry) =>
-                Self::get_fretted_midi_msgs6(channel, bar, entry, fretted_entry),
-            notation_model::prelude::ProtoEntry::Fretted4(fretted_entry) =>
-                Self::get_fretted_midi_msgs4(channel, bar, entry, fretted_entry),
-            _ => None
+            notation_model::prelude::ProtoEntry::Core(core_entry) => {
+                Self::get_core_midi_msgs(channel, bar, entry, core_entry)
+            }
+            notation_model::prelude::ProtoEntry::Fretted6(fretted_entry) => {
+                Self::get_fretted_midi_msgs6(channel, bar, entry, fretted_entry)
+            }
+            notation_model::prelude::ProtoEntry::Fretted4(fretted_entry) => {
+                Self::get_fretted_midi_msgs4(channel, bar, entry, fretted_entry)
+            }
+            _ => None,
         }
     }
 }
-
 
 macro_rules! impl_get_pick_midi_msgs {
     ($name:ident, $get_fretted_shape:ident) => {
@@ -108,8 +114,7 @@ macro_rules! impl_get_pick_midi_msgs {
                 entry: &SliceEntry,
                 pick: &Pick,
             ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
-                if let Some((fretboard, shape)) =
-                        bar.$get_fretted_shape(entry) {
+                if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
                     let tone = fretboard.pick_tone(&shape, pick);
                     Self::get_tone_midi_msgs(channel, bar, entry, &tone)
                 } else {
@@ -117,7 +122,7 @@ macro_rules! impl_get_pick_midi_msgs {
                 }
             }
         }
-    }
+    };
 }
 
 macro_rules! impl_get_fretted_midi_msgs {
@@ -130,13 +135,14 @@ macro_rules! impl_get_fretted_midi_msgs {
                 fretted_entry: &$fretted_entry,
             ) -> Option<Vec<(BarPosition, StructuredShortMessage)>> {
                 match fretted_entry {
-                    $fretted_entry::Pick(pick, _) =>
-                        Self::$get_pick_midi_msgs(channel, bar, entry, pick),
+                    $fretted_entry::Pick(pick, _) => {
+                        Self::$get_pick_midi_msgs(channel, bar, entry, pick)
+                    }
                     _ => None,
                 }
             }
         }
-    }
+    };
 }
 
 impl_get_pick_midi_msgs!(get_pick_midi_msgs6, get_fretted_shape6);

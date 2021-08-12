@@ -6,11 +6,11 @@ pub mod strum;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::entry::{FrettedEntry6, FrettedEntry4};
+    pub use crate::entry::{FrettedEntry4, FrettedEntry6};
     #[doc(hidden)]
-    pub use crate::fretboard::{Fretboard6, Fretboard4};
+    pub use crate::fretboard::{Fretboard4, Fretboard6};
     #[doc(hidden)]
-    pub use crate::hand::{Finger, HandShape6, HandShape4};
+    pub use crate::hand::{Finger, HandShape4, HandShape6};
     #[doc(hidden)]
     pub use crate::pick::{Pick, PickNote};
     #[doc(hidden)]

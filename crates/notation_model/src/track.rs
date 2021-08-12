@@ -1,7 +1,9 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{ModelEntry, SliceBegin, SliceEnd, TrackKind, Fretboard6, Fretboard4, SliceEntry};
+use crate::prelude::{
+    Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, SliceEntry, TrackKind,
+};
 
 #[derive(Debug)]
 pub struct Track {
@@ -84,13 +86,13 @@ macro_rules! impl_get_fretboard {
                     let fretted_entry = x.$as_fretted();
                     fretted_entry.and_then(|y| y.as_fretboard()).is_some()
                 });
-                fretboard_entry
-                    .and_then(|x| {
-                        x.$as_fretted().and_then(|x| x.as_fretboard().map(|z| z.to_owned()))
-                    })
+                fretboard_entry.and_then(|x| {
+                    x.$as_fretted()
+                        .and_then(|x| x.as_fretboard().map(|z| z.to_owned()))
+                })
             }
         }
-    }
+    };
 }
 
 impl_get_fretboard!(get_fretboard6, 6, as_fretted6, Fretboard6);

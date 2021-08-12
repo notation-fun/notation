@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use super::prelude::{Fretboard4, Fretboard6, HandShape4, HandShape6};
 use crate::prelude::{Pick, Strum};
-use super::prelude::{HandShape6, HandShape4};
-use super::prelude::{Fretboard6, Fretboard4};
 use notation_core::prelude::{Duration, Entry};
 
 macro_rules! impl_entry {
@@ -108,7 +107,7 @@ macro_rules! impl_entry {
                 Self::Strum(v.0, v.1)
             }
         }
-    }
+    };
 }
 
 impl_entry!(FrettedEntry6, 6, HandShape6, Fretboard6);

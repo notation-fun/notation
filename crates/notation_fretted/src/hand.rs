@@ -68,7 +68,7 @@ macro_rules! impl_hand_shape {
                 Self::new(v, [None; $strings])
             }
         }
-    }
+    };
 }
 
 impl_hand_shape!(HandShape6, 6);

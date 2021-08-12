@@ -29,7 +29,7 @@ macro_rules! impl_strings_grid {
                 }
             }
         }
-    }
+    };
 }
 
 impl_strings_grid!(StringsGrid6, 6);

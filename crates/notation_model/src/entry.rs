@@ -1,7 +1,9 @@
 use std::sync::{Arc, Weak};
 
 use crate::prelude::Track;
-use notation_proto::prelude::{Duration, Entry, FrettedEntry6, FrettedEntry4, ProtoEntry, TrackKind, Units};
+use notation_proto::prelude::{
+    Duration, Entry, FrettedEntry4, FrettedEntry6, ProtoEntry, TrackKind, Units,
+};
 
 #[derive(Copy, Clone, Debug)]
 pub struct ModelEntryProps {
@@ -121,7 +123,10 @@ impl ModelEntry {
             TrackKind::Custom("".to_owned())
         }
     }
-    pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(&self, predicate: &F) -> Option<Arc<ModelEntry>> {
+    pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(
+        &self,
+        predicate: &F,
+    ) -> Option<Arc<ModelEntry>> {
         if let Some(track) = self.track.upgrade() {
             track.get_entry(predicate)
         } else {

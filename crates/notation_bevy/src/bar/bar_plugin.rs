@@ -4,11 +4,11 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::{
-    AddEntryEvent, BarLayout, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin,
-    MelodyPlugin, NotationAppState, NotationSettings, NotationTheme, WindowResizedEvent,
+    AddEntryEvent, BarLayout, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin, MelodyPlugin,
+    NotationAppState, NotationSettings, NotationTheme, WindowResizedEvent,
 };
-use crate::strings::strings_lane_bundle::{StringsLaneBundle6, StringsLaneBundle4};
-use crate::shapes::shapes_lane_bundle::{ShapesLaneBundle6, ShapesLaneBundle4};
+use crate::shapes::shapes_lane_bundle::{ShapesLaneBundle4, ShapesLaneBundle6};
+use crate::strings::strings_lane_bundle::{StringsLaneBundle4, StringsLaneBundle6};
 use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar, TrackKind};
 
 use super::bar_beat::{BarBeat, BarBeatData};

@@ -1,6 +1,6 @@
 use crate::tuning::GuitarTuning;
 use notation_core::prelude::Note;
-use notation_fretted::prelude::{Fretboard6};
+use notation_fretted::prelude::Fretboard6;
 
 pub const GUITAR_STRING_NUM: usize = 6;
 

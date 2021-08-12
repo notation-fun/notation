@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_model::prelude::{Fretboard6, Fretboard4, FrettedEntry6, FrettedEntry4, ModelEntry, Track};
+use notation_model::prelude::{
+    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, ModelEntry, Track,
+};
 
 macro_rules! impl_shapes_lane_bundle {
     ($type:ident, $fretted_entry:ident, $fretboard:ident, $get_fretboard:ident) => {
@@ -11,14 +13,12 @@ macro_rules! impl_shapes_lane_bundle {
         }
 
         impl $type {
-            pub fn new(
-                track: Arc<Track>,
-            ) -> Self {
+            pub fn new(track: Arc<Track>) -> Self {
                 let fretboard = track.$get_fretboard();
                 Self { fretboard }
             }
         }
-    }
+    };
 }
 
 impl_shapes_lane_bundle!(ShapesLaneBundle6, FrettedEntry6, Fretboard6, get_fretboard6);

@@ -1,8 +1,10 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use crate::prelude::{StringsGrid6, StringsGrid4};
-use notation_model::prelude::{Fretboard6, FrettedEntry6, Fretboard4, FrettedEntry4, ModelEntry, Track};
+use crate::prelude::{StringsGrid4, StringsGrid6};
+use notation_model::prelude::{
+    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, ModelEntry, Track,
+};
 
 macro_rules! impl_strings_lane_bundle {
     ($type:ident, $fretted_entry:ident, $fretboard:ident, $get_fretboard:ident, $strings_grid:ident) => {
@@ -13,9 +15,7 @@ macro_rules! impl_strings_lane_bundle {
         }
 
         impl $type {
-            pub fn new(
-                track: Arc<Track>,
-            ) -> Self {
+            pub fn new(track: Arc<Track>) -> Self {
                 let fretboard = track.$get_fretboard();
                 Self {
                     fretboard,
@@ -23,8 +23,20 @@ macro_rules! impl_strings_lane_bundle {
                 }
             }
         }
-    }
+    };
 }
 
-impl_strings_lane_bundle!(StringsLaneBundle6, FrettedEntry6, Fretboard6, get_fretboard6, StringsGrid6);
-impl_strings_lane_bundle!(StringsLaneBundle4, FrettedEntry4, Fretboard4, get_fretboard4, StringsGrid4);
+impl_strings_lane_bundle!(
+    StringsLaneBundle6,
+    FrettedEntry6,
+    Fretboard6,
+    get_fretboard6,
+    StringsGrid6
+);
+impl_strings_lane_bundle!(
+    StringsLaneBundle4,
+    FrettedEntry4,
+    Fretboard4,
+    get_fretboard4,
+    StringsGrid4
+);

@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use notation_core::prelude::{CoreEntry, Duration, Entry};
-use notation_fretted::prelude::{FrettedEntry6};
-use notation_fretted::prelude::{FrettedEntry4};
+use notation_fretted::prelude::{FrettedEntry4, FrettedEntry6};
 
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum ProtoEntry {

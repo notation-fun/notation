@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::HandShape6;
-use notation_model::prelude::HandShape4;
+use notation_model::prelude::{HandShape4, HandShape6};
 
 macro_rules! impl_hand_shape_bundle {
     ($type:ident, $hand_shape:ident) => {
@@ -23,7 +22,7 @@ macro_rules! impl_hand_shape_bundle {
                 }
             }
         }
-    }
+    };
 }
 
 impl_hand_shape_bundle!(HandShapeBundle6, HandShape6);
