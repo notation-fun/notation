@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-use crate::guitar::GuitarStrings;
 use notation_core::prelude::Note;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -16,7 +15,7 @@ impl Default for GuitarTuning {
     }
 }
 
-impl From<GuitarTuning> for GuitarStrings {
+impl From<GuitarTuning> for [Note; 6] {
     fn from(v: GuitarTuning) -> Self {
         match v {
             GuitarTuning::Standard => [

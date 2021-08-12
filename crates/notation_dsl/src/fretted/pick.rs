@@ -48,10 +48,11 @@ impl ToTokens for PickDsl {
                 ProtoEntry::from(CoreEntry::from(#duration_quote))
             });
         } else {
-            let string_num = Context::fretted().string_num;
+            let _string_num = Context::fretted().string_num;
             let notes_quote: Vec<_> = notes.iter().map(|x| quote! { #x }).collect();
+            let fretted_entry_quote = Context::fretted().fretted_entry_quote();
             tokens.extend(quote! {
-                ProtoEntry::from(FrettedEntry::<#string_num>::from(
+                ProtoEntry::from(#fretted_entry_quote::from(
                     (Pick::from(vec![
                         #(#notes_quote),*
                     ]), #duration_quote)

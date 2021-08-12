@@ -7,23 +7,30 @@ use notation_model::prelude::TabBar;
 
 use super::single_string::{SingleString, SingleStringData};
 
-pub struct StringsGrid<const S: usize> {}
+macro_rules! impl_strings_grid {
+    ($type:ident, $strings: literal) => {
+        pub struct $type {}
 
-impl<const S: usize> StringsGrid<S> {
-    pub fn add_strings(
-        &self,
-        commands: &mut Commands,
-        theme: &NotationTheme,
-        entity: Entity,
-        tab_bar: &Arc<TabBar>,
-    ) {
-        for string in 1..=S {
-            SingleString::create(
-                commands,
-                entity,
-                theme,
-                SingleStringData::new(tab_bar, string as u8),
-            );
+        impl $type {
+            pub fn add_strings(
+                &self,
+                commands: &mut Commands,
+                theme: &NotationTheme,
+                entity: Entity,
+                tab_bar: &Arc<TabBar>,
+            ) {
+                for string in 1..=$strings {
+                    SingleString::create(
+                        commands,
+                        entity,
+                        theme,
+                        SingleStringData::new(tab_bar, string as u8),
+                    );
+                }
+            }
         }
     }
 }
+
+impl_strings_grid!(StringsGrid6, 6);
+impl_strings_grid!(StringsGrid4, 4);

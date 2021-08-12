@@ -20,10 +20,10 @@ fn create_word_text(
     theme: Res<NotationTheme>,
     _settings: Res<NotationSettings>,
     query: Query<(&Parent, Entity, &WordText, &Duration, &BarPosition), Added<WordText>>,
-    layer_query: Query<(&Arc<TabBar>, &LyricsGrid)>,
+    lane_query: Query<(&Arc<TabBar>, &LyricsGrid)>,
 ) {
     for (parent, entity, text, duration, pos) in query.iter() {
-        if let Ok((bar, _grid)) = layer_query.get(parent.0) {
+        if let Ok((bar, _grid)) = lane_query.get(parent.0) {
             let bar_units = bar.bar_units();
             let data = WordTextData::new(bar_units, &bar, *duration, *pos, text.0.clone());
             WordTextShape::create_with_child(

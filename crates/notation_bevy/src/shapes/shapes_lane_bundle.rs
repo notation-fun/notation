@@ -1,32 +1,25 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_model::prelude::{Fretboard, FrettedEntry, ModelEntry, Track};
+use notation_model::prelude::{Fretboard6, Fretboard4, FrettedEntry6, FrettedEntry4, ModelEntry, Track};
 
-#[derive(Bundle)]
-pub struct ShapesLaneBundle<const S: usize> {
-    fretboard: Fretboard<S>,
-}
+macro_rules! impl_shapes_lane_bundle {
+    ($type:ident, $fretted_entry:ident, $fretboard:ident, $get_fretboard:ident) => {
+        #[derive(Bundle)]
+        pub struct $type {
+            fretboard: Option<$fretboard>,
+        }
 
-impl<const S: usize> ShapesLaneBundle<S> {
-    pub fn _new<F1, F2>(
-        track: Arc<Track>,
-        as_fretted_entry: &F1,
-        new_default_fretboard: &F2,
-    ) -> Self
-    where
-        F1: Fn(&ModelEntry) -> Option<&FrettedEntry<S>>,
-        F2: Fn() -> Fretboard<S>,
-    {
-        let fretboard_entry = track.get_entry(&|x: &ModelEntry| {
-            let fretted_entry = as_fretted_entry(x);
-            fretted_entry.and_then(|y| y.as_fretboard()).is_some()
-        });
-        let fretboard = fretboard_entry
-            .and_then(|x| {
-                as_fretted_entry(x.as_ref()).and_then(|x| x.as_fretboard().map(|z| z.to_owned()))
-            })
-            .unwrap_or_else(|| new_default_fretboard());
-        Self { fretboard }
+        impl $type {
+            pub fn new(
+                track: Arc<Track>,
+            ) -> Self {
+                let fretboard = track.$get_fretboard();
+                Self { fretboard }
+            }
+        }
     }
 }
+
+impl_shapes_lane_bundle!(ShapesLaneBundle6, FrettedEntry6, Fretboard6, get_fretboard6);
+impl_shapes_lane_bundle!(ShapesLaneBundle4, FrettedEntry4, Fretboard4, get_fretboard4);

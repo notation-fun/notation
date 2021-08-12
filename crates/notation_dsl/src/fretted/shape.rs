@@ -42,7 +42,7 @@ impl ToTokens for ShapeDsl {
             frets,
             duration_tweak,
         } = self;
-        let string_num = Context::fretted().string_num;
+        //let string_num = Context::fretted().string_num;
         let mut frets_quote: Vec<TokenStream> = vec![];
         let mut fingers_quote: Vec<TokenStream> = vec![];
         for fret in frets {
@@ -53,9 +53,11 @@ impl ToTokens for ShapeDsl {
             fingers_quote.push(quote! { None });
         }
         let duration_quote = Context::duration_quote(duration_tweak);
+        let fretted_entry_quote = Context::fretted().fretted_entry_quote();
+        let hand_shape_quote = Context::fretted().hand_shape_quote();
         tokens.extend(quote! {
-            ProtoEntry::from(FrettedEntry::<#string_num>::from(
-                (HandShape::<#string_num>::new([
+            ProtoEntry::from(#fretted_entry_quote::from(
+                (#hand_shape_quote::new([
                     #(#frets_quote),*
                 ], [
                     #(#fingers_quote),*

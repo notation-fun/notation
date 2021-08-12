@@ -70,9 +70,11 @@ impl ToTokens for FretboardDsl {
                 _ => quote! { GuitarTuning::Standard },
             },
         };
+        let fretted_entry_quote = Context::fretted().fretted_entry_quote();
+        let fretboard_quote = Context::fretted().fretboard_quote();
         tokens.extend(quote! {
-            ProtoEntry::from(FrettedEntry::<#string_num>::from(
-                Fretboard::<#string_num>::new(#fret_num, #tuning_quote.into(), #capo)
+            ProtoEntry::from(#fretted_entry_quote::from(
+                #fretboard_quote::new(#fret_num, #tuning_quote.into(), #capo)
             ))
         });
     }

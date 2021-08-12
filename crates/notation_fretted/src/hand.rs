@@ -21,60 +21,55 @@ impl Display for Finger {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
-pub struct HandShape<const S: usize> {
-    #[serde(with = "serde_arrays")]
-    pub frets: [Option<u8>; S],
-    #[serde(with = "serde_arrays")]
-    pub fingers: [Option<Finger>; S],
-}
-impl<const S: usize> Display for HandShape<S> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "[")?;
-        for fret in self.frets {
-            match fret {
-                Some(fret) => write!(f, "{}", fret)?,
-                None => write!(f, "x")?,
+macro_rules! impl_hand_shape {
+    ($type:ident, $strings:literal) => {
+        #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+        pub struct $type {
+            #[serde(with = "serde_arrays")]
+            pub frets: [Option<u8>; $strings],
+            #[serde(with = "serde_arrays")]
+            pub fingers: [Option<Finger>; $strings],
+        }
+        impl Display for $type {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "[")?;
+                for fret in self.frets {
+                    match fret {
+                        Some(fret) => write!(f, "{}", fret)?,
+                        None => write!(f, "x")?,
+                    }
+                }
+                write!(f, "]")?;
+                Ok(())
             }
         }
-        write!(f, "]")?;
-        Ok(())
-    }
-}
 
-impl<const S: usize> HandShape<S> {
-    pub fn new(frets: [Option<u8>; S], fingers: [Option<Finger>; S]) -> Self {
-        Self { frets, fingers }
-    }
-    pub fn clone_<const S1: usize>(&self) -> HandShape<S1> {
-        if S != S1 {
-            println!("HandShape<{}> unsafe clone_: {}", S, S1);
+        impl $type {
+            pub fn new(frets: [Option<u8>; $strings], fingers: [Option<Finger>; $strings]) -> Self {
+                Self { frets, fingers }
+            }
+            pub fn string_fret(&self, string: u8) -> Option<u8> {
+                if string == 0 || string as usize > self.frets.len() {
+                    None
+                } else {
+                    self.frets[string as usize - 1]
+                }
+            }
         }
-        let mut frets = [None; S1];
-        let mut fingers = [None; S1];
-        for i in 0..std::cmp::min(S, S1) {
-            frets[i] = self.frets[i];
-            fingers[i] = self.fingers[i];
+
+        impl From<([Option<u8>; $strings], [Option<Finger>; $strings])> for $type {
+            fn from(v: ([Option<u8>; $strings], [Option<Finger>; $strings])) -> Self {
+                Self::new(v.0, v.1)
+            }
         }
-        HandShape::<S1> { frets, fingers }
-    }
-    pub fn string_fret(&self, string: u8) -> Option<u8> {
-        if string == 0 || string as usize > self.frets.len() {
-            None
-        } else {
-            self.frets[string as usize - 1]
+
+        impl From<[Option<u8>; $strings]> for $type {
+            fn from(v: [Option<u8>; $strings]) -> Self {
+                Self::new(v, [None; $strings])
+            }
         }
     }
 }
 
-impl<const S: usize> From<([Option<u8>; S], [Option<Finger>; S])> for HandShape<S> {
-    fn from(v: ([Option<u8>; S], [Option<Finger>; S])) -> Self {
-        Self::new(v.0, v.1)
-    }
-}
-
-impl<const S: usize> From<[Option<u8>; S]> for HandShape<S> {
-    fn from(v: [Option<u8>; S]) -> Self {
-        Self::new(v, [None; S])
-    }
-}
+impl_hand_shape!(HandShape6, 6);
+impl_hand_shape!(HandShape4, 4);

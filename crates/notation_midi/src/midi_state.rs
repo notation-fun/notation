@@ -87,8 +87,8 @@ impl MidiChannel {
         }
         if end_passed {
             self.init_channel(settings, hub);
-        }
-        if self.ensure_sorted() || end_passed {
+            self.calc_next_index(&play_control.begin_bar_position());
+        } else if self.ensure_sorted() {
             self.calc_next_index(&old_position.bar);
         }
         let mut count = 0;

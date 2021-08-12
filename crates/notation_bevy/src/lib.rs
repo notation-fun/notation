@@ -18,7 +18,6 @@ pub mod lane;
 pub mod play;
 pub mod tab;
 
-pub mod guitar;
 pub mod lyrics;
 pub mod melody;
 pub mod shapes;
@@ -63,10 +62,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::entry_state::EntryState;
     #[doc(hidden)]
-    pub use crate::guitar::guitar_lane_bundle::{GuitarShapesLaneBundle, GuitarStringsLaneBundle};
-    #[doc(hidden)]
-    pub use crate::guitar::guitar_plugin::GuitarPlugin;
-    #[doc(hidden)]
     pub use crate::lane::lane_bundle::LaneBundle;
     #[doc(hidden)]
     pub use crate::lane::lane_layout::LaneLayout;
@@ -91,7 +86,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::shapes::shapes_plugin::ShapesPlugin;
     #[doc(hidden)]
-    pub use crate::strings::strings_grid::StringsGrid;
+    pub use crate::strings::strings_grid::{StringsGrid6, StringsGrid4};
     #[doc(hidden)]
     pub use crate::strings::strings_plugin::StringsPlugin;
     #[doc(hidden)]

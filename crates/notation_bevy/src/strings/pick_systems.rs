@@ -1,59 +1,60 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarLane, BarPosition, TabBar};
+use notation_model::prelude::{BarLane, BarPosition, TabBar, SliceEntry};
 use std::sync::Arc;
 
 use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme, StringsPlugin};
-use notation_model::prelude::{Duration, Fretboard, HandShape, Pick};
+use notation_model::prelude::{Duration, Fretboard6, HandShape6, Fretboard4, HandShape4, Pick};
 
 use super::pick_note::{PickNoteData, PickNoteShape};
 
 pub fn new_system_set() -> SystemSet {
     SystemSet::new()
-        .with_system(create_pick_notes::<6>.system())
-        .with_system(create_pick_notes::<4>.system())
+        .with_system(create_pick_notes6.system())
+        .with_system(create_pick_notes4.system())
 }
 
-fn create_pick_notes<const S: usize>(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    theme: Res<NotationTheme>,
-    settings: Res<NotationSettings>,
-    query: Query<(Entity, &Pick, &Duration, &BarPosition), Added<Pick>>,
-    lane_queries_0: Query<&Parent>,
-    lane_queries_1: Query<&Children>,
-    lane_queries_2: Query<&Arc<BarLane>>,
-    shape_queries_0: Query<(&Arc<TabBar>, &Arc<BarLane>, &Fretboard<S>, &Children)>,
-    shape_queries_1: Query<&HandShape<S>>,
-) {
-    for (entity, pick, duration, pos) in query.iter() {
-        if let Some((bar, fretboard, shape)) = StringsPlugin::get_fretted_shape::<S>(
-            entity,
-            pos,
-            (&lane_queries_0, &lane_queries_1, &lane_queries_2),
-            (&shape_queries_0, &shape_queries_1),
+macro_rules! impl_pick_system {
+    ($create_pick_notes:ident, $fretboard:ident, $hand_shape:ident, $get_fretted_shape:ident
+    ) => {
+        fn $create_pick_notes(
+            mut commands: Commands,
+            asset_server: Res<AssetServer>,
+            theme: Res<NotationTheme>,
+            settings: Res<NotationSettings>,
+            query: Query<(&Parent, Entity, &Arc<SliceEntry>, &Pick, &Duration, &BarPosition), Added<Pick>>,
+            lane_query: Query<&Arc<TabBar>>,
         ) {
-            let bar_units = bar.bar_units();
-            for pick_note in pick.get_notes() {
-                if let Some((fret, note)) = fretboard.shape_pick_fret_note(&shape, pick_note) {
-                    let syllable = bar.calc_syllable(&note.pitch);
-                    let data =
-                        PickNoteData::new(bar_units, &bar, *duration, *pos, pick_note, syllable);
-                    PickNoteShape::create_with_child(
-                        &mut commands,
-                        entity,
-                        &theme,
-                        data,
-                        |child_commands| {
-                            if settings.always_show_fret || pick_note.fret.is_some() {
-                                theme
-                                    .strings
-                                    .insert_fret_text(child_commands, &asset_server, fret);
+            for (parent, entity, entry, pick, duration, pos) in query.iter() {
+                if let Ok(bar) = lane_query.get(parent.0) {
+                    if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
+                        let bar_units = bar.bar_units();
+                        for pick_note in pick.get_notes() {
+                            if let Some((fret, note)) = fretboard.shape_pick_fret_note(&shape, pick_note) {
+                                let syllable = bar.calc_syllable(&note.pitch);
+                                let data =
+                                    PickNoteData::new(bar_units, &bar, *duration, *pos, pick_note, syllable);
+                                PickNoteShape::create_with_child(
+                                    &mut commands,
+                                    entity,
+                                    &theme,
+                                    data,
+                                    |child_commands| {
+                                        if settings.always_show_fret || pick_note.fret.is_some() {
+                                            theme
+                                                .strings
+                                                .insert_fret_text(child_commands, &asset_server, fret);
+                                        }
+                                    },
+                                );
                             }
-                        },
-                    );
+                        }
+                    }
                 }
             }
         }
     }
 }
+
+impl_pick_system!(create_pick_notes6, Fretboard6, HandShape6, get_fretted_shape6);
+impl_pick_system!(create_pick_notes4, Fretboard4, HandShape4, get_fretted_shape4);

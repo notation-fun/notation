@@ -1,7 +1,7 @@
 use std::sync::{Arc, Weak};
 
 use crate::prelude::Track;
-use notation_proto::prelude::{Duration, Entry, FrettedEntry, ProtoEntry, TrackKind, Units};
+use notation_proto::prelude::{Duration, Entry, FrettedEntry6, FrettedEntry4, ProtoEntry, TrackKind, Units};
 
 #[derive(Copy, Clone, Debug)]
 pub struct ModelEntryProps {
@@ -45,11 +45,11 @@ impl Entry for ModelEntry {
     }
 }
 impl ModelEntry {
-    pub fn as_fretted_six(&self) -> Option<&FrettedEntry<6>> {
-        self.proto.as_fretted_six()
+    pub fn as_fretted6(&self) -> Option<&FrettedEntry6> {
+        self.proto.as_fretted6()
     }
-    pub fn as_fretted_four(&self) -> Option<&FrettedEntry<4>> {
-        self.proto.as_fretted_four()
+    pub fn as_fretted4(&self) -> Option<&FrettedEntry4> {
+        self.proto.as_fretted4()
     }
     pub fn prev(&self) -> Option<Arc<ModelEntry>> {
         if self.index == 0 {

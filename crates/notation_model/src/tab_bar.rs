@@ -1,9 +1,9 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use notation_proto::prelude::{Fretboard, FrettedEntry, HandShape, Note, SyllableNote, TabPosition};
+use notation_proto::prelude::{Fretboard6, HandShape6, Fretboard4, HandShape4, Note, SyllableNote, TabPosition};
 
-use crate::prelude::{Bar, LaneKind, ModelEntry, Pitch, Section, Signature, SliceEntry, Syllable, Tab, TabMeta, Unit, Units};
+use crate::prelude::{Bar, Pitch, Section, Signature, SliceEntry, Syllable, Tab, TabMeta, Unit, Units};
 
 #[derive(Debug)]
 pub struct TabBar {
@@ -59,16 +59,15 @@ impl TabBar {
         self.tab_meta().calc_syllable_note(note)
     }
 }
-impl TabBar {
-    pub fn get_fretted_shape<F1, F2, const S: usize>(&self,
-        as_fretted_entry: &F1,
-        new_default_fretboard: &F2,
-        entry: &SliceEntry,
-    ) -> Option<(Fretboard<S>, HandShape<S>)>
-    where
-        F1: Fn(&ModelEntry) -> Option<&FrettedEntry<S>>,
-        F2: Fn() -> Fretboard<S>,
-    {
-        self.bar.get_fretted_shape(as_fretted_entry, new_default_fretboard, entry)
+macro_rules! impl_get_fretted_shape {
+    ($name:ident, $strings:literal, $get_fretted_shape:ident, $fretboard:ident, $hand_shape:ident) => {
+        impl TabBar {
+            pub fn $name(&self, entry: &SliceEntry) -> Option<($fretboard, $hand_shape)> {
+                self.bar.$get_fretted_shape(entry)
+            }
+        }
     }
 }
+
+impl_get_fretted_shape!(get_fretted_shape6, 6, get_fretted_shape6, Fretboard6, HandShape6);
+impl_get_fretted_shape!(get_fretted_shape4, 4, get_fretted_shape4, Fretboard4, HandShape4);

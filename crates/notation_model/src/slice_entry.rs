@@ -1,6 +1,6 @@
 use std::sync::{Arc, Weak};
 
-use crate::prelude::{ModelEntry, Slice, TabBar};
+use crate::prelude::{ModelEntry, Slice};
 use notation_proto::prelude::{Entry, ProtoEntry, TrackKind, Units};
 
 #[derive(Copy, Clone, Debug)]

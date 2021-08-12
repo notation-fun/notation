@@ -22,7 +22,6 @@ impl PluginGroup for NotationPlugins {
         group.add(BarPlugin);
         group.add(StringsPlugin);
         group.add(ShapesPlugin);
-        group.add(GuitarPlugin);
         group.add(TabPlugin);
         group.add(PlayPlugin);
         //crates plugins

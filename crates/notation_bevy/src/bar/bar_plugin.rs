@@ -4,9 +4,11 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::{
-    AddEntryEvent, BarLayout, GuitarPlugin, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin,
+    AddEntryEvent, BarLayout, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin,
     MelodyPlugin, NotationAppState, NotationSettings, NotationTheme, WindowResizedEvent,
 };
+use crate::strings::strings_lane_bundle::{StringsLaneBundle6, StringsLaneBundle4};
+use crate::shapes::shapes_lane_bundle::{ShapesLaneBundle6, ShapesLaneBundle4};
 use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar, TrackKind};
 
 use super::bar_beat::{BarBeat, BarBeatData};
@@ -101,12 +103,12 @@ impl BarPlugin {
             LaneKind::Melody => MelodyPlugin::insert_melody_lane_extra(commands, track),
             LaneKind::Strings => {
                 if track.kind == TrackKind::Guitar {
-                    GuitarPlugin::insert_guitar_strings_lane_extra(commands, track)
+                    commands.insert_bundle(StringsLaneBundle6::new(track));
                 }
             }
             LaneKind::Shapes => {
                 if track.kind == TrackKind::Guitar {
-                    GuitarPlugin::insert_guitar_shapes_lane_extra(commands, track)
+                    commands.insert_bundle(ShapesLaneBundle6::new(track));
                 }
             }
             _ => (),

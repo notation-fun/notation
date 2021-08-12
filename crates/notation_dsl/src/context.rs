@@ -26,6 +26,35 @@ impl Default for FrettedContext {
         }
     }
 }
+impl FrettedContext {
+    pub fn fretted_entry_quote(&self) -> TokenStream {
+        if self.string_num == 6 {
+            quote! { FrettedEntry6 }
+        } else if self.string_num == 4 {
+            quote! { FrettedEntry4 }
+        } else {
+            panic!("Unsupported string_num: {}", self.string_num);
+        }
+    }
+    pub fn fretboard_quote(&self) -> TokenStream {
+        if self.string_num == 6 {
+            quote! { Fretboard6 }
+        } else if self.string_num == 4 {
+            quote! { Fretboard4 }
+        } else {
+            panic!("Unsupported string_num: {}", self.string_num);
+        }
+    }
+    pub fn hand_shape_quote(&self) -> TokenStream {
+        if self.string_num == 6 {
+            quote! { HandShape6 }
+        } else if self.string_num == 4 {
+            quote! { HandShape4 }
+        } else {
+            panic!("Unsupported string_num: {}", self.string_num);
+        }
+    }
+}
 
 #[derive(Debug)]
 pub struct Context {

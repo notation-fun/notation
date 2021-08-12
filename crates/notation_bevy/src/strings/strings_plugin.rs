@@ -7,16 +7,17 @@ use std::sync::Arc;
 use super::pick_bundle::PickBundle;
 use super::pick_note::{PickNoteData, PickNoteShape};
 use super::single_string::{SingleString, SingleStringData};
-use super::strings_grid::StringsGrid;
+use super::strings_grid::StringsGrid6;
+use super::strings_grid::StringsGrid4;
 use crate::prelude::{BarPlugin, LyonShapeOp, NotationTheme, ShapesPlugin, WindowResizedEvent};
-use notation_model::prelude::{Fretboard, FrettedEntry, HandShape, TabBar};
+use notation_model::prelude::{Fretboard6, FrettedEntry6, HandShape6, Fretboard4, FrettedEntry4, HandShape4, TabBar};
 
 pub struct StringsPlugin;
 
 impl Plugin for StringsPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_system(on_add_fretted_grid::<6>.system());
-        app.add_system(on_add_fretted_grid::<4>.system());
+        app.add_system(on_add_fretted_grid6.system());
+        app.add_system(on_add_fretted_grid4.system());
         app.add_system(on_config_changed.system());
         app.add_system_set(super::pick_systems::new_system_set());
     }
@@ -39,43 +40,35 @@ fn on_config_changed(
     }
 }
 
-fn on_add_fretted_grid<const S: usize>(
-    mut commands: Commands,
-    theme: Res<NotationTheme>,
-    query: Query<(Entity, &Arc<TabBar>, &StringsGrid<S>), Added<StringsGrid<S>>>,
-) {
-    for (entity, tab_bar, strings_grid) in query.iter() {
-        strings_grid.add_strings(&mut commands, &theme, entity, tab_bar);
+macro_rules! impl_strings_plugin {
+    ($on_add_fretted_grid:ident, $insert_entry_extra:ident,
+        $fretted_entry:ident, $strings_grid:ident
+    ) => {
+        fn $on_add_fretted_grid(
+            mut commands: Commands,
+            theme: Res<NotationTheme>,
+            query: Query<(Entity, &Arc<TabBar>, &$strings_grid), Added<$strings_grid>>,
+        ) {
+            for (entity, tab_bar, strings_grid) in query.iter() {
+                strings_grid.add_strings(&mut commands, &theme, entity, tab_bar);
+            }
+        }
+
+        impl StringsPlugin {
+            pub fn $insert_entry_extra(
+                commands: &mut EntityCommands,
+                entry: &$fretted_entry,
+            ) {
+                match entry {
+                    $fretted_entry::Pick(pick, _duration) => {
+                        commands.insert_bundle(PickBundle::from(*pick));
+                    }
+                    _ => (),
+                }
+            }
+        }
     }
 }
 
-impl StringsPlugin {
-    pub fn insert_entry_extra<const S: usize>(
-        commands: &mut EntityCommands,
-        entry: &FrettedEntry<S>,
-    ) {
-        match entry {
-            FrettedEntry::Pick(pick, _duration) => {
-                commands.insert_bundle(PickBundle::from(*pick));
-            }
-            _ => (),
-        }
-    }
-    pub fn get_fretted_shape<const S: usize>(
-        entry_entity: Entity,
-        position: &BarPosition,
-        lane_queries: (&Query<&Parent>, &Query<&Children>, &Query<&Arc<BarLane>>),
-        shape_queries: (
-            &Query<(&Arc<TabBar>, &Arc<BarLane>, &Fretboard<S>, &Children)>,
-            &Query<&HandShape<S>>,
-        ),
-    ) -> Option<(Arc<TabBar>, Fretboard<S>, HandShape<S>)> {
-        if let Some((shapes_lane_entity, _shapes_lane)) =
-            BarPlugin::get_lane(entry_entity, 2, LaneKind::Shapes, lane_queries)
-        {
-            ShapesPlugin::get_fretted_shape::<S>(shapes_lane_entity, position, shape_queries)
-        } else {
-            None
-        }
-    }
-}
+impl_strings_plugin!(on_add_fretted_grid6, insert_entry_extra6, FrettedEntry6, StringsGrid6);
+impl_strings_plugin!(on_add_fretted_grid4, insert_entry_extra4, FrettedEntry4, StringsGrid4);

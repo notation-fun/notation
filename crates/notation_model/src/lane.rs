@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use notation_proto::prelude::{FrettedEntry, ProtoEntry, TrackKind};
+use notation_proto::prelude::{FrettedEntry6, ProtoEntry, TrackKind};
 
 use crate::prelude::Slice;
 
@@ -28,11 +28,11 @@ impl LaneKind {
             TrackKind::Lyrics => Some(Self::Lyrics),
             TrackKind::Vocal => Some(Self::Melody),
             TrackKind::Guitar => match entry {
-                ProtoEntry::FrettedSix(entry) => match entry {
-                    FrettedEntry::Pick(_, _) => Some(Self::Strings),
-                    FrettedEntry::Strum(_, _) => Some(Self::Strings),
-                    FrettedEntry::Shape(_, _) => Some(Self::Shapes),
-                    FrettedEntry::Fretboard(_) => None,
+                ProtoEntry::Fretted6(entry) => match entry {
+                    FrettedEntry6::Pick(_, _) => Some(Self::Strings),
+                    FrettedEntry6::Strum(_, _) => Some(Self::Strings),
+                    FrettedEntry6::Shape(_, _) => Some(Self::Shapes),
+                    FrettedEntry6::Fretboard(_) => None,
                 },
                 _ => None,
             },

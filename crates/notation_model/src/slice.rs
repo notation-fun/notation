@@ -1,10 +1,10 @@
-use fehler::throws;
+
 use notation_proto::prelude::{SliceBegin, SliceEnd};
 
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{LaneKind, ParseError, SliceEntry, Track};
+use crate::prelude::{LaneKind, SliceEntry, Track};
 
 #[derive(Debug)]
 pub struct Slice {

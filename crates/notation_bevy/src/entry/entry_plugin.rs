@@ -46,13 +46,13 @@ impl EntryPlugin {
     pub fn insert_entry_extra(commands: &mut EntityCommands, entry: Arc<SliceEntry>) {
         match entry.as_ref().model.proto.as_ref() {
             ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
-            ProtoEntry::FrettedSix(entry) => {
-                ShapesPlugin::insert_entry_extra(commands, entry);
-                StringsPlugin::insert_entry_extra(commands, entry);
+            ProtoEntry::Fretted6(entry) => {
+                ShapesPlugin::insert_entry_extra6(commands, entry);
+                StringsPlugin::insert_entry_extra6(commands, entry);
             }
-            ProtoEntry::FrettedFour(entry) => {
-                ShapesPlugin::insert_entry_extra(commands, entry);
-                StringsPlugin::insert_entry_extra(commands, entry);
+            ProtoEntry::Fretted4(entry) => {
+                ShapesPlugin::insert_entry_extra4(commands, entry);
+                StringsPlugin::insert_entry_extra4(commands, entry);
             }
             ProtoEntry::Mark(_) => {}
             ProtoEntry::Word(word, _) => {

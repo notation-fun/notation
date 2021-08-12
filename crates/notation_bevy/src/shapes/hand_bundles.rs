@@ -1,22 +1,30 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::HandShape;
+use notation_model::prelude::HandShape6;
+use notation_model::prelude::HandShape4;
 
-#[derive(Bundle)]
-pub struct HandShapeBundle<const S: usize> {
-    pub name: Name,
-    pub shape: HandShape<S>,
-    pub transform: Transform,
-    pub global_cransform: GlobalTransform,
-}
+macro_rules! impl_hand_shape_bundle {
+    ($type:ident, $hand_shape:ident) => {
+        #[derive(Bundle)]
+        pub struct $type {
+            pub name: Name,
+            pub shape: $hand_shape,
+            pub transform: Transform,
+            pub global_cransform: GlobalTransform,
+        }
 
-impl<const S: usize> From<HandShape<S>> for HandShapeBundle<S> {
-    fn from(v: HandShape<S>) -> Self {
-        Self {
-            name: v.to_string().as_str().into(),
-            shape: v,
-            transform: Transform::default(),
-            global_cransform: GlobalTransform::default(),
+        impl From<$hand_shape> for $type {
+            fn from(v: $hand_shape) -> Self {
+                Self {
+                    name: v.to_string().as_str().into(),
+                    shape: v,
+                    transform: Transform::default(),
+                    global_cransform: GlobalTransform::default(),
+                }
+            }
         }
     }
 }
+
+impl_hand_shape_bundle!(HandShapeBundle6, HandShape6);
+impl_hand_shape_bundle!(HandShapeBundle4, HandShape4);
