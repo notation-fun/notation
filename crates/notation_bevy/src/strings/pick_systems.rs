@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarLane, BarPosition, SliceEntry, TabBar};
+use notation_model::prelude::{BarLane, BarPosition, SliceEntry, TabBar, Entry};
 use std::sync::Arc;
 
 use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme, StringsPlugin};
@@ -36,6 +36,9 @@ macro_rules! impl_pick_system {
             lane_query: Query<&Arc<TabBar>>,
         ) {
             for (parent, entity, entry, pick, duration, pos) in query.iter() {
+                if entry.as_ref().prev_is_tie() {
+                    continue;
+                }
                 if let Ok(bar) = lane_query.get(parent.0) {
                     if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
                         let bar_units = bar.bar_units();
