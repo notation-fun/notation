@@ -1,13 +1,15 @@
 use std::sync::Arc;
 
-use bevy::render::camera::OrthographicProjection;
 use notation_midi::prelude::PlayControlEvt;
 use notation_model::prelude::{LaneEntry, PlayState, Position, Tab, TickResult};
 
 use bevy::prelude::*;
 use notation_model::prelude::{BarPosition, Duration};
 
-use crate::prelude::{BarLayout, EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabBars, TabState, WindowResizedEvent};
+use crate::prelude::{
+    BarLayout, EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabBars, TabState,
+    WindowResizedEvent,
+};
 
 use crate::tab::tab_state::TabPlayStateChanged;
 
@@ -56,10 +58,7 @@ fn on_tab_play_state_changed(
     mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
-    mut query: Query<
-        (Entity, &Arc<Vec<BarLayout>>, &TabState),
-        Added<TabPlayStateChanged>,
-    >,
+    mut query: Query<(Entity, &Arc<Vec<BarLayout>>, &TabState), Added<TabPlayStateChanged>>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut entry_query: Query<(Entity, &Arc<LaneEntry>, &BarPosition, &mut EntryState)>,
     mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,

@@ -1,7 +1,7 @@
 use bevy::app::PluginGroupBuilder;
 use bevy::input::mouse::MouseMotion;
 use bevy::prelude::*;
-use bevy::render::camera::OrthographicProjection;
+
 use bevy::window::WindowResized;
 
 use crate::prelude::*;

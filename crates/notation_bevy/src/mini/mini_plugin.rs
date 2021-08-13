@@ -1,9 +1,11 @@
-use std::fmt::Display;
 use bevy::prelude::*;
 
 use notation_model::prelude::Tab;
 
-use crate::prelude::{BevyUtil, LyonShapeOp, NotationAppState, NotationSettings, NotationTheme, SingleBundle, WindowResizedEvent};
+use crate::prelude::{
+    BevyUtil, LyonShapeOp, NotationAppState, NotationSettings, NotationTheme, SingleBundle,
+    WindowResizedEvent,
+};
 
 use super::mini_bar::{MiniBarData, MiniBarShape};
 use super::mini_beats::{MiniBeats, MiniBeatsData, MiniBeatsValue};
@@ -29,8 +31,11 @@ fn on_config_changed(
 ) {
     for _evt in evts.iter() {
         for (minimap, mut transform) in query.iter_mut() {
-            let data_value = settings.layout.calc_mini_bar_value(&app_state, minimap.bars);
-            let (new_transform, new_back_data) = theme.grid.calc_mini_map_transform(&app_state, &data_value);
+            let data_value = settings
+                .layout
+                .calc_mini_bar_value(&app_state, minimap.bars);
+            let (new_transform, new_back_data) =
+                theme.grid.calc_mini_map_transform(&app_state, &data_value);
             *transform = new_transform;
             if let Ok((back_entity, mut back_data)) = mini_map_back_query.single_mut() {
                 *back_data = new_back_data;
@@ -56,14 +61,17 @@ impl MiniPlugin {
         let bars = tab.bars.len();
         let data_value = settings.layout.calc_mini_bar_value(app_state, bars);
         let (transform, back_data) = theme.grid.calc_mini_map_transform(app_state, &data_value);
-        let map_entity = BevyUtil::spawn_child_bundle(commands, tab_entity,
-            SingleBundle::from((MiniMap { bars }, transform)));
+        let map_entity = BevyUtil::spawn_child_bundle(
+            commands,
+            tab_entity,
+            SingleBundle::from((MiniMap { bars }, transform)),
+        );
         MiniMapBack::create(commands, map_entity, theme, back_data);
         for bar in tab.bars.iter() {
             let data = MiniBarData::new(bar, data_value.clone());
             let mini_bar_entity = MiniBarShape::create(commands, map_entity, theme, data);
             let beats_value = MiniBeatsValue {
-                size: data_value.size / 3.0,
+                size: data_value.size * settings.layout.mini_beats_factor,
                 offset: data_value.size / 2.0,
                 syllable: notation_model::prelude::Syllable::Fa,
             };

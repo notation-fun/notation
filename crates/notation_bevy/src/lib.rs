@@ -98,15 +98,15 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
-    pub use crate::tab::tab_events::AddTabEvent;
-    #[doc(hidden)]
     pub use crate::tab::tab_bars::TabBars;
+    #[doc(hidden)]
+    pub use crate::tab::tab_bundle::TabBundle;
+    #[doc(hidden)]
+    pub use crate::tab::tab_events::AddTabEvent;
     #[doc(hidden)]
     pub use crate::tab::tab_plugin::TabPlugin;
     #[doc(hidden)]
     pub use crate::tab::tab_state::TabState;
-    #[doc(hidden)]
-    pub use crate::tab::tab_bundle::TabBundle;
     #[doc(hidden)]
     pub use crate::theme::core_theme::CoreTheme;
     #[doc(hidden)]

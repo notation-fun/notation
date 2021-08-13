@@ -5,7 +5,9 @@ use bevy::prelude::*;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::{mini::{mini_bar::{self, MiniBarValue}, mini_map::MiniMapBackData}, prelude::{BarLayout, NotationAppState, NotationSettings}};
+use crate::mini::mini_bar::MiniBarValue;
+use crate::mini::mini_map::MiniMapBackData;
+use crate::prelude::{BarLayout, NotationAppState, NotationSettings};
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -63,10 +65,10 @@ impl GridTheme {
         app_state: &NotationAppState,
         mini_bar_value: &MiniBarValue,
     ) -> (Transform, MiniMapBackData) {
-        let space = app_state.window_width
-            - mini_bar_value.size * mini_bar_value.cols as f32;
+        let space = app_state.window_width - mini_bar_value.size * mini_bar_value.cols as f32;
         let x = space / 2.0 - self.margin;
-        let mut y = -app_state.window_height + self.margin + self.header_height + mini_bar_value.margin;
+        let mut y =
+            -app_state.window_height + self.margin + self.header_height + mini_bar_value.margin;
         if mini_bar_value.rows > 1 {
             let size_and_margin = mini_bar_value.size + mini_bar_value.margin;
             y += (mini_bar_value.rows - 1) as f32 * size_and_margin;

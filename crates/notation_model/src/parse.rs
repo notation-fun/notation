@@ -5,9 +5,7 @@ use std::convert::TryFrom;
 use std::sync::{Arc, Weak};
 use thiserror::Error;
 
-use crate::prelude::{
-    BarLane, Form, LaneEntry, ModelEntry, Section, Tab, TabBar, TabMeta, Track,
-};
+use crate::prelude::{BarLane, Form, LaneEntry, ModelEntry, Section, Tab, TabBar, TabMeta, Track};
 use notation_proto::prelude::{Duration, Entry, ProtoEntry, Units};
 
 #[derive(Error, Debug)]

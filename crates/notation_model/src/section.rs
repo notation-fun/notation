@@ -26,7 +26,12 @@ impl Display for Section {
 }
 impl Section {
     pub fn new(index: usize, kind: SectionKind, id: String, bars: Vec<Arc<Bar>>) -> Self {
-        Self { id, kind, bars, index }
+        Self {
+            id,
+            kind,
+            bars,
+            index,
+        }
     }
 }
 
@@ -59,7 +64,11 @@ impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
 
 impl Section {
     #[throws(ParseError)]
-    pub fn try_new(index: usize, proto: notation_proto::prelude::Section, tracks: &Vec<Arc<Track>>) -> Self {
+    pub fn try_new(
+        index: usize,
+        proto: notation_proto::prelude::Section,
+        tracks: &Vec<Arc<Track>>,
+    ) -> Self {
         let mut bars = Vec::new();
         for (bar_index, bar) in proto.bars.into_iter().enumerate() {
             bars.push(Bar::try_new(bar_index, bar, tracks).map(Arc::new)?);

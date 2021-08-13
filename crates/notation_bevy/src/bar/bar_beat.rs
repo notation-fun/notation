@@ -53,7 +53,10 @@ pub struct BarBeat<'a> {
 
 impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     fn get_name(&self) -> String {
-        format!("{}:{}", self.data.bar_props.bar_ordinal, self.data.value.beat)
+        format!(
+            "{}:{}",
+            self.data.bar_props.bar_ordinal, self.data.value.beat
+        )
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
@@ -64,14 +67,18 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
     fn get_colors(&self) -> ShapeColors {
         let signature = self.data.value.signature;
-        let color = self.theme.core.get_beat_color(&signature, self.data.value.beat);
+        let color = self
+            .theme
+            .core
+            .get_beat_color(&signature, self.data.value.beat);
         ShapeColors::new(color.unwrap_or(self.theme.core.background_color))
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
-        let x = self.theme.grid.bar_size / self.data.value.bar_beats as f32 * self.data.value.beat as f32;
+        let x = self.theme.grid.bar_size / self.data.value.bar_beats as f32
+            * self.data.value.beat as f32;
         Transform::from_xyz(x, self.theme.grid.bar_beat_extra, self.theme.core.beat_z)
     }
 }

@@ -5,7 +5,11 @@ use notation_midi::prelude::SwitchTabEvent;
 use notation_model::prelude::Tab;
 
 use crate::mini::mini_plugin::MiniPlugin;
-use crate::prelude::{AddEntryEvent, AddTabEvent, BarBundle, BarLayout, BarPlugin, BevyUtil, NotationAppState, NotationSettings, NotationTheme, PlayPlugin, SingleBundle, TabAsset, TabBars, WindowResizedEvent};
+use crate::prelude::{
+    AddEntryEvent, AddTabEvent, BarBundle, BarLayout, BarPlugin, BevyUtil, NotationAppState,
+    NotationSettings, NotationTheme, PlayPlugin, SingleBundle, TabAsset, TabBars,
+    WindowResizedEvent,
+};
 
 use super::tab_asset::TabAssetLoader;
 
@@ -50,12 +54,29 @@ fn on_add_tab(
         let tab = evt.0.clone();
         let bar_layouts = Arc::new(settings.layout.calc_bar_layouts(&app_state, &tab));
         let transform = theme.grid.calc_tab_transform(&app_state, &settings);
-        let tab_entity = commands.spawn_bundle(
-            TabBundle::new(tab.clone(), bar_layouts.clone(), transform)).id();
-        MiniPlugin::spawn_mini_map(&mut commands, &app_state, &settings, &theme, tab_entity, &tab);
-        let bars_entity = BevyUtil::spawn_child_bundle(&mut commands, tab_entity,
-            SingleBundle::<TabBars>::from(TabBars::new(tab.clone())));
-        PlayPlugin::spawn_pos_indicator(&mut commands, &theme, bars_entity, &tab, bar_layouts.get(0));
+        let tab_entity = commands
+            .spawn_bundle(TabBundle::new(tab.clone(), bar_layouts.clone(), transform))
+            .id();
+        MiniPlugin::spawn_mini_map(
+            &mut commands,
+            &app_state,
+            &settings,
+            &theme,
+            tab_entity,
+            &tab,
+        );
+        let bars_entity = BevyUtil::spawn_child_bundle(
+            &mut commands,
+            tab_entity,
+            SingleBundle::<TabBars>::from(TabBars::new(tab.clone())),
+        );
+        PlayPlugin::spawn_pos_indicator(
+            &mut commands,
+            &theme,
+            bars_entity,
+            &tab,
+            bar_layouts.get(0),
+        );
         let bar_bundles: Vec<(&BarLayout, BarBundle)> = tab
             .bars
             .iter()

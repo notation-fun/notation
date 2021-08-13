@@ -1,8 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use notation_model::prelude::{Syllable, TabBar};
-
 use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 
 #[derive(Clone, Debug)]
@@ -68,4 +66,3 @@ impl<'a> LyonShapeOp<'a, MiniBarData, shapes::Rectangle, MiniBarShape<'a>> for M
         MiniBarShape::<'a> { theme, data }
     }
 }
-

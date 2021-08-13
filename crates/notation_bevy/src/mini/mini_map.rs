@@ -1,6 +1,6 @@
-use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use std::fmt::Display;
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
@@ -10,7 +10,7 @@ pub struct MiniMap {
 }
 impl Display for MiniMap {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<Minimap> {}",self.bars)
+        write!(f, "<Minimap> {}", self.bars)
     }
 }
 

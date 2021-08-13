@@ -1,4 +1,5 @@
-use std::{fmt::Display, sync::Arc};
+use std::fmt::Display;
+use std::sync::Arc;
 
 use notation_model::prelude::Tab;
 

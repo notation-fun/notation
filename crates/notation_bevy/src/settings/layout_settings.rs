@@ -46,6 +46,7 @@ pub struct LayoutSettings {
     pub mini_bar_margin: f32,
     pub min_mini_bar_size: f32,
     pub max_mini_bar_size: f32,
+    pub mini_beats_factor: f32,
 }
 
 impl Default for LayoutSettings {
@@ -67,6 +68,7 @@ impl Default for LayoutSettings {
             mini_bar_margin: 6.0,
             min_mini_bar_size: 16.0,
             max_mini_bar_size: 32.0,
+            mini_beats_factor: 0.30,
         }
     }
 }
@@ -344,7 +346,7 @@ impl LayoutSettings {
         if bars == 0 {
             return MiniBarValue::new(0, 0, self.max_mini_bar_size, self.mini_bar_margin);
         }
-        let content_width =  app_state.window_width - self.mini_bar_margin * 2.0;
+        let content_width = app_state.window_width - self.mini_bar_margin * 2.0;
         let mut size = content_width / bars as f32;
         let mut rows = 1;
         let mut cols = bars;

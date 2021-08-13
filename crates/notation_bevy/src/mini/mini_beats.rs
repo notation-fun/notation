@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use notation_model::prelude::{Syllable, TabBar};
+use notation_model::prelude::Syllable;
 
 use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 
@@ -30,7 +30,10 @@ impl<'a> LyonShape<shapes::Circle> for MiniBeats<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        let color = self.theme.colors.color_of_syllable(self.data.value.syllable);
+        let color = self
+            .theme
+            .colors
+            .color_of_syllable(self.data.value.syllable);
         ShapeColors::new(color)
     }
     fn get_draw_mode(&self) -> DrawMode {
@@ -46,4 +49,3 @@ impl<'a> LyonShapeOp<'a, MiniBeatsData, shapes::Circle, MiniBeats<'a>> for MiniB
         MiniBeats::<'a> { theme, data }
     }
 }
-

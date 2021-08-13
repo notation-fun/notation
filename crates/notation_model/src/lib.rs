@@ -5,6 +5,7 @@ pub use notation_proto;
 pub mod bar;
 pub mod bar_lane;
 pub mod lane_entry;
+pub mod lane_kind;
 pub mod model_entry;
 pub mod parse;
 pub mod play;
@@ -18,9 +19,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar::{Bar, BarLayer};
     #[doc(hidden)]
-    pub use crate::bar_lane::{BarLane, BarLaneProps, LaneKind};
+    pub use crate::bar_lane::{BarLane, BarLaneProps};
     #[doc(hidden)]
     pub use crate::lane_entry::{LaneEntry, LaneEntryProps};
+    #[doc(hidden)]
+    pub use crate::lane_kind::LaneKind;
     #[doc(hidden)]
     pub use crate::model_entry::{ModelEntry, ModelEntryProps};
     #[doc(hidden)]

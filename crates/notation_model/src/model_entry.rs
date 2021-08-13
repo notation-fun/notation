@@ -24,10 +24,7 @@ impl ModelEntry {
         index: usize,
         tied_units: Units,
     ) -> Self {
-        let props = ModelEntryProps {
-            index,
-            tied_units,
-        };
+        let props = ModelEntryProps { index, tied_units };
         Self {
             track,
             proto,
