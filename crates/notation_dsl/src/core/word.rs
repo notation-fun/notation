@@ -47,7 +47,9 @@ impl ToTokens for WordDsl {
         } else {
             let word = word.as_ref().unwrap();
             tokens.extend(quote! {
-                ProtoEntry::from((#word, #duration_quote))
+                ProtoEntry::from(LyricEntry::from(
+                    (#word, #duration_quote)
+                ))
             });
         }
     }

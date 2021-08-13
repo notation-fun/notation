@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
 use crate::pick::PickNote;
 use crate::prelude::Pick;
@@ -14,6 +15,15 @@ macro_rules! impl_fretboard {
             #[serde(with = "serde_arrays")]
             pub string_notes: [Note; $strings],
             pub capo: u8,
+        }
+        impl Display for $type {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(
+                    f,
+                    "F: {}, C: {}, {:?})",
+                    self.total_fret_num, self.capo, self.string_notes
+                )
+            }
         }
 
         impl $type {

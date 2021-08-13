@@ -1,7 +1,9 @@
 pub mod chord;
+pub mod core_entry;
 pub mod duration;
 pub mod entry;
 pub mod interval;
+pub mod meta_entry;
 pub mod note;
 pub mod octave;
 pub mod pitch;
@@ -15,9 +17,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::chord::{Chord, ChordInversion, ChordQuality};
     #[doc(hidden)]
+    pub use crate::core_entry::CoreEntry;
+    #[doc(hidden)]
     pub use crate::duration::{Duration, Unit, Units};
     #[doc(hidden)]
-    pub use crate::entry::{CoreEntry, Entry};
+    pub use crate::entry::Entry;
+    #[doc(hidden)]
+    pub use crate::meta_entry::MetaEntry;
     #[doc(hidden)]
     pub use crate::note::Note;
     #[doc(hidden)]

@@ -4,11 +4,12 @@ use bevy::prelude::*;
 use notation_midi::prelude::SwitchTabEvent;
 use notation_model::prelude::Tab;
 
-use crate::prelude::{AddEntryEvent, AddTabEvent, BarBundle, BarLayout, BarPlugin, NotationAppState, NotationSettings, NotationTheme, SingleBundle, TabAsset, WindowResizedEvent};
+use crate::mini::mini_plugin::MiniPlugin;
+use crate::prelude::{AddEntryEvent, AddTabEvent, BarBundle, BarLayout, BarPlugin, BevyUtil, NotationAppState, NotationSettings, NotationTheme, PlayPlugin, SingleBundle, TabAsset, TabBars, WindowResizedEvent};
 
 use super::tab_asset::TabAssetLoader;
 
-use super::tab_state_bundle::TabStateBundle;
+use super::tab_bundle::TabBundle;
 
 pub struct TabPlugin;
 
@@ -36,11 +37,6 @@ fn on_config_changed(
     }
 }
 
-fn new_tab_bundle(app_state: &NotationAppState, settings: &NotationSettings, theme: &NotationTheme, tab: Arc<Tab>) -> SingleBundle<Arc<Tab>> {
-    let transform = theme.grid.calc_tab_transform(app_state, settings);
-    (tab, transform).into()
-}
-
 fn on_add_tab(
     mut commands: Commands,
     app_state: Res<NotationAppState>,
@@ -52,17 +48,14 @@ fn on_add_tab(
 ) {
     for evt in evts.iter() {
         let tab = evt.0.clone();
-        let bar_layouts = settings.layout.calc_bar_layouts(&app_state, &tab);
-        let tab_entity = commands
-            .spawn_bundle(new_tab_bundle(&app_state, &settings, &theme, tab.clone()))
-            .id();
-        let state_entity = commands
-            .spawn_bundle(TabStateBundle::new(
-                tab.clone(),
-                Arc::new(bar_layouts.clone()),
-            ))
-            .id();
-        commands.entity(tab_entity).push_children(&[state_entity]);
+        let bar_layouts = Arc::new(settings.layout.calc_bar_layouts(&app_state, &tab));
+        let transform = theme.grid.calc_tab_transform(&app_state, &settings);
+        let tab_entity = commands.spawn_bundle(
+            TabBundle::new(tab.clone(), bar_layouts.clone(), transform)).id();
+        MiniPlugin::spawn_mini_map(&mut commands, &app_state, &settings, &theme, tab_entity, &tab);
+        let bars_entity = BevyUtil::spawn_child_bundle(&mut commands, tab_entity,
+            SingleBundle::<TabBars>::from(TabBars::new(tab.clone())));
+        PlayPlugin::spawn_pos_indicator(&mut commands, &theme, bars_entity, &tab, bar_layouts.get(0));
         let bar_bundles: Vec<(&BarLayout, BarBundle)> = tab
             .bars
             .iter()
@@ -79,8 +72,7 @@ fn on_add_tab(
             .collect();
         for (bar_layout, bar_bundle) in bar_bundles.into_iter() {
             let bar = bar_bundle.bar.clone();
-            let bar_entity = commands.spawn_bundle(bar_bundle).id();
-            commands.entity(tab_entity).push_children(&[bar_entity]);
+            let bar_entity = BevyUtil::spawn_child_bundle(&mut commands, bars_entity, bar_bundle);
             BarPlugin::create_lanes(
                 &mut commands,
                 &app_state,

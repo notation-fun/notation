@@ -5,7 +5,9 @@ use std::convert::TryFrom;
 use std::sync::{Arc, Weak};
 use thiserror::Error;
 
-use crate::prelude::{BarLane, Form, LaneEntry, LaneEntryProps, ModelEntry, ModelEntryProps, Section, Tab, TabBar, TabMeta, Track};
+use crate::prelude::{
+    BarLane, Form, LaneEntry, ModelEntry, Section, Tab, TabBar, TabMeta, Track,
+};
 use notation_proto::prelude::{Duration, Entry, ProtoEntry, Units};
 
 #[derive(Error, Debug)]
@@ -22,8 +24,8 @@ impl Tab {
         let meta = Arc::new(v.meta);
         let tracks = v.tracks.into_iter().map(Track::new_arc).collect();
         let mut sections = Vec::new();
-        for section in v.sections {
-            sections.push(Section::try_from((section, &tracks)).map(Arc::new)?);
+        for (index, section) in v.sections.into_iter().enumerate() {
+            sections.push(Section::try_new(index, section, &tracks).map(Arc::new)?);
         }
         let form = Form::try_from((v.form, &sections))?;
         Self::new_arc(meta, tracks, sections, form)
@@ -37,7 +39,7 @@ impl Tab {
         form: Form,
     ) -> Arc<Self> {
         Arc::<Tab>::new_cyclic(|weak_self| {
-            let bars = Self::new_tab_bars(weak_self, &form);
+            let bars = Self::new_tab_bars(weak_self, &meta, &form);
             Self {
                 meta,
                 tracks,
@@ -47,7 +49,7 @@ impl Tab {
             }
         })
     }
-    fn new_tab_bars(weak_self: &Weak<Tab>, form: &Form) -> Vec<Arc<TabBar>> {
+    fn new_tab_bars(weak_self: &Weak<Tab>, meta: &TabMeta, form: &Form) -> Vec<Arc<TabBar>> {
         let mut section_rounds: HashMap<String, usize> = HashMap::new();
         let mut section_ordinal: usize = 1;
         let mut bar_ordinal: usize = 1;
@@ -64,6 +66,7 @@ impl Tab {
                 section_round,
                 section_ordinal,
                 bar_ordinal,
+                meta.bar_units(),
             ));
             section_ordinal += 1;
             bar_ordinal += section.bars.len();
@@ -80,6 +83,7 @@ impl Section {
         section_round: usize,
         section_ordinal: usize,
         section_bar_ordinal: usize,
+        bar_units: Units,
     ) -> Vec<Arc<TabBar>> {
         self.bars
             .iter()
@@ -88,11 +92,12 @@ impl Section {
                 TabBar::new_arc(
                     tab.clone(),
                     arc_section.clone(),
+                    bar.clone(),
                     section_round,
                     section_ordinal,
-                    bar.clone(),
                     bar_index,
                     section_bar_ordinal + bar_index,
+                    bar_units,
                 )
             })
             .collect()
@@ -122,10 +127,8 @@ impl ModelEntry {
             .map(Arc::new)
             .enumerate()
             .map(|(index, entry)| {
-                let props = ModelEntryProps {
-                    tied_units: Self::calc_tied_units(&entries, index),
-                };
-                ModelEntry::new(track.clone(), index, entry, props)
+                let tied_units = Self::calc_tied_units(&entries, index);
+                ModelEntry::new(track.clone(), entry, index, tied_units)
             })
             .map(Arc::new)
             .collect()
@@ -137,11 +140,9 @@ impl LaneEntry {
         v.into_iter()
             .enumerate()
             .map(|(index, entry)| {
-                let props = LaneEntryProps {
-                    in_bar_pos: Units(pos),
-                };
+                let in_bar_pos = pos;
                 pos += Units::from(entry.as_ref().duration()).0;
-                LaneEntry::new(lane.clone(), index, entry, props)
+                LaneEntry::new(lane.clone(), index, entry, Units(in_bar_pos))
             })
             .map(Arc::new)
             .collect()

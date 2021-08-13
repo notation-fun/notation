@@ -3,12 +3,12 @@
 pub use notation_proto;
 
 pub mod bar;
-pub mod entry;
-pub mod lane;
+pub mod bar_lane;
+pub mod lane_entry;
+pub mod model_entry;
 pub mod parse;
 pub mod play;
 pub mod section;
-pub mod lane_entry;
 pub mod tab;
 pub mod tab_bar;
 pub mod track;
@@ -18,9 +18,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar::{Bar, BarLayer};
     #[doc(hidden)]
-    pub use crate::entry::{ModelEntry, ModelEntryProps};
+    pub use crate::bar_lane::{BarLane, BarLaneProps, LaneKind};
     #[doc(hidden)]
-    pub use crate::lane::{BarLane, LaneKind};
+    pub use crate::lane_entry::{LaneEntry, LaneEntryProps};
+    #[doc(hidden)]
+    pub use crate::model_entry::{ModelEntry, ModelEntryProps};
     #[doc(hidden)]
     pub use crate::parse::ParseError;
     #[doc(hidden)]
@@ -32,11 +34,9 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::section::{Form, Section};
     #[doc(hidden)]
-    pub use crate::lane_entry::{LaneEntry, LaneEntryProps};
-    #[doc(hidden)]
     pub use crate::tab::Tab;
     #[doc(hidden)]
-    pub use crate::tab_bar::TabBar;
+    pub use crate::tab_bar::{TabBar, TabBarProps};
     #[doc(hidden)]
     pub use crate::track::Track;
     #[doc(hidden)]

@@ -7,6 +7,7 @@ use crate::prelude::EntryState;
 
 #[derive(Bundle)]
 pub struct EntryBundle {
+    pub name: Name,
     pub entry: Arc<LaneEntry>,
     pub duration: Duration,
     pub tied_units: Units,
@@ -19,6 +20,7 @@ impl From<(Arc<LaneEntry>, BarPosition)> for EntryBundle {
         let duration = v.0.duration();
         let tied_units = v.0.tied_units();
         EntryBundle {
+            name: v.0.to_string().as_str().into(),
             entry: v.0,
             duration,
             tied_units,

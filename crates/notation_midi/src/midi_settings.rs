@@ -41,15 +41,10 @@ impl MidiSettings {
 impl MidiSettings {
     pub fn get_track_channel_params(&self, kind: &TrackKind) -> Option<(u8, u8)> {
         match kind {
-            TrackKind::Chord => None,
-            TrackKind::Lyrics => None,
             TrackKind::Vocal => Some((self.vocal_sound, self.vocal_velocity)),
             TrackKind::Guitar => Some((self.guitar_sound, self.guitar_velocity)),
-            TrackKind::Synth => None,
             TrackKind::Piano => Some((self.piano_sound, self.piano_velocity)),
-            TrackKind::Drums => None,
-            TrackKind::Bass => None,
-            TrackKind::Custom(_) => None,
+            _ => None,
         }
     }
 }

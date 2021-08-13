@@ -1,15 +1,10 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarLane, BarPosition};
-use std::sync::Arc;
-
 use super::hand_bundles::{HandShapeBundle4, HandShapeBundle6};
 use super::shape_diagram::{ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6};
 use crate::prelude::{LyonShapeOp, NotationTheme, WindowResizedEvent};
-use notation_model::prelude::{
-    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, HandShape4, HandShape6, TabBar,
-};
+use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6};
 
 pub struct ShapesPlugin;
 
@@ -19,6 +14,10 @@ impl Plugin for ShapesPlugin {
         app.add_system(on_config_changed4.system());
         app.add_system_set(super::hand_systems::new_system_set());
     }
+}
+
+impl ShapesPlugin {
+    pub fn insert_lane_extra(_commands: &mut EntityCommands, _lane: &BarLane) {}
 }
 
 macro_rules! impl_shapes_plugin {

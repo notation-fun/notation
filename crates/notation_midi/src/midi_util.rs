@@ -2,8 +2,8 @@ use std::convert::TryFrom;
 
 use helgoboss_midi::{Channel, KeyNumber, StructuredShortMessage, U7};
 use notation_model::prelude::{
-    BarPosition, CoreEntry, Entry, FrettedEntry4, FrettedEntry6, LaneKind, ModelEntry, Note, Pick,
-    Semitones, LaneEntry, TabBar, Tone, Units,
+    BarPosition, CoreEntry, Entry, FrettedEntry4, FrettedEntry6, LaneEntry, Note, Pick, Semitones,
+    TabBar, Tone,
 };
 
 use crate::prelude::MidiChannel;
@@ -48,8 +48,11 @@ impl MidiUtil {
         if tone.is_none() || entry.prev_is_tie() {
             return None;
         }
-        let start_position =
-            BarPosition::new(bar.bar_units(), bar.bar_ordinal, entry.props.in_bar_pos);
+        let start_position = BarPosition::new(
+            bar.bar_units(),
+            bar.props.bar_ordinal,
+            entry.props.in_bar_pos,
+        );
         let mut play_msgs: Vec<(BarPosition, StructuredShortMessage)> = tone
             .get_notes()
             .iter()
@@ -58,7 +61,7 @@ impl MidiUtil {
             .collect();
         let stop_position = BarPosition::new(
             bar.bar_units(),
-            bar.bar_ordinal,
+            bar.props.bar_ordinal,
             entry.props.in_bar_pos + entry.model.tied_units(),
         );
         let mut stop_msgs: Vec<(BarPosition, StructuredShortMessage)> = tone

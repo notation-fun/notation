@@ -1,16 +1,13 @@
 use std::sync::Arc;
 
 use bevy::render::camera::OrthographicProjection;
-use notation_midi::prelude::{AddToneEvent, PlayControlEvt};
-use notation_model::prelude::{Entry, PlayState, Position, LaneEntry, TickResult, Tone, Units};
+use notation_midi::prelude::PlayControlEvt;
+use notation_model::prelude::{LaneEntry, PlayState, Position, Tab, TickResult};
 
 use bevy::prelude::*;
 use notation_model::prelude::{BarPosition, Duration};
 
-use crate::prelude::{
-    BarLayout, EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabState,
-    WindowResizedEvent,
-};
+use crate::prelude::{BarLayout, EntryState, LyonShapeOp, NotationSettings, NotationTheme, TabBars, TabState, WindowResizedEvent};
 
 use crate::tab::tab_state::TabPlayStateChanged;
 
@@ -21,10 +18,24 @@ pub struct PlayPlugin;
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(on_config_changed.system());
-        app.add_system(on_add_tab_state.system());
         app.add_system(on_tab_play_state_changed.system());
         app.add_system(on_play_control_evt.system());
         //app.add_system(add_midi_tone.system());
+    }
+}
+
+impl PlayPlugin {
+    pub fn spawn_pos_indicator(
+        commands: &mut Commands,
+        theme: &NotationTheme,
+        entity: Entity,
+        tab: &Tab,
+        bar_layout: Option<&BarLayout>,
+    ) {
+        if let Some(bar_layout) = bar_layout {
+            let data = PosIndicatorData::new(tab.bar_units(), bar_layout);
+            PosIndicator::create(commands, entity, &theme, data);
+        }
     }
 }
 
@@ -41,47 +52,32 @@ fn on_config_changed(
     }
 }
 
-fn on_add_tab_state(
-    mut commands: Commands,
-    theme: Res<NotationTheme>,
-    state_query: Query<(Entity, &Arc<Vec<BarLayout>>, &TabState), Added<TabState>>,
-) {
-    for (entity, bar_layouts, state) in state_query.iter() {
-        if let Some(bar_layout) = bar_layouts.get(0) {
-            let pos = state.play_control.position;
-            let data = PosIndicatorData::new(pos.bar.bar_units, bar_layout);
-            PosIndicator::create(&mut commands, entity, &theme, data);
-        }
-    }
-}
-
 fn on_tab_play_state_changed(
     mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut query: Query<
-        (Entity, &Arc<Vec<BarLayout>>, &TabState, &Children),
+        (Entity, &Arc<Vec<BarLayout>>, &TabState),
         Added<TabPlayStateChanged>,
     >,
-    mut pos_indicator_query: Query<&mut PosIndicatorData>,
+    mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut entry_query: Query<(Entity, &Arc<LaneEntry>, &BarPosition, &mut EntryState)>,
-    mut camera_query: Query<(Entity, &mut Transform, &OrthographicProjection)>,
+    mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,
 ) {
-    for (state_entity, bar_layouts, state, children) in query.iter_mut() {
+    for (state_entity, bar_layouts, state) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
         if !state.play_control.play_state.is_playing() {
             PosIndicator::update_pos(
                 &mut commands,
                 &theme,
-                children,
                 &settings,
                 &mut pos_indicator_query,
                 bar_layouts,
                 state.play_control.position,
             );
-            settings.layout.focus_camera(
+            settings.layout.focus_bar(
                 &mut commands,
-                &mut camera_query,
+                &mut tab_bars_query,
                 bar_layouts,
                 theme.grid.bar_size,
                 &state,
@@ -105,7 +101,7 @@ fn on_tick(
     commands: &mut Commands,
     settings: &NotationSettings,
     theme: &NotationTheme,
-    pos_indicator_query: &mut Query<&mut PosIndicatorData>,
+    pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData)>,
     entry_query: &mut Query<(
         Entity,
         &Arc<LaneEntry>,
@@ -113,11 +109,10 @@ fn on_tick(
         &BarPosition,
         &mut EntryState,
     )>,
-    camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
+    tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
     state_entity: Entity,
     bar_layouts: &Arc<Vec<BarLayout>>,
     state: &mut TabState,
-    children: &Children,
     new_position: &Position,
     tick_result: &TickResult,
 ) {
@@ -135,17 +130,15 @@ fn on_tick(
         PosIndicator::update_pos(
             commands,
             theme,
-            children,
             settings,
             pos_indicator_query,
             bar_layouts,
             pos,
         );
-        //settings.layout.focus_camera(&mut camera_query, bar_layouts, state.pos, theme.grid.bar_size);
-        if settings.layout.should_focus_camera(&old_position, &pos) {
-            settings.layout.focus_camera(
+        if settings.layout.should_focus_bar(&old_position, &pos) {
+            settings.layout.focus_bar(
                 commands,
-                camera_query,
+                tab_bars_query,
                 bar_layouts,
                 theme.grid.bar_size,
                 state,
@@ -174,8 +167,8 @@ fn on_play_control_evt(
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut evts: EventReader<PlayControlEvt>,
-    mut query: Query<(Entity, &Arc<Vec<BarLayout>>, &mut TabState, &Children)>,
-    mut pos_indicator_query: Query<&mut PosIndicatorData>,
+    mut query: Query<(Entity, &Arc<Vec<BarLayout>>, &mut TabState)>,
+    mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut entry_query: Query<(
         Entity,
         &Arc<LaneEntry>,
@@ -183,10 +176,10 @@ fn on_play_control_evt(
         &BarPosition,
         &mut EntryState,
     )>,
-    mut camera_query: Query<(Entity, &mut Transform, &OrthographicProjection)>,
+    mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,
 ) {
     for evt in evts.iter() {
-        for (state_entity, bar_layouts, mut state, children) in query.iter_mut() {
+        for (state_entity, bar_layouts, mut state) in query.iter_mut() {
             if !state.under_control {
                 continue;
             }
@@ -200,11 +193,10 @@ fn on_play_control_evt(
                     &theme,
                     &mut pos_indicator_query,
                     &mut entry_query,
-                    &mut camera_query,
+                    &mut tab_bars_query,
                     state_entity,
                     bar_layouts,
                     &mut state,
-                    children,
                     position,
                     tick_result,
                 ),
@@ -216,48 +208,3 @@ fn on_play_control_evt(
         }
     }
 }
-
-/*
-fn play_stop_tone(
-    mut _commands: Commands,
-    _theme: Res<NotationTheme>,
-    query: Query<(&Arc<LaneEntry>, &Tone, &EntryState), Changed<EntryState>>,
-    mut play_note_evts: EventWriter<PlayToneEvent>,
-    mut stop_note_evts: EventWriter<StopToneEvent>,
-) {
-    for (entry, tone, state) in query.iter() {
-        if !tone.is_none() {
-            if state.is_played() || state.is_idle() {
-                stop_note_evts.send(StopToneEvent::new(
-                    entry.track_id(),
-                    entry.track_kind(),
-                    *tone,
-                ));
-            } else if state.is_playing() {
-                play_note_evts.send(PlayToneEvent::new(
-                    entry.track_id(),
-                    entry.track_kind(),
-                    *tone,
-                ));
-            }
-        }
-    }
-}
-
-fn add_midi_tone(
-    query: Query<(&Arc<LaneEntry>, &Tone, &BarPosition, &Units), Added<Tone>>,
-    mut add_note_evts: EventWriter<AddToneEvent>,
-) {
-    for (entry, tone, position, tied_units) in query.iter() {
-        if !tone.is_none() && !entry.as_ref().prev_is_tie() {
-            add_note_evts.send(AddToneEvent::new(
-                entry.track_id(),
-                entry.track_kind(),
-                *tone,
-                *position,
-                *tied_units,
-            ));
-        }
-    }
-}
-*/

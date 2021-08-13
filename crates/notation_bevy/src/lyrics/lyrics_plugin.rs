@@ -1,10 +1,11 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
-use std::sync::Arc;
 
-use crate::prelude::{LyonShapeOp, LyricsLaneBundle, NotationTheme, WindowResizedEvent};
-use crate::word::word_text::{WordTextData, WordTextShape};
-use notation_model::prelude::Track;
+use crate::prelude::{LyonShapeOp, NotationTheme, WindowResizedEvent};
+use crate::word::word_text::{WordText, WordTextData, WordTextShape};
+use notation_model::prelude::{BarLane, LyricEntry};
+
+use super::lyrics_grid::LyricsGrid;
 
 pub struct LyricsPlugin;
 
@@ -28,7 +29,14 @@ fn on_config_changed(
 }
 
 impl LyricsPlugin {
-    pub fn insert_lyrics_lane_extra(commands: &mut EntityCommands, track: Arc<Track>) {
-        commands.insert_bundle(LyricsLaneBundle::new(track));
+    pub fn insert_lane_extra(commands: &mut EntityCommands, _lane: &BarLane) {
+        commands.insert(LyricsGrid::default());
+    }
+    pub fn insert_entry_extra(commands: &mut EntityCommands, entry: &LyricEntry) {
+        match entry {
+            LyricEntry::Word(word, _duration) => {
+                commands.insert_bundle(WordText::from(word.clone()));
+            }
+        }
     }
 }

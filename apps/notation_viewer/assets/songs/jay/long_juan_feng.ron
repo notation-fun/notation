@@ -1712,320 +1712,462 @@
                     "_1_4",
                 ),// [0]
                 Mark("1:1"),// [1]
-                Word(
-                    "爱",
+                Lyric(Word(
+                    (
+                        text: "爱",
+                    ),
                     Simple(Quarter),
-                ),// [2]
-                Word(
-                    "像",
+                )),// [2]
+                Lyric(Word(
+                    (
+                        text: "像",
+                    ),
                     Simple(Quarter),
-                ),// [3]
-                Word(
-                    "一",
+                )),// [3]
+                Lyric(Word(
+                    (
+                        text: "一",
+                    ),
                     Simple(Eighth),
-                ),// [4]
-                Word(
-                    "阵",
+                )),// [4]
+                Lyric(Word(
+                    (
+                        text: "阵",
+                    ),
                     Simple(Eighth),
-                ),// [5]
-                Word(
-                    "风",
+                )),// [5]
+                Lyric(Word(
+                    (
+                        text: "风",
+                    ),
                     Simple(Quarter),
-                ),// [6]
+                )),// [6]
                 Mark("|"),// [7]
                 Mark("1:2"),// [8]
-                Word(
-                    "吹",
+                Lyric(Word(
+                    (
+                        text: "吹",
+                    ),
                     Simple(Quarter),
-                ),// [9]
-                Word(
-                    "完",
+                )),// [9]
+                Lyric(Word(
+                    (
+                        text: "完",
+                    ),
                     Simple(Quarter),
-                ),// [10]
-                Word(
-                    "它",
+                )),// [10]
+                Lyric(Word(
+                    (
+                        text: "它",
+                    ),
                     Simple(Eighth),
-                ),// [11]
-                Word(
-                    "就",
+                )),// [11]
+                Lyric(Word(
+                    (
+                        text: "就",
+                    ),
                     Simple(Eighth),
-                ),// [12]
-                Word(
-                    "走",
+                )),// [12]
+                Lyric(Word(
+                    (
+                        text: "走",
+                    ),
                     Simple(Quarter),
-                ),// [13]
+                )),// [13]
                 Mark("|"),// [14]
                 Mark("1:3"),// [15]
-                Word(
-                    "这",
+                Lyric(Word(
+                    (
+                        text: "这",
+                    ),
                     Simple(Quarter),
-                ),// [16]
-                Word(
-                    "样",
+                )),// [16]
+                Lyric(Word(
+                    (
+                        text: "样",
+                    ),
                     Simple(Quarter),
-                ),// [17]
-                Word(
-                    "的",
+                )),// [17]
+                Lyric(Word(
+                    (
+                        text: "的",
+                    ),
                     Simple(Eighth),
-                ),// [18]
-                Word(
-                    "节",
+                )),// [18]
+                Lyric(Word(
+                    (
+                        text: "节",
+                    ),
                     Simple(Eighth),
-                ),// [19]
-                Word(
-                    "奏",
+                )),// [19]
+                Lyric(Word(
+                    (
+                        text: "奏",
+                    ),
                     Simple(Quarter),
-                ),// [20]
+                )),// [20]
                 Mark("|"),// [21]
                 Mark("1:4"),// [22]
-                Word(
-                    "谁",
+                Lyric(Word(
+                    (
+                        text: "谁",
+                    ),
                     Simple(Quarter),
-                ),// [23]
-                Word(
-                    "都",
+                )),// [23]
+                Lyric(Word(
+                    (
+                        text: "都",
+                    ),
                     Dotted(Eighth),
-                ),// [24]
-                Word(
-                    "无",
+                )),// [24]
+                Lyric(Word(
+                    (
+                        text: "无",
+                    ),
                     Simple(Sixteenth),
-                ),// [25]
-                Word(
-                    "可",
+                )),// [25]
+                Lyric(Word(
+                    (
+                        text: "可",
+                    ),
                     Simple(Eighth),
-                ),// [26]
-                Word(
-                    "奈",
+                )),// [26]
+                Lyric(Word(
+                    (
+                        text: "奈",
+                    ),
                     Simple(Eighth),
-                ),// [27]
-                Word(
-                    "何",
+                )),// [27]
+                Lyric(Word(
+                    (
+                        text: "何",
+                    ),
                     Simple(Quarter),
-                ),// [28]
+                )),// [28]
                 Mark("|"),// [29]
                 Mark("2:1"),// [30]
-                Word(
-                    "没",
+                Lyric(Word(
+                    (
+                        text: "没",
+                    ),
                     Simple(Quarter),
-                ),// [31]
-                Word(
-                    "有",
+                )),// [31]
+                Lyric(Word(
+                    (
+                        text: "有",
+                    ),
                     Simple(Quarter),
-                ),// [32]
-                Word(
-                    "你",
+                )),// [32]
+                Lyric(Word(
+                    (
+                        text: "你",
+                    ),
                     Simple(Eighth),
-                ),// [33]
-                Word(
-                    "以",
+                )),// [33]
+                Lyric(Word(
+                    (
+                        text: "以",
+                    ),
                     Simple(Eighth),
-                ),// [34]
-                Word(
-                    "后",
+                )),// [34]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
                     Simple(Quarter),
-                ),// [35]
+                )),// [35]
                 Mark("|"),// [36]
                 Mark("2:2"),// [37]
-                Word(
-                    "我",
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
                     Simple(Quarter),
-                ),// [38]
-                Word(
-                    "灵",
+                )),// [38]
+                Lyric(Word(
+                    (
+                        text: "灵",
+                    ),
                     Simple(Quarter),
-                ),// [39]
-                Word(
-                    "魂",
+                )),// [39]
+                Lyric(Word(
+                    (
+                        text: "魂",
+                    ),
                     Simple(Eighth),
-                ),// [40]
-                Word(
-                    "失",
+                )),// [40]
+                Lyric(Word(
+                    (
+                        text: "失",
+                    ),
                     Simple(Eighth),
-                ),// [41]
-                Word(
-                    "控",
+                )),// [41]
+                Lyric(Word(
+                    (
+                        text: "控",
+                    ),
                     Simple(Quarter),
-                ),// [42]
+                )),// [42]
                 Mark("|"),// [43]
                 Mark("2:3"),// [44]
-                Word(
-                    "黑",
+                Lyric(Word(
+                    (
+                        text: "黑",
+                    ),
                     Simple(Quarter),
-                ),// [45]
-                Word(
-                    "云",
+                )),// [45]
+                Lyric(Word(
+                    (
+                        text: "云",
+                    ),
                     Simple(Quarter),
-                ),// [46]
-                Word(
-                    "在",
+                )),// [46]
+                Lyric(Word(
+                    (
+                        text: "在",
+                    ),
                     Simple(Eighth),
-                ),// [47]
-                Word(
-                    "降",
+                )),// [47]
+                Lyric(Word(
+                    (
+                        text: "降",
+                    ),
                     Simple(Eighth),
-                ),// [48]
-                Word(
-                    "落",
+                )),// [48]
+                Lyric(Word(
+                    (
+                        text: "落",
+                    ),
                     Simple(Quarter),
-                ),// [49]
+                )),// [49]
                 Mark("|"),// [50]
                 Mark("2:4"),// [51]
-                Word(
-                    "我",
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
                     Simple(Quarter),
-                ),// [52]
-                Word(
-                    "被",
+                )),// [52]
+                Lyric(Word(
+                    (
+                        text: "被",
+                    ),
                     Dotted(Eighth),
-                ),// [53]
-                Word(
-                    "它",
+                )),// [53]
+                Lyric(Word(
+                    (
+                        text: "它",
+                    ),
                     Simple(Sixteenth),
-                ),// [54]
-                Word(
-                    "拖",
+                )),// [54]
+                Lyric(Word(
+                    (
+                        text: "拖",
+                    ),
                     Simple(Eighth),
-                ),// [55]
-                Word(
-                    "着",
+                )),// [55]
+                Lyric(Word(
+                    (
+                        text: "着",
+                    ),
                     Simple(Eighth),
-                ),// [56]
-                Word(
-                    "走",
+                )),// [56]
+                Lyric(Word(
+                    (
+                        text: "走",
+                    ),
                     Simple(Eighth),
-                ),// [57]
-                Word(
-                    "静",
+                )),// [57]
+                Lyric(Word(
+                    (
+                        text: "静",
+                    ),
                     Simple(Eighth),
-                ),// [58]
+                )),// [58]
                 Mark("|"),// [59]
                 Extra(
                     "dsl::context::duration",
                     "_1_8",
                 ),// [60]
                 Mark("b:1"),// [61]
-                Word(
-                    "静",
+                Lyric(Word(
+                    (
+                        text: "静",
+                    ),
                     Simple(Eighth),
-                ),// [62]
-                Word(
-                    "悄",
+                )),// [62]
+                Lyric(Word(
+                    (
+                        text: "悄",
+                    ),
                     Simple(Eighth),
-                ),// [63]
-                Word(
-                    "悄",
+                )),// [63]
+                Lyric(Word(
+                    (
+                        text: "悄",
+                    ),
                     Simple(Eighth),
-                ),// [64]
-                Word(
-                    "默",
+                )),// [64]
+                Lyric(Word(
+                    (
+                        text: "默",
+                    ),
                     Simple(Eighth),
-                ),// [65]
-                Word(
-                    "默",
+                )),// [65]
+                Lyric(Word(
+                    (
+                        text: "默",
+                    ),
                     Simple(Eighth),
-                ),// [66]
-                Word(
-                    "离",
+                )),// [66]
+                Lyric(Word(
+                    (
+                        text: "离",
+                    ),
                     Simple(Eighth),
-                ),// [67]
-                Word(
-                    "开",
+                )),// [67]
+                Lyric(Word(
+                    (
+                        text: "开",
+                    ),
                     Simple(Eighth),
-                ),// [68]
-                Word(
-                    "陷",
+                )),// [68]
+                Lyric(Word(
+                    (
+                        text: "陷",
+                    ),
                     Simple(Eighth),
-                ),// [69]
+                )),// [69]
                 Mark("|"),// [70]
                 Mark("b:2"),// [71]
-                Word(
-                    "入",
+                Lyric(Word(
+                    (
+                        text: "入",
+                    ),
                     Simple(Eighth),
-                ),// [72]
-                Word(
-                    "了",
+                )),// [72]
+                Lyric(Word(
+                    (
+                        text: "了",
+                    ),
                     Simple(Eighth),
-                ),// [73]
-                Word(
-                    "危",
+                )),// [73]
+                Lyric(Word(
+                    (
+                        text: "危",
+                    ),
                     Simple(Eighth),
-                ),// [74]
-                Word(
-                    "险",
+                )),// [74]
+                Lyric(Word(
+                    (
+                        text: "险",
+                    ),
                     Simple(Eighth),
-                ),// [75]
-                Word(
-                    "边",
+                )),// [75]
+                Lyric(Word(
+                    (
+                        text: "边",
+                    ),
                     Simple(Eighth),
-                ),// [76]
-                Word(
-                    "缘",
+                )),// [76]
+                Lyric(Word(
+                    (
+                        text: "缘",
+                    ),
                     Simple(Eighth),
-                ),// [77]
-                Word(
-                    "Ba-",
+                )),// [77]
+                Lyric(Word(
+                    (
+                        text: "Ba-",
+                    ),
                     Simple(Eighth),
-                ),// [78]
-                Word(
-                    "by",
+                )),// [78]
+                Lyric(Word(
+                    (
+                        text: "by",
+                    ),
                     Simple(Eighth),
-                ),// [79]
+                )),// [79]
                 Mark("|"),// [80]
                 Mark("b:3"),// [81]
                 Core(Rest(Simple(Eighth))),// [82]
-                Word(
-                    "我",
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
                     Simple(Eighth),
-                ),// [83]
-                Word(
-                    "的",
+                )),// [83]
+                Lyric(Word(
+                    (
+                        text: "的",
+                    ),
                     Simple(Eighth),
-                ),// [84]
-                Word(
-                    "世",
+                )),// [84]
+                Lyric(Word(
+                    (
+                        text: "世",
+                    ),
                     Simple(Eighth),
-                ),// [85]
-                Word(
-                    "界",
+                )),// [85]
+                Lyric(Word(
+                    (
+                        text: "界",
+                    ),
                     Simple(Eighth),
-                ),// [86]
-                Word(
-                    "已",
+                )),// [86]
+                Lyric(Word(
+                    (
+                        text: "已",
+                    ),
                     Simple(Sixteenth),
-                ),// [87]
-                Word(
-                    "狂",
+                )),// [87]
+                Lyric(Word(
+                    (
+                        text: "狂",
+                    ),
                     Dotted(Eighth),
-                ),// [88]
-                Word(
-                    "风",
+                )),// [88]
+                Lyric(Word(
+                    (
+                        text: "风",
+                    ),
                     Simple(Sixteenth),
-                ),// [89]
-                Word(
-                    "暴",
+                )),// [89]
+                Lyric(Word(
+                    (
+                        text: "暴",
+                    ),
                     Simple(Sixteenth),
-                ),// [90]
+                )),// [90]
                 Core(Tie),// [91]
                 Mark("|"),// [92]
                 Mark("b:4"),// [93]
                 Core(Tie),// [94]
-                Word(
-                    "",
+                Lyric(Word(
+                    (
+                        text: "",
+                    ),
                     Simple(Eighth),
-                ),// [95]
-                Word(
-                    "雨",
+                )),// [95]
+                Lyric(Word(
+                    (
+                        text: "雨",
+                    ),
                     Simple(Eighth),
-                ),// [96]
+                )),// [96]
                 Core(Tie),// [97]
-                Word(
-                    "",
+                Lyric(Word(
+                    (
+                        text: "",
+                    ),
                     Simple(Half),
-                ),// [98]
-                Word(
-                    "呜",
+                )),// [98]
+                Lyric(Word(
+                    (
+                        text: "呜",
+                    ),
                     Simple(Quarter),
-                ),// [99]
+                )),// [99]
                 Mark("|"),
             ],
         ),

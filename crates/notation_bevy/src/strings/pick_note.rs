@@ -26,7 +26,7 @@ impl PickNoteData {
         pick_note: PickNote,
         syllable: Syllable,
     ) -> Self {
-        let bar_ordinal = tab_bar.bar_ordinal;
+        let bar_ordinal = tab_bar.props.bar_ordinal;
         PickNoteData {
             bar_units,
             bar_ordinal,
@@ -60,7 +60,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
     }
     fn get_colors(&self) -> ShapeColors {
         ShapeColors::outlined(
-            self.theme.syllable.color_of_syllable(self.data.syllable),
+            self.theme.colors.color_of_syllable(self.data.syllable),
             self.theme.strings.note_outline_color,
         )
     }

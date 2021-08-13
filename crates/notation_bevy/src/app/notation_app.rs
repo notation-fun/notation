@@ -22,6 +22,7 @@ impl PluginGroup for NotationPlugins {
         group.add(BarPlugin);
         group.add(StringsPlugin);
         group.add(ShapesPlugin);
+        group.add(MiniPlugin);
         group.add(TabPlugin);
         group.add(PlayPlugin);
         //crates plugins
@@ -144,7 +145,7 @@ fn update_camera(
     mut state: ResMut<NotationAppState>,
     settings: Res<NotationSettings>,
     mut mouse_motion_events: EventReader<MouseMotion>,
-    mut camera_query: Query<(Entity, &mut Transform, &OrthographicProjection)>,
+    mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,
 ) {
     if keyboard_input.just_released(KeyCode::Space) {
         state.camera_panning = !state.camera_panning;
@@ -155,7 +156,7 @@ fn update_camera(
             if mouse_input.pressed(MouseButton::Left) {
                 settings
                     .layout
-                    .pan_camera(&mut camera_query, event.delta.x, event.delta.y);
+                    .pan_tab_bars(&mut tab_bars_query, -event.delta.x, -event.delta.y);
             }
         }
     }

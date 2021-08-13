@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarLane, BarPosition, LaneEntry, TabBar, Entry};
+use notation_model::prelude::{BarPosition, Entry, LaneEntry};
 use std::sync::Arc;
 
-use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme, StringsPlugin};
-use notation_model::prelude::{Duration, Fretboard4, Fretboard6, HandShape4, HandShape6, Pick};
+use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme};
+use notation_model::prelude::{Duration, Pick};
 
 use super::pick_note::{PickNoteData, PickNoteShape};
 
@@ -22,24 +22,13 @@ macro_rules! impl_pick_system {
             asset_server: Res<AssetServer>,
             theme: Res<NotationTheme>,
             settings: Res<NotationSettings>,
-            query: Query<
-                (
-                    &Parent,
-                    Entity,
-                    &Arc<LaneEntry>,
-                    &Pick,
-                    &Duration,
-                    &BarPosition,
-                ),
-                Added<Pick>,
-            >,
-            lane_query: Query<&Arc<TabBar>>,
+            query: Query<(Entity, &Arc<LaneEntry>, &Pick, &Duration, &BarPosition), Added<Pick>>,
         ) {
-            for (parent, entity, entry, pick, duration, pos) in query.iter() {
+            for (entity, entry, pick, duration, pos) in query.iter() {
                 if entry.as_ref().prev_is_tie() {
                     continue;
                 }
-                if let Ok(bar) = lane_query.get(parent.0) {
+                if let Some(bar) = entry.bar() {
                     if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
                         let bar_units = bar.bar_units();
                         for pick_note in pick.get_notes() {

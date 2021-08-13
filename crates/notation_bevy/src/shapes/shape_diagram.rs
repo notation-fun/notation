@@ -1,41 +1,13 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{BarPosition, Duration, HandShape4, HandShape6, Units};
 
-use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
-use notation_model::prelude::TabBar;
+use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme};
+use notation_model::prelude::{HandShape4, HandShape6};
 
 macro_rules! impl_shape_diagram {
     ($hand_shape:ident, $diagram:ident, $diagram_data:ident) => {
-        #[derive(Clone, Debug)]
-        pub struct $diagram_data {
-            pub bar_units: Units,
-            pub bar_ordinal: usize,
-            pub duration: Duration,
-            pub position: BarPosition,
-            pub shape: $hand_shape,
-        }
+        pub type $diagram_data = EntryData<$hand_shape>;
 
-        impl $diagram_data {
-            pub fn new(
-                bar_units: Units,
-                tab_bar: &Arc<TabBar>,
-                duration: Duration,
-                position: BarPosition,
-                shape: $hand_shape,
-            ) -> Self {
-                let bar_ordinal = tab_bar.bar_ordinal;
-                Self {
-                    bar_units,
-                    bar_ordinal,
-                    duration,
-                    position,
-                    shape,
-                }
-            }
-        }
         pub struct $diagram<'a> {
             theme: &'a NotationTheme,
             data: $diagram_data,
@@ -43,7 +15,7 @@ macro_rules! impl_shape_diagram {
 
         impl<'a> LyonShape<shapes::SvgPathShape> for $diagram<'a> {
             fn get_name(&self) -> String {
-                format!("{}:{}", self.data.bar_ordinal, self.data.shape)
+                format!("{}:{}", self.data.bar_props.bar_ordinal, self.data.value)
             }
             fn get_shape(&self) -> shapes::SvgPathShape {
                 shapes::SvgPathShape {
@@ -60,7 +32,7 @@ macro_rules! impl_shape_diagram {
                 )
             }
             fn get_transform(&self) -> Transform {
-                let x = self.theme.grid.bar_size / self.data.bar_units.0 * self.data.position.in_bar_pos.0
+                let x = self.theme.grid.bar_size / self.data.bar_props.bar_units.0 * self.data.entry_props.in_bar_pos.0
                     + self.theme.shapes.shape_x;
                 let mut trans =
                     Transform::from_xyz(x, self.theme.shapes.shape_y, self.theme.shapes.shape_z);

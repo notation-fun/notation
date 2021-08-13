@@ -1,15 +1,14 @@
 use bevy::prelude::*;
 
-use std::sync::Arc;
-
 use crate::prelude::{LyonShapeOp, NotationTheme};
-use notation_model::prelude::TabBar;
+use notation_model::prelude::BarLane;
 
 use super::single_string::{SingleString, SingleStringData};
 
 macro_rules! impl_strings_grid {
     ($type:ident, $strings: literal) => {
-        pub struct $type {}
+        #[derive(Debug, Default)]
+        pub struct $type();
 
         impl $type {
             pub fn add_strings(
@@ -17,14 +16,14 @@ macro_rules! impl_strings_grid {
                 commands: &mut Commands,
                 theme: &NotationTheme,
                 entity: Entity,
-                tab_bar: &Arc<TabBar>,
+                lane: &BarLane,
             ) {
                 for string in 1..=$strings {
                     SingleString::create(
                         commands,
                         entity,
                         theme,
-                        SingleStringData::new(tab_bar, string as u8),
+                        SingleStringData::new(lane, string as u8),
                     );
                 }
             }

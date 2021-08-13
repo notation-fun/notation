@@ -6,4 +6,4 @@ pub mod melody_theme;
 pub mod notation_theme;
 pub mod shapes_theme;
 pub mod strings_theme;
-pub mod syllable_theme;
+pub mod theme_colors;

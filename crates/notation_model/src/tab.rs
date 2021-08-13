@@ -19,8 +19,7 @@ impl Display for Tab {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<{}>({} T:{} S:{} F:{} B:{})",
-            stringify!(Tab),
+            "<Tab>({} T:{} S:{} F:{} B:{})",
             self.meta,
             self.tracks.len(),
             self.sections.len(),

@@ -31,6 +31,11 @@ pub enum Tempo {
     Prestissimo,
     Bpm(u8),
 }
+impl Display for Tempo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 pub type BpmRange = (u8, u8);
 pub type Bpm = u8;

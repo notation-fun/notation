@@ -7,7 +7,7 @@ use super::lyrics_theme::LyricsTheme;
 use super::melody_theme::MelodyTheme;
 use super::shapes_theme::ShapesTheme;
 use super::strings_theme::StringsTheme;
-use super::syllable_theme::SyllableTheme;
+use super::theme_colors::ThemeColors;
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
@@ -17,7 +17,7 @@ use bevy_inspector_egui::Inspectable;
 pub struct NotationTheme {
     pub core: CoreTheme,
     pub grid: GridTheme,
-    pub syllable: SyllableTheme,
+    pub colors: ThemeColors,
     pub melody: MelodyTheme,
     pub lyrics: LyricsTheme,
     pub shapes: ShapesTheme,
@@ -30,7 +30,7 @@ impl Default for NotationTheme {
         Self {
             core: CoreTheme::default(),
             grid: GridTheme::default(),
-            syllable: SyllableTheme::default(),
+            colors: ThemeColors::default(),
             melody: MelodyTheme::default(),
             lyrics: LyricsTheme::default(),
             shapes: ShapesTheme::default(),

@@ -1,17 +1,14 @@
-use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
 use std::sync::Arc;
 
 use crate::prelude::{
-    AddEntryEvent, BarLayout, LaneBundle, LaneLayout, LyonShapeOp, LyricsPlugin, MelodyPlugin,
-    NotationAppState, NotationSettings, NotationTheme, WindowResizedEvent,
+    AddEntryEvent, BarLayout, BevyUtil, LaneBundle, LaneLayout, LyonShapeOp, NotationAppState,
+    NotationSettings, NotationTheme, WindowResizedEvent,
 };
-use crate::shapes::shapes_lane_bundle::{ShapesLaneBundle4, ShapesLaneBundle6};
-use crate::strings::strings_lane_bundle::{StringsLaneBundle4, StringsLaneBundle6};
-use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar, TrackKind};
+use notation_model::prelude::{BarLane, BarPosition, TabBar};
 
-use super::bar_beat::{BarBeat, BarBeatData};
+use super::bar_beat::{BarBeat, BarBeatData, BarBeatValue};
 use super::bar_separator::{BarSeparator, BarSeparatorData};
 
 pub struct BarPlugin;
@@ -44,76 +41,6 @@ fn on_config_changed(
 }
 
 impl BarPlugin {
-    pub fn get_lane(
-        entity: Entity,
-        depth: usize,
-        lane_kind: LaneKind,
-        lane_queries: (&Query<&Parent>, &Query<&Children>, &Query<&Arc<BarLane>>),
-    ) -> Option<(Entity, Arc<BarLane>)> {
-        let mut current_entity = entity;
-        for i in 0..depth {
-            if let Ok(parent) = lane_queries.0.get(current_entity) {
-                current_entity = parent.0;
-            } else {
-                println!(
-                    "BarPlugin::get_lane({:?}, {}, {}) Parent Not Found: {}",
-                    entity, depth, lane_kind, i
-                );
-                return None;
-            }
-        }
-        if let Ok(children) = lane_queries.1.get(current_entity) {
-            if children.len() == 0 {
-                println!(
-                    "BarPlugin::get_lane({:?}, {}, {}) Children Is Empty: {:?}",
-                    entity, depth, lane_kind, current_entity
-                );
-            }
-            for &child in children.iter() {
-                if let Ok(lane) = lane_queries.2.get(child) {
-                    if lane.kind == lane_kind {
-                        //println!("BarPlugin::get_lane({:?}, {}, {}) Found: {}", entity, depth, lane_kind, lane);
-                        return Some((child, lane.clone()));
-                    } else {
-                        println!(
-                            "BarPlugin::get_lane({:?}, {}, {}) BarLane Not Matched: {}",
-                            entity, depth, lane_kind, lane
-                        );
-                    }
-                } else {
-                    println!(
-                        "BarPlugin::get_lane({:?}, {}, {}) BarLane Not Found: {:?}",
-                        entity, depth, lane_kind, child
-                    );
-                }
-            }
-        } else {
-            println!(
-                "BarPlugin::get_lane({:?}, {}, {}) Children Not Found: {:?}",
-                entity, depth, lane_kind, current_entity
-            );
-        }
-        None
-    }
-    fn insert_lane_extra(commands: &mut EntityCommands, _bar: Arc<TabBar>, lane: Arc<BarLane>) {
-        commands.insert(lane.track.clone());
-        let track = lane.track.clone();
-        match lane.kind {
-            LaneKind::Lyrics => LyricsPlugin::insert_lyrics_lane_extra(commands, track),
-            LaneKind::Melody => MelodyPlugin::insert_melody_lane_extra(commands, track),
-            LaneKind::Strings => {
-                if track.kind == TrackKind::Guitar {
-                    commands.insert_bundle(StringsLaneBundle6::new(track));
-                }
-            }
-            LaneKind::Shapes => {
-                if track.kind == TrackKind::Guitar {
-                    commands.insert_bundle(ShapesLaneBundle6::new(track));
-                }
-            }
-            _ => (),
-        }
-    }
     fn create_lane(
         commands: &mut Commands,
         _app_state: &NotationAppState,
@@ -126,16 +53,17 @@ impl BarPlugin {
         lane: &Arc<BarLane>,
         lane_layout: &LaneLayout,
     ) {
-        let layer_bundle = LaneBundle::new(bar.clone(), lane.clone(), *lane_layout);
-        let mut layer_commands = commands.spawn_bundle(layer_bundle);
-        BarPlugin::insert_lane_extra(&mut layer_commands, bar.clone(), lane.clone());
-        let layer_entity = layer_commands.id();
-        commands.entity(bar_entity).push_children(&[layer_entity]);
+        let lane_bundle = LaneBundle::new(lane.clone(), *lane_layout);
+        let lane_entity = BevyUtil::spawn_child_bundle(commands, bar_entity, lane_bundle);
         for entry in lane.entries.iter() {
             add_entry_evts.send(AddEntryEvent(
-                layer_entity,
+                lane_entity,
                 entry.clone(),
-                BarPosition::new(bar.bar_units(), bar.bar_ordinal, entry.props.in_bar_pos),
+                BarPosition::new(
+                    bar.bar_units(),
+                    bar.props.bar_ordinal,
+                    entry.props.in_bar_pos,
+                ),
             ));
         }
     }
@@ -181,7 +109,8 @@ impl BarPlugin {
         );
         let signature = bar.signature();
         for beat in 0..signature.bar_beats {
-            BarBeatData::may_new(&theme, &bar, &signature, bar_layout, beat)
+            BarBeatValue::may_new(&theme, &bar, &signature, bar_layout, beat)
+                .map(|value| BarBeatData::new(&bar, value))
                 .map(|data| BarBeat::create(commands, bar_entity, theme, data));
         }
     }

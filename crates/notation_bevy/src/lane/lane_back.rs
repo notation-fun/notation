@@ -17,7 +17,7 @@ pub struct LaneBackData {
 
 impl LaneBackData {
     pub fn new(tab_bar: &Arc<TabBar>, lane_layout: &LaneLayout) -> Self {
-        let bar_ordinal = tab_bar.bar_ordinal;
+        let bar_ordinal = tab_bar.props.bar_ordinal;
         let height = lane_layout.data.height;
         let margin = lane_layout.data.margin;
         LaneBackData {

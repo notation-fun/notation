@@ -7,24 +7,26 @@ use crate::prelude::{Bar, ParseError, SectionKind, Track};
 
 #[derive(Debug)]
 pub struct Section {
-    pub id: String,
+    pub index: usize,
     pub kind: SectionKind,
+    pub id: String,
     pub bars: Vec<Arc<Bar>>,
 }
 impl Display for Section {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<Section>({} <{}> B:{})",
-            self.id,
+            "<Section>({} <{}> {} B:{})",
+            self.index,
             self.kind,
+            self.id,
             self.bars.len()
         )
     }
 }
 impl Section {
-    pub fn new(id: String, kind: SectionKind, bars: Vec<Arc<Bar>>) -> Self {
-        Self { id, kind, bars }
+    pub fn new(index: usize, kind: SectionKind, id: String, bars: Vec<Arc<Bar>>) -> Self {
+        Self { id, kind, bars, index }
     }
 }
 
@@ -55,15 +57,13 @@ impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
     }
 }
 
-impl TryFrom<(notation_proto::prelude::Section, &Vec<Arc<Track>>)> for Section {
-    type Error = ParseError;
-
-    #[throws(Self::Error)]
-    fn try_from(v: (notation_proto::prelude::Section, &Vec<Arc<Track>>)) -> Self {
+impl Section {
+    #[throws(ParseError)]
+    pub fn try_new(index: usize, proto: notation_proto::prelude::Section, tracks: &Vec<Arc<Track>>) -> Self {
         let mut bars = Vec::new();
-        for bar in v.0.bars {
-            bars.push(Bar::try_from((bar, v.1)).map(Arc::new)?);
+        for (bar_index, bar) in proto.bars.into_iter().enumerate() {
+            bars.push(Bar::try_new(bar_index, bar, tracks).map(Arc::new)?);
         }
-        Self::new(v.0.id, v.0.kind, bars)
+        Self::new(index, proto.kind, proto.id, bars)
     }
 }

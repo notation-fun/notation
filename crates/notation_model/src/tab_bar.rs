@@ -5,28 +5,38 @@ use notation_proto::prelude::{
     Fretboard4, Fretboard6, HandShape4, HandShape6, Note, SyllableNote, TabPosition,
 };
 
-use crate::prelude::{Bar, BarLane, LaneKind, Pitch, Section, Signature, Slice, LaneEntry, Syllable, Tab, TabMeta, Track, Unit, Units};
+use crate::prelude::{
+    Bar, BarLane, LaneEntry, LaneKind, Pitch, Section, Signature, Syllable, Tab, TabMeta, Unit,
+    Units,
+};
+
+#[derive(Copy, Clone, Debug, Default)]
+pub struct TabBarProps {
+    pub section_index: usize,
+    pub section_round: usize,
+    pub section_ordinal: usize,
+    pub bar_index: usize,
+    pub bar_ordinal: usize,
+    pub bar_units: Units,
+}
 
 #[derive(Debug)]
 pub struct TabBar {
     pub tab: Weak<Tab>,
     pub section: Arc<Section>,
-    pub section_round: usize,
-    pub section_ordinal: usize,
-    pub bar: Arc<Bar>,
-    pub bar_index: usize,
-    pub bar_ordinal: usize,
     pub lanes: Vec<Arc<BarLane>>,
+    pub model: Arc<Bar>,
+    pub props: TabBarProps,
 }
 impl Display for TabBar {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<{}>({} {}:{} N:{})",
-            stringify!(TabBar),
-            self.bar_ordinal,
-            self.section_ordinal,
-            self.bar_index,
+            "<TabBar>({} S:{} {}:{} N:{})",
+            self.props.bar_ordinal,
+            self.props.section_ordinal,
+            self.props.section_index,
+            self.props.bar_index,
             self.lanes.len(),
         )
     }
@@ -35,37 +45,47 @@ impl TabBar {
     pub fn new_arc(
         tab: Weak<Tab>,
         section: Arc<Section>,
+        bar: Arc<Bar>,
         section_round: usize,
         section_ordinal: usize,
-        bar: Arc<Bar>,
         bar_index: usize,
         bar_ordinal: usize,
+        bar_units: Units,
     ) -> Arc<Self> {
         Arc::<Self>::new_cyclic(|weak_self| {
             let mut lanes = Vec::new();
             for layer in bar.layers.iter() {
                 for slice in layer.slices.iter() {
                     if slice.in_round(section_round) {
-                        if let Some(lane) = BarLane::try_new_arc(weak_self.clone(), &layer.track, slice.clone()) {
+                        if let Some(lane) =
+                            BarLane::try_new_arc(weak_self.clone(), &layer.track, slice.clone())
+                        {
                             lanes.push(lane);
                         }
                     }
                 }
             }
+            let props = TabBarProps {
+                section_index: section.index,
+                section_round,
+                section_ordinal,
+                bar_index,
+                bar_ordinal,
+                bar_units,
+            };
             Self {
                 tab: tab,
                 section: section,
-                section_round,
-                section_ordinal,
-                bar: bar,
-                bar_index,
-                bar_ordinal,
+                model: bar,
                 lanes,
+                props,
             }
         })
     }
     pub fn tab_pos(&self) -> TabPosition {
-        TabPosition::new(Units((self.bar_ordinal - 1) as f32 * self.bar_units().0))
+        TabPosition::new(Units(
+            (self.props.bar_ordinal - 1) as f32 * self.bar_units().0,
+        ))
     }
     pub fn tab_meta(&self) -> Arc<TabMeta> {
         match self.tab.upgrade() {
@@ -96,6 +116,9 @@ impl TabBar {
     }
 }
 impl TabBar {
+    pub fn tab(&self) -> Option<Arc<Tab>> {
+        self.tab.upgrade().map(|x| x.clone())
+    }
     pub fn get_lane_of_kind(&self, kind: LaneKind) -> Option<Arc<BarLane>> {
         for lane in self.lanes.iter() {
             if lane.kind == kind {

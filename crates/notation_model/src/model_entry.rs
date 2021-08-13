@@ -7,26 +7,29 @@ use notation_proto::prelude::{
 
 #[derive(Copy, Clone, Debug)]
 pub struct ModelEntryProps {
+    pub index: usize,
     pub tied_units: Units,
 }
 
 #[derive(Debug)]
 pub struct ModelEntry {
     pub track: Weak<Track>,
-    pub index: usize,
     pub proto: Arc<ProtoEntry>,
     pub props: ModelEntryProps,
 }
 impl ModelEntry {
     pub fn new(
         track: Weak<Track>,
-        index: usize,
         proto: Arc<ProtoEntry>,
-        props: ModelEntryProps,
+        index: usize,
+        tied_units: Units,
     ) -> Self {
+        let props = ModelEntryProps {
+            index,
+            tied_units,
+        };
         Self {
             track,
-            index,
             proto,
             props,
         }
@@ -54,17 +57,17 @@ impl ModelEntry {
         self.proto.as_fretted4()
     }
     pub fn prev(&self) -> Option<Arc<ModelEntry>> {
-        if self.index == 0 {
+        if self.props.index == 0 {
             None
         } else if let Some(track) = self.track.upgrade() {
-            track.entries.get(self.index - 1).map(|x| x.clone())
+            track.entries.get(self.props.index - 1).map(|x| x.clone())
         } else {
             None
         }
     }
     pub fn next(&self) -> Option<Arc<ModelEntry>> {
         if let Some(track) = self.track.upgrade() {
-            track.entries.get(self.index + 1).map(|x| x.clone())
+            track.entries.get(self.props.index + 1).map(|x| x.clone())
         } else {
             None
         }
@@ -77,13 +80,13 @@ impl ModelEntry {
         }
     }
     pub fn get_tied_prev(&self) -> Option<Arc<ModelEntry>> {
-        if self.index <= 1 {
+        if self.props.index <= 1 {
             return None;
         }
         if let Some(track) = self.track.upgrade() {
-            if let Some(prev) = track.entries.get(self.index - 1) {
+            if let Some(prev) = track.entries.get(self.props.index - 1) {
                 if prev.proto.is_core_tie() {
-                    for i in self.index - 2..=0 {
+                    for i in self.props.index - 2..=0 {
                         let entry = track.entries.get(i).unwrap();
                         if entry.duration() != Duration::Zero {
                             return Some(entry.clone());
@@ -96,9 +99,9 @@ impl ModelEntry {
     }
     pub fn get_tied_next(&self) -> Option<Arc<ModelEntry>> {
         if let Some(track) = self.track.upgrade() {
-            if let Some(next) = track.entries.get(self.index + 1) {
+            if let Some(next) = track.entries.get(self.props.index + 1) {
                 if next.proto.is_core_tie() {
-                    for i in self.index + 2..track.entries.len() {
+                    for i in self.props.index + 2..track.entries.len() {
                         let entry = track.entries.get(i).unwrap();
                         if entry.duration() != Duration::Zero {
                             return Some(entry.clone());

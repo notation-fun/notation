@@ -40,7 +40,7 @@ pub struct PosIndicator<'a> {
 
 impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
     fn get_name(&self) -> String {
-        "Pos Indicator".to_string()
+        "Pos".to_string()
     }
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
@@ -76,9 +76,8 @@ impl<'a> PosIndicator<'a> {
     pub fn update_pos(
         commands: &mut Commands,
         theme: &'a NotationTheme,
-        children: &Children,
         settings: &NotationSettings,
-        pos_indicator_query: &mut Query<&mut PosIndicatorData>,
+        pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData)>,
         bar_layouts: &Arc<Vec<BarLayout>>,
         pos: Position,
     ) {
@@ -86,11 +85,9 @@ impl<'a> PosIndicator<'a> {
             .layout
             .bar_layout_of_pos(bar_layouts, pos)
             .map(|bar_layout| {
-                for &child in children.iter() {
-                    if let Ok(mut data) = pos_indicator_query.get_mut(child) {
-                        PosIndicatorData::update(&mut data, &bar_layout, pos.bar.in_bar_pos);
-                        Self::update(commands, theme, child, &data);
-                    }
+                if let Ok((entity, mut data)) = pos_indicator_query.single_mut() {
+                    PosIndicatorData::update(&mut data, &bar_layout, pos.bar.in_bar_pos);
+                    Self::update(commands, theme, entity, &data);
                 }
             });
     }

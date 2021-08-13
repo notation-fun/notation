@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::prelude::{Bar, BarLane, BarLayer, ModelEntry, Slice, LaneEntry, TabBar, Track};
+use crate::prelude::{Bar, BarLane, BarLayer, LaneEntry, ModelEntry, TabBar, Track};
 
 pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(
     v: &[Arc<ModelEntry>],
@@ -30,7 +30,10 @@ impl Track {
     }
 }
 impl BarLayer {
-    pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(&self, predicate: &F) -> Option<Arc<ModelEntry>> {
+    pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(
+        &self,
+        predicate: &F,
+    ) -> Option<Arc<ModelEntry>> {
         self.track.get_entry(predicate)
     }
 }

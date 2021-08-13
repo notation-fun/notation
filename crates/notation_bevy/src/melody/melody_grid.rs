@@ -5,9 +5,10 @@ use std::sync::Arc;
 use crate::prelude::NotationTheme;
 use notation_model::prelude::TabBar;
 
-pub struct MemoryGrid {}
+#[derive(Debug, Default)]
+pub struct MelodyGrid();
 
-impl MemoryGrid {
+impl MelodyGrid {
     pub fn add_octave(
         &self,
         _commands: &mut Commands,

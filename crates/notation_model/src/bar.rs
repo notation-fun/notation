@@ -1,61 +1,54 @@
 use fehler::throws;
-use notation_proto::prelude::{Fretboard4, Fretboard6, HandShape4, HandShape6};
 
-use crate::prelude::{BarLane, LaneKind, ParseError, Slice, LaneEntry, Track};
+use crate::prelude::{ParseError, Slice, Track};
 use std::convert::TryFrom;
 use std::fmt::Display;
 use std::sync::Arc;
 
 #[derive(Debug)]
 pub struct BarLayer {
+    pub index: usize,
     pub track: Arc<Track>,
     pub slices: Vec<Slice>,
 }
 impl Display for BarLayer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<BarLayer>({} S:{})", self.track, self.slices.len())
+        write!(f, "<BarLayer>({} {} S:{})", self.index, self.track, self.slices.len())
     }
 }
 impl BarLayer {
-    pub fn new(track: Arc<Track>, slices: Vec<Slice>) -> Self {
-        Self { track, slices }
+    pub fn new(index: usize, track: Arc<Track>, slices: Vec<Slice>) -> Self {
+        Self { index, track, slices }
     }
 }
 #[derive(Debug)]
 pub struct Bar {
+    pub index: usize,
     pub layers: Vec<Arc<BarLayer>>,
 }
 impl Display for Bar {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "<Bar>(L:{})",
-            self.layers.len(),
-        )
+        write!(f, "<Bar>({} L:{})", self.index, self.layers.len(),)
     }
 }
-impl TryFrom<(notation_proto::prelude::BarLayer, &Vec<Arc<Track>>)> for BarLayer {
-    type Error = ParseError;
-
-    #[throws(Self::Error)]
-    fn try_from(v: (notation_proto::prelude::BarLayer, &Vec<Arc<Track>>)) -> Self {
+impl BarLayer {
+    #[throws(ParseError)]
+    pub fn try_new(index: usize, proto: notation_proto::prelude::BarLayer, tracks: &Vec<Arc<Track>>) -> Self {
         let track =
-            v.1.iter()
-                .find(|x| x.id == v.0.track)
+            tracks.iter()
+                .find(|x| x.id == proto.track)
                 .cloned()
-                .ok_or(ParseError::TrackNotFound(v.0.track))?;
-        Self::new(track, v.0.slices)
+                .ok_or(ParseError::TrackNotFound(proto.track))?;
+        Self::new(index, track, proto.slices)
     }
 }
-impl TryFrom<(notation_proto::prelude::Bar, &Vec<Arc<Track>>)> for Bar {
-    type Error = ParseError;
-
-    #[throws(Self::Error)]
-    fn try_from(v: (notation_proto::prelude::Bar, &Vec<Arc<Track>>)) -> Self {
+impl Bar {
+    #[throws(ParseError)]
+    pub fn try_new(index: usize, proto: notation_proto::prelude::Bar, tracks: &Vec<Arc<Track>>) -> Self {
         let mut layers = Vec::new();
-        for layer in v.0.layers {
-            layers.push(BarLayer::try_from((layer, v.1)).map(Arc::new)?);
+        for (layer_index, layer) in proto.layers.into_iter().enumerate() {
+            layers.push(BarLayer::try_new(layer_index, layer, tracks).map(Arc::new)?);
         }
-        Self { layers }
+        Self { index: index, layers }
     }
 }

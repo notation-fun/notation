@@ -20,9 +20,25 @@ pub enum StrumStrings {
     All,
     Between(u8, u8),
 }
+impl Display for StrumStrings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            StrumStrings::All => write!(f, "All"),
+            StrumStrings::Between(x, y) => write!(f, "{}-{}", x, y),
+        }
+    }
+}
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Strum {
-    pub string: StrumStrings,
+    pub strings: StrumStrings,
     pub direction: Option<StrumDirection>,
+}
+impl Display for Strum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self.direction {
+            Some(x) => write!(f, "{} {}", x, self.strings),
+            None => write!(f, "{}", self.strings),
+        }
+    }
 }

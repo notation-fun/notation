@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::{Pitch, Syllable};
@@ -10,6 +12,11 @@ pub enum ChordInversion {
     SecondInversion,
     ThirdInversion,
     SlashBass(Pitch),
+}
+impl Display for ChordInversion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 // https://hellomusictheory.com/learn/types-of-chords/
@@ -30,6 +37,11 @@ pub enum ChordQuality {
     HaldDiminished7th,
 }
 //Extended, Altered, Quartal and Quintal not supported
+impl Display for ChordQuality {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Chord {
@@ -37,6 +49,11 @@ pub struct Chord {
     pub quality: ChordQuality,
     pub inversion: ChordInversion,
     pub syllable: Option<Syllable>,
+}
+impl Display for Chord {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {} {}", self.pitch, self.quality, self.inversion)
+    }
 }
 
 impl Chord {

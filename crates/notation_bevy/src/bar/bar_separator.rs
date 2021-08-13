@@ -16,7 +16,7 @@ pub struct BarSeparatorData {
 
 impl BarSeparatorData {
     pub fn new(tab_bar: &Arc<TabBar>, bar_layout: &BarLayout, is_begin: bool) -> Self {
-        let bar_ordinal = tab_bar.bar_ordinal;
+        let bar_ordinal = tab_bar.props.bar_ordinal;
         let bar_units = tab_bar.bar_units();
         let bar_height = bar_layout.height;
         BarSeparatorData {

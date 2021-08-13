@@ -19,6 +19,8 @@ pub struct CoreTheme {
     pub beat_z: f32,
     pub pos_indicator_color: Color,
     pub pos_indicator_z: f32,
+    pub mini_map_z: f32,
+    pub mini_bar_z: f32,
 }
 
 impl Default for CoreTheme {
@@ -33,6 +35,8 @@ impl Default for CoreTheme {
             beat_z: 0.0,
             pos_indicator_color: Color::hex("000000AA").unwrap(),
             pos_indicator_z: 20.0,
+            mini_map_z: 23.0,
+            mini_bar_z: 24.0,
         }
     }
 }

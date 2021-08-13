@@ -1,30 +1,10 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::Units;
 
-use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
-use notation_model::prelude::TabBar;
+use crate::prelude::{LaneData, LyonShape, LyonShapeOp, NotationTheme};
 
-#[derive(Clone, Debug)]
-pub struct SingleStringData {
-    pub bar_ordinal: usize,
-    pub bar_units: Units,
-    pub string: u8,
-}
+pub type SingleStringData = LaneData<u8>;
 
-impl SingleStringData {
-    pub fn new(tab_bar: &Arc<TabBar>, string: u8) -> Self {
-        let bar_ordinal = tab_bar.bar_ordinal;
-        let bar_units = tab_bar.bar_units();
-        SingleStringData {
-            bar_ordinal,
-            bar_units,
-            string,
-        }
-    }
-}
 pub struct SingleString<'a> {
     theme: &'a NotationTheme,
     data: SingleStringData,
@@ -32,7 +12,10 @@ pub struct SingleString<'a> {
 
 impl<'a> LyonShape<shapes::Line> for SingleString<'a> {
     fn get_name(&self) -> String {
-        format!("{}:String {}", self.data.bar_ordinal, self.data.string)
+        format!(
+            "{}:String {}",
+            self.data.bar_props.bar_ordinal, self.data.value
+        )
     }
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(Vec2::ZERO, Vec2::new(self.theme.grid.bar_size, 0.0))
@@ -41,11 +24,11 @@ impl<'a> LyonShape<shapes::Line> for SingleString<'a> {
         ShapeColors::new(self.theme.strings.string_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.guitar.get_string_width(self.data.string);
+        let line_width = self.theme.guitar.get_string_width(self.data.value);
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let y = -1.0 * (self.data.string as f32 - 0.5) * self.theme.strings.string_space;
+        let y = -1.0 * (self.data.value as f32 - 0.5) * self.theme.strings.string_space;
         Transform::from_xyz(0.0, y, self.theme.strings.string_z)
     }
 }

@@ -1,10 +1,10 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
-use std::sync::Arc;
 
-use crate::prelude::{AddEntryEvent, EntryBundle, ShapesPlugin, StringsPlugin, ToneBundle};
-use crate::word::word_bundle::WordBundle;
-use notation_model::prelude::{CoreEntry, ProtoEntry, LaneEntry};
+use crate::prelude::{
+    AddEntryEvent, BevyUtil, EntryBundle, LyricsPlugin, ShapesPlugin, StringsPlugin, ToneBundle,
+};
+use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;
 
@@ -20,45 +20,35 @@ impl Plugin for EntryPlugin {
 fn on_add_entry(mut commands: Commands, mut evts: EventReader<AddEntryEvent>) {
     for evt in evts.iter() {
         let parent = evt.0;
-        let entry = evt.1.clone();
-        let entry_bundle = EntryBundle::from((entry.clone(), evt.2));
-        let entry_entity = commands.spawn_bundle(entry_bundle).id();
-        commands.entity(parent).push_children(&[entry_entity]);
+        let entry_bundle = EntryBundle::from((evt.1.clone(), evt.2));
+        let entry_entity = BevyUtil::spawn_child_bundle(&mut commands, parent, entry_bundle);
         let mut entry_commands = commands.entity(entry_entity);
-        EntryPlugin::insert_entry_extra(&mut entry_commands, entry);
+        insert_entry_extra(&mut entry_commands, &evt.1);
     }
 }
 
-impl EntryPlugin {
-    pub fn insert_core_entry_extra(commands: &mut EntityCommands, entry: &CoreEntry) {
-        match entry {
-            CoreEntry::Tie => (),
-            CoreEntry::Rest(_) => (),
-            CoreEntry::Tone(tone, _) => {
-                commands.insert_bundle(ToneBundle::from(*tone));
-            }
-            CoreEntry::Chord(_, _) => (),
-            CoreEntry::Signature(_) => (),
-            CoreEntry::Tempo(_) => (),
-        };
-    }
-
-    pub fn insert_entry_extra(commands: &mut EntityCommands, entry: Arc<LaneEntry>) {
-        match entry.as_ref().model.proto.as_ref() {
-            ProtoEntry::Core(entry) => Self::insert_core_entry_extra(commands, entry),
-            ProtoEntry::Fretted6(entry) => {
-                ShapesPlugin::insert_entry_extra6(commands, entry);
-                StringsPlugin::insert_entry_extra6(commands, entry);
-            }
-            ProtoEntry::Fretted4(entry) => {
-                ShapesPlugin::insert_entry_extra4(commands, entry);
-                StringsPlugin::insert_entry_extra4(commands, entry);
-            }
-            ProtoEntry::Mark(_) => {}
-            ProtoEntry::Word(word, _) => {
-                commands.insert_bundle(WordBundle::from(word.clone()));
-            }
-            ProtoEntry::Extra(_, _) => {}
+fn insert_core_entry_extra(commands: &mut EntityCommands, entry: &CoreEntry) {
+    match entry {
+        CoreEntry::Tie => (),
+        CoreEntry::Rest(_) => (),
+        CoreEntry::Tone(tone, _) => {
+            commands.insert_bundle(ToneBundle::from(*tone));
         }
+        CoreEntry::Chord(_, _) => (),
+    };
+}
+fn insert_entry_extra(commands: &mut EntityCommands, entry: &LaneEntry) {
+    match entry.model.proto.as_ref() {
+        ProtoEntry::Core(entry) => insert_core_entry_extra(commands, entry),
+        ProtoEntry::Lyric(entry) => LyricsPlugin::insert_entry_extra(commands, entry),
+        ProtoEntry::Fretted6(entry) => {
+            ShapesPlugin::insert_entry_extra6(commands, entry);
+            StringsPlugin::insert_entry_extra6(commands, entry);
+        }
+        ProtoEntry::Fretted4(entry) => {
+            ShapesPlugin::insert_entry_extra4(commands, entry);
+            StringsPlugin::insert_entry_extra4(commands, entry);
+        }
+        _ => {}
     }
 }

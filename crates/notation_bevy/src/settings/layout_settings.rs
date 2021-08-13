@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy::render::camera::OrthographicProjection;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
 use float_eq::float_ne;
 use std::collections::HashMap;
@@ -13,7 +12,8 @@ use bevy_inspector_egui::Inspectable;
 
 use crate::bar::bar_layout::BarLayoutData;
 use crate::lane::lane_layout::LaneLayoutData;
-use crate::prelude::{BarLayout, LaneLayout, NotationAppState, TabState};
+use crate::mini::mini_bar::MiniBarValue;
+use crate::prelude::{BarLayout, LaneLayout, NotationAppState, TabBars, TabState};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -42,7 +42,10 @@ pub struct LayoutSettings {
     pub strings_lane_order: u8,
     pub lyrics_lane_order: u8,
     pub melody_lane_order: u8,
-    pub focus_camera_ease_ms: u64,
+    pub focus_bar_ease_ms: u64,
+    pub mini_bar_margin: f32,
+    pub min_mini_bar_size: f32,
+    pub max_mini_bar_size: f32,
 }
 
 impl Default for LayoutSettings {
@@ -60,7 +63,10 @@ impl Default for LayoutSettings {
             strings_lane_order: 2,
             lyrics_lane_order: 3,
             melody_lane_order: 4,
-            focus_camera_ease_ms: 250,
+            focus_bar_ease_ms: 250,
+            mini_bar_margin: 6.0,
+            min_mini_bar_size: 16.0,
+            max_mini_bar_size: 32.0,
         }
     }
 }
@@ -136,7 +142,7 @@ impl LayoutSettings {
         }
     }
     fn calc_bar_layout_data(&self, app_state: &NotationAppState, bar: &TabBar) -> BarLayoutData {
-        let (row, col) = self._calc_bar_row_col(bar.bar_ordinal - 1);
+        let (row, col) = self._calc_bar_row_col(bar.props.bar_ordinal - 1);
         BarLayoutData::new(
             self.bar_margin,
             row,
@@ -147,8 +153,9 @@ impl LayoutSettings {
     pub fn calc_pos_layout(&self, tab: &Tab, pos: TabPosition) -> (usize, usize) {
         let bar_units = tab.bar_units();
         let mut index = (pos.in_tab_pos.0 / bar_units.0) as usize;
-        if index >= tab.bars.len() {
-            index = tab.bars.len() - 1;
+        let bars = tab.bars.len();
+        if index >= bars {
+            index = bars - 1;
         }
         self._calc_bar_row_col(index)
     }
@@ -220,13 +227,13 @@ impl LayoutSettings {
     ) -> Option<BarLayout> {
         bar_layouts.get(pos.bar.bar_ordinal - 1).map(|x| x.clone())
     }
-    pub fn pan_camera(
+    pub fn pan_tab_bars(
         &self,
-        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
         delta_x: f32,
         delta_y: f32,
     ) {
-        if let Ok((_, mut camera_transform, _)) = camera_query.single_mut() {
+        if let Ok((_, mut camera_transform, _)) = tab_bars_query.single_mut() {
             let trans = camera_transform.translation;
             let (x, y) = match self.mode {
                 LayoutMode::Grid => (trans.x, trans.y + delta_y),
@@ -235,26 +242,26 @@ impl LayoutSettings {
             *camera_transform = Transform::from_xyz(x, y, trans.z);
         }
     }
-    pub fn set_camera_xy(
+    pub fn set_tab_bars_xy(
         &self,
-        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
         x: Option<f32>,
         y: Option<f32>,
     ) {
-        if let Ok((_, mut camera_transform, _)) = camera_query.single_mut() {
+        if let Ok((_, mut camera_transform, _)) = tab_bars_query.single_mut() {
             let trans = camera_transform.translation;
             *camera_transform =
                 Transform::from_xyz(x.unwrap_or(trans.x), y.unwrap_or(trans.y), trans.z);
         }
     }
-    pub fn ease_camera_xy(
+    pub fn ease_tab_bars_xy(
         &self,
         commands: &mut Commands,
-        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
         x: Option<f32>,
         y: Option<f32>,
     ) {
-        if let Ok((camera_entity, camera_transform, _)) = camera_query.single_mut() {
+        if let Ok((camera_entity, camera_transform, _)) = tab_bars_query.single_mut() {
             let mut camera_commands = commands.entity(camera_entity);
             camera_commands.remove::<EasingComponent<Transform>>();
             let from = camera_transform.translation;
@@ -269,13 +276,13 @@ impl LayoutSettings {
                     Transform::from_translation(to),
                     ease_function,
                     EasingType::Once {
-                        duration: std::time::Duration::from_millis(self.focus_camera_ease_ms),
+                        duration: std::time::Duration::from_millis(self.focus_bar_ease_ms),
                     },
                 ));
             }
         }
     }
-    pub fn should_focus_camera(&self, old: &Position, new: &Position) -> bool {
+    pub fn should_focus_bar(&self, old: &Position, new: &Position) -> bool {
         self.mode == LayoutMode::Line || old.bar.bar_ordinal != new.bar.bar_ordinal
     }
     fn calc_grid_focus_y(
@@ -302,10 +309,10 @@ impl LayoutSettings {
             bar_layout.data.col as f32
         })
     }
-    pub fn focus_camera(
+    pub fn focus_bar(
         &self,
         commands: &mut Commands,
-        camera_query: &mut Query<(Entity, &mut Transform, &OrthographicProjection)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
         bar_layouts: &Arc<Vec<BarLayout>>,
         bar_size: f32,
         state: &TabState,
@@ -315,22 +322,42 @@ impl LayoutSettings {
             match self.mode {
                 LayoutMode::Grid => {
                     let y = self.calc_grid_focus_y(bar_layouts, bar_layout, &pos);
-                    self.ease_camera_xy(commands, camera_query, None, Some(y));
+                    self.ease_tab_bars_xy(commands, tab_bars_query, None, Some(-y));
                 }
                 LayoutMode::Line => {
                     let x_units = self.calc_line_focus_x_units(bar_layout, &pos);
                     if state.play_control.play_state.is_playing() {
-                        self.set_camera_xy(camera_query, Some(x_units.0 * bar_size), None);
+                        self.set_tab_bars_xy(tab_bars_query, Some(-x_units.0 * bar_size), None);
                     } else {
-                        self.ease_camera_xy(
+                        self.ease_tab_bars_xy(
                             commands,
-                            camera_query,
-                            Some(x_units.0 * bar_size),
+                            tab_bars_query,
+                            Some(-x_units.0 * bar_size),
                             None,
                         );
                     }
                 }
-            };
+            }
         }
+    }
+    pub fn calc_mini_bar_value(&self, app_state: &NotationAppState, bars: usize) -> MiniBarValue {
+        if bars == 0 {
+            return MiniBarValue::new(0, 0, self.max_mini_bar_size, self.mini_bar_margin);
+        }
+        let content_width =  app_state.window_width - self.mini_bar_margin * 2.0;
+        let mut size = content_width / bars as f32;
+        let mut rows = 1;
+        let mut cols = bars;
+        if size < self.min_mini_bar_size {
+            size = self.min_mini_bar_size;
+            cols = (content_width / size).floor() as usize;
+            rows = bars / cols;
+            if bars % cols > 0 {
+                rows += 1;
+            }
+        } else if size > self.max_mini_bar_size {
+            size = self.max_mini_bar_size;
+        }
+        MiniBarValue::new(rows, cols, size, self.mini_bar_margin)
     }
 }

@@ -5,7 +5,8 @@ use std::sync::Arc;
 use crate::prelude::NotationTheme;
 use notation_model::prelude::TabBar;
 
-pub struct LyricsGrid {}
+#[derive(Debug, Default)]
+pub struct LyricsGrid();
 
 impl LyricsGrid {
     pub fn add_octave(

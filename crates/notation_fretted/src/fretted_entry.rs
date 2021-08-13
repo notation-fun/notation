@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
 use super::prelude::{Fretboard4, Fretboard6, HandShape4, HandShape6};
 use crate::prelude::{Pick, Strum};
@@ -12,6 +13,16 @@ macro_rules! impl_entry {
             Strum(Strum, Duration),
             Shape($hand_shape, Duration),
             Fretboard($fretboard),
+        }
+        impl Display for $type {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                match self {
+                    Self::Pick(x, y) => write!(f, "Pick({}, {})", x, y),
+                    Self::Strum(x, y) => write!(f, "Strum({}, {})", x, y),
+                    Self::Shape(x, y) => write!(f, "Shape({}, {})", x, y),
+                    Self::Fretboard(x) => write!(f, "Fretboard({})", x),
+                }
+            }
         }
 
         impl $type {

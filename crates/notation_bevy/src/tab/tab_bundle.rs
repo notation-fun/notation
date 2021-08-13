@@ -3,28 +3,34 @@ use std::sync::Arc;
 
 use notation_model::prelude::Tab;
 
-use crate::prelude::BarLayout;
+use crate::prelude::{BarLayout};
 
 use super::tab_state::TabState;
 
 #[derive(Bundle, Debug)]
-pub struct TabStateBundle {
-    pub bar_layouts: Arc<Vec<BarLayout>>,
+pub struct TabBundle {
     pub name: Name,
+    pub tab: Arc<Tab>,
+    pub bar_layouts: Arc<Vec<BarLayout>>,
     pub state: TabState,
     pub transform: Transform,
     pub global_cransform: GlobalTransform,
 }
 
-impl TabStateBundle {
-    pub fn new(tab: Arc<Tab>, bar_layouts: Arc<Vec<BarLayout>>) -> Self {
-        let name = format!("State: {}", tab).as_str().into();
+impl TabBundle {
+    pub fn new(
+        tab: Arc<Tab>,
+        bar_layouts: Arc<Vec<BarLayout>>,
+        transform: Transform,
+    ) -> Self {
+        let name = tab.to_string().as_str().into();
         let state = TabState::new(&tab);
         Self {
-            bar_layouts,
             name,
+            tab,
+            bar_layouts,
             state,
-            transform: Transform::default(),
+            transform,
             global_cransform: GlobalTransform::default(),
         }
     }

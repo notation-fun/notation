@@ -55,7 +55,7 @@ impl Unit {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug, Default)]
 pub struct Units(pub f32);
 
 impl Add for Units {
