@@ -10,6 +10,40 @@
     ),
     tracks: [
         (
+            id: "chord",
+            kind: Chord,
+            entries: [
+                Extra(
+                    "dsl::context::duration",
+                    "_1",
+                ),// [0]
+                Mark("1"),// [1]
+                Core(Chord(
+                    (
+                        root: Do,
+                        intervals: Triad(
+                            Major3nd,
+                            Perfect5th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [2]
+                Mark("6-"),// [3]
+                Core(Chord(
+                    (
+                        root: La,
+                        intervals: Triad(
+                            Minor3nd,
+                            Perfect5th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),
+            ],
+        ),// [0]
+        (
             id: "guitar",
             kind: Guitar,
             entries: [
@@ -246,6 +280,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -264,6 +308,16 @@
                 ),// [0]
                 (
                     layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
                         (
                             track: "guitar",
                             slices: [
@@ -284,6 +338,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -302,6 +366,16 @@
                 ),// [2]
                 (
                     layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
                         (
                             track: "guitar",
                             slices: [

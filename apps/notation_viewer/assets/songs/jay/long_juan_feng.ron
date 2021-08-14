@@ -10,6 +10,118 @@
     ),
     tracks: [
         (
+            id: "chord",
+            kind: Chord,
+            entries: [
+                Extra(
+                    "dsl::context::duration",
+                    "_1",
+                ),// [0]
+                Mark("1"),// [1]
+                Core(Chord(
+                    (
+                        root: Do,
+                        intervals: Triad(
+                            Major3nd,
+                            Perfect5th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [2]
+                Mark("1/4"),// [3]
+                Core(Chord(
+                    (
+                        root: Do,
+                        intervals: Tetrad(
+                            Major3nd,
+                            Perfect5th,
+                            Perfect4th,
+                        ),
+                        base: Some(2),
+                    ),
+                    Simple(Whole),
+                )),// [4]
+                Mark("2-"),// [5]
+                Core(Chord(
+                    (
+                        root: Re,
+                        intervals: Tetrad(
+                            Minor3nd,
+                            Perfect5th,
+                            Minor7th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [6]
+                Mark("3-"),// [7]
+                Core(Chord(
+                    (
+                        root: Mi,
+                        intervals: Tetrad(
+                            Minor3nd,
+                            Perfect5th,
+                            Minor7th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [8]
+                Mark("4"),// [9]
+                Core(Chord(
+                    (
+                        root: Fa,
+                        intervals: Tetrad(
+                            Major3nd,
+                            Perfect5th,
+                            Major7th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [10]
+                Mark("5"),// [11]
+                Core(Chord(
+                    (
+                        root: So,
+                        intervals: Triad(
+                            Major3nd,
+                            Perfect5th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [12]
+                Mark("b6"),// [13]
+                Core(Chord(
+                    (
+                        root: Li,
+                        intervals: Tetrad(
+                            Major3nd,
+                            Perfect5th,
+                            Minor7th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [14]
+                Mark("6-"),// [15]
+                Core(Chord(
+                    (
+                        root: La,
+                        intervals: Tetrad(
+                            Minor3nd,
+                            Perfect5th,
+                            Minor7th,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),
+            ],
+        ),// [0]
+        (
             id: "guitar",
             kind: Guitar,
             entries: [
@@ -1110,7 +1222,7 @@
                 )),// [114]
                 Mark("|"),
             ],
-        ),// [0]
+        ),// [1]
         (
             id: "vocal",
             kind: Vocal,
@@ -1702,7 +1814,7 @@
                 )),// [77]
                 Mark("|"),
             ],
-        ),// [1]
+        ),// [2]
         (
             id: "lyrics",
             kind: Lyrics,
@@ -2180,6 +2292,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2198,6 +2320,16 @@
                 ),// [0]
                 (
                     layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
                         (
                             track: "guitar",
                             slices: [
@@ -2218,6 +2350,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1/4"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2236,6 +2378,16 @@
                 ),// [2]
                 (
                     layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
                         (
                             track: "guitar",
                             slices: [
@@ -2262,6 +2414,31 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("G"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("i:1,2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2275,7 +2452,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [2]
                         (
                             track: "vocal",
                             slices: [
@@ -2285,7 +2462,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [1]
+                        ),// [3]
                         (
                             track: "lyrics",
                             slices: [
@@ -2310,6 +2487,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2323,7 +2510,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2333,7 +2520,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [1]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [
@@ -2358,6 +2545,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("4"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2371,7 +2568,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2381,7 +2578,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [1]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [
@@ -2406,6 +2603,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("b6"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2419,7 +2626,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2438,7 +2645,7 @@
                                     ]),
                                 ),
                             ],
-                        ),// [1]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [
@@ -2469,6 +2676,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("4"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2482,7 +2699,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2492,7 +2709,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [1]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [
@@ -2508,6 +2725,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("3-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2521,7 +2748,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2531,7 +2758,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [1]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [
@@ -2547,6 +2774,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("2-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2560,7 +2797,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2570,7 +2807,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [1]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [
@@ -2586,6 +2823,16 @@
                 (
                     layers: [
                         (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("5"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
                             track: "guitar",
                             slices: [
                                 (
@@ -2599,7 +2846,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [0]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2609,7 +2856,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [1]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [

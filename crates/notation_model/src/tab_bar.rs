@@ -1,9 +1,7 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use notation_proto::prelude::{
-    Fretboard4, Fretboard6, HandShape4, HandShape6, Note, SyllableNote, TabPosition,
-};
+use notation_proto::prelude::{Chord, Fretboard4, Fretboard6, HandShape4, HandShape6, Note, SyllableNote, TabPosition};
 
 use crate::prelude::{
     Bar, BarLane, LaneEntry, LaneKind, Pitch, Section, Signature, Syllable, Tab, TabMeta, Unit,
@@ -127,34 +125,56 @@ impl TabBar {
         }
         None
     }
+    pub fn get_entry_in_other_lane<T, F: Fn(&LaneEntry) -> Option<T>>(&self,
+        lane_kind: LaneKind,
+        in_bar_pos: Option<Units>,
+        predicate: &F,
+    ) -> Option<T> {
+        if let Some(lane) = self.get_lane_of_kind(lane_kind) {
+            for entry in lane.entries.iter() {
+                if let Some(in_bar_pos) = in_bar_pos {
+                    if in_bar_pos
+                        > entry.props.in_bar_pos + entry.model().props.tied_units {
+                        continue;
+                    }
+                    if in_bar_pos < entry.props.in_bar_pos {
+                        break;
+                    }
+                }
+                if let Some(result) = predicate(entry.as_ref()) {
+                    return Some(result);
+                }
+            }
+        }
+        None
+    }
+    pub fn get_chord(&self, in_bar_pos: Option<Units>) -> Option<Chord> {
+        self.get_entry_in_other_lane(LaneKind::Chord, in_bar_pos, &|x: &LaneEntry| {
+            x.proto()
+                .as_core()
+                .and_then(|x| x.as_chord())
+                .map(|z| z.to_owned())
+        })
+    }
+    pub fn get_chord_of_entry(&self, entry: &LaneEntry) -> Option<Chord> {
+        self.get_chord(Some(entry.props.in_bar_pos))
+    }
 }
 
 macro_rules! impl_get_fretted_shape {
     ($name:ident, $strings:literal, $as_fretted:ident, $get_fretboard:ident, $fretboard:ident, $hand_shape:ident) => {
         impl TabBar {
             pub fn $name(&self, entry: &LaneEntry) -> Option<($fretboard, $hand_shape)> {
-                if let Some(shapes_lane) = self.get_lane_of_kind(LaneKind::Shapes) {
-                    for lane_entry in shapes_lane.entries.iter() {
-                        if entry.props.in_bar_pos
-                            > lane_entry.props.in_bar_pos + lane_entry.model().props.tied_units
-                        {
-                            continue;
-                        }
-                        if entry.props.in_bar_pos < lane_entry.props.in_bar_pos {
-                            break;
-                        }
-                        if let Some(fretted_entry) = lane_entry.model().$as_fretted() {
-                            if let Some((shape, _duration)) = fretted_entry.as_shape() {
-                                if let Some(fretboard) = shapes_lane.track.$get_fretboard() {
-                                    return Some((fretboard, shape.clone()));
-                                } else {
-                                    return None;
-                                }
-                            }
-                        }
-                    }
-                }
-                None
+                self.get_entry_in_other_lane(LaneKind::Shapes, Some(entry.props.in_bar_pos), &|x: &LaneEntry| {
+                    x.model()
+                        .$as_fretted()
+                        .and_then(|y| y.as_shape())
+                        .and_then(|z| {
+                            x.lane()
+                            .and_then(|lane| lane.track.$get_fretboard())
+                            .map(|fretboard| (fretboard, z.clone()))
+                        })
+                })
             }
         }
     };

@@ -4,6 +4,7 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream, Result};
 use syn::{braced, bracketed, parenthesized, token};
 
+use crate::core::chord::ChordDsl;
 use crate::core::tone::ToneDsl;
 use crate::core::word::WordDsl;
 use crate::fretted::pick::PickDsl;
@@ -129,6 +130,7 @@ macro_rules! impl_multible_dsl {
 }
 
 impl_multible_dsl!(ToneDsl);
+impl_multible_dsl!(ChordDsl);
 impl_multible_dsl!(WordDsl);
 impl_multible_dsl!(PickDsl);
 impl_multible_dsl!(ShapeDsl);

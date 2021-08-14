@@ -12,7 +12,6 @@ mod kw {
     syn::custom_keyword!(G);
     syn::custom_keyword!(A);
     syn::custom_keyword!(B);
-    syn::custom_keyword!(b);
 }
 
 pub struct PitchNameDsl {
@@ -32,7 +31,8 @@ impl Parse for PitchNameDsl {
                 5 => PitchName::G,
                 6 => PitchName::A,
                 7 => PitchName::B,
-                _ => PitchName::C,
+                _ =>
+                    throw!(Error::new(input.span(), "Invalid Pitch Name")),
             };
             PitchNameDsl {
                 name,

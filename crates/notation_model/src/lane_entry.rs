@@ -111,20 +111,20 @@ impl LaneEntry {
     pub fn track_kind(&self) -> TrackKind {
         self.model.track_kind()
     }
-    pub fn get_lane_entry<F: Fn(&LaneEntry) -> bool>(
+    pub fn get_lane_entry<T, F: Fn(&LaneEntry) -> Option<T>>(
         &self,
         predicate: &F,
-    ) -> Option<Arc<LaneEntry>> {
+    ) -> Option<T> {
         if let Some(lane) = self.lane.upgrade() {
             lane.get_entry(predicate)
         } else {
             None
         }
     }
-    pub fn get_track_entry<F: Fn(&ModelEntry) -> bool>(
+    pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(
         &self,
         predicate: &F,
-    ) -> Option<Arc<ModelEntry>> {
+    ) -> Option<T> {
         if let Some(lane) = self.lane.upgrade() {
             lane.track.get_entry(predicate)
         } else {

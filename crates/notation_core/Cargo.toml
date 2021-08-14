@@ -8,6 +8,5 @@ edition = "2018"
 [lib]
 
 [dependencies]
-serde = {version = "1.0.126", features = ["derive"]}
 fehler = "1.0"
-
+serde = {version = "1.0.126", features = ["derive"]}

@@ -5,6 +5,17 @@ pub fn new_tab_long_juan_feng() -> Tab {
     tab! {
         Meta: TabMeta::new(Key::A, Scale::Major, Signature::_4_4, Tempo::Bpm(72))
         Tracks: [
+            {chord Chord [
+                $duration = _1
+                "1" Chord ( 1: 3 5 )
+                "1/4" Chord ( 1: 3 5 4 /2 )
+                "2-" Chord ( 2: 3- 5 7- )
+                "3-" Chord ( 3: 3- 5 7- )
+                "4" Chord ( 4: 3 5 7 )
+                "5" Chord ( 5: 3 5 )
+                "b6" Chord ( %6: 3 5 7- )
+                "6-" Chord ( 6: 3- 5 7- )
+            ]}
             {guitar Guitar [
                 Fretboard capo: 2
                 $duration = _1
@@ -64,49 +75,62 @@ pub fn new_tab_long_juan_feng() -> Tab {
         Sections: [
             {intro Intro [
                 {
-                    guitar [ "G" 1 "i:1,2" | ]
+                    chord [ "1" 1 ]
+                    guitar [ "G" 1 ; "i:1,2" | ]
                 } {
-                    guitar [ "Em7" 1 "i:1,2" | ]
+                    chord [ "6-" 1 ]
+                    guitar [ "Em7" 1 ; "i:1,2" | ]
                 } {
-                    guitar [ "G/C" 1 "i:3" | ]
+                    chord [ "1/4" 1 ]
+                    guitar [ "G/C" 1 ; "i:3" | ]
                 } {
-                    guitar [ "G" 1 "i:4" | ]
+                    chord [ "1" 1 ]
+                    guitar [ "G" 1 ; "i:4" | ]
                 }
             ]}
             {verse Verse [
                 {
-                    guitar [ "G" 1 "v:1,2" | ]
+                    chord [ "1" 1 ]
+                    guitar [ "G" 1 ; "i:1,2" | ]
+                    guitar [ "G" 1 ; "v:1,2" | ]
                     vocal [ "v:1,2" | ]
-                    lyrics [ "1:1" | @ 1 "2:1" | @ 2 ]
+                    lyrics [ "1:1" | @ 1 ; "2:1" | @ 2 ]
                 } {
-                    guitar [ "Em7" 1 "v:1,2" | ]
+                    chord [ "6-" 1 ]
+                    guitar [ "Em7" 1 ; "v:1,2" | ]
                     vocal [ "v:1,2" | ]
-                    lyrics [ "1:2" | @ 1 "2:2" | @ 2 ]
+                    lyrics [ "1:2" | @ 1 ; "2:2" | @ 2 ]
                 } {
-                    guitar [ "Cmaj7" 1 "v:3" | ]
+                    chord [ "4" 1 ]
+                    guitar [ "Cmaj7" 1 ; "v:3" | ]
                     vocal [ "v:3" | ]
-                    lyrics [ "1:3" | @ 1 "2:3" | @ 2 ]
+                    lyrics [ "1:3" | @ 1 ; "2:3" | @ 2 ]
                 } {
-                    guitar [ "bEdim7" 1 "v:4" | ]
-                    vocal [ "v:4_1" | @ 1 "v:4_2" | @ 2 ]
-                    lyrics [ "1:4" | @ 1 "2:4" | @ 2 ]
+                    chord [ "b6" 1 ]
+                    guitar [ "bEdim7" 1 ; "v:4" | ]
+                    vocal [ "v:4_1" | @ 1 ; "v:4_2" | @ 2 ]
+                    lyrics [ "1:4" | @ 1 ; "2:4" | @ 2 ]
                 }
             ]}
             {bridge Bridge [
                 {
-                    guitar [ "Cmaj7" 1 "b:1" | ]
+                    chord [ "4" 1 ]
+                    guitar [ "Cmaj7" 1 ; "b:1" | ]
                     vocal [ "b:1" | ]
                     lyrics [ "b:1" | ]
                 } {
-                    guitar [ "Bm7" 1 "b:2" | ]
+                    chord [ "3-" 1 ]
+                    guitar [ "Bm7" 1 ; "b:2" | ]
                     vocal [ "b:2" | ]
                     lyrics [ "b:2" | ]
                 } {
-                    guitar [ "Am7" 1 "b:3" | ]
+                    chord [ "2-" 1 ]
+                    guitar [ "Am7" 1 ; "b:3" | ]
                     vocal [ "b:3" | ]
                     lyrics [ "b:3" | ]
                 } {
-                    guitar [ "D" 1 "b:4" | ]
+                    chord [ "5" 1 ]
+                    guitar [ "D" 1 ; "b:4" | ]
                     vocal [ "b:4" | ]
                     lyrics [ "b:4" | ]
                 }

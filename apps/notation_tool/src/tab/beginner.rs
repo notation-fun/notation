@@ -5,7 +5,12 @@ pub fn new_tab_1_right_hand() -> Tab {
     tab! {
         Meta: TabMeta::new(Key::G, Scale::Major, Signature::_4_4, Tempo::Bpm(60))
         Tracks: [
-            {"guitar" Guitar [
+            {chord Chord [
+                $duration = _1
+                "1" Chord ( 1: 3 5 )
+                "6-" Chord ( 6: 3- 5 )
+            ]}
+            {guitar Guitar [
                 Fretboard
                 $duration = _1
                 "Em" Shape ( 0 2 2 0 0 0 )
@@ -18,28 +23,17 @@ pub fn new_tab_1_right_hand() -> Tab {
         Sections: [
             {"A" Verse [
                 {
-                    guitar [
-                        "Em" 1
-                        "picks" |
-                    ]
-                }
-                {
-                    guitar [
-                        "Em" 1
-                        "picks" |
-                    ]
-                }
-                {
-                    guitar [
-                        "G" 1
-                        "picks" |
-                    ]
-                }
-                {
-                    guitar [
-                        "G" 1
-                        "picks" |
-                    ]
+                    chord [ "6-" 1 ]
+                    guitar [ "Em" 1 ; "picks" | ]
+                } {
+                    chord [ "6-" 1 ]
+                    guitar [ "Em" 1 ; "picks" | ]
+                } {
+                    chord [ "1" 1 ]
+                    guitar [ "G" 1 ; "picks" | ]
+                } {
+                    chord [ "1" 1 ]
+                    guitar [ "G" 1 ; "picks" | ]
                 }
             ]}
         ]

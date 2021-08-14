@@ -80,13 +80,10 @@ macro_rules! impl_get_fretboard {
     ($name:ident, $strings:literal, $as_fretted:ident, $fretboard:ident) => {
         impl Track {
             pub fn $name(&self) -> Option<$fretboard> {
-                let fretboard_entry = self.get_entry(&|x: &ModelEntry| {
-                    let fretted_entry = x.$as_fretted();
-                    fretted_entry.and_then(|y| y.as_fretboard()).is_some()
-                });
-                fretboard_entry.and_then(|x| {
+                self.get_entry(&|x: &ModelEntry| {
                     x.$as_fretted()
-                        .and_then(|x| x.as_fretboard().map(|z| z.to_owned()))
+                        .and_then(|x| x.as_fretboard()
+                        .map(|z| z.to_owned()))
                 })
             }
         }

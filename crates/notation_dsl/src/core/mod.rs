@@ -6,3 +6,6 @@ pub mod pitch_name;
 pub mod pitch_sign;
 pub mod tone;
 pub mod word;
+pub mod interval;
+pub mod chord;
+pub mod syllable;

@@ -70,10 +70,12 @@ impl MiniPlugin {
         for bar in tab.bars.iter() {
             let data = MiniBarData::new(bar, data_value.clone());
             let mini_bar_entity = MiniBarShape::create(commands, map_entity, theme, data);
+            let chord = bar.get_chord(None);
+            let syllable = chord.map(|chord| chord.root).unwrap_or_default();
             let beats_value = MiniBeatsValue {
                 size: data_value.size * settings.layout.mini_beats_factor,
                 offset: data_value.size / 2.0,
-                syllable: notation_model::prelude::Syllable::Fa,
+                syllable,
             };
             let beats_data = MiniBeatsData::new(bar, beats_value);
             MiniBeats::create(commands, mini_bar_entity, theme, beats_data);

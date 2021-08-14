@@ -59,23 +59,23 @@ macro_rules! impl_entry {
         }
 
         impl $type {
-            pub fn as_pick(&self) -> Option<(&Pick, &Duration)> {
-                if let Self::Pick(v, d) = self {
-                    Some((v, d))
+            pub fn as_pick(&self) -> Option<&Pick> {
+                if let Self::Pick(v, _) = self {
+                    Some(v)
                 } else {
                     None
                 }
             }
-            pub fn as_strum(&self) -> Option<(&Strum, &Duration)> {
-                if let Self::Strum(v, d) = self {
-                    Some((v, d))
+            pub fn as_strum(&self) -> Option<&Strum> {
+                if let Self::Strum(v, _) = self {
+                    Some(v)
                 } else {
                     None
                 }
             }
-            pub fn as_shape(&self) -> Option<(&$hand_shape, &Duration)> {
-                if let Self::Shape(v, d) = self {
-                    Some((v, d))
+            pub fn as_shape(&self) -> Option<&$hand_shape> {
+                if let Self::Shape(v, _) = self {
+                    Some(v)
                 } else {
                     None
                 }

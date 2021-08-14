@@ -60,6 +60,9 @@ impl SliceDsl {
             }
             rounds = Some(rounds_);
         }
+        if input.peek(Token![;]) {
+            input.parse::<Token![;]>()?;
+        }
         Ok(SliceDsl { begin, end, rounds })
     }
     pub fn peek(input: ParseStream) -> bool {

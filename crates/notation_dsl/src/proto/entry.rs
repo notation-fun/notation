@@ -6,6 +6,7 @@ use syn::Ident;
 
 use crate::context::ContextDsl;
 
+use crate::core::chord::ChordDsl;
 use crate::core::tone::ToneDsl;
 use crate::core::word::WordDsl;
 use crate::fretted::fretboard::FretboardDsl;
@@ -21,6 +22,7 @@ pub enum EntryDsl {
     Context(ContextDsl),
     Mark(MarkDsl),
     Tone(MultibleDsl<ToneDsl>),
+    Chord(MultibleDsl<ChordDsl>),
     Word(MultibleDsl<WordDsl>),
     Pick(MultibleDsl<PickDsl>),
     Shape(MultibleDsl<ShapeDsl>),
@@ -37,6 +39,7 @@ impl EntryDsl {
         } else {
             match input.parse::<Ident>()?.to_string().as_str() {
                 "Tone" => Self::Tone(input.parse()?),
+                "Chord" => Self::Chord(input.parse()?),
                 "Word" => Self::Word(input.parse()?),
                 "Pick" => Self::Pick(input.parse()?),
                 "Shape" => Self::Shape(input.parse()?),
@@ -53,6 +56,7 @@ impl ToTokens for EntryDsl {
             Self::Mark(x) => quote! { ProtoEntry::from(#x) },
             Self::Context(x) => quote! { #x },
             Self::Tone(x) => quote! { #x },
+            Self::Chord(x) => quote! { #x },
             Self::Word(x) => quote! { #x },
             Self::Pick(x) => quote! { #x },
             Self::Shape(x) => quote! { #x },

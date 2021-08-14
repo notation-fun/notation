@@ -91,7 +91,10 @@ impl From<Vec<Note>> for Tone {
             3 => Self::from((v[0], v[1], v[2])),
             4 => Self::from((v[0], v[1], v[2], v[3])),
             5 => Self::from((v[0], v[1], v[2], v[3], v[4])),
-            _ => Self::None,
+            _ => {
+                println!("Unsupported Tones: {}", v.len());
+                Self::None
+            }
         }
     }
 }

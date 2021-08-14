@@ -15,10 +15,10 @@ pub struct ShapeDsl {
 impl ShapeDsl {
     #[throws(Error)]
     pub fn parse_without_paren(input: ParseStream, multied: bool, with_paren: bool) -> Self {
-        let mut frets = vec![];
         if multied && !with_paren {
             throw!(Error::new(input.span(), "paren required in multied mode"));
         }
+        let mut frets = vec![];
         while input.peek(LitInt) || input.peek(Token![_]) {
             if input.peek(LitInt) {
                 frets.push(Some(input.parse::<LitInt>()?.base10_parse::<u8>()?));
