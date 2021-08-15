@@ -1,6 +1,5 @@
 use std::fmt::Display;
 
-use notation_core::prelude::Duration;
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::Units;
@@ -106,9 +105,8 @@ impl Position {
         let in_tab_pos = self.cal_bar_pos(pos.bar_ordinal) + pos.in_bar_pos;
         in_tab_pos.0 <= self.tab.in_tab_pos.0
     }
-    pub fn is_passed_with(&self, pos: &BarPosition, duration: &Duration) -> bool {
-        let in_tab_pos =
-            self.cal_bar_pos(pos.bar_ordinal) + pos.in_bar_pos + Units::from(*duration);
+    pub fn is_passed_with(&self, pos: &BarPosition, units: Units) -> bool {
+        let in_tab_pos = self.cal_bar_pos(pos.bar_ordinal) + pos.in_bar_pos + units;
         in_tab_pos.0 <= self.tab.in_tab_pos.0
     }
 }

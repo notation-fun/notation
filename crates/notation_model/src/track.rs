@@ -82,8 +82,7 @@ macro_rules! impl_get_fretboard {
             pub fn $name(&self) -> Option<$fretboard> {
                 self.get_entry(&|x: &ModelEntry| {
                     x.$as_fretted()
-                        .and_then(|x| x.as_fretboard()
-                        .map(|z| z.to_owned()))
+                        .and_then(|x| x.as_fretboard().map(|z| z.to_owned()))
                 })
             }
         }

@@ -3,29 +3,22 @@ use std::sync::Arc;
 
 use notation_model::prelude::*;
 
-use crate::prelude::EntryState;
+use crate::prelude::EntryPlaying;
 
 #[derive(Bundle)]
 pub struct EntryBundle {
     pub name: Name,
     pub entry: Arc<LaneEntry>,
-    pub duration: Duration,
-    pub tied_units: Units,
-    pub position: BarPosition,
-    pub state: EntryState,
+    pub playing: EntryPlaying,
 }
 
-impl From<(Arc<LaneEntry>, BarPosition)> for EntryBundle {
-    fn from(v: (Arc<LaneEntry>, BarPosition)) -> Self {
-        let duration = v.0.duration();
-        let tied_units = v.0.tied_units();
+impl From<Arc<LaneEntry>> for EntryBundle {
+    fn from(v: Arc<LaneEntry>) -> Self {
+        let playing = EntryPlaying::new(&v, PlayingState::Idle);
         EntryBundle {
-            name: v.0.to_string().as_str().into(),
-            entry: v.0,
-            duration,
-            tied_units,
-            position: v.1,
-            state: EntryState::default(),
+            name: v.to_string().as_str().into(),
+            entry: v,
+            playing,
         }
     }
 }

@@ -123,10 +123,7 @@ impl ModelEntry {
             TrackKind::Custom("".to_owned())
         }
     }
-    pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(
-        &self,
-        predicate: &F,
-    ) -> Option<T> {
+    pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         if let Some(track) = self.track.upgrade() {
             track.get_entry(predicate)
         } else {

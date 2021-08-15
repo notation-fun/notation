@@ -20,6 +20,7 @@ impl Parse for SliceBeginDsl {
         }
     }
 }
+#[allow(dead_code)]
 impl SliceBeginDsl {
     pub fn peek(input: ParseStream) -> bool {
         MarkDsl::peek(input) || input.peek(LitInt)
@@ -65,6 +66,7 @@ impl SliceDsl {
         }
         Ok(SliceDsl { begin, end, rounds })
     }
+    #[allow(dead_code)]
     pub fn peek(input: ParseStream) -> bool {
         SliceBeginDsl::peek(input)
     }

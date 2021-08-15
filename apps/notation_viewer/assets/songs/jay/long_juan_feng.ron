@@ -2432,27 +2432,12 @@
                                     rounds: None,
                                 ),// [0]
                                 (
-                                    begin: Mark("i:1,2"),
-                                    end: Mark("|"),
-                                    rounds: None,
-                                ),
-                            ],
-                        ),// [1]
-                        (
-                            track: "guitar",
-                            slices: [
-                                (
-                                    begin: Mark("G"),
-                                    end: Count(1),
-                                    rounds: None,
-                                ),// [0]
-                                (
                                     begin: Mark("v:1,2"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
-                        ),// [2]
+                        ),// [1]
                         (
                             track: "vocal",
                             slices: [
@@ -2462,7 +2447,7 @@
                                     rounds: None,
                                 ),
                             ],
-                        ),// [3]
+                        ),// [2]
                         (
                             track: "lyrics",
                             slices: [

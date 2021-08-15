@@ -70,13 +70,7 @@ fn on_add_tab(
             tab_entity,
             SingleBundle::<TabBars>::from(TabBars::new(tab.clone())),
         );
-        PlayPlugin::spawn_pos_indicator(
-            &mut commands,
-            &theme,
-            bars_entity,
-            &tab,
-            bar_layouts.get(0),
-        );
+        PlayPlugin::spawn_indicators(&mut commands, &theme, bars_entity, &tab, bar_layouts.get(0));
         let bar_bundles: Vec<(&BarLayout, BarBundle)> = tab
             .bars
             .iter()

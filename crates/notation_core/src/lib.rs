@@ -18,19 +18,21 @@ pub mod tone;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::chord::{Chord};
+    pub use crate::chord::Chord;
     #[doc(hidden)]
-    pub use crate::chord_symbol::{ChordSymbol, ChordInversion, ChordQuality};
+    pub use crate::chord_symbol::{ChordInversion, ChordQuality, ChordSymbol};
     #[doc(hidden)]
     pub use crate::core_entry::CoreEntry;
     #[doc(hidden)]
     pub use crate::duration::{Duration, Unit, Units};
     #[doc(hidden)]
+    pub use crate::entry::Entry;
+    #[doc(hidden)]
     pub use crate::interval::{Interval, IntervalQuality};
     #[doc(hidden)]
     pub use crate::intervals::Intervals;
     #[doc(hidden)]
-    pub use crate::entry::Entry;
+    pub use crate::key::Key;
     #[doc(hidden)]
     pub use crate::meta_entry::MetaEntry;
     #[doc(hidden)]
@@ -41,8 +43,6 @@ pub mod prelude {
     pub use crate::pitch::{Pitch, PitchName, PitchSign, Semitones};
     #[doc(hidden)]
     pub use crate::rhythm::{Beats, Bpm, BpmRange, Signature, Tempo};
-    #[doc(hidden)]
-    pub use crate::key::Key;
     #[doc(hidden)]
     pub use crate::scale::Scale;
     #[doc(hidden)]

@@ -31,8 +31,7 @@ impl Parse for PitchNameDsl {
                 5 => PitchName::G,
                 6 => PitchName::A,
                 7 => PitchName::B,
-                _ =>
-                    throw!(Error::new(input.span(), "Invalid Pitch Name")),
+                _ => throw!(Error::new(input.span(), "Invalid Pitch Name")),
             };
             PitchNameDsl {
                 name,

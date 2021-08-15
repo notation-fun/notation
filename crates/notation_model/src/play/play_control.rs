@@ -105,10 +105,10 @@ impl PlayControl {
             TickResult::new(false, false, false)
         }
     }
-    pub fn is_in_range(&self, pos: &BarPosition) -> bool {
+    pub fn is_bar_in_range(&self, bar_ordinal: usize) -> bool {
         self.end_bar_ordinal >= self.begin_bar_ordinal
-            && pos.bar_ordinal >= self.begin_bar_ordinal
-            && pos.bar_ordinal <= self.end_bar_ordinal
+            && bar_ordinal >= self.begin_bar_ordinal
+            && bar_ordinal <= self.end_bar_ordinal
     }
     pub fn begin_bar_position(&self) -> BarPosition {
         BarPosition::new(

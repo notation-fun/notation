@@ -68,7 +68,7 @@ impl Default for LayoutSettings {
             mini_bar_margin: 6.0,
             min_mini_bar_size: 16.0,
             max_mini_bar_size: 32.0,
-            mini_beats_factor: 0.48,
+            mini_beats_factor: 0.45,
         }
     }
 }

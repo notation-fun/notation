@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
 use crate::prelude::{BarLane, BarLaneProps, ModelEntry, Tab, TabBar, TabBarProps};
-use notation_proto::prelude::{Duration, Entry, ProtoEntry, TrackKind, Units};
+use notation_proto::prelude::{BarPosition, Duration, Entry, ProtoEntry, TrackKind, Units};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct LaneEntryProps {
@@ -56,6 +56,13 @@ impl Entry for LaneEntry {
 impl LaneEntry {
     pub fn in_bar_pos(&self) -> Units {
         self.props.in_bar_pos
+    }
+    pub fn bar_position(&self) -> BarPosition {
+        BarPosition::new(
+            self.bar_props().bar_units,
+            self.bar_props().bar_ordinal,
+            self.props.in_bar_pos,
+        )
     }
 }
 impl LaneEntry {
@@ -111,20 +118,14 @@ impl LaneEntry {
     pub fn track_kind(&self) -> TrackKind {
         self.model.track_kind()
     }
-    pub fn get_lane_entry<T, F: Fn(&LaneEntry) -> Option<T>>(
-        &self,
-        predicate: &F,
-    ) -> Option<T> {
+    pub fn get_lane_entry<T, F: Fn(&LaneEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         if let Some(lane) = self.lane.upgrade() {
             lane.get_entry(predicate)
         } else {
             None
         }
     }
-    pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(
-        &self,
-        predicate: &F,
-    ) -> Option<T> {
+    pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         if let Some(lane) = self.lane.upgrade() {
             lane.track.get_entry(predicate)
         } else {

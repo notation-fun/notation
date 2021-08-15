@@ -52,6 +52,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar::bar_layout::BarLayout;
     #[doc(hidden)]
+    pub use crate::bar::bar_playing::BarPlaying;
+    #[doc(hidden)]
     pub use crate::bar::bar_plugin::BarPlugin;
     #[doc(hidden)]
     pub use crate::chord::chord_bundle::ChordBundle;
@@ -66,9 +68,9 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::entry_events::AddEntryEvent;
     #[doc(hidden)]
-    pub use crate::entry::entry_plugin::EntryPlugin;
+    pub use crate::entry::entry_playing::EntryPlaying;
     #[doc(hidden)]
-    pub use crate::entry::entry_state::EntryState;
+    pub use crate::entry::entry_plugin::EntryPlugin;
     #[doc(hidden)]
     pub use crate::lane::lane_bundle::LaneBundle;
     #[doc(hidden)]

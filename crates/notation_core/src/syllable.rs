@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use crate::prelude::{Semitones};
+use crate::prelude::Semitones;
 
 // https://en.wikipedia.org/wiki/Solf%C3%A8ge
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -63,7 +63,8 @@ impl Syllable {
             Syllable::Se => "b5",
             Syllable::Le => "b6",
             Syllable::Te => "b7",
-        }.to_owned()
+        }
+        .to_owned()
     }
     pub fn from_text(text: &str) -> Self {
         match text {

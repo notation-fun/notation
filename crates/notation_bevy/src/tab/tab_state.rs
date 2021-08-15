@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarPosition, PlayControl, PlayState, Position, Tab};
+use notation_model::prelude::{PlayControl, PlayState, Position, Tab};
 
 #[derive(Debug)]
 pub struct TabPlayStateChanged();
@@ -44,7 +44,7 @@ impl TabState {
     pub fn set_position(&mut self, position: Position) {
         self.play_control.position = position;
     }
-    pub fn is_in_range(&self, pos: &BarPosition) -> bool {
-        self.play_control.is_in_range(pos)
+    pub fn is_bar_in_range(&self, bar_ordinal: usize) -> bool {
+        self.play_control.is_bar_in_range(bar_ordinal)
     }
 }

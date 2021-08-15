@@ -94,7 +94,9 @@ impl MidiChannel {
         let mut count = 0;
         loop {
             if let Some(&next) = self.messages.get(self.next_index) {
-                if play_control.is_in_range(&next.0) && play_control.position.is_passed(&next.0) {
+                if play_control.is_bar_in_range(next.0.bar_ordinal)
+                    && play_control.position.is_passed(&next.0)
+                {
                     self.next_index += 1;
                     count += 1;
                     hub.send(settings, next.1);

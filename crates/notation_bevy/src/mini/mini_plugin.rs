@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::Tab;
+use notation_model::prelude::{PlayingState, Tab};
 
 use crate::prelude::{
-    BevyUtil, LyonShapeOp, NotationAppState, NotationSettings, NotationTheme, SingleBundle,
-    WindowResizedEvent,
+    BarPlaying, BevyUtil, LyonShapeOp, NotationAppState, NotationSettings, NotationTheme,
+    SingleBundle, WindowResizedEvent,
 };
 
 use super::mini_bar::{MiniBarData, MiniBarShape};
@@ -16,6 +16,7 @@ pub struct MiniPlugin;
 impl Plugin for MiniPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(on_config_changed.system());
+        app.add_system(on_bar_playing_changed.system());
     }
 }
 
@@ -49,6 +50,18 @@ fn on_config_changed(
     }
 }
 
+fn on_bar_playing_changed(
+    mut commands: Commands,
+    theme: Res<NotationTheme>,
+    mut query: Query<(Entity, &BarPlaying, &mut MiniBarData), Changed<BarPlaying>>,
+) {
+    for (entity, playing, mut data) in query.iter_mut() {
+        //println!("{:?} -> {:?} -> {:?}", name, data, playing)
+        data.value.playing_state = playing.value;
+        MiniBarShape::update(&mut commands, &theme, entity, &data);
+    }
+}
+
 impl MiniPlugin {
     pub fn spawn_mini_map(
         commands: &mut Commands,
@@ -79,6 +92,9 @@ impl MiniPlugin {
             };
             let beats_data = MiniBeatsData::new(bar, beats_value);
             MiniBeats::create(commands, mini_bar_entity, theme, beats_data);
+            commands
+                .entity(mini_bar_entity)
+                .insert(BarPlaying::new(bar, PlayingState::Idle));
         }
         map_entity
     }

@@ -1,7 +1,9 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use notation_proto::prelude::{Chord, Fretboard4, Fretboard6, HandShape4, HandShape6, Note, SyllableNote, TabPosition};
+use notation_proto::prelude::{
+    Chord, Fretboard4, Fretboard6, HandShape4, HandShape6, Note, SyllableNote, TabPosition,
+};
 
 use crate::prelude::{
     Bar, BarLane, LaneEntry, LaneKind, Pitch, Section, Signature, Syllable, Tab, TabMeta, Unit,
@@ -80,7 +82,7 @@ impl TabBar {
             }
         })
     }
-    pub fn tab_pos(&self) -> TabPosition {
+    pub fn tab_position(&self) -> TabPosition {
         TabPosition::new(Units(
             (self.props.bar_ordinal - 1) as f32 * self.bar_units().0,
         ))
@@ -125,7 +127,8 @@ impl TabBar {
         }
         None
     }
-    pub fn get_entry_in_other_lane<T, F: Fn(&LaneEntry) -> Option<T>>(&self,
+    pub fn get_entry_in_other_lane<T, F: Fn(&LaneEntry) -> Option<T>>(
+        &self,
         lane_kind: LaneKind,
         in_bar_pos: Option<Units>,
         predicate: &F,
@@ -133,8 +136,7 @@ impl TabBar {
         if let Some(lane) = self.get_lane_of_kind(lane_kind) {
             for entry in lane.entries.iter() {
                 if let Some(in_bar_pos) = in_bar_pos {
-                    if in_bar_pos
-                        > entry.props.in_bar_pos + entry.model().props.tied_units {
+                    if in_bar_pos > entry.props.in_bar_pos + entry.model().props.tied_units {
                         continue;
                     }
                     if in_bar_pos < entry.props.in_bar_pos {
@@ -165,16 +167,20 @@ macro_rules! impl_get_fretted_shape {
     ($name:ident, $strings:literal, $as_fretted:ident, $get_fretboard:ident, $fretboard:ident, $hand_shape:ident) => {
         impl TabBar {
             pub fn $name(&self, entry: &LaneEntry) -> Option<($fretboard, $hand_shape)> {
-                self.get_entry_in_other_lane(LaneKind::Shapes, Some(entry.props.in_bar_pos), &|x: &LaneEntry| {
-                    x.model()
-                        .$as_fretted()
-                        .and_then(|y| y.as_shape())
-                        .and_then(|z| {
-                            x.lane()
-                            .and_then(|lane| lane.track.$get_fretboard())
-                            .map(|fretboard| (fretboard, z.clone()))
-                        })
-                })
+                self.get_entry_in_other_lane(
+                    LaneKind::Shapes,
+                    Some(entry.props.in_bar_pos),
+                    &|x: &LaneEntry| {
+                        x.model()
+                            .$as_fretted()
+                            .and_then(|y| y.as_shape())
+                            .and_then(|z| {
+                                x.lane()
+                                    .and_then(|lane| lane.track.$get_fretboard())
+                                    .map(|fretboard| (fretboard, z.clone()))
+                            })
+                    },
+                )
             }
         }
     };

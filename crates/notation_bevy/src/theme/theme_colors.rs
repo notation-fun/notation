@@ -1,4 +1,4 @@
-use notation_model::prelude::{Octave, Semitones, Syllable};
+use notation_model::prelude::{Octave, PlayingState, Semitones, Syllable};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -8,38 +8,74 @@ use bevy_inspector_egui::Inspectable;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct PlayingColors {
+    pub idle: Color,
+    pub current: Color,
+    pub played: Color,
+}
+impl PlayingColors {
+    pub fn new(idle: Color, current: Color, played: Color) -> Self {
+        Self {
+            idle,
+            current,
+            played,
+        }
+    }
+    pub fn of_state(&self, state: &PlayingState) -> Color {
+        match state {
+            PlayingState::Idle => self.idle,
+            PlayingState::Current => self.current,
+            PlayingState::Played => self.played,
+        }
+    }
+}
+
+pub fn color_of_hex(hex: &str) -> Color {
+    Color::hex(hex).unwrap()
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeColors {
     pub syllables: [Color; 12],
+    pub syllable_outline: PlayingColors,
     pub sections: [Color; 6],
     pub mini_map_back: Color,
+    pub mini_bar_current_outline: Color,
 }
 
 impl Default for ThemeColors {
     fn default() -> Self {
         Self {
+            syllable_outline: PlayingColors::new(
+                color_of_hex("000000"),
+                color_of_hex("CC00CC"),
+                color_of_hex("FFF9F2"),
+            ),
             syllables: [
-                Color::hex("E94F4F").unwrap(), // Do
-                Color::hex("AAAAAA").unwrap(), // Di, Ra
-                Color::hex("FFEB34").unwrap(), // Re
-                Color::hex("AAAAAA").unwrap(), // Ri, Me
-                Color::hex("59D7FF").unwrap(), // Mi
-                Color::hex("C31F6E").unwrap(), // Fa
-                Color::hex("AAAAAA").unwrap(), // Fi, Se
-                Color::hex("FF8F28").unwrap(), // So
-                Color::hex("AAAAAA").unwrap(), // Si, Le
-                Color::hex("A3DC5B").unwrap(), // La
-                Color::hex("AAAAAA").unwrap(), // Li, Te
-                Color::hex("7C87E8").unwrap(), // Ti
+                color_of_hex("E94F4F"), // Do
+                color_of_hex("AAAAAA"), // Di, Ra
+                color_of_hex("FFEB34"), // Re
+                color_of_hex("AAAAAA"), // Ri, Me
+                color_of_hex("59D7FF"), // Mi
+                color_of_hex("C31F6E"), // Fa
+                color_of_hex("AAAAAA"), // Fi, Se
+                color_of_hex("FF8F28"), // So
+                color_of_hex("AAAAAA"), // Si, Le
+                color_of_hex("A3DC5B"), // La
+                color_of_hex("AAAAAA"), // Li, Te
+                color_of_hex("7C87E8"), // Ti
             ],
             sections: [
-                Color::hex("AA8888").unwrap(),
-                Color::hex("88AA88").unwrap(),
-                Color::hex("8888AA").unwrap(),
-                Color::hex("AA88AA").unwrap(),
-                Color::hex("88AAAA").unwrap(),
-                Color::hex("AAAA88").unwrap(),
+                color_of_hex("CC4444"),
+                color_of_hex("44CC44"),
+                color_of_hex("4444CC"),
+                color_of_hex("CCCC44"),
+                color_of_hex("44CCCC"),
+                color_of_hex("CC44CC"),
             ],
-            mini_map_back: Color::hex("44444444").unwrap(),
+            mini_map_back: color_of_hex("44444444"),
+            mini_bar_current_outline: color_of_hex("CC00CC"),
         }
     }
 }

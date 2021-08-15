@@ -2,20 +2,15 @@ use fehler::{throw, throws};
 use notation_proto::prelude::Syllable;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::{LitInt, Token, parse::{Result, Error, Parse, ParseStream}};
-
-use crate::context::Context;
-
-use super::pitch_name::PitchNameDsl;
+use syn::parse::{Error, Parse, ParseStream};
+use syn::{LitInt, Token};
 
 pub struct SyllableDsl {
     pub syllable: Syllable,
 }
 impl SyllableDsl {
     pub fn new(syllable: Syllable) -> Self {
-        Self {
-            syllable,
-        }
+        Self { syllable }
     }
     #[throws(Error)]
     fn parse_natural(input: ParseStream) -> Self {
@@ -60,7 +55,7 @@ impl Parse for SyllableDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
         if input.peek(Token![#]) {
-            Self::parse_natural(input)?
+            Self::parse_sharp(input)?
         } else if input.peek(Token![%]) {
             Self::parse_flat(input)?
         } else {
@@ -69,17 +64,17 @@ impl Parse for SyllableDsl {
     }
 }
 
+#[allow(dead_code)]
 impl SyllableDsl {
     pub fn peek(input: ParseStream) -> bool {
-        input.peek(LitInt)
-            || input.peek(Token![#]) || input.peek(Token![%])
+        input.peek(LitInt) || input.peek(Token![#]) || input.peek(Token![%])
     }
 }
 
 impl ToTokens for SyllableDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let syllable_text = self.syllable.to_text();
-        tokens.extend(quote!{
+        tokens.extend(quote! {
             Syllable::from_text(#syllable_text)
         });
     }

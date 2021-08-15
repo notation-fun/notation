@@ -2,7 +2,8 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{interval::Interval, prelude::{Intervals, Syllable}};
+use crate::interval::Interval;
+use crate::prelude::{Intervals, Syllable};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub struct Chord {

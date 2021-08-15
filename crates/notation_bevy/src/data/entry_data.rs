@@ -1,4 +1,4 @@
-use notation_model::prelude::{BarLaneProps, LaneEntry, LaneEntryProps, TabBarProps};
+use notation_model::prelude::{BarLaneProps, BarPosition, LaneEntry, LaneEntryProps, TabBarProps};
 
 #[derive(Clone, Debug)]
 pub struct EntryData<T: Send + Sync + 'static> {
@@ -16,5 +16,12 @@ impl<T: Send + Sync + 'static> EntryData<T> {
             entry_props: entry.props,
             value,
         }
+    }
+    pub fn bar_position(&self) -> BarPosition {
+        BarPosition::new(
+            self.bar_props.bar_units,
+            self.bar_props.bar_ordinal,
+            self.entry_props.in_bar_pos,
+        )
     }
 }

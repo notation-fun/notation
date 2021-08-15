@@ -1,15 +1,14 @@
 use fehler::{throw, throws};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::{LitInt, Token};
 use syn::parse::{Error, ParseStream};
+use syn::{LitInt, Token};
 
 use crate::context::Context;
 
 use super::duration::DurationTweakDsl;
 use super::empty::EmptyDsl;
 use super::interval::IntervalDsl;
-use super::note::NoteDsl;
 use super::syllable::SyllableDsl;
 
 pub struct ChordDsl {

@@ -91,7 +91,6 @@ pub fn new_tab_long_juan_feng() -> Tab {
             {verse Verse [
                 {
                     chord [ "1" 1 ]
-                    guitar [ "G" 1 ; "i:1,2" | ]
                     guitar [ "G" 1 ; "v:1,2" | ]
                     vocal [ "v:1,2" | ]
                     lyrics [ "1:1" | @ 1 ; "2:1" | @ 2 ]

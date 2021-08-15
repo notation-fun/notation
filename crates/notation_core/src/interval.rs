@@ -143,7 +143,6 @@ impl Interval {
             "4" => Self::Perfect4th,
             "t" => Self::Tritone,
             "5" => Self::Perfect5th,
-            "5+" => Self::Perfect5th,
             "5+" => Self::Augmented5th,
             "6-" => Self::Minor6th,
             "6" => Self::Major6th,
@@ -154,4 +153,3 @@ impl Interval {
         }
     }
 }
-

@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{interval::Interval, prelude::{Syllable}};
+use crate::interval::Interval;
 
 //https://en.wikipedia.org/wiki/Chord_(music)
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -24,10 +24,8 @@ impl Intervals {
             Self::Monad => format!(""),
             Self::Dyad(n1) => format!("{}", n1),
             Self::Triad(n1, n2) => format!("{}, {}", n1, n2),
-            Self::Tetrad(n1, n2, n3) =>
-                format!("{}, {}, {}", n1, n2, n3),
-            Self::Pentad(n1, n2, n3, n4) =>
-                format!("{}, {}, {}, {}", n1, n2, n3, n4),
+            Self::Tetrad(n1, n2, n3) => format!("{}, {}, {}", n1, n2, n3),
+            Self::Pentad(n1, n2, n3, n4) => format!("{}, {}, {}, {}", n1, n2, n3, n4),
         }
     }
 }

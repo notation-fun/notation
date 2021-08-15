@@ -40,7 +40,8 @@ impl<'a> LyonShape<shapes::Circle> for MiniBeats<'a> {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
-        Transform::from_xyz(self.data.value.offset, self.data.value.offset, 1.0)
+        //Transform::from_xyz(self.data.value.offset, self.data.value.offset, 1.0)
+        Transform::from_xyz(0.0, 0.0, 1.0)
     }
 }
 

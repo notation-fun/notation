@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarPosition, Entry, LaneEntry};
+use notation_model::prelude::{Entry, LaneEntry};
 use std::sync::Arc;
 
 use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme};
-use notation_model::prelude::{Duration, Pick};
+use notation_model::prelude::{Pick};
 
-use super::pick_note::{PickNoteData, PickNoteShape};
+use super::pick_note::{PickNoteData, PickNoteShape, PickNoteValue};
 
 pub fn new_system_set() -> SystemSet {
     SystemSet::new()
@@ -22,22 +22,22 @@ macro_rules! impl_pick_system {
             asset_server: Res<AssetServer>,
             theme: Res<NotationTheme>,
             settings: Res<NotationSettings>,
-            query: Query<(Entity, &Arc<LaneEntry>, &Pick, &Duration, &BarPosition), Added<Pick>>,
+            query: Query<(Entity, &Arc<LaneEntry>, &Pick), Added<Pick>>,
         ) {
-            for (entity, entry, pick, duration, pos) in query.iter() {
+            for (entity, entry, pick) in query.iter() {
                 if entry.as_ref().prev_is_tie() {
                     continue;
                 }
                 if let Some(bar) = entry.bar() {
                     if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
-                        let bar_units = bar.bar_units();
                         for pick_note in pick.get_notes() {
                             if let Some((fret, note)) =
                                 fretboard.shape_pick_fret_note(&shape, pick_note)
                             {
                                 let syllable = bar.calc_syllable(&note.pitch);
                                 let data = PickNoteData::new(
-                                    bar_units, &bar, *duration, *pos, pick_note, syllable,
+                                    entry,
+                                    PickNoteValue::new(pick_note, syllable),
                                 );
                                 PickNoteShape::create_with_child(
                                     &mut commands,

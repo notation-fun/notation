@@ -20,7 +20,7 @@ impl Plugin for EntryPlugin {
 fn on_add_entry(mut commands: Commands, mut evts: EventReader<AddEntryEvent>) {
     for evt in evts.iter() {
         let parent = evt.0;
-        let entry_bundle = EntryBundle::from((evt.1.clone(), evt.2));
+        let entry_bundle = EntryBundle::from(evt.1.clone());
         let entry_entity = BevyUtil::spawn_child_bundle(&mut commands, parent, entry_bundle);
         let mut entry_commands = commands.entity(entry_entity);
         insert_entry_extra(&mut entry_commands, &evt.1);

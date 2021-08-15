@@ -29,6 +29,7 @@ macro_rules! impl_dsl {
                 }
             }
         }
+        #[allow(dead_code)]
         impl $dsl_type {
             #[throws(Error)]
             pub fn parse_vec(input: ParseStream) -> Vec<$dsl_type> {
@@ -70,6 +71,7 @@ macro_rules! impl_multible_dsl {
                 Self::parse_multible(input, false)
             }
         }
+        #[allow(dead_code)]
         impl $dsl_type {
             fn parse_multible(input: ParseStream, multied: bool) -> Result<Self> {
                 if input.peek(token::Paren) {

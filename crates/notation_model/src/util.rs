@@ -25,17 +25,12 @@ pub fn get_track_entry_<T, F: Fn(usize, &ModelEntry) -> Option<T>>(
     None
 }
 impl Track {
-    pub fn get_entry<T, F: Fn(&ModelEntry) -> Option<T>>(&self,
-        predicate: &F
-    ) -> Option<T> {
+    pub fn get_entry<T, F: Fn(&ModelEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         get_track_entry(&self.entries, predicate)
     }
 }
 impl BarLayer {
-    pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(
-        &self,
-        predicate: &F,
-    ) -> Option<T> {
+    pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         self.track.get_entry(predicate)
     }
 }
@@ -75,9 +70,7 @@ pub fn get_lane_entry_<T, F: Fn(usize, &LaneEntry) -> Option<T>>(
     None
 }
 impl BarLane {
-    pub fn get_entry<T, F: Fn(&LaneEntry) -> Option<T>>(&self,
-        predicate: &F
-    ) -> Option<T> {
+    pub fn get_entry<T, F: Fn(&LaneEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         get_lane_entry(&self.entries, predicate)
     }
 }

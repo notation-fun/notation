@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 use std::sync::Arc;
 
-use notation_model::prelude::{TabBar, TabPosition};
+use notation_model::prelude::{PlayingState, TabBar};
 
-use crate::prelude::BarLayout;
+use crate::prelude::{BarLayout, BarPlaying};
 
 #[derive(Bundle)]
 pub struct BarBundle {
     pub bar: Arc<TabBar>,
     pub name: Name,
-    pub pos: TabPosition,
     pub layout: BarLayout,
+    pub playing: BarPlaying,
     pub transform: Transform,
     pub global_cransform: GlobalTransform,
 }
@@ -18,12 +18,12 @@ pub struct BarBundle {
 impl BarBundle {
     pub fn new(bar: Arc<TabBar>, layout: BarLayout, transform: Transform) -> Self {
         let name = Name::from(bar.to_string().as_str());
-        let pos = bar.tab_pos();
+        let playing = BarPlaying::new(&bar, PlayingState::Idle);
         Self {
             bar,
             name,
-            pos,
             layout,
+            playing,
             transform,
             global_cransform: GlobalTransform::default(),
         }

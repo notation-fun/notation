@@ -1,4 +1,4 @@
-use notation_model::prelude::{TabBar, TabBarProps};
+use notation_model::prelude::{TabBar, TabBarProps, TabPosition, Units};
 
 #[derive(Clone, Debug)]
 pub struct BarData<T: Send + Sync + 'static> {
@@ -12,5 +12,10 @@ impl<T: Send + Sync + 'static> BarData<T> {
             bar_props: bar.props,
             value,
         }
+    }
+    pub fn tab_position(&self) -> TabPosition {
+        TabPosition::new(Units(
+            (self.bar_props.bar_ordinal - 1) as f32 * self.bar_props.bar_units.0,
+        ))
     }
 }

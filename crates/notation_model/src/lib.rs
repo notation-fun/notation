@@ -33,7 +33,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_control::{PlayControl, TickResult};
     #[doc(hidden)]
-    pub use crate::play::play_state::PlayState;
+    pub use crate::play::play_state::{PlayState, PlayingState};
     #[doc(hidden)]
     pub use crate::section::{Form, Section};
     #[doc(hidden)]
