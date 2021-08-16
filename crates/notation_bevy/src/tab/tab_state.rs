@@ -38,8 +38,8 @@ impl TabState {
             false
         }
     }
-    pub fn set_play_speed(&mut self, play_speed: f32) {
-        self.play_control.play_speed = play_speed;
+    pub fn set_speed_factor(&mut self, speed_factor: f32) {
+        self.play_control.play_speed.set_factor(speed_factor);
     }
     pub fn set_position(&mut self, position: Position) {
         self.play_control.position = position;

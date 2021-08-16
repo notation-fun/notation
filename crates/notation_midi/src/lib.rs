@@ -1,24 +1,25 @@
-pub mod midi_audio_stream;
 pub mod midi_events;
 pub mod midi_hub;
 pub mod midi_plugin;
 pub mod midi_settings;
 pub mod midi_state;
 pub mod midi_util;
+pub mod midi_message;
 
 #[cfg(not(target_arch = "wasm32"))]
-pub mod native_midi_synth;
+pub mod native;
 
 #[cfg(target_arch = "wasm32")]
-pub mod wasm_midi_synth;
+pub mod wasm;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::midi_audio_stream::{AudioBuffer, DoubleAudioBuffer, MidiAudioStream};
     #[doc(hidden)]
     pub use crate::midi_events::{
-        AddToneEvent, PlayControlEvt, PlayToneEvent, StopToneEvent, SwitchTabEvent,
+        PlayControlEvt, SwitchTabEvent,
     };
+    #[doc(hidden)]
+    pub use crate::midi_message::MidiMessage;
     #[doc(hidden)]
     pub use crate::midi_hub::MidiHub;
     #[doc(hidden)]
@@ -31,7 +32,7 @@ pub mod prelude {
     pub use crate::midi_util::MidiUtil;
     #[doc(hidden)]
     #[cfg(not(target_arch = "wasm32"))]
-    pub use crate::native_midi_synth::MidiSynth;
+    pub use crate::native::midi_synth::MidiSynth;
     #[cfg(target_arch = "wasm32")]
-    pub use crate::wasm_midi_synth::MidiSynth;
+    pub use crate::wasm::midi_synth::MidiSynth;
 }

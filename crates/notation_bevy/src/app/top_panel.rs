@@ -28,13 +28,13 @@ pub fn reload_tab(
     *cam = Transform::from_xyz(0.0, 0.0, trans.z);
 }
 
-pub fn sync_play_speed(
+pub fn sync_speed_factor(
     settings: &NotationSettings,
     midi_state: &mut MidiState,
     play_control_evts: &mut EventWriter<PlayControlEvt>,
 ) {
-    midi_state.play_control.play_speed = settings.play_speed;
-    play_control_evts.send(PlayControlEvt::on_play_speed(settings.play_speed));
+    midi_state.play_control.play_speed.set_factor(settings.speed_factor);
+    play_control_evts.send(PlayControlEvt::on_speed_factor(midi_state.play_control.play_speed.factor()));
 }
 
 pub fn send_play_state_evt(
@@ -93,10 +93,10 @@ pub fn top_panel_ui(
                     }
                 }
             }
-            let play_speed = settings.play_speed;
-            ui.add(Slider::new(&mut settings.play_speed, 0.1..=2.0).text("Play Speed"));
-            if float_ne!(play_speed, settings.play_speed, abs <= 0.01) {
-                sync_play_speed(&settings, &mut &mut midi_state, &mut play_control_evts)
+            let play_speed = settings.speed_factor;
+            ui.add(Slider::new(&mut settings.speed_factor, 0.1..=2.0).text("Play Speed"));
+            if float_ne!(play_speed, settings.speed_factor, abs <= 0.01) {
+                sync_speed_factor(&settings, &mut &mut midi_state, &mut play_control_evts)
             }
             let always_show_fret = settings.always_show_fret;
             ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");

@@ -35,7 +35,7 @@ impl MidiSettings {
         #[cfg(not(target_arch = "wasm32"))]
         return true;
         #[cfg(target_arch = "wasm32")]
-        return false;
+        return true;
     }
 }
 impl MidiSettings {

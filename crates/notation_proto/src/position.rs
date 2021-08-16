@@ -52,6 +52,9 @@ impl BarPosition {
             in_bar_pos,
         }
     }
+    pub fn with_delay(&self, delay: Units) -> Self {
+        Self::new(self.bar_units, self.bar_ordinal, self.in_bar_pos + delay)
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]

@@ -3,15 +3,54 @@ use crate::prelude::{BarPosition, Bpm, PlayState, Position, Tab, TabMeta, Units}
 #[derive(Debug)]
 pub struct TabPlayStateChanged();
 
+#[derive(Copy, Clone, Debug)]
+pub struct PlaySpeed {
+    pub seconds_per_unit: f32,
+    pub units_per_second: f32,
+    factor: f32,
+}
+
+impl PlaySpeed {
+    pub fn new(tab_meta: &TabMeta) -> Self {
+        let units_per_second =
+            Bpm::from(tab_meta.tempo) as f32 / 60.0 * Units::from(tab_meta.signature.beat_unit).0;
+        Self {
+            seconds_per_unit: 1.0 / units_per_second,
+            units_per_second,
+            factor: 1.0,
+        }
+    }
+    pub fn factor(&self) -> f32 {
+        self.factor
+    }
+    pub fn set_factor(&mut self, factor: f32) -> bool {
+        if factor > 0.0 {
+            self.factor = factor;
+            true
+        } else {
+            println!("Invalid Speed Factor: {}", factor);
+            false
+        }
+    }
+    pub fn calc_units(&self, seconds: f32) -> Units {
+        Units(seconds * self.units_per_second * self.factor)
+    }
+    pub fn calc_seconds(&self, units: Units) -> f32 {
+        units.0 * self.seconds_per_unit / self.factor
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
+pub struct UnitsToSeconds(pub f32);
+
 #[derive(Debug)]
 pub struct PlayControl {
-    pub second_to_units: f32,
     pub position: Position,
     pub begin_bar_ordinal: usize,
     pub end_bar_ordinal: usize,
     pub should_loop: bool,
     pub play_state: PlayState,
-    pub play_speed: f32,
+    pub play_speed: PlaySpeed,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -37,17 +76,14 @@ impl Default for PlayControl {
 }
 
 impl PlayControl {
-    pub fn _new(tab_meta: &TabMeta, bars: usize) -> Self {
-        let second_to_units =
-            Bpm::from(tab_meta.tempo) as f32 / 60.0 * Units::from(tab_meta.signature.beat_unit).0;
+    fn _new(tab_meta: &TabMeta, bars: usize) -> Self {
         Self {
-            second_to_units,
             position: Position::new(tab_meta.bar_units()),
             begin_bar_ordinal: 1,
             end_bar_ordinal: bars,
             should_loop: true,
             play_state: PlayState::default(),
-            play_speed: 1.0,
+            play_speed: PlaySpeed::new(tab_meta),
         }
     }
     pub fn new(tab: &Tab) -> Self {
@@ -82,8 +118,8 @@ impl PlayControl {
     }
     pub fn tick(&mut self, delta_seconds: f32) -> TickResult {
         if self.play_state.is_playing() {
-            let delta_units = delta_seconds * self.second_to_units;
-            self.position.tick(Units(delta_units * self.play_speed));
+            let delta_units = self.play_speed.calc_units(delta_seconds);
+            self.position.tick(delta_units);
             let end_passed = self.position.bar.bar_ordinal > self.end_bar_ordinal;
             let stopped = if end_passed {
                 if self.should_loop {

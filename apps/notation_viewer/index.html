@@ -23,6 +23,22 @@
         background-color: white;
       }
     </style>
+		<script src='https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js'></script>
+		<script src='https://surikov.github.io/webaudiofontdata/sound/0250_SoundBlasterOld_sf2.js'></script>
+		<script>
+			var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+			var audioContext = new AudioContextFunc();
+			var player=new WebAudioFontPlayer();
+			player.loader.decodeAfterLoading(audioContext, '_tone_0250_SoundBlasterOld_sf2');
+
+			function play_note(semitones, seconds){
+				player.queueWaveTable(audioContext, audioContext.destination
+					, _tone_0250_SoundBlasterOld_sf2, 0, semitones, seconds);
+			}
+
+      function load_instrument(program) {
+      }
+		</script>
   </head>
   <script type="module">
     import init from './target/wasm.js'

@@ -31,7 +31,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_clock::PlayClock;
     #[doc(hidden)]
-    pub use crate::play::play_control::{PlayControl, TickResult};
+    pub use crate::play::play_control::{PlayControl, PlaySpeed, TickResult};
     #[doc(hidden)]
     pub use crate::play::play_state::{PlayState, PlayingState};
     #[doc(hidden)]
