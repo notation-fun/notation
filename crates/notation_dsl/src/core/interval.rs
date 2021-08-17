@@ -6,7 +6,6 @@ use syn::parse::{Error, Parse, ParseStream};
 use syn::{LitInt, Token};
 
 mod kw {
-    syn::custom_keyword!(t);
     syn::custom_keyword!(o);
 }
 
@@ -22,19 +21,12 @@ impl IntervalDsl {
 impl Parse for IntervalDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
-        if input.peek(kw::t) {
-            input.parse::<kw::t>()?;
-            return IntervalDsl::new(Interval::Tritone);
-        }
         let interval = match input.parse::<LitInt>()?.base10_parse::<u8>()? {
             1 => Interval::Unison,
             2 => {
                 if input.peek(Token![-]) {
                     input.parse::<Token![-]>()?;
                     Interval::Minor2nd
-                } else if input.peek(Token![+]) {
-                    input.parse::<Token![+]>()?;
-                    Interval::Augmented2nd
                 } else {
                     Interval::Major2nd
                 }
@@ -51,12 +43,18 @@ impl Parse for IntervalDsl {
                 if input.peek(kw::o) {
                     input.parse::<kw::o>()?;
                     Interval::Diminished4th
+                } else if input.peek(Token![+]) {
+                    input.parse::<Token![+]>()?;
+                    Interval::Augmented4th
                 } else {
                     Interval::Perfect4th
                 }
             }
             5 => {
-                if input.peek(Token![+]) {
+                if input.peek(kw::o) {
+                    input.parse::<kw::o>()?;
+                    Interval::Diminished5th
+                } else if input.peek(Token![+]) {
                     input.parse::<Token![+]>()?;
                     Interval::Augmented5th
                 } else {
@@ -88,7 +86,7 @@ impl Parse for IntervalDsl {
 
 impl IntervalDsl {
     pub fn peek(input: ParseStream) -> bool {
-        input.peek(LitInt) || input.peek(kw::t)
+        input.peek(LitInt)
     }
 }
 

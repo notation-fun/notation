@@ -1,4 +1,3 @@
-use helgoboss_midi::{ShortMessage, StructuredShortMessage};
 use midir::{MidiOutput, MidiOutputConnection};
 use notation_model::prelude::PlaySpeed;
 use std::sync::Mutex;
