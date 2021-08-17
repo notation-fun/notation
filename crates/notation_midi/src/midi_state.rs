@@ -127,8 +127,8 @@ impl MidiChannel {
     }
     pub fn setup(
         &mut self,
-        settings: &MidiSettings,
-        hub: &mut MidiHub,
+        _settings: &MidiSettings,
+        _hub: &mut MidiHub,
         params: (u8, u8),
         track: &Arc<Track>,
     ) {

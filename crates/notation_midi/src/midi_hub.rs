@@ -72,11 +72,7 @@ impl MidiHub {
         }
         if let Some(conn) = &self.output_conn {
             //println!("send midi: {:?}", msg);
-            if let Err(err) = conn.lock().unwrap().send(&[
-                msg.midi.status_byte(),
-                msg.midi.data_byte_1().into(),
-                msg.midi.data_byte_2().into(),
-            ]) {
+            if let Err(err) = conn.lock().unwrap().send(&msg.to_midi()) {
                 println!("send to midi failed: {:?} -> {:?}", msg, err);
             }
         }

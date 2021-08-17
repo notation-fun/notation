@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use helgoboss_midi::{StructuredShortMessage};
+use helgoboss_midi::{ShortMessage, StructuredShortMessage};
 use notation_model::prelude::*;
 
 #[derive(Clone, Debug)]
@@ -25,5 +25,12 @@ impl MidiMessage {
     }
     pub fn units_position(&self) -> Units {
         self.bar_position().into()
+    }
+    pub fn to_midi(&self) -> [u8; 3] {
+        [
+            self.midi.status_byte(),
+            self.midi.data_byte_1().into(),
+            self.midi.data_byte_2().into(),
+        ]
     }
 }

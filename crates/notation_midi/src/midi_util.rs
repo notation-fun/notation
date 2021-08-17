@@ -38,7 +38,7 @@ impl MidiUtil {
     }
     pub fn get_tone_midi_msgs(
         channel: &MidiChannel,
-        bar: &TabBar,
+        _bar: &TabBar,
         entry: &LaneEntry,
         tone: &Tone,
     ) -> Option<Vec<(Option<Units>, StructuredShortMessage)>> {

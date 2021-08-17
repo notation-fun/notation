@@ -42,7 +42,7 @@ impl MidiSynth {
             synth.write(data).unwrap();
         });
     }
-    pub fn send(&self, speed: &PlaySpeed, msg: &MidiMessage) -> Result<(), String> {
+    pub fn send(&self, _speed: &PlaySpeed, msg: &MidiMessage) -> Result<(), String> {
         match msg.midi {
             StructuredShortMessage::NoteOff {
                 channel,
