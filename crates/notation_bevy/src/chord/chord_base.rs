@@ -41,7 +41,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordBase<'a> {
         let color = self
             .theme
             .colors
-            .color_of_syllable(self.data.value.calc_syllable());
+            .of_syllable(self.data.value.calc_syllable());
         ShapeColors::new(color)
     }
     fn get_draw_mode(&self) -> DrawMode {

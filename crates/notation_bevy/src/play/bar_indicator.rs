@@ -47,7 +47,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.colors.mini_bar_current_outline)
+        ShapeColors::new(self.theme.colors.mini_map.bar_outline.current)
     }
     fn get_draw_mode(&self) -> DrawMode {
         let line_width = self.theme.grid.pos_indicator_size;

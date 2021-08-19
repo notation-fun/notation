@@ -54,7 +54,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         ShapeColors::outlined(
             self.theme
                 .colors
-                .color_of_syllable(self.data.value.syllable()),
+                .of_syllable(self.data.value.syllable()),
             self.theme.melody.note_outline_color,
         )
     }

@@ -39,7 +39,7 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniMapBack<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        let color = self.theme.colors.mini_map_back;
+        let color = self.theme.colors.mini_map.back;
         ShapeColors::new(color)
     }
     fn get_draw_mode(&self) -> DrawMode {

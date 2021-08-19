@@ -5,9 +5,11 @@ use bevy::prelude::*;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::mini::mini_bar::MiniBarValue;
+use crate::mini::mini_bar::{MiniBarLayout};
 use crate::mini::mini_map::MiniMapBackData;
 use crate::prelude::{BarLayout, NotationAppState, NotationSettings};
+
+use super::theme_sizes::MiniMapSizes;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -63,22 +65,22 @@ impl GridTheme {
     pub fn calc_mini_map_transform(
         &self,
         app_state: &NotationAppState,
-        mini_bar_value: &MiniBarValue,
+        sizes: &MiniMapSizes,
+        mini_bar_layout: &MiniBarLayout,
     ) -> (Transform, MiniMapBackData) {
-        let space = app_state.window_width - mini_bar_value.size * mini_bar_value.cols as f32;
+        let space = app_state.window_width - mini_bar_layout.width * mini_bar_layout.cols as f32;
         let x = space / 2.0 - self.margin;
         let mut y =
-            -app_state.window_height + self.margin + self.header_height + mini_bar_value.margin;
-        if mini_bar_value.rows > 1 {
-            let size_and_margin = mini_bar_value.size + mini_bar_value.margin;
-            y += (mini_bar_value.rows - 1) as f32 * size_and_margin;
+            -app_state.window_height + self.margin + self.header_height + sizes.margin;
+        if mini_bar_layout.rows > 1 {
+            y += (mini_bar_layout.rows - 1) as f32 * sizes.bar_height_with_margin();
         }
         let transform = Transform::from_xyz(x, y, 0.0);
-        let height = mini_bar_value.rows as f32 * mini_bar_value.size
-            + (mini_bar_value.rows + 1) as f32 * mini_bar_value.margin;
+        let height = mini_bar_layout.rows as f32 * sizes.bar_height
+            + (mini_bar_layout.rows + 1) as f32 * sizes.margin;
         let back_data = MiniMapBackData {
             x: -space / 2.0,
-            y: mini_bar_value.size + mini_bar_value.margin,
+            y: sizes.bar_height_with_margin(),
             width: app_state.window_width,
             height,
         };

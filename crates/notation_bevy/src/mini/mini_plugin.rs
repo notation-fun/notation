@@ -1,16 +1,13 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{PlayingState, Tab};
+use notation_model::prelude::{PlayingState, Syllable, Tab};
 
-use crate::chord::chord_base::ChordBaseData;
-use crate::chord::chord_diagram::{ChordData, ChordDiagram};
-use crate::chord::chord_interval::ChordIntervalData;
 use crate::prelude::{
     BarPlaying, BevyUtil, LyonShapeOp, NotationAppState, NotationSettings, NotationTheme,
     SingleBundle, WindowResizedEvent,
 };
 
-use super::mini_bar::{MiniBarData, MiniBarShape};
+use super::mini_bar::{MiniBarData, MiniBarShape, MiniBarValue};
 use super::mini_map::{MiniMap, MiniMapBack, MiniMapBackData};
 use super::mini_section_separator::{
     MiniSectionSeparator, MiniSectionSeparatorData, MiniSectionSeparatorValue,
@@ -33,42 +30,27 @@ fn on_config_changed(
     theme: Res<NotationTheme>,
     mut query: Query<(&MiniMap, &mut Transform)>,
     mut mini_map_back_query: Query<(Entity, &mut MiniMapBackData)>,
-    mut mini_bar_query: Query<(Entity, &mut MiniBarData, &Children)>,
+    mut mini_bar_query: Query<(Entity, &mut MiniBarData)>,
     mut mini_section_separator_query: Query<(Entity, &mut MiniSectionSeparatorData)>,
-    mut chord_query: Query<(Entity, &mut ChordData, &Children)>,
-    mut interval_query: Query<(Entity, &mut ChordIntervalData)>,
-    mut base_query: Query<(Entity, &mut ChordBaseData)>,
 ) {
     for _evt in evts.iter() {
         for (minimap, mut transform) in query.iter_mut() {
-            let data_value = settings
+            let layout = settings
                 .layout
-                .calc_mini_bar_value(&app_state, minimap.bars);
+                .calc_mini_bar_layout(&app_state, &theme.sizes.mini_map, minimap.bars);
             let (new_transform, new_back_data) =
-                theme.grid.calc_mini_map_transform(&app_state, &data_value);
+                theme.grid.calc_mini_map_transform(&app_state, &theme.sizes.mini_map, &layout);
             *transform = new_transform;
             if let Ok((back_entity, mut back_data)) = mini_map_back_query.single_mut() {
                 *back_data = new_back_data;
                 MiniMapBack::update(&mut commands, &theme, back_entity, &back_data);
             }
-            for (entity, mut data, bar_children) in mini_bar_query.iter_mut() {
-                data.value = data_value.clone();
+            for (entity, mut data) in mini_bar_query.iter_mut() {
+                data.value.layout = layout.clone();
                 MiniBarShape::update(&mut commands, &theme, entity, &data);
-                for chord_entity in bar_children.iter() {
-                    let chord_size = data_value.size * settings.layout.mini_beats_factor;
-                    ChordDiagram::update_size(
-                        &mut commands,
-                        &theme,
-                        &mut chord_query,
-                        &mut interval_query,
-                        &mut base_query,
-                        *chord_entity,
-                        chord_size,
-                    );
-                }
             }
             for (entity, mut data) in mini_section_separator_query.iter_mut() {
-                data.value.bar = data_value.clone();
+                data.value.layout = layout.clone();
                 MiniSectionSeparator::update(&mut commands, &theme, entity, &data);
             }
         }
@@ -97,8 +79,8 @@ impl MiniPlugin {
         tab: &Tab,
     ) -> Entity {
         let bars = tab.bars.len();
-        let data_value = settings.layout.calc_mini_bar_value(app_state, bars);
-        let (transform, back_data) = theme.grid.calc_mini_map_transform(app_state, &data_value);
+        let layout = settings.layout.calc_mini_bar_layout(app_state, &theme.sizes.mini_map, bars);
+        let (transform, back_data) = theme.grid.calc_mini_map_transform(app_state, &theme.sizes.mini_map, &layout);
         let map_entity = BevyUtil::spawn_child_bundle(
             commands,
             tab_entity,
@@ -106,23 +88,25 @@ impl MiniPlugin {
         );
         MiniMapBack::create(commands, map_entity, theme, back_data);
         for bar in tab.bars.iter() {
-            let data = MiniBarData::new(bar, data_value.clone());
+            let syllable = bar.get_chord(None).map(|x| x.root).unwrap_or(Syllable::Do);
+            let data = MiniBarData::new(bar, MiniBarValue::new(layout.clone(), syllable));
             let mini_bar_entity = MiniBarShape::create(commands, map_entity, theme, data);
             if bar.props.bar_index == 0 {
                 let section_separator_data = MiniSectionSeparatorData::new(
                     bar,
-                    MiniSectionSeparatorValue::new(data_value.clone()),
+                    MiniSectionSeparatorValue::new(layout.clone()),
                 );
                 MiniSectionSeparator::create(commands, map_entity, theme, section_separator_data);
             }
-
+            commands
+                .entity(mini_bar_entity)
+                .insert(BarPlaying::new(bar, PlayingState::Idle));
+            /*
             if let Some(chord) = bar.get_chord(None) {
-                let chord_size = data_value.size * settings.layout.mini_beats_factor;
+                let chord_size = layout.size * settings.layout.mini_beats_factor;
                 ChordDiagram::spawn(commands, theme, mini_bar_entity, bar, chord, chord_size);
-                commands
-                    .entity(mini_bar_entity)
-                    .insert(BarPlaying::new(bar, PlayingState::Idle));
             }
+             */
         }
         map_entity
     }

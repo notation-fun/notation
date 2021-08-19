@@ -12,8 +12,9 @@ use bevy_inspector_egui::Inspectable;
 
 use crate::bar::bar_layout::BarLayoutData;
 use crate::lane::lane_layout::LaneLayoutData;
-use crate::mini::mini_bar::MiniBarValue;
+use crate::mini::mini_bar::{MiniBarLayout};
 use crate::prelude::{BarLayout, LaneLayout, NotationAppState, TabBars, TabState};
+use crate::theme::theme_sizes::MiniMapSizes;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -43,10 +44,6 @@ pub struct LayoutSettings {
     pub lyrics_lane_order: u8,
     pub melody_lane_order: u8,
     pub focus_bar_ease_ms: u64,
-    pub mini_bar_margin: f32,
-    pub min_mini_bar_size: f32,
-    pub max_mini_bar_size: f32,
-    pub mini_beats_factor: f32,
 }
 
 impl Default for LayoutSettings {
@@ -65,10 +62,6 @@ impl Default for LayoutSettings {
             lyrics_lane_order: 3,
             melody_lane_order: 4,
             focus_bar_ease_ms: 250,
-            mini_bar_margin: 6.0,
-            min_mini_bar_size: 32.0,
-            max_mini_bar_size: 80.0,
-            mini_beats_factor: 0.45,
         }
     }
 }
@@ -342,24 +335,24 @@ impl LayoutSettings {
             }
         }
     }
-    pub fn calc_mini_bar_value(&self, app_state: &NotationAppState, bars: usize) -> MiniBarValue {
+    pub fn calc_mini_bar_layout(&self, app_state: &NotationAppState, sizes: &MiniMapSizes, bars: usize) -> MiniBarLayout {
         if bars == 0 {
-            return MiniBarValue::new(0, 0, self.max_mini_bar_size, self.mini_bar_margin);
+            return MiniBarLayout::new(0, 0, sizes.max_bar_width);
         }
-        let content_width = app_state.window_width - self.mini_bar_margin * 2.0;
-        let mut size = content_width / bars as f32;
+        let content_width = app_state.window_width - sizes.margin * 2.0;
+        let mut width = content_width / bars as f32;
         let mut rows = 1;
         let mut cols = bars;
-        if size < self.min_mini_bar_size {
-            size = self.min_mini_bar_size;
-            cols = (content_width / size).floor() as usize;
+        if width < sizes.min_bar_width {
+            width = sizes.min_bar_width;
+            cols = (content_width / width).floor() as usize;
             rows = bars / cols;
             if bars % cols > 0 {
                 rows += 1;
             }
-        } else if size > self.max_mini_bar_size {
-            size = self.max_mini_bar_size;
+        } else if width > sizes.max_bar_width {
+            width = sizes.max_bar_width;
         }
-        MiniBarValue::new(rows, cols, size, self.mini_bar_margin)
+        MiniBarLayout::new(rows, cols, width)
     }
 }

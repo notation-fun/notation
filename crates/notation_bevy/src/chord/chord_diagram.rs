@@ -35,7 +35,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
         let color = self
             .theme
             .colors
-            .color_of_syllable(self.data.value.chord.root);
+            .of_syllable(self.data.value.chord.root);
         ShapeColors::new(color)
     }
     fn get_draw_mode(&self) -> DrawMode {
@@ -123,3 +123,21 @@ impl<'a> ChordDiagram<'a> {
         }
     }
 }
+
+    /*
+    mut chord_query: Query<(Entity, &mut ChordData, &Children)>,
+    mut interval_query: Query<(Entity, &mut ChordIntervalData)>,
+    mut base_query: Query<(Entity, &mut ChordBaseData)>,
+                for chord_entity in bar_children.iter() {
+                    let chord_size = layout.size * settings.layout.mini_beats_factor;
+                    ChordDiagram::update_size(
+                        &mut commands,
+                        &theme,
+                        &mut chord_query,
+                        &mut interval_query,
+                        &mut base_query,
+                        *chord_entity,
+                        chord_size,
+                    );
+                }
+                 */

@@ -8,15 +8,17 @@ use super::melody_theme::MelodyTheme;
 use super::shapes_theme::ShapesTheme;
 use super::strings_theme::StringsTheme;
 use super::theme_colors::ThemeColors;
+use super::theme_sizes::ThemeSizes;
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotationTheme {
     pub core: CoreTheme,
     pub grid: GridTheme,
+    pub sizes: ThemeSizes,
     pub colors: ThemeColors,
     pub melody: MelodyTheme,
     pub lyrics: LyricsTheme,
@@ -25,17 +27,3 @@ pub struct NotationTheme {
     pub guitar: GuitarTheme,
 }
 
-impl Default for NotationTheme {
-    fn default() -> Self {
-        Self {
-            core: CoreTheme::default(),
-            grid: GridTheme::default(),
-            colors: ThemeColors::default(),
-            melody: MelodyTheme::default(),
-            lyrics: LyricsTheme::default(),
-            shapes: ShapesTheme::default(),
-            strings: StringsTheme::default(),
-            guitar: GuitarTheme::default(),
-        }
-    }
-}

@@ -7,3 +7,4 @@ pub mod notation_theme;
 pub mod shapes_theme;
 pub mod strings_theme;
 pub mod theme_colors;
+pub mod theme_sizes;

@@ -45,7 +45,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
         ShapeColors::outlined(
             self.theme
                 .colors
-                .color_of_syllable(self.data.value.syllable),
+                .of_syllable(self.data.value.syllable),
             self.theme.strings.note_outline_color,
         )
     }
