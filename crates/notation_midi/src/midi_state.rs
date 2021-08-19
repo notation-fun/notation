@@ -116,13 +116,21 @@ impl MidiChannel {
                 channel: self.channel,
                 program_number: self.program,
             };
-            hub.send(settings, speed, &MidiMessage::new(&first_msg.entry, None, msg));
+            hub.send(
+                settings,
+                speed,
+                &MidiMessage::new(&first_msg.entry, None, msg),
+            );
             let msg = StructuredShortMessage::ControlChange {
                 channel: self.channel,
                 controller_number: controller_numbers::ALL_SOUND_OFF,
                 control_value: U7::new(0),
             };
-            hub.send(settings, speed, &MidiMessage::new(&first_msg.entry, None, msg));
+            hub.send(
+                settings,
+                speed,
+                &MidiMessage::new(&first_msg.entry, None, msg),
+            );
         }
     }
     pub fn setup(

@@ -33,12 +33,11 @@
                 Core(Chord(
                     (
                         root: Do,
-                        intervals: Tetrad(
+                        intervals: Triad(
                             Major3nd,
                             Perfect5th,
-                            Perfect4th,
                         ),
-                        base: Some(2),
+                        base: Some(Perfect4th),
                     ),
                     Simple(Whole),
                 )),// [4]

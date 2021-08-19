@@ -8,7 +8,7 @@ pub fn new_tab_bai_hua_lin() -> Tab {
             {chord Chord [
                 $duration = _1
                 "1" Chord ( 1: 3 5 )
-                "1/3" Chord ( 1: 3 5 /1 )
+                "1/3" Chord ( 1: 3 5 /3 )
                 "2-" Chord ( 2: 3- 5 )
                 "2o" Chord ( 2: 3- 5- )
                 "3" Chord ( 3: 3 5 7- )

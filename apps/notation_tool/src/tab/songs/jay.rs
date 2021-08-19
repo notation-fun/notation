@@ -8,7 +8,7 @@ pub fn new_tab_long_juan_feng() -> Tab {
             {chord Chord [
                 $duration = _1
                 "1" Chord ( 1: 3 5 )
-                "1/4" Chord ( 1: 3 5 4 /2 )
+                "1/4" Chord ( 1: 3 5 /4 )
                 "2-" Chord ( 2: 3- 5 7- )
                 "3-" Chord ( 3: 3- 5 7- )
                 "4" Chord ( 4: 3 5 7 )

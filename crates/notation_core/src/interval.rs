@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::prelude::Semitones;
+use crate::prelude::{Semitones, Syllable};
 
 // https://hellomusictheory.com/learn/intervals/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -22,7 +22,6 @@ pub enum Interval {
     Major2nd,
     Minor3nd,
     Major3nd,
-    Diminished4th,
     Perfect4th,
     Augmented4th,
     Tritone,
@@ -49,7 +48,6 @@ impl From<Interval> for IntervalQuality {
             Interval::Major2nd => Self::Minor,
             Interval::Minor3nd => Self::Minor,
             Interval::Major3nd => Self::Major,
-            Interval::Diminished4th => Self::Diminished,
             Interval::Perfect4th => Self::Perfect,
             Interval::Augmented4th => Self::Augmented,
             Interval::Tritone => Self::Tritone,
@@ -65,6 +63,29 @@ impl From<Interval> for IntervalQuality {
     }
 }
 
+impl From<Interval> for Syllable {
+    fn from(v: Interval) -> Self {
+        match v {
+            Interval::Unison => Self::Do,
+            Interval::Minor2nd => Self::Ra,
+            Interval::Major2nd => Self::Re,
+            Interval::Minor3nd => Self::Me,
+            Interval::Major3nd => Self::Mi,
+            Interval::Perfect4th => Self::Fa,
+            Interval::Augmented4th => Self::Fi,
+            Interval::Tritone => Self::Se,
+            Interval::Diminished5th => Self::Se,
+            Interval::Perfect5th => Self::So,
+            Interval::Augmented5th => Self::Si,
+            Interval::Minor6th => Self::Le,
+            Interval::Major6th => Self::La,
+            Interval::Minor7th => Self::Te,
+            Interval::Major7th => Self::Ti,
+            Interval::Perfect8ve => Self::Do,
+        }
+    }
+}
+
 impl From<Interval> for Semitones {
     fn from(v: Interval) -> Self {
         match v {
@@ -73,7 +94,6 @@ impl From<Interval> for Semitones {
             Interval::Major2nd => 2,
             Interval::Minor3nd => 3,
             Interval::Major3nd => 4,
-            Interval::Diminished4th => 4,
             Interval::Perfect4th => 5,
             Interval::Augmented4th => 6,
             Interval::Tritone => 6,
@@ -87,6 +107,12 @@ impl From<Interval> for Semitones {
             Interval::Perfect8ve => 12,
         }
         .into()
+    }
+}
+
+impl From<(Syllable, Interval)> for Syllable {
+    fn from(v: (Syllable, Interval)) -> Self {
+        (Semitones::from(v.0) + Semitones::from(v.1)).into()
     }
 }
 
@@ -120,7 +146,6 @@ impl Interval {
             Interval::Major2nd => "2",
             Interval::Minor3nd => "3-",
             Interval::Major3nd => "3",
-            Interval::Diminished4th => "4o",
             Interval::Perfect4th => "4",
             Interval::Augmented4th => "4+",
             Interval::Tritone => "t",
@@ -142,7 +167,6 @@ impl Interval {
             "2" => Self::Major2nd,
             "3-" => Self::Minor3nd,
             "3" => Self::Major3nd,
-            "4o" => Self::Diminished4th,
             "4" => Self::Perfect4th,
             "4+" => Self::Augmented4th,
             "t" => Self::Tritone,

@@ -4,8 +4,8 @@ pub mod midi_synth;
 use bevy::prelude::*;
 use bevy_kira_audio::{AudioPlugin, AudioStreamPlugin, StreamedAudio};
 
+use crate::prelude::{MidiHub, MidiPlugin, MidiSettings};
 use audio_stream::{DoubleAudioBuffer, MidiAudioStream};
-use crate::prelude::{MidiPlugin, MidiHub, MidiSettings};
 
 impl MidiPlugin {
     pub fn build_native(&self, app: &mut AppBuilder) {

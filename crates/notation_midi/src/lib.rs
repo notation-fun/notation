@@ -1,10 +1,10 @@
 pub mod midi_events;
 pub mod midi_hub;
+pub mod midi_message;
 pub mod midi_plugin;
 pub mod midi_settings;
 pub mod midi_state;
 pub mod midi_util;
-pub mod midi_message;
 
 #[cfg(not(target_arch = "wasm32"))]
 pub mod native;
@@ -15,13 +15,11 @@ pub mod wasm;
 pub mod prelude {
     #[doc(hidden)]
     #[doc(hidden)]
-    pub use crate::midi_events::{
-        PlayControlEvt, SwitchTabEvent,
-    };
-    #[doc(hidden)]
-    pub use crate::midi_message::MidiMessage;
+    pub use crate::midi_events::{PlayControlEvt, SwitchTabEvent};
     #[doc(hidden)]
     pub use crate::midi_hub::MidiHub;
+    #[doc(hidden)]
+    pub use crate::midi_message::MidiMessage;
     #[doc(hidden)]
     pub use crate::midi_plugin::MidiPlugin;
     #[doc(hidden)]

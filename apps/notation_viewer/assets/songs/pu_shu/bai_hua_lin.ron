@@ -37,7 +37,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: Some(1),
+                        base: Some(Major3nd),
                     ),
                     Simple(Whole),
                 )),// [4]

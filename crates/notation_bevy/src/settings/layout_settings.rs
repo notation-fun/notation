@@ -66,8 +66,8 @@ impl Default for LayoutSettings {
             melody_lane_order: 4,
             focus_bar_ease_ms: 250,
             mini_bar_margin: 6.0,
-            min_mini_bar_size: 16.0,
-            max_mini_bar_size: 32.0,
+            min_mini_bar_size: 32.0,
+            max_mini_bar_size: 80.0,
             mini_beats_factor: 0.45,
         }
     }

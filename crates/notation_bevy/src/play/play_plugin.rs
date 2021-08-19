@@ -280,7 +280,9 @@ fn on_play_control_evt(
                 PlayControlEvt::OnPlayState(play_state) => {
                     tab_state.set_play_state(&mut commands, state_entity, *play_state);
                 }
-                PlayControlEvt::OnSpeedFactor(play_speed) => tab_state.set_speed_factor(*play_speed),
+                PlayControlEvt::OnSpeedFactor(play_speed) => {
+                    tab_state.set_speed_factor(*play_speed)
+                }
             }
         }
     }

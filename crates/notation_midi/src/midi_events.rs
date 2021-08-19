@@ -36,4 +36,3 @@ impl PlayControlEvt {
         Self::OnSpeedFactor(play_speed)
     }
 }
-

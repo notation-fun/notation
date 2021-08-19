@@ -33,8 +33,13 @@ pub fn sync_speed_factor(
     midi_state: &mut MidiState,
     play_control_evts: &mut EventWriter<PlayControlEvt>,
 ) {
-    midi_state.play_control.play_speed.set_factor(settings.speed_factor);
-    play_control_evts.send(PlayControlEvt::on_speed_factor(midi_state.play_control.play_speed.factor()));
+    midi_state
+        .play_control
+        .play_speed
+        .set_factor(settings.speed_factor);
+    play_control_evts.send(PlayControlEvt::on_speed_factor(
+        midi_state.play_control.play_speed.factor(),
+    ));
 }
 
 pub fn send_play_state_evt(

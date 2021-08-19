@@ -1,15 +1,5 @@
-use bevy::prelude::*;
+use notation_model::prelude::Chord;
 
-use notation_model::prelude::{ChordInversion, ChordQuality, Pitch, Syllable};
+use crate::prelude::SingleBundle;
 
-use crate::entry::entry_bundle::EntryBundle;
-
-#[derive(Bundle)]
-pub struct ChordBundle {
-    pub syllable: Syllable,
-    pub pitch: Pitch,
-    pub quality: ChordQuality,
-    pub inversion: ChordInversion,
-    #[bundle]
-    pub entry: EntryBundle,
-}
+pub type ChordBundle = SingleBundle<Chord>;

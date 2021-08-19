@@ -1,7 +1,10 @@
 use std::convert::TryFrom;
 
 use helgoboss_midi::{Channel, KeyNumber, StructuredShortMessage, U7};
-use notation_model::prelude::{BarPosition, CoreEntry, Entry, FrettedEntry4, FrettedEntry6, LaneEntry, Note, Pick, Semitones, TabBar, Tone, Units};
+use notation_model::prelude::{
+    CoreEntry, Entry, FrettedEntry4, FrettedEntry6, LaneEntry, Note, Pick, Semitones, TabBar, Tone,
+    Units,
+};
 
 use crate::prelude::MidiChannel;
 

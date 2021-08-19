@@ -1,7 +1,7 @@
 use helgoboss_midi::StructuredShortMessage;
 
-use notation_model::prelude::PlaySpeed;
 use crate::prelude::MidiMessage;
+use notation_model::prelude::PlaySpeed;
 
 use super::audio_stream::DoubleAudioBuffer;
 

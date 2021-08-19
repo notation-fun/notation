@@ -4,7 +4,7 @@ use notation_model::prelude::{Entry, LaneEntry};
 use std::sync::Arc;
 
 use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme};
-use notation_model::prelude::{Pick};
+use notation_model::prelude::Pick;
 
 use super::pick_note::{PickNoteData, PickNoteShape, PickNoteValue};
 

@@ -37,7 +37,7 @@ impl Default for CoreTheme {
             bar_indicator_z: 19.0,
             pos_indicator_color: Color::hex("0000FF").unwrap(),
             pos_indicator_z: 20.0,
-            mini_map_z: 23.0,
+            mini_map_z: 22.0,
             mini_bar_z: 24.0,
         }
     }

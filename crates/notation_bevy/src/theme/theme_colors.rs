@@ -42,7 +42,10 @@ pub struct ThemeColors {
     pub sections: [Color; 6],
     pub mini_map_back: Color,
     pub mini_bar_current_outline: Color,
+    pub mini_section_separator_color: Color,
 }
+
+//https://meyerweb.com/eric/tools/color-blend/
 
 impl Default for ThemeColors {
     fn default() -> Self {
@@ -54,16 +57,16 @@ impl Default for ThemeColors {
             ),
             syllables: [
                 color_of_hex("E94F4F"), // Do
-                color_of_hex("AAAAAA"), // Di, Ra
+                color_of_hex("99572C"), // Di, Ra
                 color_of_hex("FFEB34"), // Re
-                color_of_hex("AAAAAA"), // Ri, Me
+                color_of_hex("558C7F"), // Ri, Me
                 color_of_hex("59D7FF"), // Mi
                 color_of_hex("C31F6E"), // Fa
-                color_of_hex("AAAAAA"), // Fi, Se
+                color_of_hex("992D42"), // Fi, Se
                 color_of_hex("FF8F28"), // So
-                color_of_hex("AAAAAA"), // Si, Le
+                color_of_hex("A17C2B"), // Si, Le
                 color_of_hex("A3DC5B"), // La
-                color_of_hex("AAAAAA"), // Li, Te
+                color_of_hex("5F785A"), // Li, Te
                 color_of_hex("7C87E8"), // Ti
             ],
             sections: [
@@ -76,6 +79,7 @@ impl Default for ThemeColors {
             ],
             mini_map_back: color_of_hex("44444444"),
             mini_bar_current_outline: color_of_hex("CC00CC"),
+            mini_section_separator_color: Color::hex("333333").unwrap(),
         }
     }
 }

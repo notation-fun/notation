@@ -40,7 +40,7 @@ pub struct PosIndicator<'a> {
 
 impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
     fn get_name(&self) -> String {
-        "Pos".to_string()
+        "Current Pos".to_string()
     }
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(

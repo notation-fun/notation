@@ -1,3 +1,6 @@
+use notation_bevy::bevy::prelude::bevy_main;
+
+#[bevy_main]
 fn main() {
     #[cfg(target_arch = "wasm32")]
     let tabs = vec![notation_bevy::prelude::NotationApp::get_tab_from_url()

@@ -1,6 +1,4 @@
-use crate::prelude::{
-    MidiHub, MidiSettings, MidiState, PlayControlEvt, SwitchTabEvent,
-};
+use crate::prelude::{MidiHub, MidiSettings, MidiState, PlayControlEvt, SwitchTabEvent};
 use bevy::prelude::*;
 use notation_model::prelude::PlayClock;
 

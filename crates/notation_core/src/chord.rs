@@ -9,7 +9,7 @@ use crate::prelude::{Intervals, Syllable};
 pub struct Chord {
     pub root: Syllable,
     pub intervals: Intervals,
-    pub base: Option<usize>,
+    pub base: Option<Interval>,
 }
 impl Display for Chord {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -21,7 +21,7 @@ impl Display for Chord {
     }
 }
 impl Chord {
-    pub fn new(root: Syllable, intervals: Intervals, base: Option<usize>) -> Self {
+    pub fn new(root: Syllable, intervals: Intervals, base: Option<Interval>) -> Self {
         Self {
             root,
             intervals,
@@ -42,14 +42,14 @@ impl From<(Syllable, Vec<Interval>)> for Chord {
     }
 }
 
-impl From<(Syllable, Intervals, usize)> for Chord {
-    fn from(v: (Syllable, Intervals, usize)) -> Self {
+impl From<(Syllable, Intervals, Interval)> for Chord {
+    fn from(v: (Syllable, Intervals, Interval)) -> Self {
         Self::new(v.0, v.1, Some(v.2))
     }
 }
 
-impl From<(Syllable, Vec<Interval>, usize)> for Chord {
-    fn from(v: (Syllable, Vec<Interval>, usize)) -> Self {
+impl From<(Syllable, Vec<Interval>, Interval)> for Chord {
+    fn from(v: (Syllable, Vec<Interval>, Interval)) -> Self {
         Self::new(v.0, v.1.into(), Some(v.2))
     }
 }

@@ -52,22 +52,6 @@ pub trait LyonShapeOp<'a, Data: Clone + Send + Sync + 'static, T: Geometry, Op: 
             entity_commands.insert(data.clone());
         })
     }
-    fn create_with_extra<F>(
-        commands: &mut Commands,
-        entity: Entity,
-        theme: &'a NotationTheme,
-        data: Data,
-        extra: F,
-    ) -> Entity
-    where
-        F: Fn(&mut EntityCommands),
-    {
-        let shape = Self::new_shape(theme, data.clone());
-        shape.insert_lyon(commands, entity, |entity_commands| {
-            entity_commands.insert(data.clone());
-            extra(entity_commands);
-        })
-    }
     fn create_with_child<F>(
         commands: &mut Commands,
         entity: Entity,

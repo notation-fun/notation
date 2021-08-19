@@ -37,7 +37,7 @@ pub struct BarIndicator<'a> {
 
 impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
     fn get_name(&self) -> String {
-        "Pos".to_string()
+        "Current Bar".to_string()
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {

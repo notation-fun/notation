@@ -2,7 +2,8 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
 use crate::prelude::{
-    AddEntryEvent, BevyUtil, EntryBundle, LyricsPlugin, ShapesPlugin, StringsPlugin, ToneBundle,
+    AddEntryEvent, BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, ShapesPlugin, StringsPlugin,
+    ToneBundle,
 };
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
@@ -34,7 +35,9 @@ fn insert_core_entry_extra(commands: &mut EntityCommands, entry: &CoreEntry) {
         CoreEntry::Tone(tone, _) => {
             commands.insert_bundle(ToneBundle::from(*tone));
         }
-        CoreEntry::Chord(_, _) => (),
+        CoreEntry::Chord(chord, _) => {
+            commands.insert_bundle(ChordBundle::from(*chord));
+        }
     };
 }
 fn insert_entry_extra(commands: &mut EntityCommands, entry: &LaneEntry) {

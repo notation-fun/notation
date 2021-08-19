@@ -22,6 +22,18 @@ impl MiniBarValue {
             playing_state: PlayingState::Idle,
         }
     }
+    pub fn calc_xy(&self, bar_ordinal: usize) -> (f32, f32) {
+        let index = bar_ordinal - 1;
+        let mut row = index / self.cols;
+        let col = index % self.cols;
+        let x = col as f32 * self.size;
+        if row > self.rows {
+            row = self.rows;
+        }
+        let size_and_margin = self.size + self.margin;
+        let y = -1.0 * row as f32 * size_and_margin;
+        (x, y)
+    }
 }
 
 pub type MiniBarData = BarData<MiniBarValue>;
@@ -70,19 +82,15 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
-        let index = self.data.bar_props.bar_ordinal - 1;
-        let mut row = index / self.data.value.cols;
-        let col = index % self.data.value.cols;
-        let x = col as f32 * self.data.value.size;
-        if row > self.data.value.rows {
-            row = self.data.value.rows;
+        let (x, y) = self.data.value.calc_xy(self.data.bar_props.bar_ordinal);
+        let mut z = self.theme.core.mini_bar_z;
+        if self.data.value.playing_state.is_current() {
+            z += 2.0;
         }
-        let size_and_margin = self.data.value.size + self.data.value.margin;
-        let y = -1.0 * row as f32 * size_and_margin;
         Transform::from_xyz(
             self.data.value.size / 2.0 + x,
             self.data.value.size / 2.0 + y,
-            self.theme.core.mini_bar_z,
+            z,
         )
     }
 }

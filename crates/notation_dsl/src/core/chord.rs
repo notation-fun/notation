@@ -2,7 +2,7 @@ use fehler::{throw, throws};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
-use syn::{LitInt, Token};
+use syn::Token;
 
 use crate::context::Context;
 
@@ -15,7 +15,7 @@ pub struct ChordDsl {
     pub empty: Option<EmptyDsl>,
     pub root: Option<SyllableDsl>,
     pub intervals: Vec<IntervalDsl>,
-    pub base: Option<usize>,
+    pub base: Option<IntervalDsl>,
     pub duration_tweak: Option<DurationTweakDsl>,
 }
 impl ChordDsl {
@@ -31,7 +31,7 @@ impl ChordDsl {
     pub fn chord(
         root: SyllableDsl,
         intervals: Vec<IntervalDsl>,
-        base: Option<usize>,
+        base: Option<IntervalDsl>,
         duration_tweak: Option<DurationTweakDsl>,
     ) -> Self {
         Self {
@@ -59,17 +59,12 @@ impl ChordDsl {
         while IntervalDsl::peek(input) {
             intervals.push(input.parse()?);
         }
-        let base = if input.peek(Token![/]) {
+        let base: Option<IntervalDsl> = if input.peek(Token![/]) {
             input.parse::<Token![/]>()?;
-            Some(input.parse::<LitInt>()?.base10_parse::<usize>()?)
+            Some(input.parse()?)
         } else {
             None
         };
-        if let Some(base) = base {
-            if base >= intervals.len() {
-                throw!(Error::new(input.span(), "Base Slash Out of Range"));
-            }
-        }
         let duration_tweak = DurationTweakDsl::try_parse(input);
         ChordDsl::chord(root, intervals, base, duration_tweak)
     }
