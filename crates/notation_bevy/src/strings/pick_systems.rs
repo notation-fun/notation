@@ -3,15 +3,33 @@ use bevy::prelude::*;
 use notation_model::prelude::{Entry, LaneEntry};
 use std::sync::Arc;
 
-use crate::prelude::{LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme};
 use notation_model::prelude::Pick;
 
 use super::pick_note::{PickNoteData, PickNoteShape, PickNoteValue};
 
 pub fn new_system_set() -> SystemSet {
     SystemSet::new()
+        .with_system(on_entry_playing_changed.system())
         .with_system(create_pick_notes6.system())
         .with_system(create_pick_notes4.system())
+}
+
+fn on_entry_playing_changed(
+    mut commands: Commands,
+    theme: Res<NotationTheme>,
+    query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
+    mut note_query: Query<(Entity, &mut PickNoteData)>,
+) {
+    for (_entity, playing, children) in query.iter() {
+        for child in children.iter() {
+            if let Ok((entity, mut data)) = note_query.get_mut(*child) {
+                //println!("{:?} -> {:?} -> {:?}", name, data, playing)
+                data.value.playing_state = playing.value;
+                PickNoteShape::update(&mut commands, &theme, entity, &data);
+            }
+        }
+    }
 }
 
 macro_rules! impl_pick_system {
@@ -75,3 +93,4 @@ impl_pick_system!(
     HandShape4,
     get_fretted_shape4
 );
+

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{Note, Syllable, SyllableNote};
+use notation_model::prelude::{Note, PlayingState, Syllable, SyllableNote};
 
 use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::TabBar;
@@ -14,6 +14,7 @@ pub struct ToneNoteValue {
     pub note: Note,
     pub mode: ToneMode,
     pub syllable_note: SyllableNote,
+    pub playing_state: PlayingState,
 }
 
 impl ToneNoteValue {
@@ -23,6 +24,7 @@ impl ToneNoteValue {
             note,
             mode,
             syllable_note,
+            playing_state: PlayingState::Idle,
         }
     }
     pub fn syllable(&self) -> Syllable {
@@ -34,6 +36,21 @@ pub struct ToneNoteShape<'a> {
     data: ToneNoteData,
 }
 
+impl<'a> ToneNoteShape<'a> {
+    fn calc_width_height(&self) -> (f32, f32) {
+        let outline = self.theme.sizes.melody.note_outline.of_state(&self.data.value.playing_state);
+        let mut width = self.theme.grid.bar_size / self.data.bar_props.bar_units.0
+                * self.data.entry_props.tied_units.0;
+        let mut height = self.theme.melody.note_height;
+        if self.data.value.playing_state.is_current() {
+            height +=  outline;
+        } else {
+            width -= outline * 2.0;
+        }
+        (width, height)
+    }
+}
+
 impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     fn get_name(&self) -> String {
         format!(
@@ -42,12 +59,11 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         )
     }
     fn get_shape(&self) -> shapes::Rectangle {
+        let (width, height) = self.calc_width_height();
         shapes::Rectangle {
-            width: self.theme.grid.bar_size / self.data.bar_props.bar_units.0
-                * self.data.entry_props.tied_units.0
-                - self.theme.melody.note_outline * 2.0,
-            height: self.theme.melody.note_height,
-            origin: shapes::RectangleOrigin::BottomLeft,
+            width,
+            height,
+            origin: shapes::RectangleOrigin::Center,
         }
     }
     fn get_colors(&self) -> ShapeColors {
@@ -55,14 +71,15 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
             self.theme
                 .colors
                 .of_syllable(self.data.value.syllable()),
-            self.theme.melody.note_outline_color,
+            self.theme.colors.syllables.outline.of_state(&self.data.value.playing_state),
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
+        let outline = self.theme.sizes.melody.note_outline.of_state(&self.data.value.playing_state);
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
             outline_options: StrokeOptions::default()
-                .with_line_width(self.theme.melody.note_outline),
+                .with_line_width(outline),
         }
     }
     fn get_transform(&self) -> Transform {
@@ -75,7 +92,8 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         } else {
             0.0
         };
-        Transform::from_xyz(x, y, self.theme.strings.pick_z)
+        let (width, height) = self.calc_width_height();
+        Transform::from_xyz(x + width / 2.0, y + height / 2.0, self.theme.strings.pick_z)
     }
 }
 

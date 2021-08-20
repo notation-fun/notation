@@ -1,12 +1,32 @@
+use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::LyricWord;
+use notation_model::prelude::{LyricWord, PlayingState};
 
 use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme, SingleBundle};
 
-pub type WordText = SingleBundle<LyricWord>;
+#[derive(Clone, Debug)]
+pub struct WordTextValue {
+    pub word: LyricWord,
+    pub playing_state: PlayingState,
+}
+impl WordTextValue {
+    pub fn new(word: LyricWord) -> Self {
+        Self {
+            word,
+            playing_state: PlayingState::Idle,
+        }
+    }
+}
+impl Display for WordTextValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
-pub type WordTextData = EntryData<LyricWord>;
+pub type WordText = SingleBundle<WordTextValue>;
+
+pub type WordTextData = EntryData<WordTextValue>;
 
 pub struct WordTextShape<'a> {
     theme: &'a NotationTheme,
@@ -24,10 +44,10 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
         shapes::Line(Vec2::ZERO, Vec2::new(width, 0.0))
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.lyrics.line_color)
+        ShapeColors::new(self.theme.colors.lyrics.line.of_state(&self.data.value.playing_state))
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.lyrics.line_size;
+        let line_width = self.theme.sizes.lyrics.line_height.of_state(&self.data.value.playing_state);
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {

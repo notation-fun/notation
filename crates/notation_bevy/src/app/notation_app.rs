@@ -6,7 +6,7 @@ use bevy::window::WindowResized;
 
 use crate::prelude::*;
 
-use notation_midi::prelude::MidiPlugin;
+use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvt};
 use notation_model::prelude::*;
 
 use super::notation_app_state::{NotationAppState, TabPathes};
@@ -142,13 +142,16 @@ fn update_camera(
     _keyboard_input: Res<Input<KeyCode>>,
     keyboard_input: Res<Input<KeyCode>>,
     mouse_input: Res<Input<MouseButton>>,
-    mut state: ResMut<NotationAppState>,
     settings: Res<NotationSettings>,
+    mut state: ResMut<NotationAppState>,
+    mut midi_state: ResMut<MidiState>,
+    mut play_control_evts: EventWriter<PlayControlEvt>,
     mut mouse_motion_events: EventReader<MouseMotion>,
     mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,
 ) {
     if keyboard_input.just_released(KeyCode::Space) {
-        state.camera_panning = !state.camera_panning;
+        //state.camera_panning = !state.camera_panning;
+        super::top_panel::play_or_pause(&mut midi_state, &mut play_control_evts);
     }
 
     if state.camera_panning {

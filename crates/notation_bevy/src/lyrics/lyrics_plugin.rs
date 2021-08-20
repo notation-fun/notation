@@ -2,7 +2,7 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
 use crate::prelude::{LyonShapeOp, NotationTheme, WindowResizedEvent};
-use crate::word::word_text::{WordText, WordTextData, WordTextShape};
+use crate::word::word_text::{WordText, WordTextData, WordTextShape, WordTextValue};
 use notation_model::prelude::{BarLane, LyricEntry};
 
 use super::lyrics_grid::LyricsGrid;
@@ -35,7 +35,8 @@ impl LyricsPlugin {
     pub fn insert_entry_extra(commands: &mut EntityCommands, entry: &LyricEntry) {
         match entry {
             LyricEntry::Word(word, _duration) => {
-                commands.insert_bundle(WordText::from(word.clone()));
+                let value = WordTextValue::new(word.clone());
+                commands.insert_bundle(WordText::from(value));
             }
         }
     }

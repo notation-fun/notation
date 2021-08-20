@@ -43,8 +43,8 @@ pub fn sync_speed_factor(
 }
 
 pub fn send_play_state_evt(
-    play_control_evts: &mut EventWriter<PlayControlEvt>,
     midi_state: &MidiState,
+    play_control_evts: &mut EventWriter<PlayControlEvt>,
 ) {
     play_control_evts.send(PlayControlEvt::on_play_state(
         midi_state.play_control.play_state,
@@ -58,6 +58,21 @@ pub fn send_play_state_evt(
         midi_state.play_control.position,
         tick_result,
     ));
+}
+
+pub fn play_or_pause(
+    midi_state: &mut MidiState,
+    play_control_evts: &mut EventWriter<PlayControlEvt>,
+) {
+    if midi_state.play_control.play_state.is_playing() {
+        if midi_state.play_control.pause() {
+            send_play_state_evt(midi_state, play_control_evts);
+        }
+    } else {
+        if midi_state.play_control.play() {
+            send_play_state_evt(midi_state, play_control_evts);
+        }
+    }
 }
 
 pub fn top_panel_ui(
@@ -81,20 +96,12 @@ pub fn top_panel_ui(
                 "Play"
             };
             if ui.button(play_title).clicked() {
-                if midi_state.play_control.play_state.is_playing() {
-                    if midi_state.play_control.pause() {
-                        send_play_state_evt(&mut play_control_evts, &midi_state);
-                    }
-                } else {
-                    if midi_state.play_control.play() {
-                        send_play_state_evt(&mut play_control_evts, &midi_state);
-                    }
-                }
+                play_or_pause(&mut midi_state, &mut play_control_evts);
             }
             if !midi_state.play_control.play_state.is_stopped() {
                 if ui.button("Stop").clicked() {
                     if midi_state.play_control.stop() {
-                        send_play_state_evt(&mut play_control_evts, &midi_state);
+                        send_play_state_evt(&midi_state, &mut play_control_evts);
                     }
                 }
             }

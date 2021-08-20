@@ -29,6 +29,15 @@ impl PlayingColors {
         }
     }
 }
+impl Default for PlayingColors {
+    fn default() -> Self {
+        Self::new(
+            color_of_hex("FFFFFF"),
+            color_of_hex("FF00FF"),
+            color_of_hex("555555"),
+        )
+    }
+}
 
 pub fn color_of_hex(hex: &str) -> Color {
     Color::hex(hex).unwrap()
@@ -38,7 +47,9 @@ pub fn color_of_hex(hex: &str) -> Color {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeColors {
     pub syllables: SyllableColors,
+    pub lyrics: LyricsColors,
     pub sections: SectionColors,
+    pub strings: StringsColors,
     pub mini_map: MiniMapColors,
 }
 
@@ -48,29 +59,11 @@ pub struct SyllableColors {
     pub syllables: [Color; 12],
     pub outline: PlayingColors,
 }
-
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
-pub struct SectionColors {
-    pub sections: [Color; 6],
-}
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
-pub struct MiniMapColors {
-    pub back: Color,
-    pub bar_outline: PlayingColors,
-}
-
 //https://meyerweb.com/eric/tools/color-blend/
-
 impl Default for SyllableColors {
     fn default() -> Self {
         Self {
-            outline: PlayingColors::new(
-                color_of_hex("000000"),
-                color_of_hex("CC00CC"),
-                color_of_hex("FFF9F2"),
-            ),
+            outline: PlayingColors::default(),
             syllables: [
                 color_of_hex("E94F4F"), // Do
                 color_of_hex("99572C"), // Di, Ra
@@ -88,6 +81,40 @@ impl Default for SyllableColors {
         }
     }
 }
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct LyricsColors {
+    pub line: PlayingColors,
+    pub text: PlayingColors,
+}
+impl Default for LyricsColors {
+    fn default() -> Self {
+        Self {
+            line: PlayingColors::default(),
+            text: PlayingColors::default(),
+        }
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct StringsColors {
+    pub outline: PlayingColors,
+}
+impl Default for StringsColors {
+    fn default() -> Self {
+        Self {
+            outline: PlayingColors::default(),
+        }
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct SectionColors {
+    pub sections: [Color; 6],
+}
 impl Default for SectionColors {
     fn default() -> Self {
         Self {
@@ -103,15 +130,17 @@ impl Default for SectionColors {
     }
 }
 
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct MiniMapColors {
+    pub back: Color,
+    pub bar_outline: PlayingColors,
+}
 impl Default for MiniMapColors {
     fn default() -> Self {
         Self {
             back: color_of_hex("FFF9F2"),
-            bar_outline: PlayingColors::new(
-                color_of_hex("FFFFFF"),
-                color_of_hex("CC00CC"),
-                color_of_hex("333333"),
-            ),
+            bar_outline: PlayingColors::default(),
         }
     }
 }

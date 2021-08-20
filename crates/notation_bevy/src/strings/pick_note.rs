@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{PickNote, Syllable};
+use notation_model::prelude::{PickNote, PlayingState, Syllable};
 
 use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme};
 
@@ -10,6 +10,7 @@ pub type PickNoteData = EntryData<PickNoteValue>;
 pub struct PickNoteValue {
     pub pick_note: PickNote,
     pub syllable: Syllable,
+    pub playing_state: PlayingState,
 }
 
 impl PickNoteValue {
@@ -17,12 +18,28 @@ impl PickNoteValue {
         Self {
             pick_note,
             syllable,
+            playing_state: PlayingState::Idle,
         }
     }
 }
 pub struct PickNoteShape<'a> {
     theme: &'a NotationTheme,
     data: PickNoteData,
+}
+
+impl<'a> PickNoteShape<'a> {
+    fn calc_width_height(&self) -> (f32, f32) {
+        let outline = self.theme.sizes.strings.note_outline.of_state(&self.data.value.playing_state);
+        let mut width = self.theme.grid.bar_size / self.data.bar_props.bar_units.0
+                * self.data.entry_props.tied_units.0;
+        let mut height = self.theme.sizes.strings.note_height;
+        if self.data.value.playing_state.is_current() {
+            height +=  outline;
+        } else {
+            width -= outline * 2.0;
+        }
+        (width, height)
+    }
 }
 
 impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
@@ -33,12 +50,11 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
         )
     }
     fn get_shape(&self) -> shapes::Rectangle {
+        let (width, height) = self.calc_width_height();
         shapes::Rectangle {
-            width: self.theme.grid.bar_size / self.data.bar_props.bar_units.0
-                * self.data.entry_props.tied_units.0
-                - self.theme.strings.note_outline * 2.0,
-            height: self.theme.strings.note_height,
-            origin: shapes::RectangleOrigin::BottomLeft,
+            width,
+            height,
+            origin: shapes::RectangleOrigin::Center,
         }
     }
     fn get_colors(&self) -> ShapeColors {
@@ -46,14 +62,15 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
             self.theme
                 .colors
                 .of_syllable(self.data.value.syllable),
-            self.theme.strings.note_outline_color,
+            self.theme.colors.strings.outline.of_state(&self.data.value.playing_state),
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
+        let outline = self.theme.sizes.strings.note_outline.of_state(&self.data.value.playing_state);
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
             outline_options: StrokeOptions::default()
-                .with_line_width(self.theme.strings.note_outline),
+                .with_line_width(outline),
         }
     }
     fn get_transform(&self) -> Transform {
@@ -63,7 +80,8 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
             * self.theme.strings.string_space
             * (self.data.value.pick_note.string as f32 - 0.5)
             - self.theme.strings.note_height / 2.0;
-        Transform::from_xyz(x, y, self.theme.strings.pick_z)
+        let (width, height) = self.calc_width_height();
+        Transform::from_xyz(x + width / 2.0, y + height / 2.0, self.theme.strings.pick_z)
     }
 }
 
