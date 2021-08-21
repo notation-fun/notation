@@ -37,9 +37,9 @@ impl PlayPlugin {
     ) {
         if let Some(bar_layout) = bar_layout {
             let bar_data = BarIndicatorData::new(tab.bar_units(), bar_layout);
-            BarIndicator::create(commands, entity, &theme, bar_data);
+            BarIndicator::create(commands, &theme, entity, bar_data);
             let pos_data = PosIndicatorData::new(tab.bar_units(), bar_layout);
-            PosIndicator::create(commands, entity, &theme, pos_data);
+            PosIndicator::create(commands, &theme, entity, pos_data);
         }
     }
 }
@@ -91,34 +91,34 @@ fn on_tab_play_state_changed(
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying)>,
     mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
-    mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,
+    mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
 ) {
     for (state_entity, bar_layouts, tab_state) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
+        BarIndicator::update_pos(
+            &mut commands,
+            &theme,
+            &settings,
+            &mut bar_indicator_query,
+            bar_layouts,
+            tab_state.play_control.position,
+        );
+        PosIndicator::update_pos(
+            &mut commands,
+            &theme,
+            &settings,
+            &mut pos_indicator_query,
+            bar_layouts,
+            tab_state.play_control.position,
+        );
+        settings.layout.focus_bar(
+            &mut commands,
+            &mut tab_bars_query,
+            bar_layouts,
+            theme.grid.bar_size,
+            &tab_state,
+        );
         if !tab_state.play_control.play_state.is_playing() {
-            BarIndicator::update_pos(
-                &mut commands,
-                &theme,
-                &settings,
-                &mut bar_indicator_query,
-                bar_layouts,
-                tab_state.play_control.position,
-            );
-            PosIndicator::update_pos(
-                &mut commands,
-                &theme,
-                &settings,
-                &mut pos_indicator_query,
-                bar_layouts,
-                tab_state.play_control.position,
-            );
-            settings.layout.focus_bar(
-                &mut commands,
-                &mut tab_bars_query,
-                bar_layouts,
-                theme.grid.bar_size,
-                &tab_state,
-            );
             let playing_bar_ordinal = tab_state.play_control.position.bar.bar_ordinal;
             update_bar_playings(tab_state, playing_bar_ordinal, &mut bar_playing_query);
             for (_entity, _entry, mut entry_state) in entry_playing_query.iter_mut() {
@@ -146,7 +146,7 @@ fn on_tick(
     pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData)>,
     bar_playing_query: &mut Query<(Entity, &mut BarPlaying)>,
     entry_playing_query: &mut Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
-    tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
+    tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
     state_entity: Entity,
     bar_layouts: &Arc<Vec<BarLayout>>,
     tab_state: &mut TabState,
@@ -251,7 +251,7 @@ fn on_play_control_evt(
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying)>,
     mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
-    mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,
+    mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
 ) {
     for evt in evts.iter() {
         for (state_entity, bar_layouts, mut tab_state) in tab_state_query.iter_mut() {

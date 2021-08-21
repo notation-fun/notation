@@ -22,6 +22,21 @@ impl PickNoteValue {
         }
     }
 }
+
+impl PickNoteData {
+    pub fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
+        let outline = theme.sizes.strings.note_outline.of_state(&self.value.playing_state);
+        let mut width = theme.grid.bar_size / self.bar_props.bar_units.0
+                * self.entry_props.tied_units.0;
+        let mut height = theme.sizes.strings.note_height;
+        if self.value.playing_state.is_current() {
+            height +=  outline;
+        } else {
+            width -= outline * 2.0;
+        }
+        (width, height)
+    }
+}
 pub struct PickNoteShape<'a> {
     theme: &'a NotationTheme,
     data: PickNoteData,
@@ -29,16 +44,7 @@ pub struct PickNoteShape<'a> {
 
 impl<'a> PickNoteShape<'a> {
     fn calc_width_height(&self) -> (f32, f32) {
-        let outline = self.theme.sizes.strings.note_outline.of_state(&self.data.value.playing_state);
-        let mut width = self.theme.grid.bar_size / self.data.bar_props.bar_units.0
-                * self.data.entry_props.tied_units.0;
-        let mut height = self.theme.sizes.strings.note_height;
-        if self.data.value.playing_state.is_current() {
-            height +=  outline;
-        } else {
-            width -= outline * 2.0;
-        }
-        (width, height)
+        self.data.calc_width_height(self.theme)
     }
 }
 
@@ -85,7 +91,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, PickNoteData, shapes::Rectangle, PickNoteShape<'a>> for PickNoteShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, PickNoteData, shapes::Rectangle, PickNoteShape<'a>> for PickNoteShape<'a> {
     fn new_shape(theme: &'a NotationTheme, data: PickNoteData) -> PickNoteShape<'a> {
         PickNoteShape::<'a> { theme, data }
     }

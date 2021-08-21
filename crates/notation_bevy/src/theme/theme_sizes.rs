@@ -95,7 +95,7 @@ impl Default for MiniMapSizes {
     fn default() -> Self {
         Self {
             min_bar_width: 4.0,
-            max_bar_width: 128.0,
+            max_bar_width: 1024.0,
             bar_height: 24.0,
             bar_outline: PlayingSize::new(0.5, 2.0, 1.0),
             section_separator: 2.0,

@@ -46,7 +46,7 @@ macro_rules! impl_shape_diagram {
         }
 
         impl<'a>
-            LyonShapeOp<'a, $diagram_data, shapes::SvgPathShape, $diagram<'a>>
+            LyonShapeOp<'a, NotationTheme, $diagram_data, shapes::SvgPathShape, $diagram<'a>>
             for $diagram<'a>
         {
             fn new_shape(theme: &'a NotationTheme, data: $diagram_data) -> $diagram<'a> {

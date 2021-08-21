@@ -5,11 +5,7 @@ use bevy::prelude::*;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::mini::mini_bar::{MiniBarLayout};
-use crate::mini::mini_map::MiniMapBackData;
 use crate::prelude::{BarLayout, NotationAppState, NotationSettings};
-
-use super::theme_sizes::MiniMapSizes;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -53,42 +49,13 @@ impl GridTheme {
             (app_state.window_width - self.margin * 2.0) / settings.layout.bars_in_window as f32;
         self.bar_size = bar_size;
     }
-    pub fn calc_tab_transform(
-        &self,
-        app_state: &NotationAppState,
-        settings: &NotationSettings,
-    ) -> Transform {
-        let x = (self.bar_size * settings.layout.bars_in_window as f32) * -0.5;
-        let y = app_state.window_height / 2.0 - self.margin - self.header_height;
-        Transform::from_xyz(x, y, 0.0)
-    }
-    pub fn calc_mini_map_transform(
-        &self,
-        app_state: &NotationAppState,
-        sizes: &MiniMapSizes,
-        mini_bar_layout: &MiniBarLayout,
-    ) -> (Transform, MiniMapBackData) {
-        let space = app_state.window_width - mini_bar_layout.width * mini_bar_layout.cols as f32;
-        let x = space / 2.0 - self.margin;
-        let mut y =
-            -app_state.window_height + self.margin + self.header_height + sizes.margin;
-        if mini_bar_layout.rows > 1 {
-            y += (mini_bar_layout.rows - 1) as f32 * sizes.bar_height_with_margin();
-        }
-        let transform = Transform::from_xyz(x, y, 0.0);
-        let height = mini_bar_layout.rows as f32 * sizes.bar_height
-            + (mini_bar_layout.rows + 1) as f32 * sizes.margin;
-        let back_data = MiniMapBackData {
-            x: -space / 2.0,
-            y: sizes.bar_height_with_margin(),
-            width: app_state.window_width,
-            height,
-        };
-        (transform, back_data)
+    pub fn add_margin(&self, transform: Transform) -> Transform {
+        let trans = transform.translation;
+        Transform::from_xyz(trans.x + self.margin, trans.y - self.margin - self.header_height, trans.z)
     }
     pub fn calc_bar_transform(&self, layout: &BarLayout) -> Transform {
         let x = self.bar_size * layout.data.col as f32;
         let y = layout.offset;
-        Transform::from_xyz(x, y, 0.0)
+        self.add_margin(Transform::from_xyz(x, y, 0.0))
     }
 }

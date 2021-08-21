@@ -54,6 +54,6 @@ fn on_add_lane_layout(
 ) {
     for (entity, tab_bar, lane_layout) in query.iter() {
         let data = LaneBackData::new(tab_bar, lane_layout);
-        LaneBack::create(&mut commands, entity, &theme, data);
+        LaneBack::create(&mut commands, &theme, entity, data);
     }
 }

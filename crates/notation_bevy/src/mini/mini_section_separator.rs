@@ -45,7 +45,7 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, MiniSectionSeparatorData, shapes::Line, MiniSectionSeparator<'a>>
+impl<'a> LyonShapeOp<'a, NotationTheme, MiniSectionSeparatorData, shapes::Line, MiniSectionSeparator<'a>>
     for MiniSectionSeparator<'a>
 {
     fn new_shape(

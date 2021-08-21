@@ -35,7 +35,7 @@ impl Default for CoreTheme {
             beat_color2: None,
             beat_z: 0.0,
             bar_indicator_z: 19.0,
-            pos_indicator_color: Color::hex("FF00FF").unwrap(),
+            pos_indicator_color: Color::hex("00FF00").unwrap(),
             pos_indicator_z: 20.0,
             mini_map_z: 22.0,
             mini_bar_z: 24.0,

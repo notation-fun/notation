@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use bevy::app::PluginGroupBuilder;
 use bevy::input::mouse::MouseMotion;
 use bevy::prelude::*;
@@ -147,13 +149,13 @@ fn update_camera(
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvt>,
     mut mouse_motion_events: EventReader<MouseMotion>,
-    mut tab_bars_query: Query<(Entity, &mut Transform, &TabBars)>,
+    mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
 ) {
-    if keyboard_input.just_released(KeyCode::Space) {
-        //state.camera_panning = !state.camera_panning;
+    if keyboard_input.just_released(KeyCode::LControl) {
+        state.camera_panning = !state.camera_panning;
+    } else if keyboard_input.just_released(KeyCode::Space) {
         super::top_panel::play_or_pause(&mut midi_state, &mut play_control_evts);
     }
-
     if state.camera_panning {
         for event in mouse_motion_events.iter() {
             if mouse_input.pressed(MouseButton::Left) {

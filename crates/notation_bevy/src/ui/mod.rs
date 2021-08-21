@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_egui::EguiSettings;
 
+pub mod layout;
+
 pub struct NotationUiPlugin;
 
 impl Plugin for NotationUiPlugin {

@@ -17,10 +17,12 @@ default = [
 
 dev = [
     #"bevy/dynamic",
+    "bevy_utils/dev",
 ]
 
 inspector = [
     "bevy-inspector-egui",
+    "bevy_utils/inspector",
     "notation_midi/inspector",
 ]
 
@@ -29,6 +31,8 @@ native = [
 ]
 
 [dependencies]
+bevy_utils = { path = "../bevy_utils" }
+
 notation_model = { path = "../notation_model" }
 notation_midi = { path = "../notation_midi" }
 

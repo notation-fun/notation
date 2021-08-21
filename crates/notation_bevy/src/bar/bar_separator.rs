@@ -67,7 +67,7 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, BarSeparatorData, shapes::Line, BarSeparator<'a>> for BarSeparator<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, BarSeparatorData, shapes::Line, BarSeparator<'a>> for BarSeparator<'a> {
     fn new_shape(theme: &'a NotationTheme, data: BarSeparatorData) -> BarSeparator<'a> {
         BarSeparator::<'a> { theme, data }
     }

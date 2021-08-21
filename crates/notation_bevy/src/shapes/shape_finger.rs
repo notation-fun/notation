@@ -53,7 +53,7 @@ impl<'a> LyonShape<shapes::Circle> for ShapeFingerShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, ShapeFingerData, shapes::Circle, ShapeFingerShape<'a>>
+impl<'a> LyonShapeOp<'a, NotationTheme, ShapeFingerData, shapes::Circle, ShapeFingerShape<'a>>
     for ShapeFingerShape<'a>
 {
     fn new_shape(theme: &'a NotationTheme, data: ShapeFingerData) -> ShapeFingerShape<'a> {

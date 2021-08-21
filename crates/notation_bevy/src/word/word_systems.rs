@@ -26,7 +26,7 @@ fn on_word_text(
             continue;
         }
         let data = WordTextData::new(entry, text.clone());
-        WordTextShape::create_with_child(&mut commands, entity, &theme, data, |child_commands| {
+        WordTextShape::create_with_child(&mut commands, &theme, entity, data, |child_commands| {
             if text.word.text != "" {
                 theme
                     .lyrics

@@ -96,22 +96,22 @@ impl BarPlugin {
         if bar_layout.data.col == 0 {
             BarSeparator::create(
                 commands,
-                bar_entity,
                 &theme,
+                bar_entity,
                 BarSeparatorData::new(&bar, bar_layout, true),
             );
         }
         BarSeparator::create(
             commands,
-            bar_entity,
             &theme,
+            bar_entity,
             BarSeparatorData::new(&bar, bar_layout, false),
         );
         let signature = bar.signature();
         for beat in 0..signature.bar_beats {
             BarBeatValue::may_new(&theme, &bar, &signature, bar_layout, beat)
                 .map(|value| BarBeatData::new(&bar, value))
-                .map(|data| BarBeat::create(commands, bar_entity, theme, data));
+                .map(|data| BarBeat::create(commands, theme, bar_entity, data));
         }
     }
 }

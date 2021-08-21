@@ -91,8 +91,16 @@ pub struct LyricsColors {
 impl Default for LyricsColors {
     fn default() -> Self {
         Self {
-            line: PlayingColors::default(),
-            text: PlayingColors::default(),
+            line: PlayingColors::new(
+                color_of_hex("000000"),
+                color_of_hex("FF00FF"),
+                color_of_hex("555555"),
+            ),
+            text: PlayingColors::new(
+                color_of_hex("000000"),
+                color_of_hex("FF00FF"),
+                color_of_hex("555555"),
+            ),
         }
     }
 }
@@ -139,7 +147,8 @@ pub struct MiniMapColors {
 impl Default for MiniMapColors {
     fn default() -> Self {
         Self {
-            back: color_of_hex("FFF9F2"),
+            //back: color_of_hex("FFF9F2"),
+            back: color_of_hex("333333"),
             bar_outline: PlayingColors::default(),
         }
     }

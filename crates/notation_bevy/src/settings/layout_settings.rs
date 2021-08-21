@@ -224,7 +224,7 @@ impl LayoutSettings {
     }
     pub fn pan_tab_bars(
         &self,
-        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
         delta_x: f32,
         delta_y: f32,
     ) {
@@ -239,7 +239,7 @@ impl LayoutSettings {
     }
     pub fn set_tab_bars_xy(
         &self,
-        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
         x: Option<f32>,
         y: Option<f32>,
     ) {
@@ -252,7 +252,7 @@ impl LayoutSettings {
     pub fn ease_tab_bars_xy(
         &self,
         commands: &mut Commands,
-        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
         x: Option<f32>,
         y: Option<f32>,
     ) {
@@ -307,7 +307,7 @@ impl LayoutSettings {
     pub fn focus_bar(
         &self,
         commands: &mut Commands,
-        tab_bars_query: &mut Query<(Entity, &mut Transform, &TabBars)>,
+        tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
         bar_layouts: &Arc<Vec<BarLayout>>,
         bar_size: f32,
         state: &TabState,
@@ -334,25 +334,5 @@ impl LayoutSettings {
                 }
             }
         }
-    }
-    pub fn calc_mini_bar_layout(&self, app_state: &NotationAppState, sizes: &MiniMapSizes, bars: usize) -> MiniBarLayout {
-        if bars == 0 {
-            return MiniBarLayout::new(0, 0, sizes.max_bar_width);
-        }
-        let content_width = app_state.window_width - sizes.margin * 2.0;
-        let mut width = content_width / bars as f32;
-        let mut rows = 1;
-        let mut cols = bars;
-        if width < sizes.min_bar_width {
-            width = sizes.min_bar_width;
-            cols = (content_width / width).floor() as usize;
-            rows = bars / cols;
-            if bars % cols > 0 {
-                rows += 1;
-            }
-        } else if width > sizes.max_bar_width {
-            width = sizes.max_bar_width;
-        }
-        MiniBarLayout::new(rows, cols, width)
     }
 }

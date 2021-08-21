@@ -26,8 +26,8 @@ macro_rules! impl_on_add_hand_shape {
                 let data = $diagram_data::new(entry, *shape);
                 let diagram_entity = $diagram::create_with_child(
                     &mut commands,
-                    entity,
                     &theme,
+                    entity,
                     data,
                     |child_commands| {
                         if let Some(mark) = entry.model().prev_as_mark() {
@@ -42,8 +42,8 @@ macro_rules! impl_on_add_hand_shape {
                         let finger_data = ShapeFingerData::new(string as u8, *fret, None);
                         ShapeFingerShape::create(
                             &mut commands,
-                            diagram_entity,
                             &theme,
+                            diagram_entity,
                             finger_data,
                         );
                     }

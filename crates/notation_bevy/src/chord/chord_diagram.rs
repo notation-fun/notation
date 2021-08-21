@@ -47,7 +47,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, ChordData, shapes::Circle, ChordDiagram<'a>> for ChordDiagram<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, ChordData, shapes::Circle, ChordDiagram<'a>> for ChordDiagram<'a> {
     fn new_shape(theme: &'a NotationTheme, data: ChordData) -> ChordDiagram<'a> {
         ChordDiagram::<'a> { theme, data }
     }
@@ -64,7 +64,7 @@ impl<'a> ChordDiagram<'a> {
     ) -> Entity {
         let chord_value = ChordValue { size, chord };
         let chord_data = ChordData::new(bar, chord_value);
-        let diagram_entity = ChordDiagram::create(commands, entity, theme, chord_data);
+        let diagram_entity = ChordDiagram::create(commands, theme, entity, chord_data);
         let intervals = chord.intervals.get_intervals();
         for (index, interval) in intervals.iter().enumerate() {
             let interval_value = ChordIntervalValue {
@@ -76,7 +76,7 @@ impl<'a> ChordDiagram<'a> {
             };
             let interval_data = ChordIntervalData::new(bar, interval_value);
             let interval_entity =
-                ChordInterval::create(commands, diagram_entity, theme, interval_data);
+                ChordInterval::create(commands, theme, diagram_entity, interval_data);
             commands
                 .entity(diagram_entity)
                 .push_children(&[interval_entity]);
@@ -92,7 +92,7 @@ impl<'a> ChordDiagram<'a> {
             let base_data = ChordBaseData::new(bar, ChordBaseValue {
                 interval: interval_value,
             });
-            let base_entity = ChordBase::create(commands, diagram_entity, theme, base_data);
+            let base_entity = ChordBase::create(commands, theme, diagram_entity, base_data);
             commands
                 .entity(diagram_entity)
                 .push_children(&[base_entity]);

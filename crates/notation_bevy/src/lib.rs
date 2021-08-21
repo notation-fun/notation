@@ -27,7 +27,6 @@ pub mod strings;
 pub mod data;
 pub mod settings;
 pub mod theme;
-pub mod utils;
 
 pub mod app;
 pub mod ext;
@@ -41,6 +40,12 @@ pub mod inspector;
 pub mod dev;
 
 pub mod prelude {
+    pub struct NotationLabels();
+    impl NotationLabels {
+        pub const TAB: &'static str = "tab";
+        pub const MINI_MAP: &'static str = "mini_map";
+    }
+
     #[doc(hidden)]
     pub use crate::app::notation_app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
@@ -126,13 +131,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tone::tone_mode::ToneMode;
     #[doc(hidden)]
+    pub use crate::ui::layout::NotationLayout;
+    #[doc(hidden)]
     pub use crate::ui::NotationUiPlugin;
     #[doc(hidden)]
-    pub use crate::utils::bevy_util::BevyUtil;
-    #[doc(hidden)]
-    pub use crate::utils::lyon_shape::{LyonShape, LyonShapeOp};
-    #[doc(hidden)]
-    pub use crate::utils::single_bundle::SingleBundle;
-    #[doc(hidden)]
     pub use crate::viewer::run_notation_viewer;
+    #[doc(hidden)]
+    pub use bevy_utils::prelude::*;
 }

@@ -58,7 +58,7 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, WordTextData, shapes::Line, WordTextShape<'a>> for WordTextShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, WordTextData, shapes::Line, WordTextShape<'a>> for WordTextShape<'a> {
     fn new_shape(theme: &'a NotationTheme, data: WordTextData) -> WordTextShape<'a> {
         WordTextShape::<'a> { theme, data }
     }

@@ -31,7 +31,7 @@ fn create_tone_notes(
             let bar = lane.bar().unwrap();
             for note in tone.get_notes() {
                 let data = ToneNoteData::new(entry, ToneNoteValue::new(&bar, note, *mode));
-                ToneNoteShape::create(&mut commands, entity, &theme, data);
+                ToneNoteShape::create(&mut commands, &theme, entity, data);
             }
         }
     }

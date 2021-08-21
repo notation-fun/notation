@@ -21,8 +21,8 @@ macro_rules! impl_strings_grid {
                 for string in 1..=$strings {
                     SingleString::create(
                         commands,
-                        entity,
                         theme,
+                        entity,
                         SingleStringData::new(lane, string as u8),
                     );
                 }

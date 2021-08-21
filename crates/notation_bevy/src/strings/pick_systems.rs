@@ -57,10 +57,11 @@ macro_rules! impl_pick_system {
                                     entry,
                                     PickNoteValue::new(pick_note, syllable),
                                 );
+                                let (width, height) = data.calc_width_height(&theme);
                                 PickNoteShape::create_with_child(
                                     &mut commands,
-                                    entity,
                                     &theme,
+                                    entity,
                                     data,
                                     |child_commands| {
                                         if settings.always_show_fret || pick_note.fret.is_some() {
@@ -68,6 +69,7 @@ macro_rules! impl_pick_system {
                                                 child_commands,
                                                 &asset_server,
                                                 fret,
+                                                width, height
                                             );
                                         }
                                     },

@@ -9,13 +9,15 @@ pub struct MiniBarLayout {
     pub rows: usize,
     pub cols: usize,
     pub width: f32,
+    pub x_offset: f32,
 }
 impl MiniBarLayout {
-    pub fn new(rows: usize, cols: usize, width: f32) -> Self {
+    pub fn new(rows: usize, cols: usize, width: f32, x_offset: f32) -> Self {
         Self {
             rows,
             cols,
             width,
+            x_offset,
         }
     }
     pub fn calc_xy(&self, sizes: &MiniMapSizes, bar_ordinal: usize) -> (f32, f32) {
@@ -27,7 +29,7 @@ impl MiniBarLayout {
             row = self.rows - 1;
         }
         let y = -1.0 * row as f32 * sizes.bar_height_with_margin();
-        (x, y)
+        (x + self.x_offset, y + sizes.margin)
     }
 }
 
@@ -103,7 +105,7 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, MiniBarData, shapes::Rectangle, MiniBarShape<'a>> for MiniBarShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, MiniBarData, shapes::Rectangle, MiniBarShape<'a>> for MiniBarShape<'a> {
     fn new_shape(theme: &'a NotationTheme, data: MiniBarData) -> MiniBarShape<'a> {
         MiniBarShape::<'a> { theme, data }
     }

@@ -67,7 +67,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordInterval<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, ChordIntervalData, shapes::Circle, ChordInterval<'a>>
+impl<'a> LyonShapeOp<'a, NotationTheme, ChordIntervalData, shapes::Circle, ChordInterval<'a>>
     for ChordInterval<'a>
 {
     fn new_shape(theme: &'a NotationTheme, data: ChordIntervalData) -> ChordInterval<'a> {

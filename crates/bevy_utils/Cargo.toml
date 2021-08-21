@@ -1,0 +1,43 @@
+[package]
+name = "bevy_utils"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+
+[features]
+default = [
+    "bevy/bevy_gltf",
+    "bevy/bevy_winit",
+    "bevy/render",
+    "bevy/png",
+]
+
+inspector = [
+    "bevy-inspector-egui",
+]
+
+dev = [
+]
+
+[dependencies]
+serde = {version = "1.0.126", features = ["derive"]}
+# https://github.com/serde-rs/serde/issues/1937
+serde_arrays = "0.1.0"
+anyhow = "1.0"
+ron = "0.6"
+float_eq = "0.6"
+
+bevy = { version = "0.5.0", default-features = false }
+winit = "0.24.0"
+rand = "0.8"
+getrandom = {version="0.2", features=["wasm-bindgen"]}
+
+bevy_prototype_lyon = "0.3.1"
+bevy_asset_loader = "0.4.0"
+bevy_egui = "0.6"
+bevy_easings = { path = "../../lib/bevy_easings" }
+
+bevy-inspector-egui = { version = "0.5.1", optional = true }

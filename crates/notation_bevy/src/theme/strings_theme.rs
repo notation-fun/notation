@@ -48,6 +48,8 @@ impl StringsTheme {
         entity_commands: &mut EntityCommands,
         asset_server: &AssetServer,
         fret: u8,
+        note_width: f32,
+        note_height: f32,
     ) {
         let font = asset_server.load("fonts/FiraMono-Medium.ttf");
         let style = TextStyle {
@@ -61,7 +63,10 @@ impl StringsTheme {
         };
         entity_commands.insert_bundle(Text2dBundle {
             text: Text::with_section(format!("{}", fret).as_str(), style, alignment),
-            transform: Transform::from_xyz(self.fret_text_x, self.fret_text_y, self.fret_text_z),
+            transform: Transform::from_xyz(
+                self.fret_text_x - note_width / 2.0,
+                self.fret_text_y - note_height / 2.0,
+                self.fret_text_z),
             ..Default::default()
         });
     }

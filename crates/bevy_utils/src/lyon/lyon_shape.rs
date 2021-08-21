@@ -3,8 +3,6 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::entity::ShapeBundle;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::prelude::NotationTheme;
-
 pub trait LyonShape<T: Geometry> {
     fn get_name(&self) -> String;
     fn get_shape(&self) -> T;
@@ -39,12 +37,12 @@ pub trait LyonShape<T: Geometry> {
     }
 }
 
-pub trait LyonShapeOp<'a, Data: Clone + Send + Sync + 'static, T: Geometry, Op: LyonShape<T>> {
-    fn new_shape(theme: &'a NotationTheme, data: Data) -> Op;
+pub trait LyonShapeOp<'a, Theme, Data: Clone + Send + Sync + 'static, T: Geometry, Op: LyonShape<T>> {
+    fn new_shape(theme: &'a Theme, data: Data) -> Op;
     fn create(
         commands: &mut Commands,
+        theme: &'a Theme,
         entity: Entity,
-        theme: &'a NotationTheme,
         data: Data,
     ) -> Entity {
         let shape = Self::new_shape(theme, data.clone());
@@ -54,22 +52,22 @@ pub trait LyonShapeOp<'a, Data: Clone + Send + Sync + 'static, T: Geometry, Op: 
     }
     fn create_with_child<F>(
         commands: &mut Commands,
+        theme: &'a Theme,
         entity: Entity,
-        theme: &'a NotationTheme,
         data: Data,
         setup_child: F,
     ) -> Entity
     where
         F: Fn(&mut EntityCommands),
     {
-        let entity = Self::create(commands, entity, theme, data);
+        let entity = Self::create(commands, theme, entity, data);
         let mut child_commands = commands.spawn();
         setup_child(&mut child_commands);
         let child_entity = child_commands.id();
         commands.entity(entity).push_children(&[child_entity]);
         entity
     }
-    fn update(commands: &mut Commands, theme: &'a NotationTheme, entity: Entity, data: &Data) {
+    fn update(commands: &mut Commands, theme: &'a Theme, entity: Entity, data: &Data) {
         let shape = Self::new_shape(theme, data.clone());
         shape.update_lyon(commands, entity);
     }

@@ -83,7 +83,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, BarBeatData, shapes::Rectangle, BarBeat<'a>> for BarBeat<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, BarBeatData, shapes::Rectangle, BarBeat<'a>> for BarBeat<'a> {
     fn new_shape(theme: &'a NotationTheme, data: BarBeatData) -> BarBeat<'a> {
         BarBeat::<'a> { theme, data }
     }

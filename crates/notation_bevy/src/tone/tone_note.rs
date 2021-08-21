@@ -97,7 +97,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, ToneNoteData, shapes::Rectangle, ToneNoteShape<'a>> for ToneNoteShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, ToneNoteData, shapes::Rectangle, ToneNoteShape<'a>> for ToneNoteShape<'a> {
     fn new_shape(theme: &'a NotationTheme, data: ToneNoteData) -> ToneNoteShape<'a> {
         ToneNoteShape::<'a> { theme, data }
     }

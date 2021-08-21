@@ -56,11 +56,11 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
     fn get_transform(&self) -> Transform {
         let x = self.theme.grid.bar_size * self.data.bar_col as f32;
         let y = self.data.bar_offset + self.theme.grid.bar_separator_extra;
-        Transform::from_xyz(x, y, self.theme.core.bar_indicator_z)
+        self.theme.grid.add_margin(Transform::from_xyz(x, y, self.theme.core.bar_indicator_z))
     }
 }
 
-impl<'a> LyonShapeOp<'a, BarIndicatorData, shapes::Rectangle, BarIndicator<'a>>
+impl<'a> LyonShapeOp<'a, NotationTheme, BarIndicatorData, shapes::Rectangle, BarIndicator<'a>>
     for BarIndicator<'a>
 {
     fn new_shape(theme: &'a NotationTheme, data: BarIndicatorData) -> BarIndicator<'a> {
