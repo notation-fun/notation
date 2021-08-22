@@ -33,7 +33,9 @@ impl<'a> LyonShape<shapes::Line> for SingleString<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, SingleStringData, shapes::Line, SingleString<'a>> for SingleString<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, SingleStringData, shapes::Line, SingleString<'a>>
+    for SingleString<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: SingleStringData) -> SingleString<'a> {
         SingleString::<'a> { theme, data }
     }

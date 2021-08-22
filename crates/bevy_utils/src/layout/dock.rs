@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-use crate::prelude::{LayoutAnchor, LayoutConstraint, LayoutData, LayoutEnv, LayoutSize, LayoutQuery, View, ViewQuery};
+use crate::prelude::{
+    LayoutAnchor, LayoutConstraint, LayoutData, LayoutEnv, LayoutQuery, LayoutSize, View, ViewQuery,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DockSide {
@@ -12,14 +14,10 @@ pub enum DockSide {
 impl From<DockSide> for LayoutAnchor {
     fn from(v: DockSide) -> Self {
         match v {
-            DockSide::Top =>
-                LayoutAnchor::TOP,
-            DockSide::Bottom =>
-                LayoutAnchor::BOTTOM,
-            DockSide::Left =>
-                LayoutAnchor::LEFT,
-            DockSide::Right =>
-                LayoutAnchor::RIGHT,
+            DockSide::Top => LayoutAnchor::TOP,
+            DockSide::Bottom => LayoutAnchor::BOTTOM,
+            DockSide::Left => LayoutAnchor::LEFT,
+            DockSide::Right => LayoutAnchor::RIGHT,
         }
     }
 }
@@ -37,14 +35,18 @@ pub trait DockPanel<TE: LayoutEnv>: View<TE> {
 }
 
 pub trait DockView<TE: LayoutEnv, TP: DockPanel<TE>, TC: View<TE>>: View<TE> {
-    fn do_layout(&self, engine: &TE,
+    fn do_layout(
+        &self,
+        engine: &TE,
         layout_query: &mut LayoutQuery,
         panel_query: &ViewQuery<TP>,
         content_query: &ViewQuery<TC>,
         entity: Entity,
         data: LayoutData,
     ) {
-        self.set_layout_data(layout_query, entity, data);
+        if self.is_root() {
+            self.set_layout_data(layout_query, entity, data);
+        }
         let panel = engine.get_child(panel_query, entity);
         let content = engine.get_child(content_query, entity);
         if panel.is_none() || content.is_none() {
@@ -53,17 +55,22 @@ pub trait DockView<TE: LayoutEnv, TP: DockPanel<TE>, TC: View<TE>>: View<TE> {
         let panel = panel.unwrap();
         let content = content.unwrap();
         let panel_constraint = LayoutConstraint::from(data);
-        let panel_size =  panel.view.calc_size(engine, panel_constraint);
+        let panel_size = panel.view.calc_size(engine, panel_constraint);
         let dock_side = panel.view.dock_side();
         let panel_anchor = LayoutAnchor::from(dock_side);
-        panel.set_layout_data(layout_query, data.new_child(self.pivot(), panel_anchor, Vec2::ZERO, panel_size));
+        panel.set_layout_data(
+            layout_query,
+            data.new_child(self.pivot(), panel_anchor, Vec2::ZERO, panel_size),
+        );
         let content_anchor = panel_anchor.opposite();
         let content_size = if dock_side.is_h() {
             data.size - LayoutSize::new(panel_size.width, 0.0)
         } else {
             data.size - LayoutSize::new(0.0, panel_size.height)
         };
-        content.set_layout_data(layout_query, data.new_child(self.pivot(), content_anchor, Vec2::ZERO, content_size));
+        content.set_layout_data(
+            layout_query,
+            data.new_child(self.pivot(), content_anchor, Vec2::ZERO, content_size),
+        );
     }
 }
- 

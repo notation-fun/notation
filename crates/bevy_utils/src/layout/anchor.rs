@@ -1,5 +1,5 @@
-use std::fmt::Display;
 use bevy::prelude::*;
+use std::fmt::Display;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LayoutHAnchor {
@@ -55,12 +55,9 @@ impl LayoutHAnchor {
     }
     pub fn factor(&self) -> f32 {
         match self {
-            Self::Center =>
-                0.0,
-            Self::Left =>
-                -0.5,
-            Self::Right =>
-                0.5,
+            Self::Center => 0.0,
+            Self::Left => -0.5,
+            Self::Right => 0.5,
         }
     }
 }
@@ -74,12 +71,9 @@ impl LayoutVAnchor {
     }
     pub fn factor(&self) -> f32 {
         match self {
-            Self::Center =>
-                0.0,
-            Self::Top =>
-                0.5,
-            Self::Bottom =>
-                -0.5,
+            Self::Center => 0.0,
+            Self::Top => 0.5,
+            Self::Bottom => -0.5,
         }
     }
 }
@@ -93,13 +87,40 @@ impl LayoutAnchor {
     pub fn factor(&self) -> Vec2 {
         Vec2::new(self.h.factor(), self.v.factor())
     }
-    pub const CENTER: Self = Self { v:LayoutVAnchor::Center, h:LayoutHAnchor::Center };
-    pub const LEFT: Self = Self { v:LayoutVAnchor::Center, h:LayoutHAnchor::Left };
-    pub const RIGHT: Self = Self { v:LayoutVAnchor::Center, h:LayoutHAnchor::Right };
-    pub const TOP: Self = Self { v:LayoutVAnchor::Top, h:LayoutHAnchor::Center };
-    pub const TOP_LEFT: Self = Self { v:LayoutVAnchor::Top, h:LayoutHAnchor::Left };
-    pub const TOP_RIGHT: Self = Self { v:LayoutVAnchor::Top, h:LayoutHAnchor::Right };
-    pub const BOTTOM: Self = Self { v:LayoutVAnchor::Bottom, h:LayoutHAnchor::Center };
-    pub const BOTTOM_LEFT: Self = Self { v:LayoutVAnchor::Bottom, h:LayoutHAnchor::Left };
-    pub const BOTTOM_RIGHT: Self = Self { v:LayoutVAnchor::Bottom, h:LayoutHAnchor::Right };
+    pub const CENTER: Self = Self {
+        v: LayoutVAnchor::Center,
+        h: LayoutHAnchor::Center,
+    };
+    pub const LEFT: Self = Self {
+        v: LayoutVAnchor::Center,
+        h: LayoutHAnchor::Left,
+    };
+    pub const RIGHT: Self = Self {
+        v: LayoutVAnchor::Center,
+        h: LayoutHAnchor::Right,
+    };
+    pub const TOP: Self = Self {
+        v: LayoutVAnchor::Top,
+        h: LayoutHAnchor::Center,
+    };
+    pub const TOP_LEFT: Self = Self {
+        v: LayoutVAnchor::Top,
+        h: LayoutHAnchor::Left,
+    };
+    pub const TOP_RIGHT: Self = Self {
+        v: LayoutVAnchor::Top,
+        h: LayoutHAnchor::Right,
+    };
+    pub const BOTTOM: Self = Self {
+        v: LayoutVAnchor::Bottom,
+        h: LayoutHAnchor::Center,
+    };
+    pub const BOTTOM_LEFT: Self = Self {
+        v: LayoutVAnchor::Bottom,
+        h: LayoutHAnchor::Left,
+    };
+    pub const BOTTOM_RIGHT: Self = Self {
+        v: LayoutVAnchor::Bottom,
+        h: LayoutHAnchor::Right,
+    };
 }

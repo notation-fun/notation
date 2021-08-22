@@ -53,4 +53,3 @@ fn on_entry_playing_changed(
         }
     }
 }
-

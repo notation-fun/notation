@@ -1,7 +1,8 @@
-use bevy::prelude::*;
 use crate::prelude::*;
+use bevy::prelude::*;
 
-use super::{layout::LayoutShape, theme::BevyUtilsTheme};
+use super::layout::LayoutShape;
+use super::theme::BevyUtilsTheme;
 
 #[derive(Debug, Default)]
 pub struct BevyUtilsPlugin;

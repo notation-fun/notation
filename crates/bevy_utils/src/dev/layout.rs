@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::{lyon::lyon_shape::{LyonShape, LyonShapeOp}, prelude::LayoutData};
+use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp};
+use crate::prelude::LayoutData;
 
 use super::theme::BevyUtilsTheme;
 
@@ -39,7 +40,9 @@ impl<'a> LyonShape<shapes::Rectangle> for LayoutShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, BevyUtilsTheme, LayoutData, shapes::Rectangle, LayoutShape<'a>> for LayoutShape<'a> {
+impl<'a> LyonShapeOp<'a, BevyUtilsTheme, LayoutData, shapes::Rectangle, LayoutShape<'a>>
+    for LayoutShape<'a>
+{
     fn new_shape(theme: &'a BevyUtilsTheme, data: LayoutData) -> LayoutShape<'a> {
         LayoutShape::<'a> { theme, data }
     }

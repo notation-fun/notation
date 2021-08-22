@@ -45,13 +45,17 @@ impl Default for GridTheme {
 
 impl GridTheme {
     pub fn resize(&mut self, app_state: &NotationAppState, settings: &NotationSettings) {
-        let bar_size =
-            (app_state.window_width - self.margin * 2.0) / settings.layout.bars_in_window as f32;
+        let bar_size = (app_state.window_width * 0.8 - self.margin * 2.0)
+            / settings.layout.bars_in_window as f32;
         self.bar_size = bar_size;
     }
     pub fn add_margin(&self, transform: Transform) -> Transform {
         let trans = transform.translation;
-        Transform::from_xyz(trans.x + self.margin, trans.y - self.margin - self.header_height, trans.z)
+        Transform::from_xyz(
+            trans.x + self.margin,
+            trans.y - self.margin - self.header_height,
+            trans.z,
+        )
     }
     pub fn calc_bar_transform(&self, layout: &BarLayout) -> Transform {
         let x = self.bar_size * layout.data.col as f32;

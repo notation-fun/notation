@@ -25,12 +25,16 @@ impl PickNoteValue {
 
 impl PickNoteData {
     pub fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
-        let outline = theme.sizes.strings.note_outline.of_state(&self.value.playing_state);
-        let mut width = theme.grid.bar_size / self.bar_props.bar_units.0
-                * self.entry_props.tied_units.0;
+        let outline = theme
+            .sizes
+            .strings
+            .note_outline
+            .of_state(&self.value.playing_state);
+        let mut width =
+            theme.grid.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
         let mut height = theme.sizes.strings.note_height;
         if self.value.playing_state.is_current() {
-            height +=  outline;
+            height += outline;
         } else {
             width -= outline * 2.0;
         }
@@ -65,18 +69,24 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
     }
     fn get_colors(&self) -> ShapeColors {
         ShapeColors::outlined(
+            self.theme.colors.of_syllable(self.data.value.syllable),
             self.theme
                 .colors
-                .of_syllable(self.data.value.syllable),
-            self.theme.colors.strings.outline.of_state(&self.data.value.playing_state),
+                .strings
+                .outline
+                .of_state(&self.data.value.playing_state),
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let outline = self.theme.sizes.strings.note_outline.of_state(&self.data.value.playing_state);
+        let outline = self
+            .theme
+            .sizes
+            .strings
+            .note_outline
+            .of_state(&self.data.value.playing_state);
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default()
-                .with_line_width(outline),
+            outline_options: StrokeOptions::default().with_line_width(outline),
         }
     }
     fn get_transform(&self) -> Transform {
@@ -91,7 +101,9 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, PickNoteData, shapes::Rectangle, PickNoteShape<'a>> for PickNoteShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, PickNoteData, shapes::Rectangle, PickNoteShape<'a>>
+    for PickNoteShape<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: PickNoteData) -> PickNoteShape<'a> {
         PickNoteShape::<'a> { theme, data }
     }

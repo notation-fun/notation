@@ -66,7 +66,9 @@ impl<'a> LyonShape<shapes::Rectangle> for LaneBack<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, LaneBackData, shapes::Rectangle, LaneBack<'a>> for LaneBack<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, LaneBackData, shapes::Rectangle, LaneBack<'a>>
+    for LaneBack<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: LaneBackData) -> LaneBack<'a> {
         LaneBack::<'a> { theme, data }
     }

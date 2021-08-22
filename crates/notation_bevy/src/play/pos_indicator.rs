@@ -62,11 +62,15 @@ impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
         let x = self.theme.grid.bar_size
             * (self.data.bar_col as f32 + self.data.in_bar_pos.0 / self.data.bar_units.0);
         let y = self.data.bar_offset;
-        self.theme.grid.add_margin(Transform::from_xyz(x, y, self.theme.core.pos_indicator_z))
+        self.theme
+            .grid
+            .add_margin(Transform::from_xyz(x, y, self.theme.core.pos_indicator_z))
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, PosIndicatorData, shapes::Line, PosIndicator<'a>> for PosIndicator<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, PosIndicatorData, shapes::Line, PosIndicator<'a>>
+    for PosIndicator<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: PosIndicatorData) -> PosIndicator<'a> {
         PosIndicator::<'a> { theme, data }
     }

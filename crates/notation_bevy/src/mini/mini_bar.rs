@@ -1,8 +1,11 @@
+use std::fmt::Display;
+
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use notation_model::prelude::{PlayingState, Syllable};
 
-use crate::{prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme}, theme::theme_sizes::MiniMapSizes};
+use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::theme::theme_sizes::MiniMapSizes;
 
 #[derive(Clone, Debug)]
 pub struct MiniBarLayout {
@@ -21,6 +24,9 @@ impl MiniBarLayout {
         }
     }
     pub fn calc_xy(&self, sizes: &MiniMapSizes, bar_ordinal: usize) -> (f32, f32) {
+        if self.cols == 0 {
+            return (0.0, 0.0);
+        }
         let index = bar_ordinal - 1;
         let mut row = index / self.cols;
         let col = index % self.cols;
@@ -48,7 +54,11 @@ impl MiniBarValue {
         }
     }
 }
-
+impl Display for MiniBarValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 pub type MiniBarData = BarData<MiniBarValue>;
 
 pub struct MiniBarShape<'a> {
@@ -61,8 +71,16 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         format!("{}: {:?}", self.data.bar_props.bar_ordinal, self.data.value)
     }
     fn get_shape(&self) -> shapes::Rectangle {
-        let (mut width, mut height) = (self.data.value.layout.width, self.theme.sizes.mini_map.bar_height);
-        let outline = self.theme.sizes.mini_map.bar_outline.of_state(&self.data.value.playing_state);
+        let (mut width, mut height) = (
+            self.data.value.layout.width,
+            self.theme.sizes.mini_map.bar_height,
+        );
+        let outline = self
+            .theme
+            .sizes
+            .mini_map
+            .bar_outline
+            .of_state(&self.data.value.playing_state);
         if self.data.value.playing_state.is_current() {
             width += outline;
             height += outline;
@@ -77,22 +95,33 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        let fill = self
+        let fill = self.theme.colors.of_syllable(self.data.value.syllable);
+        let outline = self
             .theme
             .colors
-            .of_syllable(self.data.value.syllable);
-
-        let outline = self.theme.colors.mini_map.bar_outline.of_state(&self.data.value.playing_state);
+            .mini_map
+            .bar_outline
+            .of_state(&self.data.value.playing_state);
         ShapeColors::outlined(fill, outline)
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(self.theme.sizes.mini_map.bar_outline.of_state(&self.data.value.playing_state)),
+            outline_options: StrokeOptions::default().with_line_width(
+                self.theme
+                    .sizes
+                    .mini_map
+                    .bar_outline
+                    .of_state(&self.data.value.playing_state),
+            ),
         }
     }
     fn get_transform(&self) -> Transform {
-        let (x, y) = self.data.value.layout.calc_xy(&self.theme.sizes.mini_map, self.data.bar_props.bar_ordinal);
+        let (x, y) = self
+            .data
+            .value
+            .layout
+            .calc_xy(&self.theme.sizes.mini_map, self.data.bar_props.bar_ordinal);
         let mut z = self.theme.core.mini_bar_z;
         if self.data.value.playing_state.is_current() {
             z += 2.0;
@@ -105,7 +134,9 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, MiniBarData, shapes::Rectangle, MiniBarShape<'a>> for MiniBarShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, MiniBarData, shapes::Rectangle, MiniBarShape<'a>>
+    for MiniBarShape<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: MiniBarData) -> MiniBarShape<'a> {
         MiniBarShape::<'a> { theme, data }
     }

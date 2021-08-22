@@ -1,20 +1,23 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use crate::prelude::{
+use crate::{chord::chord_view::ChordView, prelude::{
     AddEntryEvent, BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, ShapesPlugin, StringsPlugin,
     ToneBundle,
-};
+}};
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;
 
 impl Plugin for EntryPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_event::<AddEntryEvent>()
-            .add_system_set(crate::tone::tone_systems::new_system_set())
-            .add_system_set(crate::word::word_systems::new_system_set())
-            .add_system(on_add_entry.system());
+        app.add_event::<AddEntryEvent>();
+        app.add_system_set(crate::tone::tone_systems::new_system_set());
+        app.add_system_set(crate::word::word_systems::new_system_set());
+        app.add_system(on_add_entry.system());
+        app.add_system(ChordView::on_added.system());
+        app.add_system(ChordView::on_layout_changed.system());
+        app.add_system(ChordView::on_bar_playing_changed.system());
     }
 }
 

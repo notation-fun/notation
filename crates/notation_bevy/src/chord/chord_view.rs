@@ -1,0 +1,91 @@
+use std::sync::Arc;
+
+use bevy::prelude::*;
+
+use bevy_utils::prelude::{GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewAddedQuery};
+use notation_model::prelude::{Chord, PlayingState};
+
+use crate::prelude::{BarData, BarPlaying, NotationTheme};
+use crate::ui::layout::NotationLayout;
+
+use super::chord_base::ChordBaseData;
+use super::chord_diagram::{ChordDiagram, ChordDiagramData};
+use super::chord_interval::ChordIntervalData;
+
+pub type ChordView = BarData<Chord>;
+
+impl<'a> View<NotationLayout<'a>> for ChordView {
+    fn pivot(&self) -> LayoutAnchor {
+        LayoutAnchor::CENTER
+    }
+}
+impl<'a> GridCell<NotationLayout<'a>> for ChordView {
+}
+
+impl ChordView {
+    pub fn on_layout_changed(
+        mut commands: Commands,
+        theme: Res<NotationTheme>,
+        query: LayoutChangedWithChildrenQuery<ChordView>,
+        mut diagram_query: Query<(Entity, &mut ChordDiagramData, &Children)>,
+        mut interval_query: Query<(Entity, &mut ChordIntervalData)>,
+        mut base_query: Query<(Entity, &mut ChordBaseData)>,
+    ) {
+        for (_entity, _view, layout, children) in query.iter() {
+            let radius = layout.size.width * theme.sizes.chords.diagram_factor;
+            for child in children.iter() {
+                if let Ok((diagram_entity, mut diagram_data, diagram_children)) = diagram_query.get_mut(*child) {
+                    ChordDiagram::update_size(
+                        &mut commands,
+                        &theme,
+                        &mut interval_query,
+                        &mut base_query,
+                        diagram_entity,
+                        &mut diagram_data,
+                        diagram_children,
+                        radius,
+                    );
+                }
+            }
+        }
+    }
+    pub fn on_added(
+        mut commands: Commands,
+        theme: Res<NotationTheme>,
+        query: ViewAddedQuery<ChordView>,
+    ) {
+        for (_parent, entity, view) in query.iter() {
+            //TODO: handle initialization in a nicer way.
+            let radius = 0.0;
+            ChordDiagram::spawn(
+                &mut commands,
+                &theme,
+                entity,
+                view.bar_props,
+                view.value,
+                radius,
+            );
+            commands.entity(entity).insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
+        }
+    }
+    pub fn on_bar_playing_changed(
+        mut commands: Commands,
+        theme: Res<NotationTheme>,
+        mut query: Query<(Entity, &BarPlaying, &Arc<ChordView>, &Children), Changed<BarPlaying>>,
+        mut diagram_query: Query<(Entity, &mut ChordDiagramData)>,
+    ) {
+        for (_entity, playing, _view, children) in query.iter_mut() {
+            for child in children.iter() {
+                if let Ok((diagram_entity, mut diagram_data)) = diagram_query.get_mut(*child) {
+                    ChordDiagram::update_playing_state(
+                        &mut commands,
+                        &theme,
+                        diagram_entity,
+                        &mut diagram_data,
+                        playing.value,
+                    );
+                }
+            }
+        }
+    }
+}

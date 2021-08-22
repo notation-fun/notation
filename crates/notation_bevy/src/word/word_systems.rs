@@ -28,9 +28,11 @@ fn on_word_text(
         let data = WordTextData::new(entry, text.clone());
         WordTextShape::create_with_child(&mut commands, &theme, entity, data, |child_commands| {
             if text.word.text != "" {
-                theme
-                    .lyrics
-                    .insert_word_text(child_commands, &asset_server, text.word.text.as_str())
+                theme.lyrics.insert_word_text(
+                    child_commands,
+                    &asset_server,
+                    text.word.text.as_str(),
+                )
             }
         });
     }

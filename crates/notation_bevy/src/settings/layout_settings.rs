@@ -12,9 +12,7 @@ use bevy_inspector_egui::Inspectable;
 
 use crate::bar::bar_layout::BarLayoutData;
 use crate::lane::lane_layout::LaneLayoutData;
-use crate::mini::mini_bar::{MiniBarLayout};
 use crate::prelude::{BarLayout, LaneLayout, NotationAppState, TabBars, TabState};
-use crate::theme::theme_sizes::MiniMapSizes;
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]

@@ -6,7 +6,8 @@ use notation_model::prelude::Tab;
 
 use crate::prelude::BarLayout;
 
-use super::{tab_state::TabState, tab_view::TabView};
+use super::tab_state::TabState;
+use super::tab_view::TabView;
 
 #[derive(Bundle)]
 pub struct TabBundle {

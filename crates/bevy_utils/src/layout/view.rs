@@ -1,78 +1,138 @@
-use std::{marker::PhantomData, sync::Arc};
+use std::marker::PhantomData;
+use std::sync::Arc;
 
-use bevy::prelude::*;
 use anyhow::{bail, Result};
+use bevy::prelude::*;
 
 use crate::prelude::{LayoutAnchor, LayoutConstraint, LayoutData, LayoutSize};
 
 #[derive(Debug)]
-pub struct ViewEntity<TE, T> where TE: LayoutEnv, T: View<TE> {
+pub struct ViewEntity<TE, T>
+where
+    TE: LayoutEnv,
+    T: View<TE>,
+{
     env: PhantomData<TE>,
     pub entity: Entity,
     pub view: Arc<T>,
 }
 
+#[derive(Debug)]
+pub struct DoLayoutEvent<TE, T>
+where
+    TE: LayoutEnv,
+    T: View<TE>,
+{
+    env: PhantomData<TE>,
+    pub entity: Entity,
+    pub view: Arc<T>,
+    pub layout: LayoutData,
+}
+impl<TE, T> DoLayoutEvent<TE, T>
+where
+    TE: LayoutEnv,
+    T: View<TE>,
+{
+    pub fn new(entity: Entity, view: &Arc<T>, layout: &LayoutData) -> Self {
+        Self {
+            env: PhantomData,
+            entity,
+            view: view.clone(),
+            layout: layout.clone(),
+        }
+    }
+}
+
 pub type LayoutQuery<'w, 'd, 't> = Query<'w, (&'d mut LayoutData, &'t mut Transform)>;
+pub type LayoutChangedQuery<'w, 'v, 'd, T> =
+    Query<'w, (Entity, &'v Arc<T>, &'d LayoutData), Changed<LayoutData>>;
+pub type LayoutChangedWithChildrenQuery<'w, 'v, 'd, 'c, T> =
+    Query<'w, (Entity, &'v Arc<T>, &'d LayoutData, &'c Children), Changed<LayoutData>>;
 pub type ViewQuery<'w, 'p, 'v, T> = Query<'w, (&'p Parent, Entity, &'v Arc<T>)>;
+pub type ViewAddedQuery<'w, 'p, 'v, T> = Query<'w, (&'p Parent, Entity, &'v Arc<T>), Added<Arc<T>>>;
 pub type ViewRootQuery<'w, 'v, T> = Query<'w, (Entity, &'v Arc<T>)>;
 pub type ViewRootAddedQuery<'w, 'v, T> = Query<'w, (Entity, &'v Arc<T>), Added<Arc<T>>>;
 
 pub trait LayoutEnv {
-    fn query_child<TE, T>(&self,
+    fn query_child<TE, T>(
+        &self,
         view_query: &ViewQuery<T>,
         entity: Entity,
-    ) -> Result<ViewEntity<TE, T>> where TE: LayoutEnv, T: View<TE> {
+    ) -> Result<ViewEntity<TE, T>>
+    where
+        TE: LayoutEnv,
+        T: View<TE>,
+    {
         for (parent, child, view) in view_query.iter() {
             if parent.0 == entity {
-                    return Ok(ViewEntity{
-                        env: PhantomData,
-                        entity: child,
-                        view: view.clone(),
-                    })
+                return Ok(ViewEntity {
+                    env: PhantomData,
+                    entity: child,
+                    view: view.clone(),
+                });
             }
         }
-        bail!("View Not Found: <{}>", stringify!(T));
+        bail!("View Not Found: <{}>", std::any::type_name::<T>());
     }
-    fn get_child<TE, T>(&self,
+    fn get_child<TE, T>(
+        &self,
         view_query: &ViewQuery<T>,
         entity: Entity,
-    ) -> Option<ViewEntity<TE, T>> where TE: LayoutEnv, T: View<TE> {
+    ) -> Option<ViewEntity<TE, T>>
+    where
+        TE: LayoutEnv,
+        T: View<TE>,
+    {
         let result = self.query_child(view_query, entity);
         if let Err(err) = result {
-            println!("<LayoutEnv>.get_child<{}>() Not Found: {:?}", stringify!(T), err);
+            println!(
+                "<LayoutEnv>.get_child<{}>() Not Found: {:?}",
+                std::any::type_name::<T>(),
+                err
+            );
             return None;
         }
         result.ok()
     }
-    /*
-    fn query_get<'w, Q: WorldQuery>(&self, world: &'w mut World, entity: Entity
-    ) -> Result<<Q::Fetch as Fetch<'w>>::Item, QueryEntityError>
-    where <Q as WorldQuery>::Fetch: ReadOnlyFetch;
-    fn query_child<'w, T>(&self, world: &'w mut World, entity: Entity) -> Result<ViewEntity<T>> where T: Send + Sync + 'static {
-        let _children = self.query_get::<&Children>(world, entity)?;
-        let children: Vec<Entity> = _children.iter().map(|x| x.clone()).collect();
-        for child in children.iter() {
-            if let Ok((entity, view))
-                = self.query_get::<(Entity, &Arc<T>)>(world, *child) {
-                    return Ok(ViewEntity{
-                        entity,
-                        view: view.clone(),
-                    })
+    fn get_children<TE, T>(
+        &self,
+        view_query: &ViewQuery<T>,
+        entity: Entity,
+    ) -> Vec<ViewEntity<TE, T>>
+    where
+        TE: LayoutEnv,
+        T: View<TE>,
+    {
+        let mut children = Vec::new();
+        for (parent, child, view) in view_query.iter() {
+            if parent.0 == entity {
+                children.push(ViewEntity {
+                    env: PhantomData,
+                    entity: child,
+                    view: view.clone(),
+                })
             }
         }
-        bail!("Not Found: [{}]", children.len());
+        children
     }
-     */
 }
 
 pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
+    fn is_root(&self) -> bool {
+        false
+    }
     fn pivot(&self) -> LayoutAnchor {
         LayoutAnchor::default()
     }
     fn calc_size(&self, _engine: &TE, constraint: LayoutConstraint) -> LayoutSize {
         constraint.max
     }
-    fn calc_root_layout(&self, engine: &TE, constraint: LayoutConstraint, pivot: LayoutAnchor) -> LayoutData {
+    fn calc_root_layout(
+        &self,
+        engine: &TE,
+        constraint: LayoutConstraint,
+        pivot: LayoutAnchor,
+    ) -> LayoutData {
         let size = self.calc_size(engine, constraint);
         LayoutData::new(0, pivot, LayoutAnchor::default(), Vec2::ZERO, size)
     }
@@ -85,20 +145,28 @@ pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
             data
         };
         if need_adjust {
-            println!("{}.set_layout_data(\n\t{} {} ->\n\t{:?}\n)", self.to_string(),
-                data.pivot, data.offset,
-                adjusted);
+            println!(
+                "{}.set_layout_data(\n\t{} {} ->\n\t{}\n)",
+                self.to_string(),
+                data.pivot,
+                data.offset,
+                adjusted
+            );
         } else {
-            println!("{}.set_layout_data(\n\t{:?}\n)", self.to_string(), adjusted);
+            println!("{}.set_layout_data(\n\t{}\n)", self.to_string(), adjusted);
         }
         match layout_query.get_mut(entity) {
             Ok((mut layout_data, mut transform)) => {
                 *layout_data = adjusted;
                 *transform = adjusted.transform();
-            },
+            }
             Err(err) => {
-                println!("{}.set_layout_data() Query Failed: {:?}", self.to_string(), err);
-            },
+                println!(
+                    "{}.set_layout_data() Query Failed: {:?}",
+                    self.to_string(),
+                    err
+                );
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
-use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use notation_model::prelude::{LyricWord, PlayingState};
+use std::fmt::Display;
 
 use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme, SingleBundle};
 
@@ -44,10 +44,21 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
         shapes::Line(Vec2::ZERO, Vec2::new(width, 0.0))
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.colors.lyrics.line.of_state(&self.data.value.playing_state))
+        ShapeColors::new(
+            self.theme
+                .colors
+                .lyrics
+                .line
+                .of_state(&self.data.value.playing_state),
+        )
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.sizes.lyrics.line_height.of_state(&self.data.value.playing_state);
+        let line_width = self
+            .theme
+            .sizes
+            .lyrics
+            .line_height
+            .of_state(&self.data.value.playing_state);
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
@@ -58,7 +69,9 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, WordTextData, shapes::Line, WordTextShape<'a>> for WordTextShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, WordTextData, shapes::Line, WordTextShape<'a>>
+    for WordTextShape<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: WordTextData) -> WordTextShape<'a> {
         WordTextShape::<'a> { theme, data }
     }

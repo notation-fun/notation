@@ -1,4 +1,4 @@
-use bevy_utils::prelude::{LayoutEnv};
+use bevy_utils::prelude::LayoutEnv;
 
 use crate::prelude::{NotationAppState, NotationSettings, NotationTheme};
 
@@ -26,7 +26,9 @@ impl<'a> NotationLayout<'a> {
         settings: &'a NotationSettings,
     ) -> Self {
         Self {
-            theme, state, settings,
+            theme,
+            state,
+            settings,
         }
     }
 }

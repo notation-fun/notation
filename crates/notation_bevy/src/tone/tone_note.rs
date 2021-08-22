@@ -38,12 +38,17 @@ pub struct ToneNoteShape<'a> {
 
 impl<'a> ToneNoteShape<'a> {
     fn calc_width_height(&self) -> (f32, f32) {
-        let outline = self.theme.sizes.melody.note_outline.of_state(&self.data.value.playing_state);
+        let outline = self
+            .theme
+            .sizes
+            .melody
+            .note_outline
+            .of_state(&self.data.value.playing_state);
         let mut width = self.theme.grid.bar_size / self.data.bar_props.bar_units.0
-                * self.data.entry_props.tied_units.0;
+            * self.data.entry_props.tied_units.0;
         let mut height = self.theme.melody.note_height;
         if self.data.value.playing_state.is_current() {
-            height +=  outline;
+            height += outline;
         } else {
             width -= outline * 2.0;
         }
@@ -68,18 +73,24 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     }
     fn get_colors(&self) -> ShapeColors {
         ShapeColors::outlined(
+            self.theme.colors.of_syllable(self.data.value.syllable()),
             self.theme
                 .colors
-                .of_syllable(self.data.value.syllable()),
-            self.theme.colors.syllables.outline.of_state(&self.data.value.playing_state),
+                .syllables
+                .outline
+                .of_state(&self.data.value.playing_state),
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let outline = self.theme.sizes.melody.note_outline.of_state(&self.data.value.playing_state);
+        let outline = self
+            .theme
+            .sizes
+            .melody
+            .note_outline
+            .of_state(&self.data.value.playing_state);
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default()
-                .with_line_width(outline),
+            outline_options: StrokeOptions::default().with_line_width(outline),
         }
     }
     fn get_transform(&self) -> Transform {
@@ -97,7 +108,9 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, ToneNoteData, shapes::Rectangle, ToneNoteShape<'a>> for ToneNoteShape<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, ToneNoteData, shapes::Rectangle, ToneNoteShape<'a>>
+    for ToneNoteShape<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: ToneNoteData) -> ToneNoteShape<'a> {
         ToneNoteShape::<'a> { theme, data }
     }

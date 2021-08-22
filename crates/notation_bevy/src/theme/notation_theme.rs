@@ -26,4 +26,3 @@ pub struct NotationTheme {
     pub strings: StringsTheme,
     pub guitar: GuitarTheme,
 }
-

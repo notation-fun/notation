@@ -1,4 +1,6 @@
-use std::{fmt::Display, ops::{Add, Sub}, sync::{Arc, RwLock}};
+use std::fmt::Display;
+use std::ops::{Add, Sub};
+use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::shapes;
@@ -12,7 +14,7 @@ pub struct LayoutSize {
 }
 impl Display for LayoutSize {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}, {}", self.width, self.height)
+        write!(f, "({}, {})", self.width, self.height)
     }
 }
 impl LayoutSize {
@@ -50,8 +52,11 @@ pub struct LayoutData {
 }
 impl Display for LayoutData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<LayoutData>({} {} {} - {}, {} - {})",
-            self.depth, self.pivot, self.anchor, self.offset.x, self.offset.y, self.size)
+        write!(
+            f,
+            "<LayoutData>({} {} {} {} {})",
+            self.depth, self.pivot, self.anchor, self.offset, self.size
+        )
     }
 }
 
@@ -77,7 +82,13 @@ impl LayoutData {
     pub fn calc_offset(&self, pivot: LayoutAnchor, anchor: LayoutAnchor, offset: Vec2) -> Vec2 {
         self.size.calc_offset(pivot, anchor) + offset
     }
-    pub fn new_child(&self, pivot: LayoutAnchor, anchor: LayoutAnchor, offset: Vec2, size: LayoutSize) -> Self {
+    pub fn new_child(
+        &self,
+        pivot: LayoutAnchor,
+        anchor: LayoutAnchor,
+        offset: Vec2,
+        size: LayoutSize,
+    ) -> Self {
         let offset = self.size.calc_offset(pivot, anchor) + offset;
         Self::new(self.depth + 1, anchor, anchor, offset, size)
     }
@@ -97,24 +108,23 @@ impl LayoutData {
 impl From<LayoutData> for shapes::RectangleOrigin {
     fn from(v: LayoutData) -> Self {
         match (v.pivot.v, v.pivot.h) {
-            (LayoutVAnchor::Top, LayoutHAnchor::Left) =>
-                Self::TopLeft,
-            (LayoutVAnchor::Top, LayoutHAnchor::Center) =>
-                Self::CustomCenter(Vec2::new(0.0, -0.5 * v.size.height)),
-            (LayoutVAnchor::Top, LayoutHAnchor::Right) =>
-                Self::TopRight,
-            (LayoutVAnchor::Center, LayoutHAnchor::Left) =>
-                Self::CustomCenter(Vec2::new(-0.5 * v.size.height, 0.0)),
-            (LayoutVAnchor::Center, LayoutHAnchor::Center) =>
-                Self::Center,
-            (LayoutVAnchor::Center, LayoutHAnchor::Right) =>
-                Self::CustomCenter(Vec2::new(0.5 * v.size.height, 0.0)),
-            (LayoutVAnchor::Bottom, LayoutHAnchor::Left) =>
-                Self::BottomLeft,
-            (LayoutVAnchor::Bottom, LayoutHAnchor::Center) =>
-                Self::CustomCenter(Vec2::new(0.0, 0.5 * v.size.height)),
-            (LayoutVAnchor::Bottom, LayoutHAnchor::Right) =>
-                Self::BottomRight,
+            (LayoutVAnchor::Top, LayoutHAnchor::Left) => Self::TopLeft,
+            (LayoutVAnchor::Top, LayoutHAnchor::Center) => {
+                Self::CustomCenter(Vec2::new(0.0, -0.5 * v.size.height))
+            }
+            (LayoutVAnchor::Top, LayoutHAnchor::Right) => Self::TopRight,
+            (LayoutVAnchor::Center, LayoutHAnchor::Left) => {
+                Self::CustomCenter(Vec2::new(-0.5 * v.size.height, 0.0))
+            }
+            (LayoutVAnchor::Center, LayoutHAnchor::Center) => Self::Center,
+            (LayoutVAnchor::Center, LayoutHAnchor::Right) => {
+                Self::CustomCenter(Vec2::new(0.5 * v.size.height, 0.0))
+            }
+            (LayoutVAnchor::Bottom, LayoutHAnchor::Left) => Self::BottomLeft,
+            (LayoutVAnchor::Bottom, LayoutHAnchor::Center) => {
+                Self::CustomCenter(Vec2::new(0.0, 0.5 * v.size.height))
+            }
+            (LayoutVAnchor::Bottom, LayoutHAnchor::Right) => Self::BottomRight,
         }
     }
 }

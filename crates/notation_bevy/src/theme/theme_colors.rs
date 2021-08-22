@@ -47,6 +47,7 @@ pub fn color_of_hex(hex: &str) -> Color {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeColors {
     pub syllables: SyllableColors,
+    pub chords: ChordsColors,
     pub lyrics: LyricsColors,
     pub sections: SectionColors,
     pub strings: StringsColors,
@@ -78,6 +79,19 @@ impl Default for SyllableColors {
                 color_of_hex("5F785A"), // Li, Te
                 color_of_hex("7C87E8"), // Ti
             ],
+        }
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct ChordsColors {
+    pub diagram_outline: PlayingColors,
+}
+impl Default for ChordsColors {
+    fn default() -> Self {
+        Self {
+            diagram_outline: PlayingColors::default(),
         }
     }
 }

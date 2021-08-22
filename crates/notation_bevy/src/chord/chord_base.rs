@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
@@ -10,6 +12,11 @@ use super::chord_interval::ChordIntervalValue;
 #[derive(Clone, Debug)]
 pub struct ChordBaseValue {
     pub interval: ChordIntervalValue,
+}
+impl Display for ChordBaseValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 impl ChordBaseValue {
     pub fn calc_xy(&self) -> (f32, f32) {
@@ -54,7 +61,9 @@ impl<'a> LyonShape<shapes::Circle> for ChordBase<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, ChordBaseData, shapes::Circle, ChordBase<'a>> for ChordBase<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, ChordBaseData, shapes::Circle, ChordBase<'a>>
+    for ChordBase<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: ChordBaseData) -> ChordBase<'a> {
         ChordBase::<'a> { theme, data }
     }

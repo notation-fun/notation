@@ -37,14 +37,10 @@ pub trait LyonShape<T: Geometry> {
     }
 }
 
-pub trait LyonShapeOp<'a, Theme, Data: Clone + Send + Sync + 'static, T: Geometry, Op: LyonShape<T>> {
+pub trait LyonShapeOp<'a, Theme, Data: Clone + Send + Sync + 'static, T: Geometry, Op: LyonShape<T>>
+{
     fn new_shape(theme: &'a Theme, data: Data) -> Op;
-    fn create(
-        commands: &mut Commands,
-        theme: &'a Theme,
-        entity: Entity,
-        data: Data,
-    ) -> Entity {
+    fn create(commands: &mut Commands, theme: &'a Theme, entity: Entity, data: Data) -> Entity {
         let shape = Self::new_shape(theme, data.clone());
         shape.insert_lyon(commands, entity, |entity_commands| {
             entity_commands.insert(data.clone());

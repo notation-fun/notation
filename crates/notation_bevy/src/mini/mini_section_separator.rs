@@ -1,9 +1,11 @@
+use std::fmt::Display;
+
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 
-use super::mini_bar::{MiniBarLayout};
+use super::mini_bar::MiniBarLayout;
 
 #[derive(Clone, Debug)]
 pub struct MiniSectionSeparatorValue {
@@ -14,7 +16,11 @@ impl MiniSectionSeparatorValue {
         Self { layout: bar }
     }
 }
-
+impl Display for MiniSectionSeparatorValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 pub type MiniSectionSeparatorData = BarData<MiniSectionSeparatorValue>;
 
 pub struct MiniSectionSeparator<'a> {
@@ -33,19 +39,29 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
         )
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.colors.of_section(self.data.bar_props.section_index))
+        ShapeColors::new(
+            self.theme
+                .colors
+                .of_section(self.data.bar_props.section_index),
+        )
     }
     fn get_draw_mode(&self) -> DrawMode {
         let line_width = self.theme.sizes.mini_map.section_separator;
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let (x, y) = self.data.value.layout.calc_xy(&self.theme.sizes.mini_map, self.data.bar_props.bar_ordinal);
-        Transform::from_xyz(x, y, self.theme.core.mini_bar_z + 1.0)
+        let line_width = self.theme.sizes.mini_map.section_separator;
+        let (x, y) = self
+            .data
+            .value
+            .layout
+            .calc_xy(&self.theme.sizes.mini_map, self.data.bar_props.bar_ordinal);
+        Transform::from_xyz(x + line_width, y, self.theme.core.mini_bar_z + 1.0)
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, MiniSectionSeparatorData, shapes::Line, MiniSectionSeparator<'a>>
+impl<'a>
+    LyonShapeOp<'a, NotationTheme, MiniSectionSeparatorData, shapes::Line, MiniSectionSeparator<'a>>
     for MiniSectionSeparator<'a>
 {
     fn new_shape(

@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
@@ -13,7 +14,11 @@ pub struct BarBeatValue {
     pub bar_height: f32,
     pub beat: u8,
 }
-
+impl Display for BarBeatValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 impl BarBeatValue {
     pub fn new(
         tab_bar: &Arc<TabBar>,
@@ -83,7 +88,9 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, BarBeatData, shapes::Rectangle, BarBeat<'a>> for BarBeat<'a> {
+impl<'a> LyonShapeOp<'a, NotationTheme, BarBeatData, shapes::Rectangle, BarBeat<'a>>
+    for BarBeat<'a>
+{
     fn new_shape(theme: &'a NotationTheme, data: BarBeatData) -> BarBeat<'a> {
         BarBeat::<'a> { theme, data }
     }

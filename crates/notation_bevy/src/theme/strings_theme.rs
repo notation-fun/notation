@@ -66,7 +66,8 @@ impl StringsTheme {
             transform: Transform::from_xyz(
                 self.fret_text_x - note_width / 2.0,
                 self.fret_text_y - note_height / 2.0,
-                self.fret_text_z),
+                self.fret_text_z,
+            ),
             ..Default::default()
         });
     }

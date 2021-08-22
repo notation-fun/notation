@@ -1,4 +1,5 @@
 use std::f32::consts::PI;
+use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
@@ -14,6 +15,11 @@ pub struct ChordIntervalValue {
     pub size: f32,
     pub root: Syllable,
     pub interval: Interval,
+}
+impl Display for ChordIntervalValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 impl ChordIntervalValue {
     pub fn calc_xy(&self) -> (f32, f32) {

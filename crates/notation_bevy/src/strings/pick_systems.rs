@@ -69,7 +69,8 @@ macro_rules! impl_pick_system {
                                                 child_commands,
                                                 &asset_server,
                                                 fret,
-                                                width, height
+                                                width,
+                                                height,
                                             );
                                         }
                                     },
@@ -95,4 +96,3 @@ impl_pick_system!(
     HandShape4,
     get_fretted_shape4
 );
-

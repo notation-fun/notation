@@ -31,10 +31,32 @@ impl PlayingSize {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeSizes {
+    pub chords: ChordsSizes,
     pub melody: MelodySizes,
     pub lyrics: LyricsSizes,
     pub strings: StringsSizes,
     pub mini_map: MiniMapSizes,
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct ChordsSizes {
+    pub chords_panel_factor: f32,
+    pub diagram_factor: f32,
+    pub diagram_outline: PlayingSize,
+    pub diagram_interval_factor: f32,
+    pub diagram_base_factor: f32,
+}
+impl Default for ChordsSizes {
+    fn default() -> Self {
+        Self {
+            chords_panel_factor: 0.2,
+            diagram_factor: 0.45,
+            diagram_outline: PlayingSize::new(0.5, 2.0, 1.0),
+            diagram_interval_factor: 0.33,
+            diagram_base_factor: 0.25,
+        }
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
