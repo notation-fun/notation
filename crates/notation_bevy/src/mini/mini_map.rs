@@ -8,12 +8,12 @@ use crate::prelude::{
     LyonShape, LyonShapeOp, NotationAppState, NotationLayout, NotationSettings, NotationTheme,
 };
 use bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, GridCellSize, GridData, GridView, LayoutAnchor,
+    BevyUtil, DockPanel, DockSide, GridCellSize, GridData, GridView,
     LayoutChangedQuery, LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View,
     ViewAddedQuery, ViewBundle, ViewQuery,
 };
 
-use super::mini_bar::{MiniBar, MiniBarData, MiniBarShape};
+use super::mini_bar::{MiniBar};
 use super::mini_plugin::MiniMapDoLayoutEvent;
 
 #[derive(Clone, Debug)]

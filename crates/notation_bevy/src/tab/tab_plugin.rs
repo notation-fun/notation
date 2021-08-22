@@ -5,7 +5,7 @@ use bevy_utils::prelude::{LayoutQuery, ViewBundle, ViewQuery, ViewRootQuery};
 use notation_midi::prelude::SwitchTabEvent;
 
 use crate::mini::mini_map::MiniMap;
-use crate::mini::mini_plugin::MiniPlugin;
+
 use crate::prelude::{
     AddTabEvent, BevyUtil, NotationAppState, NotationLabels, NotationSettings, NotationTheme,
     TabAsset, TabBars, WindowResizedEvent,
