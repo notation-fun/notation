@@ -19,9 +19,6 @@ impl Display for ChordBaseValue {
     }
 }
 impl ChordBaseValue {
-    pub fn calc_xy(&self) -> (f32, f32) {
-        (0.0, -self.interval.size * 3.5)
-    }
     pub fn calc_syllable(&self) -> Syllable {
         self.interval.calc_syllable()
     }
@@ -41,7 +38,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordBase<'a> {
     fn get_shape(&self) -> shapes::Circle {
         shapes::Circle {
             center: Vec2::ZERO,
-            radius: self.data.value.interval.size,
+            radius: self.data.value.interval.radius,
         }
     }
     fn get_colors(&self) -> ShapeColors {
@@ -56,8 +53,8 @@ impl<'a> LyonShape<shapes::Circle> for ChordBase<'a> {
     }
 
     fn get_transform(&self) -> Transform {
-        let (x, y) = self.data.value.calc_xy();
-        Transform::from_xyz(x, y, 1.0)
+        let y = -self.data.value.interval.radius * self.theme.sizes.chords.diagram_base_y_factor;
+        Transform::from_xyz(0.0, y, 1.0)
     }
 }
 

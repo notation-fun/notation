@@ -12,7 +12,7 @@ use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 pub struct ChordIntervalValue {
     pub total: usize,
     pub index: usize,
-    pub size: f32,
+    pub radius: f32,
     pub root: Syllable,
     pub interval: Interval,
 }
@@ -32,7 +32,7 @@ impl ChordIntervalValue {
             * PI
             / 180.0;
         let angle = PI * 2.0 * self.index as f32 / self.total as f32 + angle_offset;
-        (self.size * 1.4 * angle.cos(), self.size * 1.4 * angle.sin())
+        (self.radius * 1.4 * angle.cos(), self.radius * 1.4 * angle.sin())
     }
     pub fn calc_syllable(&self) -> Syllable {
         Syllable::from((self.root, self.interval))
@@ -53,7 +53,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordInterval<'a> {
     fn get_shape(&self) -> shapes::Circle {
         shapes::Circle {
             center: Vec2::ZERO,
-            radius: self.data.value.size,
+            radius: self.data.value.radius,
         }
     }
     fn get_colors(&self) -> ShapeColors {

@@ -1,54 +1,28 @@
 use std::fmt::Display;
+use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{PlayingState, Syllable};
+use bevy_utils::prelude::{GridCell, LayoutAnchor, LayoutChangedQuery, View, ViewAddedQuery};
+use notation_model::prelude::{PlayingState, Syllable, TabBar};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
-use crate::theme::theme_sizes::MiniMapSizes;
+use crate::prelude::{BarData, BarPlaying, LyonShape, LyonShapeOp, NotationTheme};
+use crate::ui::layout::NotationLayout;
 
-#[derive(Clone, Debug)]
-pub struct MiniBarLayout {
-    pub rows: usize,
-    pub cols: usize,
-    pub width: f32,
-    pub x_offset: f32,
-}
-impl MiniBarLayout {
-    pub fn new(rows: usize, cols: usize, width: f32, x_offset: f32) -> Self {
-        Self {
-            rows,
-            cols,
-            width,
-            x_offset,
-        }
-    }
-    pub fn calc_xy(&self, sizes: &MiniMapSizes, bar_ordinal: usize) -> (f32, f32) {
-        if self.cols == 0 {
-            return (0.0, 0.0);
-        }
-        let index = bar_ordinal - 1;
-        let mut row = index / self.cols;
-        let col = index % self.cols;
-        let x = col as f32 * self.width;
-        if row > self.rows {
-            row = self.rows - 1;
-        }
-        let y = -1.0 * row as f32 * sizes.bar_height_with_margin();
-        (x + self.x_offset, y + sizes.margin)
-    }
-}
+use super::mini_section_separator::{MiniSectionSeparator, MiniSectionSeparatorData, MiniSectionSeparatorValue};
+
+pub type MiniBar = BarData<Arc<TabBar>>;
 
 #[derive(Clone, Debug)]
 pub struct MiniBarValue {
-    pub layout: MiniBarLayout,
+    pub width: f32,
     pub syllable: Syllable,
     pub playing_state: PlayingState,
 }
 impl MiniBarValue {
-    pub fn new(layout: MiniBarLayout, syllable: Syllable) -> Self {
+    pub fn new(width: f32, syllable: Syllable) -> Self {
         Self {
-            layout,
+            width,
             syllable,
             playing_state: PlayingState::Idle,
         }
@@ -72,8 +46,8 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         let (mut width, mut height) = (
-            self.data.value.layout.width,
-            self.theme.sizes.mini_map.bar_height,
+            self.data.value.width,
+            self.theme.sizes.mini_map.bar_height - self.theme.sizes.mini_map.margin,
         );
         let outline = self
             .theme
@@ -117,20 +91,11 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
-        let (x, y) = self
-            .data
-            .value
-            .layout
-            .calc_xy(&self.theme.sizes.mini_map, self.data.bar_props.bar_ordinal);
         let mut z = self.theme.core.mini_bar_z;
         if self.data.value.playing_state.is_current() {
             z += 2.0;
         }
-        Transform::from_xyz(
-            self.data.value.layout.width / 2.0 + x,
-            self.theme.sizes.mini_map.bar_height / 2.0 + y,
-            z,
-        )
+        Transform::from_xyz(0.0, 0.0, z)
     }
 }
 
@@ -139,5 +104,53 @@ impl<'a> LyonShapeOp<'a, NotationTheme, MiniBarData, shapes::Rectangle, MiniBarS
 {
     fn new_shape(theme: &'a NotationTheme, data: MiniBarData) -> MiniBarShape<'a> {
         MiniBarShape::<'a> { theme, data }
+    }
+}
+
+impl<'a> View<NotationLayout<'a>> for MiniBar {
+    fn pivot(&self) -> LayoutAnchor {
+        LayoutAnchor::CENTER
+    }
+}
+impl<'a> GridCell<NotationLayout<'a>> for MiniBar {
+}
+impl MiniBar {
+    pub fn on_added(
+        mut commands: Commands,
+        theme: Res<NotationTheme>,
+        query: ViewAddedQuery<MiniBar>,
+    ) {
+        for (_parent, entity, view) in query.iter() {
+            let syllable = view.value.get_chord(None).map(|x| x.root).unwrap_or(Syllable::Do);
+            let value = MiniBarValue::new(0.0, syllable);
+            let data = MiniBarData::from((view.bar_props, value));
+            let shape_entity = MiniBarShape::create(&mut commands, &theme, entity, data);
+            commands.entity(shape_entity).insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
+            if view.bar_props.bar_index == 0 {
+                let section_separator_data = MiniSectionSeparatorData::new(
+                    &view.value,
+                    MiniSectionSeparatorValue::new(0.0),
+                );
+                MiniSectionSeparator::create(&mut commands, &theme, entity, section_separator_data);
+            }
+        }
+    }
+    pub fn on_layout_changed(
+        mut commands: Commands,
+        theme: Res<NotationTheme>,
+        query: LayoutChangedQuery<MiniBar>,
+        mut mini_bar_query: Query<(Entity, &mut MiniBarData)>,
+        mut mini_section_separator_query: Query<(Entity, &mut MiniSectionSeparatorData)>,
+    ) {
+        for (_entity, _view, layout) in query.iter() {
+            for (entity, mut data) in mini_bar_query.iter_mut() {
+                data.value.width = layout.size.width;
+                MiniBarShape::update(&mut commands, &theme, entity, &data);
+            }
+            for (entity, mut data) in mini_section_separator_query.iter_mut() {
+                data.value.x_offset = -layout.size.width / 2.0;
+                MiniSectionSeparator::update(&mut commands, &theme, entity, &data);
+            }
+        }
     }
 }

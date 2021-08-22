@@ -46,6 +46,7 @@ pub struct ChordsSizes {
     pub diagram_outline: PlayingSize,
     pub diagram_interval_factor: f32,
     pub diagram_base_factor: f32,
+    pub diagram_base_y_factor: f32,
 }
 impl Default for ChordsSizes {
     fn default() -> Self {
@@ -55,6 +56,7 @@ impl Default for ChordsSizes {
             diagram_outline: PlayingSize::new(0.5, 2.0, 1.0),
             diagram_interval_factor: 0.33,
             diagram_base_factor: 0.25,
+            diagram_base_y_factor: 3.4,
         }
     }
 }
@@ -126,7 +128,7 @@ impl Default for MiniMapSizes {
     }
 }
 impl MiniMapSizes {
-    pub fn bar_height_with_margin(&self) -> f32 {
-        self.bar_height + self.margin
+    pub fn bar_height_without_margin(&self) -> f32 {
+        self.bar_height - self.margin
     }
 }

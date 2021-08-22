@@ -80,7 +80,7 @@ fn on_add_tab(
         let transform = Transform::default();
         let tab_bundle = TabBundle::new(tab.clone(), bar_layouts.clone(), transform);
         let tab_entity = commands.spawn_bundle(tab_bundle).id();
-        MiniPlugin::spawn_mini_map(&mut commands, &theme, &state, &settings, tab_entity, &tab);
+        MiniMap::spawn(&mut commands, &theme, tab_entity, &tab);
         let content_entity = BevyUtil::spawn_child_bundle(
             &mut commands,
             tab_entity,

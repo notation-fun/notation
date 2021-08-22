@@ -101,10 +101,10 @@ impl<'a> ChordDiagram<'a> {
         ChordDiagram::update(commands, theme, entity, data);
         for child in children.iter() {
             if let Ok((interval_entity, mut interval_data)) = interval_query.get_mut(*child) {
-                interval_data.value.size = radius / 3.0;
+                interval_data.value.radius = radius / 3.0;
                 ChordInterval::update(commands, theme, interval_entity, &interval_data)
             } else if let Ok((base_entity, mut base_data)) = base_query.get_mut(*child) {
-                base_data.value.interval.size = radius / 4.0;
+                base_data.value.interval.radius = radius / 4.0;
                 ChordBase::update(commands, theme, base_entity, &base_data)
             }
         }
@@ -141,7 +141,7 @@ impl<'a> ChordDiagram<'a> {
             let interval_value = ChordIntervalValue {
                 total: intervals.len(),
                 index: index,
-                size: radius * theme.sizes.chords.diagram_interval_factor,
+                radius: radius * theme.sizes.chords.diagram_interval_factor,
                 root: chord.root,
                 interval: interval.clone(),
             };
@@ -156,7 +156,7 @@ impl<'a> ChordDiagram<'a> {
             let interval_value = ChordIntervalValue {
                 total: intervals.len(),
                 index: 0,
-                size: radius * theme.sizes.chords.diagram_base_factor,
+                radius: radius * theme.sizes.chords.diagram_base_factor,
                 root: chord.root,
                 interval: base.clone(),
             };

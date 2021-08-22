@@ -33,6 +33,12 @@ pub struct GridData {
     pub offset: Vec2,
 }
 impl GridData {
+    pub const ZERO: GridData = Self {
+        rows: 0,
+        cols: 0,
+        size: GridCellSize::Fixed(LayoutSize{width: 0.0, height: 0.0}),
+        offset: Vec2::ZERO,
+    };
     pub fn calc_rows(total: usize, cols: usize) -> usize {
         if total == 0 || cols == 0 {
             return 0;

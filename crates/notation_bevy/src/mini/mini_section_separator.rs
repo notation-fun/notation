@@ -5,15 +5,13 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 
-use super::mini_bar::MiniBarLayout;
-
 #[derive(Clone, Debug)]
 pub struct MiniSectionSeparatorValue {
-    pub layout: MiniBarLayout,
+    pub x_offset: f32,
 }
 impl MiniSectionSeparatorValue {
-    pub fn new(bar: MiniBarLayout) -> Self {
-        Self { layout: bar }
+    pub fn new(x_offset: f32) -> Self {
+        Self { x_offset }
     }
 }
 impl Display for MiniSectionSeparatorValue {
@@ -34,8 +32,8 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
     }
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
-            Vec2::new(0.0, 0.0),
-            Vec2::new(0.0, self.theme.sizes.mini_map.bar_height_with_margin()),
+            Vec2::new(0.0, self.theme.sizes.mini_map.bar_height / 2.0 + self.theme.sizes.mini_map.margin * 2.0),
+            Vec2::new(0.0, -self.theme.sizes.mini_map.bar_height_without_margin() / 2.0),
         )
     }
     fn get_colors(&self) -> ShapeColors {
@@ -51,12 +49,7 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
     }
     fn get_transform(&self) -> Transform {
         let line_width = self.theme.sizes.mini_map.section_separator;
-        let (x, y) = self
-            .data
-            .value
-            .layout
-            .calc_xy(&self.theme.sizes.mini_map, self.data.bar_props.bar_ordinal);
-        Transform::from_xyz(x + line_width, y, self.theme.core.mini_bar_z + 1.0)
+        Transform::from_xyz(line_width + self.data.value.x_offset, 0.0, self.theme.core.mini_bar_z + 1.0)
     }
 }
 
