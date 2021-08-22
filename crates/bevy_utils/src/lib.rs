@@ -22,8 +22,8 @@ pub mod prelude {
     pub use crate::layout::grid::{GridCell, GridCellSize, GridData, GridView};
     #[doc(hidden)]
     pub use crate::layout::view::{
-        DoLayoutEvent, LayoutChangedQuery, LayoutChangedWithChildrenQuery, LayoutEnv, LayoutQuery, View, ViewAddedQuery,
-        ViewEntity, ViewQuery, ViewRootAddedQuery, ViewRootQuery,
+        DoLayoutEvent, LayoutChangedQuery, LayoutChangedWithChildrenQuery, LayoutEnv, LayoutQuery,
+        View, ViewAddedQuery, ViewEntity, ViewQuery, ViewRootAddedQuery, ViewRootQuery,
     };
     #[doc(hidden)]
     pub use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp};

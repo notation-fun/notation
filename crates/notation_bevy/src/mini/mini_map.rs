@@ -7,9 +7,14 @@ use std::sync::Arc;
 use crate::prelude::{
     LyonShape, LyonShapeOp, NotationAppState, NotationLayout, NotationSettings, NotationTheme,
 };
-use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, GridCellSize, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View, ViewAddedQuery, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, DockPanel, DockSide, GridCellSize, GridData, GridView, LayoutAnchor,
+    LayoutChangedQuery, LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View,
+    ViewAddedQuery, ViewBundle, ViewQuery,
+};
 
-use super::{mini_bar::{MiniBar, MiniBarData, MiniBarShape}, mini_plugin::MiniMapDoLayoutEvent};
+use super::mini_bar::{MiniBar, MiniBarData, MiniBarShape};
+use super::mini_plugin::MiniMapDoLayoutEvent;
 
 #[derive(Clone, Debug)]
 pub struct MiniMap {
@@ -179,8 +184,7 @@ impl MiniMap {
     ) {
         for (entity, view, layout) in query.iter() {
             if let Ok((back_entity, mut back_data)) = mini_map_back_query.single_mut() {
-                *back_data =
-                    MiniMapBackData::new(layout.size.width, layout.size.height);
+                *back_data = MiniMapBackData::new(layout.size.width, layout.size.height);
                 MiniMapBack::update(&mut commands, &theme, back_entity, &back_data);
             }
             evts.send(MiniMapDoLayoutEvent::new(entity, view, layout))

@@ -3,7 +3,11 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, GridCellSize, GridData, GridView, LayoutChangedQuery, LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View, ViewAddedQuery, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, DockPanel, DockSide, GridCellSize, GridData, GridView, LayoutChangedQuery,
+    LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View, ViewAddedQuery, ViewBundle,
+    ViewQuery,
+};
 use notation_model::prelude::Tab;
 
 use crate::chord::chord_view::ChordView;
@@ -36,7 +40,10 @@ impl<'a> GridView<NotationLayout<'a>, ChordView> for TabChords {
             rows,
             cols,
             size: GridCellSize::Fixed(cell_size),
-            offset: Vec2::new(offset_x, -engine.theme.grid.header_height - engine.theme.grid.margin),
+            offset: Vec2::new(
+                offset_x,
+                -engine.theme.grid.header_height - engine.theme.grid.margin,
+            ),
         }
     }
 }

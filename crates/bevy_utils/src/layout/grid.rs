@@ -15,7 +15,7 @@ impl GridCellSize {
                 let x = size.width * col as f32;
                 let y = -size.height * row as f32;
                 Vec2::new(x, y)
-            },
+            }
         }
     }
     pub fn calc_cell_size(&self, _row: usize, _col: usize) -> LayoutSize {
@@ -36,7 +36,10 @@ impl GridData {
     pub const ZERO: GridData = Self {
         rows: 0,
         cols: 0,
-        size: GridCellSize::Fixed(LayoutSize{width: 0.0, height: 0.0}),
+        size: GridCellSize::Fixed(LayoutSize {
+            width: 0.0,
+            height: 0.0,
+        }),
         offset: Vec2::ZERO,
     };
     pub fn calc_rows(total: usize, cols: usize) -> usize {
@@ -75,7 +78,13 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
     fn calc_cell_offset(&self, _engine: &TE, grid_data: &GridData, row: usize, col: usize) -> Vec2 {
         grid_data.calc_cell_offset(row, col)
     }
-    fn calc_cell_size(&self, _engine: &TE, grid_data: &GridData, row: usize, col: usize) -> LayoutSize {
+    fn calc_cell_size(
+        &self,
+        _engine: &TE,
+        grid_data: &GridData,
+        row: usize,
+        col: usize,
+    ) -> LayoutSize {
         grid_data.calc_cell_size(row, col)
     }
     fn do_layout(

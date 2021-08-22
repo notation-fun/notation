@@ -9,7 +9,9 @@ use notation_model::prelude::{PlayingState, Syllable, TabBar};
 use crate::prelude::{BarData, BarPlaying, LyonShape, LyonShapeOp, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
-use super::mini_section_separator::{MiniSectionSeparator, MiniSectionSeparatorData, MiniSectionSeparatorValue};
+use super::mini_section_separator::{
+    MiniSectionSeparator, MiniSectionSeparatorData, MiniSectionSeparatorValue,
+};
 
 pub type MiniBar = BarData<Arc<TabBar>>;
 
@@ -112,8 +114,7 @@ impl<'a> View<NotationLayout<'a>> for MiniBar {
         LayoutAnchor::CENTER
     }
 }
-impl<'a> GridCell<NotationLayout<'a>> for MiniBar {
-}
+impl<'a> GridCell<NotationLayout<'a>> for MiniBar {}
 impl MiniBar {
     pub fn on_added(
         mut commands: Commands,
@@ -121,16 +122,20 @@ impl MiniBar {
         query: ViewAddedQuery<MiniBar>,
     ) {
         for (_parent, entity, view) in query.iter() {
-            let syllable = view.value.get_chord(None).map(|x| x.root).unwrap_or(Syllable::Do);
+            let syllable = view
+                .value
+                .get_chord(None)
+                .map(|x| x.root)
+                .unwrap_or(Syllable::Do);
             let value = MiniBarValue::new(0.0, syllable);
             let data = MiniBarData::from((view.bar_props, value));
             let shape_entity = MiniBarShape::create(&mut commands, &theme, entity, data);
-            commands.entity(shape_entity).insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
+            commands
+                .entity(shape_entity)
+                .insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
             if view.bar_props.bar_index == 0 {
-                let section_separator_data = MiniSectionSeparatorData::new(
-                    &view.value,
-                    MiniSectionSeparatorValue::new(0.0),
-                );
+                let section_separator_data =
+                    MiniSectionSeparatorData::new(&view.value, MiniSectionSeparatorValue::new(0.0));
                 MiniSectionSeparator::create(&mut commands, &theme, entity, section_separator_data);
             }
         }

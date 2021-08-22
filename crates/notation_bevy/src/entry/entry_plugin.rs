@@ -1,10 +1,11 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use crate::{chord::chord_view::ChordView, prelude::{
+use crate::chord::chord_view::ChordView;
+use crate::prelude::{
     AddEntryEvent, BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, ShapesPlugin, StringsPlugin,
     ToneBundle,
-}};
+};
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;

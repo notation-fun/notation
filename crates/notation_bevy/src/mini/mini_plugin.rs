@@ -2,16 +2,13 @@ use bevy::prelude::*;
 
 use bevy_utils::prelude::{DoLayoutEvent, LyonShapeOp};
 
-use crate::prelude::{
-    BarPlaying, NotationTheme,
-};
+use crate::prelude::{BarPlaying, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::mini_bar::{MiniBar, MiniBarData, MiniBarShape};
 use super::mini_map::MiniMap;
 
 pub type MiniMapDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, MiniMap>;
-
 
 pub struct MiniPlugin;
 

@@ -128,8 +128,9 @@ impl<'a> ChordDiagram<'a> {
         radius: f32,
     ) {
         let chord_value = ChordDiagramValue {
-            chord, radius,
-            playing_state: PlayingState::Idle
+            chord,
+            radius,
+            playing_state: PlayingState::Idle,
         };
         let chord_data = ChordDiagramData {
             bar_props,

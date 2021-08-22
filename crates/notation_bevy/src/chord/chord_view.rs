@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewAddedQuery};
+use bevy_utils::prelude::{
+    GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewAddedQuery,
+};
 use notation_model::prelude::{Chord, PlayingState};
 
 use crate::prelude::{BarData, BarPlaying, NotationTheme};
@@ -19,8 +21,7 @@ impl<'a> View<NotationLayout<'a>> for ChordView {
         LayoutAnchor::CENTER
     }
 }
-impl<'a> GridCell<NotationLayout<'a>> for ChordView {
-}
+impl<'a> GridCell<NotationLayout<'a>> for ChordView {}
 
 impl ChordView {
     pub fn on_layout_changed(
@@ -34,7 +35,9 @@ impl ChordView {
         for (_entity, _view, layout, children) in query.iter() {
             let radius = layout.size.width * theme.sizes.chords.diagram_factor;
             for child in children.iter() {
-                if let Ok((diagram_entity, mut diagram_data, diagram_children)) = diagram_query.get_mut(*child) {
+                if let Ok((diagram_entity, mut diagram_data, diagram_children)) =
+                    diagram_query.get_mut(*child)
+                {
                     ChordDiagram::update_size(
                         &mut commands,
                         &theme,
@@ -65,7 +68,9 @@ impl ChordView {
                 view.value,
                 radius,
             );
-            commands.entity(entity).insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
+            commands
+                .entity(entity)
+                .insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
         }
     }
     pub fn on_bar_playing_changed(

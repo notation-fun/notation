@@ -4,7 +4,8 @@ use std::sync::Arc;
 use crate::ui::layout::NotationLayout;
 use bevy_utils::prelude::DoLayoutEvent;
 
-use super::{tab_chords::TabChords, tab_content::TabContent};
+use super::tab_chords::TabChords;
+use super::tab_content::TabContent;
 
 #[derive(Debug)]
 pub struct AddTabEvent(pub Arc<Tab>);

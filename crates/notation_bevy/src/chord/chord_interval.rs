@@ -32,7 +32,10 @@ impl ChordIntervalValue {
             * PI
             / 180.0;
         let angle = PI * 2.0 * self.index as f32 / self.total as f32 + angle_offset;
-        (self.radius * 1.4 * angle.cos(), self.radius * 1.4 * angle.sin())
+        (
+            self.radius * 1.4 * angle.cos(),
+            self.radius * 1.4 * angle.sin(),
+        )
     }
     pub fn calc_syllable(&self) -> Syllable {
         Syllable::from((self.root, self.interval))
