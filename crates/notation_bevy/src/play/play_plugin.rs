@@ -1,13 +1,16 @@
 use std::sync::Arc;
 
+use bevy_utils::prelude::LayoutData;
 use notation_midi::prelude::PlayControlEvt;
 use notation_model::prelude::{LaneEntry, PlayState, PlayingState, Position, Tab, TickResult};
 
 use bevy::prelude::*;
 
+use crate::bar::bar_layout::BarLayoutData;
+use crate::bar::bar_view::BarView;
 use crate::chord::chord_playing::ChordPlaying;
 use crate::prelude::{
-    BarLayout, BarPlaying, EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme, TabBars,
+    BarPlaying, EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme, TabBars,
     TabState, WindowResizedEvent,
 };
 
@@ -21,6 +24,7 @@ pub struct PlayPlugin;
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(on_config_changed.system());
+        app.add_system(on_bar_playing_changed.system());
         app.add_system(on_tab_play_state_changed.system());
         app.add_system(on_play_control_evt.system());
         //app.add_system(add_midi_tone.system());
@@ -33,14 +37,11 @@ impl PlayPlugin {
         theme: &NotationTheme,
         entity: Entity,
         tab: &Tab,
-        bar_layout: Option<&BarLayout>,
     ) {
-        if let Some(bar_layout) = bar_layout {
-            let bar_data = BarIndicatorData::new(tab.bar_units(), bar_layout);
-            BarIndicator::create(commands, &theme, entity, bar_data);
-            let pos_data = PosIndicatorData::new(tab.bar_units(), bar_layout);
-            PosIndicator::create(commands, &theme, entity, pos_data);
-        }
+        let bar_data = BarIndicatorData::new();
+        BarIndicator::create(commands, &theme, entity, bar_data);
+        let pos_data = PosIndicatorData::new(tab.bar_units());
+        PosIndicator::create(commands, &theme, entity, pos_data);
     }
 }
 
@@ -57,12 +58,34 @@ fn on_config_changed(
     }
 }
 
+fn on_bar_playing_changed(
+    mut commands: Commands,
+    theme: Res<NotationTheme>,
+    mut query: Query<(Entity, &BarPlaying, &Arc<BarView>, &LayoutData, &Transform), Changed<BarPlaying>>,
+    mut bar_indicator_query: Query<(Entity, &mut BarIndicatorData)>,
+    mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
+) {
+    for (_entity, playing, __view, layout, transform) in query.iter_mut() {
+        if playing.value == PlayingState::Current {
+            for (entity, mut data) in bar_indicator_query.iter_mut() {
+                data.bar_offset = Vec2::new(transform.translation.x, transform.translation.y);
+                data.bar_size = layout.size;
+                BarIndicator::update(&mut commands, &theme, entity, &data);
+            }
+            for (entity, mut data) in pos_indicator_query.iter_mut() {
+                data.bar_offset = Vec2::new(transform.translation.x, transform.translation.y);
+                data.bar_size = layout.size;
+                PosIndicator::update(&mut commands, &theme, entity, &data);
+            }
+        }
+    }
+}
+
 fn on_tab_play_state_changed(
     mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
-    mut query: Query<(Entity, &Arc<Vec<BarLayout>>, &TabState), Added<TabPlayStateChanged>>,
-    mut bar_indicator_query: Query<(Entity, &mut BarIndicatorData)>,
+    mut query: Query<(Entity, &Arc<Vec<BarLayoutData>>, &TabState), Added<TabPlayStateChanged>>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying)>,
     mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
@@ -70,27 +93,17 @@ fn on_tab_play_state_changed(
 ) {
     for (state_entity, bar_layouts, tab_state) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
-        BarIndicator::update_pos(
-            &mut commands,
-            &theme,
-            &settings,
-            &mut bar_indicator_query,
-            bar_layouts,
-            tab_state.play_control.position,
-        );
         PosIndicator::update_pos(
             &mut commands,
             &theme,
-            &settings,
             &mut pos_indicator_query,
-            bar_layouts,
             tab_state.play_control.position,
         );
         settings.layout.focus_bar(
             &mut commands,
             &mut tab_bars_query,
             bar_layouts,
-            theme.grid.bar_size,
+            240.0, //TODO
             &tab_state,
         );
         if !tab_state.play_control.play_state.is_playing() {
@@ -105,14 +118,13 @@ fn on_tick(
     commands: &mut Commands,
     settings: &NotationSettings,
     theme: &NotationTheme,
-    bar_indicator_query: &mut Query<(Entity, &mut BarIndicatorData)>,
     pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData)>,
     bar_playing_query: &mut Query<(Entity, &mut BarPlaying)>,
     entry_playing_query: &mut Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
     chord_playing_query: &mut Query<(Entity, &mut ChordPlaying)>,
     tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
     state_entity: Entity,
-    bar_layouts: &Arc<Vec<BarLayout>>,
+    bar_layouts: &Arc<Vec<BarLayoutData>>,
     tab_state: &mut TabState,
     new_position: &Position,
     tick_result: &TickResult,
@@ -127,20 +139,10 @@ fn on_tick(
     if *stopped {
         tab_state.set_play_state(commands, state_entity, PlayState::Stopped);
     } else if *changed {
-        BarIndicator::update_pos(
-            commands,
-            theme,
-            settings,
-            bar_indicator_query,
-            bar_layouts,
-            *new_position,
-        );
         PosIndicator::update_pos(
             commands,
             theme,
-            settings,
             pos_indicator_query,
-            bar_layouts,
             *new_position,
         );
         if settings
@@ -151,7 +153,7 @@ fn on_tick(
                 commands,
                 tab_bars_query,
                 bar_layouts,
-                theme.grid.bar_size,
+                200.0, //TODO
                 tab_state,
             );
         }
@@ -167,8 +169,7 @@ fn on_play_control_evt(
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut evts: EventReader<PlayControlEvt>,
-    mut tab_state_query: Query<(Entity, &Arc<Vec<BarLayout>>, &mut TabState)>,
-    mut bar_indicator_query: Query<(Entity, &mut BarIndicatorData)>,
+    mut tab_state_query: Query<(Entity, &Arc<Vec<BarLayoutData>>, &mut TabState)>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying)>,
     mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
@@ -188,7 +189,6 @@ fn on_play_control_evt(
                     &mut commands,
                     &settings,
                     &theme,
-                    &mut bar_indicator_query,
                     &mut pos_indicator_query,
                     &mut bar_playing_query,
                     &mut entry_playing_query,

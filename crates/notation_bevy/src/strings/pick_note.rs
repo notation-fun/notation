@@ -11,6 +11,7 @@ pub struct PickNoteValue {
     pub pick_note: PickNote,
     pub syllable: Syllable,
     pub playing_state: PlayingState,
+    pub bar_size: f32,
 }
 
 impl PickNoteValue {
@@ -19,6 +20,7 @@ impl PickNoteValue {
             pick_note,
             syllable,
             playing_state: PlayingState::Idle,
+            bar_size: 0.0,
         }
     }
 }
@@ -31,7 +33,7 @@ impl PickNoteData {
             .note_outline
             .of_state(&self.value.playing_state);
         let mut width =
-            theme.grid.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
+            self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
         let mut height = theme.sizes.strings.note_height;
         if self.value.playing_state.is_current() {
             height += outline;
@@ -90,7 +92,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
-        let x = self.theme.grid.bar_size / self.data.bar_props.bar_units.0
+        let x = self.data.value.bar_size / self.data.bar_props.bar_units.0
             * self.data.entry_props.in_bar_pos.0;
         let y = -1.0
             * self.theme.strings.string_space

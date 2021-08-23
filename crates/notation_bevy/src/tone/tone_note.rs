@@ -15,6 +15,7 @@ pub struct ToneNoteValue {
     pub mode: ToneMode,
     pub syllable_note: SyllableNote,
     pub playing_state: PlayingState,
+    pub bar_size: f32,
 }
 
 impl ToneNoteValue {
@@ -25,6 +26,7 @@ impl ToneNoteValue {
             mode,
             syllable_note,
             playing_state: PlayingState::Idle,
+            bar_size: 0.0,
         }
     }
     pub fn syllable(&self) -> Syllable {
@@ -44,7 +46,7 @@ impl<'a> ToneNoteShape<'a> {
             .melody
             .note_outline
             .of_state(&self.data.value.playing_state);
-        let mut width = self.theme.grid.bar_size / self.data.bar_props.bar_units.0
+        let mut width = self.data.value.bar_size / self.data.bar_props.bar_units.0
             * self.data.entry_props.tied_units.0;
         let mut height = self.theme.melody.note_height;
         if self.data.value.playing_state.is_current() {
@@ -94,7 +96,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
-        let x = self.theme.grid.bar_size / self.data.bar_props.bar_units.0
+        let x = self.data.value.bar_size / self.data.bar_props.bar_units.0
             * self.data.entry_props.in_bar_pos.0;
         let y = if self.data.value.mode.is_melody() {
             self.theme

@@ -171,11 +171,9 @@ fn setup_window_size(
     window: Res<WindowDescriptor>,
     mut app_state: ResMut<NotationAppState>,
     settings: Res<NotationSettings>,
-    mut theme: ResMut<NotationTheme>,
 ) {
     app_state.window_width = window.width;
     app_state.window_height = window.height;
-    theme.grid.resize(&app_state, &settings);
 }
 
 fn on_window_resized(
@@ -183,7 +181,6 @@ fn on_window_resized(
     mut evts: EventReader<WindowResized>,
     mut app_state: ResMut<NotationAppState>,
     settings: Res<NotationSettings>,
-    mut theme: ResMut<NotationTheme>,
     mut config_evts: EventWriter<WindowResizedEvent>,
 ) {
     for evt in evts.iter() {
@@ -194,7 +191,6 @@ fn on_window_resized(
             window.height = evt.height;
             app_state.window_width = evt.width;
             app_state.window_height = evt.height;
-            theme.grid.resize(&app_state, &settings);
             config_evts.send(WindowResizedEvent());
         }
     }

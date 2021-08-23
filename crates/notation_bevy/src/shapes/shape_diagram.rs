@@ -2,12 +2,24 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme};
-use notation_model::prelude::{HandShape4, HandShape6};
+use notation_model::prelude::{HandShape4, HandShape6, LaneEntry};
 
 macro_rules! impl_shape_diagram {
-    ($hand_shape:ident, $diagram:ident, $diagram_data:ident) => {
-        pub type $diagram_data = EntryData<$hand_shape>;
-
+    ($hand_shape:ident, $diagram:ident, $diagram_data:ident, $diagram_value:ident) => {
+        #[derive(Clone, Debug)]
+        pub struct $diagram_value {
+            pub shape: $hand_shape,
+            pub bar_size: f32,
+        }
+        pub type $diagram_data = EntryData<$diagram_value>;
+        impl From<(&LaneEntry, $hand_shape)> for $diagram_data {
+            fn from(v: (&LaneEntry, $hand_shape)) -> Self {
+                Self::new(v.0, $diagram_value{
+                    shape: v.1,
+                    bar_size: 0.0,
+                })
+            }
+        }
         pub struct $diagram<'a> {
             theme: &'a NotationTheme,
             data: $diagram_data,
@@ -15,7 +27,7 @@ macro_rules! impl_shape_diagram {
 
         impl<'a> LyonShape<shapes::SvgPathShape> for $diagram<'a> {
             fn get_name(&self) -> String {
-                format!("{}:{}", self.data.bar_props.bar_ordinal, self.data.value)
+                format!("{}:{}", self.data.bar_props.bar_ordinal, self.data.value.shape)
             }
             fn get_shape(&self) -> shapes::SvgPathShape {
                 shapes::SvgPathShape {
@@ -32,7 +44,7 @@ macro_rules! impl_shape_diagram {
                 )
             }
             fn get_transform(&self) -> Transform {
-                let x = self.theme.grid.bar_size / self.data.bar_props.bar_units.0 * self.data.entry_props.in_bar_pos.0
+                let x = self.data.value.bar_size / self.data.bar_props.bar_units.0 * self.data.entry_props.in_bar_pos.0
                     + self.theme.shapes.shape_x;
                 let mut trans =
                     Transform::from_xyz(x, self.theme.shapes.shape_y, self.theme.shapes.shape_z);
@@ -56,5 +68,5 @@ macro_rules! impl_shape_diagram {
     }
 }
 
-impl_shape_diagram!(HandShape6, ShapeDiagram6, ShapeDiagramData6);
-impl_shape_diagram!(HandShape4, ShapeDiagram4, ShapeDiagramData4);
+impl_shape_diagram!(HandShape6, ShapeDiagram6, ShapeDiagramData6, ShapeDiagramValue6);
+impl_shape_diagram!(HandShape4, ShapeDiagram4, ShapeDiagramData4, ShapeDiagramValue4);

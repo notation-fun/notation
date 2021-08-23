@@ -4,3 +4,4 @@ pub mod bar_layout;
 pub mod bar_playing;
 pub mod bar_plugin;
 pub mod bar_separator;
+pub mod bar_view;

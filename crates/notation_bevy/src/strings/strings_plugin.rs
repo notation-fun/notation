@@ -16,7 +16,6 @@ impl Plugin for StringsPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(on_add_fretted_grid6.system());
         app.add_system(on_add_fretted_grid4.system());
-        app.add_system(on_config_changed.system());
         app.add_system_set(super::pick_systems::new_system_set());
     }
 }
@@ -26,23 +25,6 @@ impl StringsPlugin {
         match lane.track.kind {
             TrackKind::Guitar => Self::insert_lane_extra6(commands, lane),
             _ => (),
-        }
-    }
-}
-
-fn on_config_changed(
-    mut commands: Commands,
-    mut evts: EventReader<WindowResizedEvent>,
-    theme: Res<NotationTheme>,
-    string_query: Query<(Entity, &SingleStringData)>,
-    pick_note_query: Query<(Entity, &PickNoteData)>,
-) {
-    for _evt in evts.iter() {
-        for (entity, data) in string_query.iter() {
-            SingleString::update(&mut commands, &theme, entity, data);
-        }
-        for (entity, data) in pick_note_query.iter() {
-            PickNoteShape::update(&mut commands, &theme, entity, data);
         }
     }
 }

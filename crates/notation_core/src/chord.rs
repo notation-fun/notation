@@ -1,11 +1,12 @@
 use std::fmt::Display;
+use std::hash::Hash;
 
 use serde::{Deserialize, Serialize};
 
 use crate::interval::Interval;
 use crate::prelude::{Intervals, Syllable};
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub struct Chord {
     pub root: Syllable,
     pub intervals: Intervals,
@@ -27,6 +28,12 @@ impl Chord {
             intervals,
             base,
         }
+    }
+}
+impl Hash for Chord {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        let string = self.to_string();
+        string.hash(state);
     }
 }
 

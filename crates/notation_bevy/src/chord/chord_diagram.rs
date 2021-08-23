@@ -36,7 +36,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
         let outline = self
             .theme
             .sizes
-            .chords
+            .chord
             .diagram_outline
             .of_state(&self.data.value.playing_state);
         let mut radius = self.data.value.radius;
@@ -67,7 +67,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
             outline_options: StrokeOptions::default().with_line_width(
                 self.theme
                     .sizes
-                    .chords
+                    .chord
                     .diagram_outline
                     .of_state(&self.data.value.playing_state),
             ),
@@ -142,7 +142,7 @@ impl<'a> ChordDiagram<'a> {
             let interval_value = ChordIntervalValue {
                 total: intervals.len(),
                 index: index,
-                radius: radius * theme.sizes.chords.diagram_interval_factor,
+                radius: radius * theme.sizes.chord.diagram_interval_factor,
                 root: chord.root,
                 interval: interval.clone(),
             };
@@ -157,7 +157,7 @@ impl<'a> ChordDiagram<'a> {
             let interval_value = ChordIntervalValue {
                 total: intervals.len(),
                 index: 0,
-                radius: radius * theme.sizes.chords.diagram_base_factor,
+                radius: radius * theme.sizes.chord.diagram_base_factor,
                 root: chord.root,
                 interval: base.clone(),
             };

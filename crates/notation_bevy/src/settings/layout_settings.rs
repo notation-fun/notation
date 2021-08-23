@@ -1,18 +1,16 @@
 use bevy::prelude::*;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
 use float_eq::float_ne;
-use std::collections::HashMap;
 use std::sync::Arc;
 
-use notation_model::prelude::{BarLane, LaneKind, Position, Tab, TabBar, TabPosition, Units};
+use notation_model::prelude::{Position, Units};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
 use crate::bar::bar_layout::BarLayoutData;
-use crate::lane::lane_layout::LaneLayoutData;
-use crate::prelude::{BarLayout, LaneLayout, NotationAppState, TabBars, TabState};
+use crate::prelude::{TabBars, TabState};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -30,7 +28,8 @@ impl Default for LayoutMode {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutSettings {
     pub mode: LayoutMode,
-    pub bars_in_window: u8,
+    pub focus_bar_ease_ms: u64,
+    /*
     pub bar_margin: f32,
     pub lane_margin: f32,
     pub shapes_height: f32,
@@ -41,14 +40,15 @@ pub struct LayoutSettings {
     pub strings_lane_order: u8,
     pub lyrics_lane_order: u8,
     pub melody_lane_order: u8,
-    pub focus_bar_ease_ms: u64,
+     */
 }
 
 impl Default for LayoutSettings {
     fn default() -> Self {
         Self {
             mode: LayoutMode::default(),
-            bars_in_window: 4,
+            focus_bar_ease_ms: 250,
+    /*
             bar_margin: 32.0,
             lane_margin: 4.0,
             shapes_height: 46.0,
@@ -59,11 +59,12 @@ impl Default for LayoutSettings {
             strings_lane_order: 2,
             lyrics_lane_order: 3,
             melody_lane_order: 4,
-            focus_bar_ease_ms: 250,
+     */
         }
     }
 }
 
+/*
 impl LayoutSettings {
     pub fn calc_lane_order(&self, lane: &BarLane) -> u8 {
         match lane.kind {
@@ -88,7 +89,7 @@ impl LayoutSettings {
         };
         if height > 0.0 {
             let order = self.calc_lane_order(lane);
-            Some(LaneLayoutData::new(order, height, self.lane_margin))
+            Some(LaneLayoutData::new(order, 0.0, height, self.lane_margin))
         } else {
             None
         }
@@ -108,7 +109,7 @@ impl LayoutSettings {
         &self,
         _app_state: &NotationAppState,
         lane_layouts_data: HashMap<String, LaneLayoutData>,
-    ) -> HashMap<String, LaneLayout> {
+    ) -> HashMap<String, LaneLayoutData> {
         let mut layouts: Vec<(String, LaneLayoutData)> = lane_layouts_data.into_iter().collect();
         layouts.sort_by(|(_, a), (_, b)| a.order.cmp(&b.order));
         let mut y: f32 = 0.0;
@@ -121,21 +122,18 @@ impl LayoutSettings {
             })
             .collect()
     }
-}
-
-impl LayoutSettings {
-    fn _calc_bar_row_col(&self, index: usize) -> (usize, usize) {
+    fn _calc_bar_row_col(&self, cols: usize, index: usize) -> (usize, usize) {
         match self.mode {
             LayoutMode::Grid => {
-                let row = index / self.bars_in_window as usize;
-                let col = index % self.bars_in_window as usize;
+                let row = index / cols as usize;
+                let col = index % cols as usize;
                 (row, col)
             }
             LayoutMode::Line => (0, index),
         }
     }
-    fn calc_bar_layout_data(&self, app_state: &NotationAppState, bar: &TabBar) -> BarLayoutData {
-        let (row, col) = self._calc_bar_row_col(bar.props.bar_ordinal - 1);
+    fn calc_bar_layout_data(&self, cols: usize, app_state: &NotationAppState, bar: &TabBar) -> BarLayoutData {
+        let (row, col) = self._calc_bar_row_col(cols, bar.props.bar_ordinal - 1);
         BarLayoutData::new(
             self.bar_margin,
             row,
@@ -143,21 +141,21 @@ impl LayoutSettings {
             Arc::new(self.calc_lane_layouts_data(app_state, bar)),
         )
     }
-    pub fn calc_pos_layout(&self, tab: &Tab, pos: TabPosition) -> (usize, usize) {
+    pub fn calc_pos_layout(&self, cols: usize, tab: &Tab, pos: TabPosition) -> (usize, usize) {
         let bar_units = tab.bar_units();
         let mut index = (pos.in_tab_pos.0 / bar_units.0) as usize;
         let bars = tab.bars.len();
         if index >= bars {
             index = bars - 1;
         }
-        self._calc_bar_row_col(index)
+        self._calc_bar_row_col(cols, index)
     }
     fn merge_row_lane_layouts_data(
         &self,
         row_lane_layouts_data: &mut HashMap<String, LaneLayoutData>,
         bar_layout_data: &BarLayoutData,
     ) {
-        for (lane_id, lane_layout_data) in bar_layout_data.lane_layouts_data.iter() {
+        for (lane_id, lane_layout_data) in bar_layout_data.lane_layouts.iter() {
             if !row_lane_layouts_data.contains_key(lane_id) {
                 row_lane_layouts_data.insert(lane_id.clone(), *lane_layout_data);
             }
@@ -177,11 +175,11 @@ impl LayoutSettings {
         }
         height
     }
-    pub fn calc_bar_layouts(&self, app_state: &NotationAppState, tab: &Tab) -> Vec<BarLayout> {
+    pub fn calc_bar_layouts(&self, cols: usize, app_state: &NotationAppState, tab: &Tab) -> Vec<BarLayoutData> {
         let with_layouts_data: Vec<(&Arc<TabBar>, BarLayoutData)> = tab
             .bars
             .iter()
-            .map(|bar| (bar, self.calc_bar_layout_data(app_state, bar)))
+            .map(|bar| (bar, self.calc_bar_layout_data(cols, app_state, bar)))
             .collect();
         let mut rows_lane_layouts_data: Vec<HashMap<String, LaneLayoutData>> = Vec::new();
         for (_bar, bar_layout_data) in with_layouts_data.iter() {
@@ -193,7 +191,7 @@ impl LayoutSettings {
             self.merge_row_lane_layouts_data(&mut row_lane_layouts_data, &bar_layout_data);
         }
         let mut y: f32 = 0.0;
-        let rows_lane_layouts: Vec<(f32, f32, Arc<HashMap<String, LaneLayout>>)> =
+        let rows_lane_layouts: Vec<(f32, f32, Arc<HashMap<String, LaneLayoutData>>)> =
             rows_lane_layouts_data
                 .into_iter()
                 .map(|data| {
@@ -213,11 +211,14 @@ impl LayoutSettings {
             })
             .collect()
     }
+}
+*/
+impl LayoutSettings {
     pub fn bar_layout_of_pos(
         &self,
-        bar_layouts: &Arc<Vec<BarLayout>>,
+        bar_layouts: &Arc<Vec<BarLayoutData>>,
         pos: Position,
-    ) -> Option<BarLayout> {
+    ) -> Option<BarLayoutData> {
         bar_layouts.get(pos.bar.bar_ordinal - 1).map(|x| x.clone())
     }
     pub fn pan_tab_bars(
@@ -280,13 +281,13 @@ impl LayoutSettings {
     }
     fn calc_grid_focus_y(
         &self,
-        bar_layouts: &Arc<Vec<BarLayout>>,
-        bar_layout: &BarLayout,
+        bar_layouts: &Arc<Vec<BarLayoutData>>,
+        bar_layout: &BarLayoutData,
         _pos: &Position,
     ) -> f32 {
-        if bar_layout.data.row > 0 {
+        if false { //TODO
             for layout in bar_layouts.iter() {
-                if layout.data.row == bar_layout.data.row - 1 {
+                if false { //layout.data.row == bar_layout.data.row - 1 {
                     return layout.offset;
                 }
             }
@@ -295,18 +296,21 @@ impl LayoutSettings {
             bar_layout.offset
         }
     }
-    fn calc_line_focus_x_units(&self, bar_layout: &BarLayout, pos: &Position) -> Units {
+    fn calc_line_focus_x_units(&self, bar_layout: &BarLayoutData, pos: &Position) -> Units {
+        Units(0.0)
+        /*
         Units(if bar_layout.data.col > 0 {
             bar_layout.data.col as f32 - 1.0 + pos.bar.in_bar_pos.0 / pos.bar.bar_units.0
         } else {
             bar_layout.data.col as f32
         })
+         */
     }
     pub fn focus_bar(
         &self,
         commands: &mut Commands,
         tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
-        bar_layouts: &Arc<Vec<BarLayout>>,
+        bar_layouts: &Arc<Vec<BarLayoutData>>,
         bar_size: f32,
         state: &TabState,
     ) {

@@ -34,7 +34,7 @@ impl ChordView {
         mut base_query: Query<(Entity, &mut ChordBaseData)>,
     ) {
         for (_entity, _view, layout, children) in query.iter() {
-            let radius = layout.size.width * theme.sizes.chords.diagram_factor;
+            let radius = layout.size.width * theme.sizes.chord.diagram_factor;
             for child in children.iter() {
                 if let Ok((diagram_entity, mut diagram_data, diagram_children)) =
                     diagram_query.get_mut(*child)

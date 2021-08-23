@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use crate::prelude::{
-    LaneLayout, LyonShapeOp, LyricsPlugin, MelodyPlugin, NotationTheme, ShapesPlugin,
+    LaneLayoutData, LyonShapeOp, LyricsPlugin, MelodyPlugin, NotationTheme, ShapesPlugin,
     StringsPlugin, WindowResizedEvent,
 };
 use notation_model::prelude::{BarLane, LaneKind, TabBar};
@@ -50,7 +50,7 @@ fn on_add_lane(mut commands: Commands, query: Query<(Entity, &Arc<BarLane>), Add
 fn on_add_lane_layout(
     mut commands: Commands,
     theme: Res<NotationTheme>,
-    query: Query<(Entity, &Arc<TabBar>, &LaneLayout), Added<LaneLayout>>,
+    query: Query<(Entity, &Arc<TabBar>, &LaneLayoutData), Added<LaneLayoutData>>,
 ) {
     for (entity, tab_bar, lane_layout) in query.iter() {
         let data = LaneBackData::new(tab_bar, lane_layout);

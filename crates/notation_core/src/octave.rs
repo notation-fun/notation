@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::prelude::Semitones;
 
 // https://en.wikipedia.org/wiki/Scientific_pitch_notation
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum Octave {
     N1,
     P0,

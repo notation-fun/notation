@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 // https://hellomusictheory.com/learn/
 // http://openmusictheory.com/pitches.html
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum PitchName {
     C,
     D,
@@ -22,13 +22,13 @@ impl Display for PitchName {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum PitchSign {
+    DoubleFlat,
+    Flat,
     Natural,
     Sharp,
-    Flat,
     DoubleSharp,
-    DoubleFlat,
 }
 
 impl Display for PitchSign {
@@ -50,7 +50,7 @@ impl Display for PitchSign {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub struct Pitch {
     pub name: PitchName,
     pub sign: PitchSign,

@@ -1,50 +1,32 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 use std::sync::Arc;
 
-use crate::lane::lane_layout::{LaneLayout, LaneLayoutData};
+use crate::prelude::{LaneLayoutData};
 
 #[derive(Clone, Debug)]
 pub struct BarLayoutData {
+    pub offset: f32,
+    pub height: f32,
     pub margin: f32,
-    pub row: usize,
-    pub col: usize,
-    pub lane_layouts_data: Arc<HashMap<String, LaneLayoutData>>,
+    pub lane_layouts: Arc<HashMap<String, LaneLayoutData>>,
+}
+impl Display for BarLayoutData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<BarLayoutData>(m:{} L:[{}])", self.margin, self.lane_layouts.len())
+    }
 }
 impl BarLayoutData {
     pub fn new(
+        offset: f32,
+        height: f32,
         margin: f32,
-        row: usize,
-        col: usize,
         lane_layouts_data: Arc<HashMap<String, LaneLayoutData>>,
     ) -> Self {
         Self {
-            margin,
-            row,
-            col,
-            lane_layouts_data,
-        }
-    }
-}
-
-#[derive(Clone, Debug)]
-pub struct BarLayout {
-    pub data: BarLayoutData,
-    pub offset: f32,
-    pub height: f32,
-    pub lane_layouts: Arc<HashMap<String, LaneLayout>>,
-}
-impl BarLayout {
-    pub fn new(
-        data: BarLayoutData,
-        offset: f32,
-        height: f32,
-        lane_layouts: Arc<HashMap<String, LaneLayout>>,
-    ) -> Self {
-        Self {
-            data,
             offset,
             height,
-            lane_layouts,
+            margin,
+            lane_layouts: lane_layouts_data,
         }
     }
 }

@@ -53,7 +53,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordBase<'a> {
     }
 
     fn get_transform(&self) -> Transform {
-        let y = -self.data.value.interval.radius * self.theme.sizes.chords.diagram_base_y_factor;
+        let y = -self.data.value.interval.radius * self.theme.sizes.chord.diagram_base_y_factor;
         Transform::from_xyz(0.0, y, 1.0)
     }
 }

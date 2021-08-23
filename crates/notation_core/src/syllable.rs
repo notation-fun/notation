@@ -4,33 +4,31 @@ use std::fmt::Display;
 use crate::prelude::Semitones;
 
 // https://en.wikipedia.org/wiki/Solf%C3%A8ge
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum Syllable {
     //Natural
     Do,
+    Di, //Sharp
+    Ra, //Flat
     Re,
-    Mi,
+    Ri, //Sharp
+    Me, //Flat
+    Mi, //Sharp
     Fa,
+    Fi, //Sharp
+    Se, //Flat
     So,
+    Si, //Sharp
+    Le, //Flat
     La,
+    Li, //Sharp
+    Te, //Flat
     Ti,
-    //Sharp
-    Di,
-    Ri,
-    Fi,
-    Si,
-    Li,
-    //Flat
-    Ra,
-    Me,
-    Se,
-    Le,
-    Te,
 }
 
 impl Display for Syllable {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.to_ident())
+        write!(f, "{}", self.to_text())
     }
 }
 

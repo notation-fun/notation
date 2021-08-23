@@ -1,7 +1,9 @@
+use std::sync::Arc;
+
 use bevy::prelude::*;
 
 use bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::PlayingState;
+use notation_model::prelude::{BarLane, LaneKind, PlayingState};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -34,16 +36,33 @@ impl PlayingSize {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeSizes {
-    pub chords: ChordsSizes,
+    pub bar: BarSizes,
+    pub chord: ChordSizes,
     pub melody: MelodySizes,
     pub lyrics: LyricsSizes,
     pub strings: StringsSizes,
     pub mini_map: MiniMapSizes,
+    pub layout: LayoutSizes,
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
-pub struct ChordsSizes {
+pub struct BarSizes {
+    pub row_margin: f32,
+    pub beat_size_range: (f32, f32),
+}
+impl Default for BarSizes {
+    fn default() -> Self {
+        Self {
+            row_margin: 8.0,
+            beat_size_range: (64.0, 256.0),
+        }
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct ChordSizes {
     pub chord_size_range: (f32, f32),
     pub diagram_factor: f32,
     pub diagram_outline: PlayingSize,
@@ -51,7 +70,7 @@ pub struct ChordsSizes {
     pub diagram_base_factor: f32,
     pub diagram_base_y_factor: f32,
 }
-impl Default for ChordsSizes {
+impl Default for ChordSizes {
     fn default() -> Self {
         Self {
             chord_size_range: (32.0, 80.0),
@@ -131,5 +150,64 @@ impl Default for MiniMapSizes {
 impl MiniMapSizes {
     pub fn bar_margin(&self) -> LayoutSize {
         LayoutSize::new(self.bar_margin.0, self.bar_margin.1)
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct LayoutSizes {
+    pub bar_margin: f32,
+    pub lane_margin: f32,
+    pub shapes_height: f32,
+    pub strings_height: f32,
+    pub lyrics_height: f32,
+    pub melody_height: f32,
+    pub shapes_lane_order: u8,
+    pub strings_lane_order: u8,
+    pub lyrics_lane_order: u8,
+    pub melody_lane_order: u8,
+}
+
+impl Default for LayoutSizes {
+    fn default() -> Self {
+        Self {
+            bar_margin: 32.0,
+            lane_margin: 4.0,
+            shapes_height: 46.0,
+            strings_height: 72.0,
+            lyrics_height: 20.0,
+            melody_height: 36.0,
+            shapes_lane_order: 1,
+            strings_lane_order: 2,
+            lyrics_lane_order: 3,
+            melody_lane_order: 4,
+        }
+    }
+}
+impl LayoutSizes {
+    pub fn calc_lane_order(&self, lane_kind: LaneKind) -> u8 {
+        match lane_kind {
+            LaneKind::Lyrics => self.lyrics_lane_order,
+            LaneKind::Melody => self.melody_lane_order,
+            LaneKind::Strings => self.strings_lane_order,
+            LaneKind::Shapes => self.shapes_lane_order,
+            _ => 0,
+        }
+    }
+    pub fn calc_lane_height(&self, lane_kind: LaneKind) -> f32 {
+        match lane_kind {
+            LaneKind::Lyrics => self.lyrics_height,
+            LaneKind::Melody => self.melody_height,
+            LaneKind::Strings => self.strings_height,
+            LaneKind::Shapes => self.shapes_height,
+            _ => 0.0,
+        }
+    }
+    pub fn sort_lanes(&self, lanes: &Vec<Arc<BarLane>>) -> Vec<Arc<BarLane>> {
+        let mut sorted_lanes: Vec<Arc<BarLane>> = lanes.clone();
+        sorted_lanes.sort_by(|a, b| {
+            self.calc_lane_order(a.kind).cmp(&self.calc_lane_order(b.kind))
+        });
+        sorted_lanes
     }
 }

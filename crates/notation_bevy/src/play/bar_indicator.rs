@@ -2,31 +2,23 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use bevy_utils::prelude::LayoutSize;
 use notation_model::prelude::{Position, Units};
 
-use crate::prelude::{BarLayout, LyonShape, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{BarLayoutData, LyonShape, LyonShapeOp, NotationSettings, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct BarIndicatorData {
-    bar_units: Units,
-    bar_col: usize,
-    bar_offset: f32,
-    bar_height: f32,
+    pub bar_offset: Vec2,
+    pub bar_size: LayoutSize,
 }
 
 impl BarIndicatorData {
-    pub fn new(bar_units: Units, bar_layout: &BarLayout) -> Self {
+    pub fn new() -> Self {
         BarIndicatorData {
-            bar_units,
-            bar_col: bar_layout.data.col,
-            bar_offset: bar_layout.offset,
-            bar_height: bar_layout.height,
+            bar_offset: Vec2::ZERO,
+            bar_size: LayoutSize::ZERO,
         }
-    }
-    pub fn update(&mut self, bar_layout: &BarLayout) {
-        self.bar_col = bar_layout.data.col;
-        self.bar_offset = bar_layout.offset;
-        self.bar_height = bar_layout.height;
     }
 }
 
@@ -41,8 +33,8 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.theme.grid.bar_size,
-            height: self.data.bar_height + self.theme.grid.bar_separator_extra * 2.0,
+            width: self.data.bar_size.width,
+            height: self.data.bar_size.height,
             origin: shapes::RectangleOrigin::TopLeft,
         }
     }
@@ -54,11 +46,9 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let x = self.theme.grid.bar_size * self.data.bar_col as f32;
-        let y = self.data.bar_offset + self.theme.grid.bar_separator_extra;
-        self.theme
-            .grid
-            .add_margin(Transform::from_xyz(x, y, self.theme.core.bar_indicator_z))
+        let x = self.data.bar_offset.x;
+        let y = self.data.bar_offset.y + self.theme.grid.bar_separator_extra;
+        Transform::from_xyz(x, y, self.theme.core.bar_indicator_z)
     }
 }
 
@@ -67,26 +57,5 @@ impl<'a> LyonShapeOp<'a, NotationTheme, BarIndicatorData, shapes::Rectangle, Bar
 {
     fn new_shape(theme: &'a NotationTheme, data: BarIndicatorData) -> BarIndicator<'a> {
         BarIndicator::<'a> { theme, data }
-    }
-}
-
-impl<'a> BarIndicator<'a> {
-    pub fn update_pos(
-        commands: &mut Commands,
-        theme: &'a NotationTheme,
-        settings: &NotationSettings,
-        pos_indicator_query: &mut Query<(Entity, &mut BarIndicatorData)>,
-        bar_layouts: &Arc<Vec<BarLayout>>,
-        pos: Position,
-    ) {
-        settings
-            .layout
-            .bar_layout_of_pos(bar_layouts, pos)
-            .map(|bar_layout| {
-                if let Ok((entity, mut data)) = pos_indicator_query.single_mut() {
-                    BarIndicatorData::update(&mut data, &bar_layout);
-                    Self::update(commands, theme, entity, &data);
-                }
-            });
     }
 }

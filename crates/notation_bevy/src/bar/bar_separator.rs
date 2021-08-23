@@ -1,30 +1,31 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::prelude::{BarLayout, LyonShape, LyonShapeOp, NotationTheme};
-use notation_model::prelude::{TabBar, Units};
+use crate::prelude::{BarData, BarLayoutData, LyonShape, LyonShapeOp, NotationTheme};
+use notation_model::prelude::{TabBar};
 
 #[derive(Clone, Debug)]
-pub struct BarSeparatorData {
-    pub bar_ordinal: usize,
-    pub bar_units: Units,
+pub struct BarSeparatorValue {
     pub bar_height: f32,
     pub is_begin: bool,
+    pub bar_size: f32,
 }
+pub type BarSeparatorData = BarData<BarSeparatorValue>;
 
-impl BarSeparatorData {
-    pub fn new(tab_bar: &Arc<TabBar>, bar_layout: &BarLayout, is_begin: bool) -> Self {
-        let bar_ordinal = tab_bar.props.bar_ordinal;
-        let bar_units = tab_bar.bar_units();
+impl BarSeparatorValue {
+    pub fn new(tab_bar: &TabBar, bar_layout: &BarLayoutData, is_begin: bool) -> Self {
         let bar_height = bar_layout.height;
-        BarSeparatorData {
-            bar_ordinal,
-            bar_units,
+        Self {
             bar_height,
             is_begin,
+            bar_size: 0.0,
         }
+    }
+}
+impl BarSeparatorData {
+    pub fn new_data(tab_bar: &TabBar, bar_layout: &BarLayoutData, is_begin: bool) -> Self {
+        let value = BarSeparatorValue::new(tab_bar, bar_layout, is_begin);
+        Self::new(tab_bar, value)
     }
 }
 
@@ -35,10 +36,10 @@ pub struct BarSeparator<'a> {
 
 impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
     fn get_name(&self) -> String {
-        if self.data.is_begin {
-            format!("| {}", self.data.bar_ordinal)
+        if self.data.value.is_begin {
+            format!("| {}", self.data.bar_props.bar_ordinal)
         } else {
-            format!("{} |", self.data.bar_ordinal)
+            format!("{} |", self.data.bar_props.bar_ordinal)
         }
     }
     fn get_shape(&self) -> shapes::Line {
@@ -46,7 +47,7 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
             Vec2::new(0.0, self.theme.grid.bar_separator_extra),
             Vec2::new(
                 0.0,
-                -self.data.bar_height - self.theme.grid.bar_separator_extra,
+                -self.data.value.bar_height - self.theme.grid.bar_separator_extra,
             ),
         )
     }
@@ -58,10 +59,10 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let x = if self.data.is_begin {
+        let x = if self.data.value.is_begin {
             0.0
         } else {
-            self.theme.grid.bar_size
+            self.data.value.bar_size
         };
         Transform::from_xyz(x, 0.0, self.theme.core.bar_separator_z)
     }

@@ -14,7 +14,7 @@ use super::tab_events::TabChordsDoLayoutEvent;
 
 pub struct TabChords {
     pub tab: Arc<Tab>,
-    pub chords: Vec<(Arc<ModelEntry>, Chord)>,
+    pub chords: Vec<(Chord, Arc<ModelEntry>)>,
 }
 impl Display for TabChords {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -25,19 +25,18 @@ impl TabChords {
     pub fn new(tab: Arc<Tab>) -> Self {
         let chords =
             tab.get_track_of_kind(TrackKind::Chord)
-                .map(|x| x.get_chords())
+                .map(|x| x.get_unique_chords())
                 .unwrap_or_default();
         Self { tab, chords }
     }
 }
 impl<'a> GridView<NotationLayout<'a>, ChordView> for TabChords {
     fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
-        let sizes = engine.theme.sizes.chords;
+        let sizes = engine.theme.sizes.chord;
         let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_height(
             grid_size.height, sizes.chord_size_range, 0.0, self.chords.len());
         let size = LayoutSize::new(cell_width, cell_width);
         GridData::new_fixed(grid_size, rows, cols, size, LayoutSize::ZERO, LayoutAnchor::TOP_LEFT)
-
     }
 }
 impl<'a> DockPanel<NotationLayout<'a>> for TabChords {
@@ -59,7 +58,7 @@ impl TabChords {
         query: ViewAddedQuery<TabChords>,
     ) {
         for (_parent, entity, view) in query.iter() {
-            for (entry, chord) in view.chords.iter() {
+            for (chord, entry) in view.chords.iter() {
                 BevyUtil::spawn_child_bundle(
                     &mut commands,
                     entity,
@@ -70,6 +69,7 @@ impl TabChords {
     }
     pub fn do_layout(
         mut evts: EventReader<TabChordsDoLayoutEvent>,
+        mut commands: Commands,
         theme: Res<NotationTheme>,
         state: Res<NotationAppState>,
         settings: Res<NotationSettings>,
@@ -79,6 +79,7 @@ impl TabChords {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(
+                &mut commands,
                 &engine,
                 &mut layout_query,
                 &cell_query,

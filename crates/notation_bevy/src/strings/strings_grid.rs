@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::prelude::{LyonShapeOp, NotationTheme};
 use notation_model::prelude::BarLane;
 
-use super::single_string::{SingleString, SingleStringData};
+use super::single_string::{SingleString, SingleStringData, SingleStringValue};
 
 macro_rules! impl_strings_grid {
     ($type:ident, $strings: literal) => {
@@ -23,7 +23,10 @@ macro_rules! impl_strings_grid {
                         commands,
                         theme,
                         entity,
-                        SingleStringData::new(lane, string as u8),
+                        SingleStringData::new(lane, SingleStringValue{
+                            string: string as u8,
+                            bar_size: 0.0,
+                        }),
                     );
                 }
             }

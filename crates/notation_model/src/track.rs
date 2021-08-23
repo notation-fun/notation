@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{collections::HashMap, fmt::Display};
 use std::sync::Arc;
 
 use notation_proto::prelude::Chord;
@@ -86,6 +86,24 @@ impl Track {
                 chords.push((entry.clone(), chord));
             }
         }
+        chords
+    }
+    pub fn get_unique_chords(&self) -> Vec<(Chord, Arc<ModelEntry>)> {
+        let chords = self.get_chords();
+        if chords.len() == 0 {
+            return Vec::new();
+        }
+        let mut unique_chords: HashMap<Chord, Arc<ModelEntry>> = HashMap::new();
+        for (entry, chord) in chords.into_iter() {
+            if !unique_chords.contains_key(&chord) {
+                unique_chords.insert(chord, entry);
+            }
+        }
+        let mut chords = unique_chords.into_iter()
+            .collect::<Vec<(Chord, Arc<ModelEntry>)>>();
+        chords.sort_by(|(a, _), (b, _)| {
+                a.cmp(&b)
+            });
         chords
     }
 }

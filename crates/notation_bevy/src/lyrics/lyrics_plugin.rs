@@ -11,20 +11,6 @@ pub struct LyricsPlugin;
 
 impl Plugin for LyricsPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_system(on_config_changed.system());
-    }
-}
-
-fn on_config_changed(
-    mut commands: Commands,
-    mut evts: EventReader<WindowResizedEvent>,
-    theme: Res<NotationTheme>,
-    tone_note_query: Query<(Entity, &WordTextData)>,
-) {
-    for _evt in evts.iter() {
-        for (entity, data) in tone_note_query.iter() {
-            WordTextShape::update(&mut commands, &theme, entity, data);
-        }
     }
 }
 

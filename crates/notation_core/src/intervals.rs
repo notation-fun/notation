@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::interval::Interval;
 
 //https://en.wikipedia.org/wiki/Chord_(music)
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum Intervals {
     Monad,
     Dyad(Interval),

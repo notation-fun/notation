@@ -1,11 +1,13 @@
+use std::sync::Arc;
+
 use bevy::prelude::*;
 
-use crate::prelude::{LayoutAnchor, LayoutConstraint, LayoutData, LayoutEnv, LayoutQuery, LayoutSize, View, ViewQuery};
+use crate::prelude::{LayoutAnchor, LayoutData, LayoutEnv, LayoutQuery, LayoutSize, View, ViewQuery};
 
 #[derive(Clone, Debug)]
 pub enum GridCellSize {
     Fixed(LayoutSize),
-    Rows(Vec<(LayoutSize, f32)>),
+    Rows(Vec<LayoutSize>),
 }
 impl GridCellSize {
     pub fn calc_cell_offset(&self, margin: &LayoutSize, row: usize, col: usize) -> Vec2 {
@@ -16,9 +18,16 @@ impl GridCellSize {
                 Vec2::new(x, y)
             }
             Self::Rows(rows) => {
-                if let Some((size, offset)) = rows.get(row) {
-                    let x = size.width * col as f32;
-                    let y = -offset;
+                let mut y = 0.0;
+                for i in 0..row {
+                    if let Some(size) = rows.get(i) {
+                        y += size.height + margin.height;
+                    } else {
+                        break;
+                    }
+                }
+                if let Some(size) = rows.get(row) {
+                    let x = (size.width + margin.width) * col as f32;
                     Vec2::new(x, y)
                 } else {
                     Vec2::ZERO
@@ -30,7 +39,7 @@ impl GridCellSize {
         match self {
             Self::Fixed(size) => size.clone(),
             Self::Rows(rows) => {
-                if let Some((size, _offset)) = rows.get(row) {
+                if let Some(size) = rows.get(row) {
                     size.clone()
                 } else {
                     LayoutSize::ZERO
@@ -38,6 +47,12 @@ impl GridCellSize {
             }
         }
     }
+}
+#[derive(Clone, Debug)]
+pub struct GridCellData {
+    pub grid: Arc<GridData>,
+    pub row: usize,
+    pub col: usize,
 }
 
 #[derive(Clone, Debug)]
@@ -96,13 +111,12 @@ impl GridData {
             return (0, 0.0);
         }
         let mut cell_size = content_size / total as f32;
-        let mut cell_count = total;
         if cell_size < cell_size_range.0 {
             cell_size = cell_size_range.0;
         } else if cell_size > cell_size_range.1 {
             cell_size = cell_size_range.1;
         }
-        cell_count = (content_size / cell_size).floor() as usize;
+        let mut cell_count = (content_size / cell_size).floor() as usize;
         if cell_count == 0 {
             cell_count = 1;
         }
@@ -149,9 +163,9 @@ impl GridData {
                 let mut content_height = self.margin.height;
                 for row in rows.iter() {
                     if fixed_size.is_none() {
-                        fixed_size = Some(Self::calc_fixed_content_size(self.rows, self.cols, row.0, self.margin));
+                        fixed_size = Some(Self::calc_fixed_content_size(self.rows, self.cols, *row, self.margin));
                     }
-                    content_height += row.0.height + self.margin.height;
+                    content_height += row.height + self.margin.height;
                 }
                 if fixed_size.is_some() {
                     LayoutSize::new(fixed_size.unwrap().width, content_height)
@@ -201,6 +215,7 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
     }
     fn do_layout(
         &self,
+        commands: &mut Commands,
         engine: &TE,
         layout_query: &mut LayoutQuery,
         cell_query: &ViewQuery<TC>,
@@ -210,8 +225,9 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
         if self.is_root() {
             self.set_layout_data(layout_query, entity, data);
         }
-        let grid_data = self.calc_grid_data(engine, data.size);
+        let grid_data = Arc::new(self.calc_grid_data(engine, data.size));
         let cells = engine.get_children(cell_query, entity);
+        commands.entity(entity).insert(grid_data.clone());
         for (index, cell) in cells.iter().enumerate() {
             let (row, col) = self.calc_row_col(engine, &grid_data, index);
             let offset = self.calc_cell_offset(engine, &grid_data, row, col);
@@ -220,6 +236,11 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
                 layout_query,
                 data.new_child(self.pivot(), LayoutAnchor::TOP_LEFT, offset, size),
             );
+            commands.entity(cell.entity).insert(GridCellData{
+                grid: grid_data.clone(),
+                row,
+                col,
+            });
         }
     }
 }

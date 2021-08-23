@@ -54,13 +54,15 @@ impl TabBar {
     ) -> Arc<Self> {
         Arc::<Self>::new_cyclic(|weak_self| {
             let mut lanes = Vec::new();
+            let mut index = 0;
             for layer in bar.layers.iter() {
                 for slice in layer.slices.iter() {
                     if slice.in_round(section_round) {
                         if let Some(lane) =
-                            BarLane::try_new_arc(weak_self.clone(), &layer.track, slice.clone())
+                            BarLane::try_new_arc(weak_self.clone(), index, &layer.track, slice.clone())
                         {
                             lanes.push(lane);
+                            index += 1;
                         }
                     }
                 }

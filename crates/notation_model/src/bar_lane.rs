@@ -4,7 +4,9 @@ use std::sync::{Arc, Weak};
 use crate::prelude::{LaneEntry, LaneKind, Slice, Tab, TabBar, TabBarProps, Track};
 
 #[derive(Copy, Clone, Debug, Default)]
-pub struct BarLaneProps {}
+pub struct BarLaneProps {
+    pub index: usize,
+}
 
 #[derive(Debug)]
 pub struct BarLane {
@@ -31,11 +33,18 @@ impl BarLane {
     pub fn id(&self) -> String {
         format!("{}:{}", self.track.id, self.kind)
     }
-    pub fn try_new_arc(bar: Weak<TabBar>, track: &Arc<Track>, slice: Slice) -> Option<Arc<Self>> {
+    pub fn try_new_arc(
+        bar: Weak<TabBar>,
+        index: usize,
+        track: &Arc<Track>,
+        slice: Slice
+    ) -> Option<Arc<Self>> {
         let model_entries = track.get_entries(&slice.begin, &slice.end);
         if let Some(kind) = LaneKind::of_entries(&track.kind, &model_entries) {
             Some(Arc::<Self>::new_cyclic(|weak_self| {
-                let props = BarLaneProps {};
+                let props = BarLaneProps {
+                    index,
+                };
                 let entries = LaneEntry::new_entries(model_entries, weak_self);
                 Self {
                     bar,

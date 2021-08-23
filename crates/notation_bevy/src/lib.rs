@@ -55,7 +55,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
-    pub use crate::bar::bar_layout::BarLayout;
+    pub use crate::bar::bar_layout::BarLayoutData;
     #[doc(hidden)]
     pub use crate::bar::bar_playing::BarPlaying;
     #[doc(hidden)]
@@ -81,7 +81,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::lane::lane_bundle::LaneBundle;
     #[doc(hidden)]
-    pub use crate::lane::lane_layout::LaneLayout;
+    pub use crate::lane::lane_layout::LaneLayoutData;
     #[doc(hidden)]
     pub use crate::lane::lane_plugin::LanePlugin;
     #[doc(hidden)]

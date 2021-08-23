@@ -23,7 +23,7 @@ macro_rules! impl_on_add_hand_shape {
             query: Query<(Entity, &Arc<LaneEntry>, &$hand_shape), Added<$hand_shape>>,
         ) {
             for (entity, entry, shape) in query.iter() {
-                let data = $diagram_data::new(entry, *shape);
+                let data = $diagram_data::from((entry.as_ref(), *shape));
                 let diagram_entity = $diagram::create_with_child(
                     &mut commands,
                     &theme,

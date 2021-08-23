@@ -3,27 +3,27 @@ use std::sync::Arc;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme, LaneLayoutData};
 use notation_model::prelude::TabBar;
-
-use super::lane_layout::LaneLayout;
 
 #[derive(Clone, Debug)]
 pub struct LaneBackData {
     pub bar_ordinal: usize,
     pub height: f32,
     pub margin: f32,
+    pub bar_size: f32,
 }
 
 impl LaneBackData {
-    pub fn new(tab_bar: &Arc<TabBar>, lane_layout: &LaneLayout) -> Self {
+    pub fn new(tab_bar: &Arc<TabBar>, lane_layout: &LaneLayoutData) -> Self {
         let bar_ordinal = tab_bar.props.bar_ordinal;
-        let height = lane_layout.data.height;
-        let margin = lane_layout.data.margin;
+        let height = lane_layout.height;
+        let margin = lane_layout.margin;
         LaneBackData {
             bar_ordinal,
             height,
             margin,
+            bar_size: 0.0,
         }
     }
 }
@@ -44,7 +44,7 @@ impl<'a> LyonShape<shapes::Rectangle> for LaneBack<'a> {
             self.data.height
         };
         shapes::Rectangle {
-            width: self.theme.grid.bar_size,
+            width: self.data.bar_size,
             height,
             origin: shapes::RectangleOrigin::TopLeft,
         }

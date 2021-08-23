@@ -18,8 +18,9 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::layout::dock::{DockPanel, DockSide, DockView};
     #[doc(hidden)]
+    pub use crate::layout::grid::{GridCell, GridCellSize, GridData, GridCellData, GridView};
     #[doc(hidden)]
-    pub use crate::layout::grid::{GridCell, GridCellSize, GridData, GridView};
+    pub use crate::layout::vbox::{VBoxCell, VBoxCellData, VBoxView};
     #[doc(hidden)]
     pub use crate::layout::view::{
         DoLayoutEvent, LayoutChangedQuery, LayoutChangedWithChildrenQuery, LayoutEnv, LayoutQuery,
@@ -27,5 +28,6 @@ pub mod prelude {
     };
     #[doc(hidden)]
     pub use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp};
+    #[doc(hidden)]
     pub use crate::util::BevyUtil;
 }

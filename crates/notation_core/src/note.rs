@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::prelude::{Octave, Pitch, Semitones};
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub struct Note {
     pub octave: Octave,
     pub pitch: Pitch,

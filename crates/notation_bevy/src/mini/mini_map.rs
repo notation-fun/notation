@@ -132,6 +132,7 @@ impl MiniMap {
     }
     pub fn do_layout(
         mut evts: EventReader<MiniMapDoLayoutEvent>,
+        mut commands: Commands,
         theme: Res<NotationTheme>,
         state: Res<NotationAppState>,
         settings: Res<NotationSettings>,
@@ -141,6 +142,7 @@ impl MiniMap {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(
+                &mut commands,
                 &engine,
                 &mut layout_query,
                 &cell_query,

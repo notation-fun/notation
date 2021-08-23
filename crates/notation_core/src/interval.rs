@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::prelude::{Semitones, Syllable};
 
 // https://hellomusictheory.com/learn/intervals/
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum IntervalQuality {
     Perfect,
     Major,
@@ -15,7 +15,7 @@ pub enum IntervalQuality {
     Tritone,
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum Interval {
     Unison,
     Minor2nd,
