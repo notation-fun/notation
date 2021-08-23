@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use bevy::prelude::*;
 
 use notation_model::prelude::{PlayControl, PlayState, Position, Tab};
@@ -7,13 +9,15 @@ pub struct TabPlayStateChanged();
 
 #[derive(Debug)]
 pub struct TabState {
+    pub tab: Arc<Tab>,
     pub under_control: bool,
     pub play_control: PlayControl,
 }
 
 impl TabState {
-    pub fn new(tab: &Tab) -> Self {
+    pub fn new(tab: &Arc<Tab>) -> Self {
         Self {
+            tab: tab.clone(),
             under_control: true,
             play_control: PlayControl::new(tab),
         }

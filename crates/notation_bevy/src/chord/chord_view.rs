@@ -7,14 +7,15 @@ use bevy_utils::prelude::{
 };
 use notation_model::prelude::{Chord, PlayingState};
 
-use crate::prelude::{BarData, BarPlaying, NotationTheme};
+use crate::prelude::{ModelEntryData, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::chord_base::ChordBaseData;
 use super::chord_diagram::{ChordDiagram, ChordDiagramData};
 use super::chord_interval::ChordIntervalData;
+use super::chord_playing::ChordPlaying;
 
-pub type ChordView = BarData<Chord>;
+pub type ChordView = ModelEntryData<Chord>;
 
 impl<'a> View<NotationLayout<'a>> for ChordView {
     fn pivot(&self) -> LayoutAnchor {
@@ -64,19 +65,19 @@ impl ChordView {
                 &mut commands,
                 &theme,
                 entity,
-                view.bar_props,
+                view.entry_props,
                 view.value,
                 radius,
             );
             commands
                 .entity(entity)
-                .insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
+                .insert(ChordPlaying::from((view.entry_props, view.value)));
         }
     }
-    pub fn on_bar_playing_changed(
+    pub fn on_chord_playing_changed(
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        mut query: Query<(Entity, &BarPlaying, &Arc<ChordView>, &Children), Changed<BarPlaying>>,
+        mut query: Query<(Entity, &ChordPlaying, &Arc<ChordView>, &Children), Changed<ChordPlaying>>,
         mut diagram_query: Query<(Entity, &mut ChordDiagramData)>,
     ) {
         for (_entity, playing, _view, children) in query.iter_mut() {
@@ -87,7 +88,7 @@ impl ChordView {
                         &theme,
                         diagram_entity,
                         &mut diagram_data,
-                        playing.value,
+                        playing.value.state,
                     );
                 }
             }

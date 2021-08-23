@@ -1,6 +1,8 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
+use notation_proto::prelude::Chord;
+
 use crate::prelude::{Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, TrackKind};
 
 #[derive(Debug)]
@@ -73,6 +75,18 @@ impl Track {
             }
         }
         entries
+    }
+    pub fn get_chords(&self) -> Vec<(Arc<ModelEntry>, Chord)> {
+        let mut chords = Vec::new();
+        for entry in self.entries.iter() {
+            if let Some(chord) = entry.proto
+                .as_core()
+                .and_then(|x| x.as_chord())
+                .map(|z|z.to_owned()) {
+                chords.push((entry.clone(), chord));
+            }
+        }
+        chords
     }
 }
 

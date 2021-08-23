@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use notation_proto::prelude::{Note, SyllableNote};
+use notation_proto::prelude::{BarPosition, Note, SyllableNote, TrackKind};
 
 use crate::prelude::{
     Form, Pitch, Section, Signature, Syllable, TabBar, TabMeta, Track, Unit, Units,
@@ -46,5 +46,21 @@ impl Tab {
     }
     pub fn calc_syllable_note(&self, note: &Note) -> SyllableNote {
         self.meta.calc_syllable_note(note)
+    }
+    pub fn get_track_of_kind(&self, kind: TrackKind) -> Option<Arc<Track>> {
+        for track in self.tracks.iter() {
+            if track.kind == kind {
+                return Some(track.clone());
+            }
+        }
+        None
+    }
+    pub fn get_bar_of_ordinal(&self, bar_ordinal: usize) -> Option<Arc<TabBar>> {
+        self.bars
+            .get(bar_ordinal - 1)
+            .map(|x| x.clone())
+    }
+    pub fn get_bar(&self, pos: BarPosition) -> Option<Arc<TabBar>> {
+        self.get_bar_of_ordinal(pos.bar_ordinal)
     }
 }

@@ -5,7 +5,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use notation_model::prelude::Syllable;
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{ModelEntryData, LyonShape, LyonShapeOp, NotationTheme};
 
 use super::chord_interval::ChordIntervalValue;
 
@@ -24,7 +24,7 @@ impl ChordBaseValue {
     }
 }
 
-pub type ChordBaseData = BarData<ChordBaseValue>;
+pub type ChordBaseData = ModelEntryData<ChordBaseValue>;
 
 pub struct ChordBase<'a> {
     theme: &'a NotationTheme,
@@ -33,7 +33,7 @@ pub struct ChordBase<'a> {
 
 impl<'a> LyonShape<shapes::Circle> for ChordBase<'a> {
     fn get_name(&self) -> String {
-        format!("{}: {:?}", self.data.bar_props.bar_ordinal, self.data.value)
+        format!("{}", self.data)
     }
     fn get_shape(&self) -> shapes::Circle {
         shapes::Circle {

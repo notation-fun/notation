@@ -18,7 +18,7 @@ impl Plugin for EntryPlugin {
         app.add_system(on_add_entry.system());
         app.add_system(ChordView::on_added.system());
         app.add_system(ChordView::on_layout_changed.system());
-        app.add_system(ChordView::on_bar_playing_changed.system());
+        app.add_system(ChordView::on_chord_playing_changed.system());
     }
 }
 

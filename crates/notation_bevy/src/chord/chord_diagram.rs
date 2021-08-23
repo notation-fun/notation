@@ -3,9 +3,9 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use notation_model::prelude::{Chord, PlayingState, TabBarProps};
+use notation_model::prelude::{Chord, PlayingState, ModelEntryProps};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{ModelEntryData, LyonShape, LyonShapeOp, NotationTheme};
 
 use super::chord_base::{ChordBase, ChordBaseData, ChordBaseValue};
 use super::chord_interval::{ChordInterval, ChordIntervalData, ChordIntervalValue};
@@ -21,7 +21,7 @@ impl Display for ChordDiagramValue {
         write!(f, "{:?}", self)
     }
 }
-pub type ChordDiagramData = BarData<ChordDiagramValue>;
+pub type ChordDiagramData = ModelEntryData<ChordDiagramValue>;
 
 pub struct ChordDiagram<'a> {
     theme: &'a NotationTheme,
@@ -30,7 +30,7 @@ pub struct ChordDiagram<'a> {
 
 impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
     fn get_name(&self) -> String {
-        format!("{}: {:?}", self.data.bar_props.bar_ordinal, self.data.value)
+        format!("{}", self.data)
     }
     fn get_shape(&self) -> shapes::Circle {
         let outline = self
@@ -123,7 +123,7 @@ impl<'a> ChordDiagram<'a> {
         commands: &mut Commands,
         theme: &NotationTheme,
         entity: Entity,
-        bar_props: TabBarProps,
+        entry_props: ModelEntryProps,
         chord: Chord,
         radius: f32,
     ) {
@@ -133,7 +133,7 @@ impl<'a> ChordDiagram<'a> {
             playing_state: PlayingState::Idle,
         };
         let chord_data = ChordDiagramData {
-            bar_props,
+            entry_props,
             value: chord_value,
         };
         let diagram_entity = ChordDiagram::create(commands, theme, entity, chord_data);
@@ -146,7 +146,7 @@ impl<'a> ChordDiagram<'a> {
                 root: chord.root,
                 interval: interval.clone(),
             };
-            let interval_data = ChordIntervalData::from((bar_props, interval_value));
+            let interval_data = ChordIntervalData::from((entry_props, interval_value));
             let interval_entity =
                 ChordInterval::create(commands, theme, diagram_entity, interval_data);
             commands
@@ -161,7 +161,7 @@ impl<'a> ChordDiagram<'a> {
                 root: chord.root,
                 interval: base.clone(),
             };
-            let base_data = ChordBaseData::from((bar_props, ChordBaseValue {
+            let base_data = ChordBaseData::from((entry_props, ChordBaseValue {
                 interval: interval_value,
             }));
             let base_entity = ChordBase::create(commands, theme, diagram_entity, base_data);

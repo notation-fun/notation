@@ -69,6 +69,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::data::lane_data::LaneData;
     #[doc(hidden)]
+    pub use crate::data::model_entry_data::ModelEntryData;
+    #[doc(hidden)]
     pub use crate::entry::entry_bundle::EntryBundle;
     #[doc(hidden)]
     pub use crate::entry::entry_events::AddEntryEvent;

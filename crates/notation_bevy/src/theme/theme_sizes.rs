@@ -1,3 +1,6 @@
+use bevy::prelude::*;
+
+use bevy_utils::prelude::LayoutSize;
 use notation_model::prelude::PlayingState;
 use serde::{Deserialize, Serialize};
 
@@ -41,7 +44,7 @@ pub struct ThemeSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ChordsSizes {
-    pub chords_panel_factor: f32,
+    pub chord_size_range: (f32, f32),
     pub diagram_factor: f32,
     pub diagram_outline: PlayingSize,
     pub diagram_interval_factor: f32,
@@ -51,7 +54,7 @@ pub struct ChordsSizes {
 impl Default for ChordsSizes {
     fn default() -> Self {
         Self {
-            chords_panel_factor: 0.2,
+            chord_size_range: (32.0, 80.0),
             diagram_factor: 0.45,
             diagram_outline: PlayingSize::new(0.5, 2.0, 1.0),
             diagram_interval_factor: 0.33,
@@ -107,28 +110,26 @@ impl Default for StringsSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MiniMapSizes {
-    pub min_bar_width: f32,
-    pub max_bar_width: f32,
     pub bar_height: f32,
+    pub bar_width_range: (f32, f32),
+    pub bar_margin: (f32, f32),
     pub bar_outline: PlayingSize,
     pub section_separator: f32,
-    pub margin: f32,
 }
 
 impl Default for MiniMapSizes {
     fn default() -> Self {
         Self {
-            min_bar_width: 4.0,
-            max_bar_width: 1024.0,
             bar_height: 24.0,
+            bar_width_range: (4.0, 1024.0),
+            bar_margin: (0.0, 2.0),
             bar_outline: PlayingSize::new(0.5, 2.0, 1.0),
             section_separator: 2.0,
-            margin: 2.0,
         }
     }
 }
 impl MiniMapSizes {
-    pub fn bar_height_without_margin(&self) -> f32 {
-        self.bar_height - self.margin
+    pub fn bar_margin(&self) -> LayoutSize {
+        LayoutSize::new(self.bar_margin.0, self.bar_margin.1)
     }
 }

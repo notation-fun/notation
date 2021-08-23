@@ -49,7 +49,7 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
     fn get_shape(&self) -> shapes::Rectangle {
         let (mut width, mut height) = (
             self.data.value.width,
-            self.theme.sizes.mini_map.bar_height - self.theme.sizes.mini_map.margin,
+            self.theme.sizes.mini_map.bar_height,
         );
         let outline = self
             .theme

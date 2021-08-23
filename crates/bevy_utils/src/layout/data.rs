@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::ops::{Add, Sub};
-use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::shapes;
@@ -18,6 +17,7 @@ impl Display for LayoutSize {
     }
 }
 impl LayoutSize {
+    pub const ZERO: Self = Self { width: 0.0, height: 0.0 };
     pub fn new(width: f32, height: f32) -> Self {
         Self { width, height }
     }
@@ -61,6 +61,13 @@ impl Display for LayoutData {
 }
 
 impl LayoutData {
+    pub const ZERO: Self = Self {
+        depth: 0,
+        pivot: LayoutAnchor::CENTER,
+        anchor: LayoutAnchor::CENTER,
+        offset: Vec2::ZERO,
+        size: LayoutSize::ZERO,
+    };
     pub fn new(
         depth: usize,
         pivot: LayoutAnchor,
@@ -75,9 +82,6 @@ impl LayoutData {
             offset,
             size,
         }
-    }
-    pub fn view_default() -> Arc<RwLock<Self>> {
-        Arc::new(RwLock::new(LayoutData::default()))
     }
     pub fn calc_offset(&self, pivot: LayoutAnchor, anchor: LayoutAnchor, offset: Vec2) -> Vec2 {
         self.size.calc_offset(pivot, anchor) + offset

@@ -3,7 +3,7 @@ use std::fmt::Display;
 use notation_model::prelude::{TabBar, TabBarProps, TabPosition, Units};
 
 #[derive(Clone, Debug)]
-pub struct BarData<T: Send + Sync + ToString + 'static> {
+pub struct BarData<T: Send + Sync + 'static> {
     pub bar_props: TabBarProps,
     pub value: T,
 }
@@ -18,7 +18,7 @@ impl<T: Send + Sync + ToString + 'static> Display for BarData<T> {
         )
     }
 }
-impl<T: Send + Sync + ToString + 'static> From<(TabBarProps, T)> for BarData<T> {
+impl<T: Send + Sync + 'static> From<(TabBarProps, T)> for BarData<T> {
     fn from(v: (TabBarProps, T)) -> Self {
         Self {
             bar_props: v.0,
@@ -26,7 +26,7 @@ impl<T: Send + Sync + ToString + 'static> From<(TabBarProps, T)> for BarData<T> 
         }
     }
 }
-impl<T: Send + Sync + ToString + 'static> BarData<T> {
+impl<T: Send + Sync + 'static> BarData<T> {
     pub fn new(bar: &TabBar, value: T) -> Self {
         (bar.props, value).into()
     }

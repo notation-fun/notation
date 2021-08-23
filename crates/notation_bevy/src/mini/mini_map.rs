@@ -7,11 +7,7 @@ use std::sync::Arc;
 use crate::prelude::{
     LyonShape, LyonShapeOp, NotationAppState, NotationLayout, NotationSettings, NotationTheme,
 };
-use bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, GridCellSize, GridData, GridView,
-    LayoutChangedQuery, LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View,
-    ViewAddedQuery, ViewBundle, ViewQuery,
-};
+use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View, ViewAddedQuery, ViewBundle, ViewQuery};
 
 use super::mini_bar::{MiniBar};
 use super::mini_plugin::MiniMapDoLayoutEvent;
@@ -32,34 +28,13 @@ impl MiniMap {
     pub fn calc_grid_data(
         &self,
         engine: &NotationLayout,
-        constraint: LayoutConstraint,
+        grid_size: LayoutSize,
     ) -> GridData {
         let sizes = engine.theme.sizes.mini_map;
-        let content_width = constraint.max.width - sizes.margin * 2.0;
-        let bars = self.tab.bars.len();
-        if bars == 0 || content_width < sizes.min_bar_width {
-            return GridData::ZERO;
-        }
-        let mut width = content_width / bars as f32;
-        let mut rows = 1;
-        let mut cols = bars;
-        if width < sizes.min_bar_width {
-            width = sizes.min_bar_width;
-            cols = (content_width / width).floor() as usize;
-            rows = bars / cols;
-            if bars % cols > 0 {
-                rows += 1;
-            }
-        } else if width > sizes.max_bar_width {
-            width = sizes.max_bar_width;
-        }
-        let space = constraint.max.width - width * cols as f32;
-        GridData {
-            rows,
-            cols,
-            size: GridCellSize::Fixed(LayoutSize::new(width, sizes.bar_height)),
-            offset: Vec2::new(space / 2.0, -engine.theme.sizes.mini_map.margin / 2.0),
-        }
+        let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
+            grid_size.width, sizes.bar_width_range, sizes.bar_margin().width, self.tab.bars.len());
+        let size = LayoutSize::new(cell_width, sizes.bar_height);
+        GridData::new_fixed(grid_size, rows, cols, size, sizes.bar_margin(), LayoutAnchor::TOP_LEFT)
     }
 }
 impl<'a> DockPanel<NotationLayout<'a>> for MiniMap {
@@ -69,15 +44,14 @@ impl<'a> DockPanel<NotationLayout<'a>> for MiniMap {
 }
 impl<'a> View<NotationLayout<'a>> for MiniMap {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        let sizes = engine.theme.sizes.mini_map;
-        let grid_data = self.calc_grid_data(engine, constraint);
-        let height = grid_data.rows as f32 * sizes.bar_height + sizes.margin;
+        let grid_data = self.calc_grid_data(engine, constraint.max);
+        let height = grid_data.content_size().height + engine.theme.sizes.mini_map.bar_margin().height * 2.0;
         LayoutSize::new(constraint.max.width, height)
     }
 }
 impl<'a> GridView<NotationLayout<'a>, MiniBar> for MiniMap {
-    fn calc_grid_data(&self, engine: &NotationLayout<'a>, data: LayoutData) -> GridData {
-        self.calc_grid_data(&engine, data.into())
+    fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
+        self.calc_grid_data(&engine, grid_size)
     }
 }
 #[derive(Clone, Debug, Default)]
