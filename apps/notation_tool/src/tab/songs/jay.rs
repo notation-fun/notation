@@ -41,20 +41,6 @@ pub fn new_tab_long_juan_feng() -> Tab {
                 "b:3" Pick [ 5 4 2 4 (5 3) 4 2 4 ] |
                 "b:4" Pick [ 4 3 2 1@3 1** ] |
             ]}
-            {vocal Vocal [
-                $key = A
-                $scale = Major
-                $duration = _1_4
-                "v:1,2" Tone [ .5 2 2, 1, 3 ] |
-                "v:3" Tone [ .6 3 3, 2, 4 ] |
-                "v:4_1" Tone [ .%6 3,+ 4,, 3, 2, 1, .%6,, .5,, ] |
-                "v:4_2" Tone [ .%6 3,+ 4,, 3, 2, 1, 5,, 6,, ] |
-                $duration = _1_8
-                "b:1" Tone [ 6 3 3 1 1 .5 1 5 ] |
-                "b:2" Tone [ 5 2 2 .7 .7 .5 .7 1 ] |
-                "b:3" Tone [ _ .6 1 .6 1 .6, 1+ 2, 3, @ ] |
-                "b:4" Tone [ @ 3 2 @ 2** 3 4 ] |
-            ]}
             {lyrics Lyrics [
                 $duration = _1_4
                 "1:1" Word [ "爱" "像" "一", "阵", "风" ] |
@@ -70,6 +56,20 @@ pub fn new_tab_long_juan_feng() -> Tab {
                 "b:2" Word [ "入" "了" "危" "险" "边" "缘" "Ba-" "by"] |
                 "b:3" Word [ _ "我" "的" "世" "界" "已", "狂"+ "风", "暴", @ ] |
                 "b:4" Word [ @ "" "雨" @ ""** "呜"* ] |
+            ]}
+            {vocal Vocal [
+                $key = A
+                $scale = Major
+                $duration = _1_4
+                "v:1,2" Tone [ .5 2 2, 1, 3 ] |
+                "v:3" Tone [ .6 3 3, 2, 4 ] |
+                "v:4_1" Tone [ .%6 3,+ 4,, 3, 2, 1, .%6,, .5,, ] |
+                "v:4_2" Tone [ .%6 3,+ 4,, 3, 2, 1, 5,, 6,, ] |
+                $duration = _1_8
+                "b:1" Tone [ 6 3 3 1 1 .5 1 5 ] |
+                "b:2" Tone [ 5 2 2 .7 .7 .5 .7 1 ] |
+                "b:3" Tone [ _ .6 1 .6 1 .6, 1+ 2, 3, @ ] |
+                "b:4" Tone [ @ 3 2 @ 2** 3 4 ] |
             ]}
         ]
         Sections: [
@@ -92,23 +92,23 @@ pub fn new_tab_long_juan_feng() -> Tab {
                 {
                     chord [ "1" 1 ]
                     guitar [ "G" 1 ; "v:1,2" | ]
-                    vocal [ "v:1,2" | ]
                     lyrics [ "1:1" | @ 1 ; "2:1" | @ 2 ]
+                    vocal [ "v:1,2" | ]
                 } {
                     chord [ "6-" 1 ]
                     guitar [ "Em7" 1 ; "v:1,2" | ]
-                    vocal [ "v:1,2" | ]
                     lyrics [ "1:2" | @ 1 ; "2:2" | @ 2 ]
+                    vocal [ "v:1,2" | ]
                 } {
                     chord [ "4" 1 ]
                     guitar [ "Cmaj7" 1 ; "v:3" | ]
-                    vocal [ "v:3" | ]
                     lyrics [ "1:3" | @ 1 ; "2:3" | @ 2 ]
+                    vocal [ "v:3" | ]
                 } {
                     chord [ "b6" 1 ]
                     guitar [ "bEdim7" 1 ; "v:4" | ]
-                    vocal [ "v:4_1" | @ 1 ; "v:4_2" | @ 2 ]
                     lyrics [ "1:4" | @ 1 ; "2:4" | @ 2 ]
+                    vocal [ "v:4_1" | @ 1 ; "v:4_2" | @ 2 ]
                 }
             ]}
             {bridge Bridge [

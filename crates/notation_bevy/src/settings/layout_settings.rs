@@ -3,13 +3,14 @@ use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
 use float_eq::float_ne;
 use std::sync::Arc;
 
-use notation_model::prelude::{Position, Units};
+use notation_model::prelude::{BarLane, LaneKind, Position, Units};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
 use crate::bar::bar_layout::BarLayoutData;
+use crate::lane::lane_layout::LaneLayoutData;
 use crate::prelude::{TabBars, TabState};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -29,18 +30,10 @@ impl Default for LayoutMode {
 pub struct LayoutSettings {
     pub mode: LayoutMode,
     pub focus_bar_ease_ms: u64,
-    /*
-    pub bar_margin: f32,
-    pub lane_margin: f32,
-    pub shapes_height: f32,
-    pub strings_height: f32,
-    pub lyrics_height: f32,
-    pub melody_height: f32,
-    pub shapes_lane_order: u8,
-    pub strings_lane_order: u8,
-    pub lyrics_lane_order: u8,
-    pub melody_lane_order: u8,
-     */
+    pub shapes_lane_order: usize,
+    pub strings_lane_order: usize,
+    pub lyrics_lane_order: usize,
+    pub melody_lane_order: usize,
 }
 
 impl Default for LayoutSettings {
@@ -48,18 +41,10 @@ impl Default for LayoutSettings {
         Self {
             mode: LayoutMode::default(),
             focus_bar_ease_ms: 250,
-    /*
-            bar_margin: 32.0,
-            lane_margin: 4.0,
-            shapes_height: 46.0,
-            strings_height: 72.0,
-            lyrics_height: 20.0,
-            melody_height: 36.0,
             shapes_lane_order: 1,
             strings_lane_order: 2,
             lyrics_lane_order: 3,
             melody_lane_order: 4,
-     */
         }
     }
 }
@@ -214,12 +199,30 @@ impl LayoutSettings {
 }
 */
 impl LayoutSettings {
+    pub fn calc_lane_order(&self, lane_layout: &LaneLayoutData) ->  (usize, usize) {
+        let (track_index, lane_kind) = lane_layout.order();
+        (track_index, match lane_kind {
+            LaneKind::Lyrics => self.lyrics_lane_order,
+            LaneKind::Melody => self.melody_lane_order,
+            LaneKind::Strings => self.strings_lane_order,
+            LaneKind::Shapes => self.shapes_lane_order,
+            _ => 0,
+        })
+    }
+    pub fn sort_lane_layouts(&self, lanes: &Vec<LaneLayoutData>) -> Vec<LaneLayoutData> {
+        let mut sorted: Vec<LaneLayoutData> = lanes.clone();
+        sorted.sort_by(|a, b| {
+            self.calc_lane_order(a).cmp(&self.calc_lane_order(b))
+        });
+        sorted
+    }
     pub fn bar_layout_of_pos(
         &self,
-        bar_layouts: &Arc<Vec<BarLayoutData>>,
+        //bar_layouts: &Arc<Vec<BarLayoutData>>,
         pos: Position,
     ) -> Option<BarLayoutData> {
-        bar_layouts.get(pos.bar.bar_ordinal - 1).map(|x| x.clone())
+        //bar_layouts.get(pos.bar.bar_ordinal - 1).map(|x| x.clone())
+        None
     }
     pub fn pan_tab_bars(
         &self,
@@ -281,20 +284,11 @@ impl LayoutSettings {
     }
     fn calc_grid_focus_y(
         &self,
-        bar_layouts: &Arc<Vec<BarLayoutData>>,
+        //bar_layouts: &Arc<Vec<BarLayoutData>>,
         bar_layout: &BarLayoutData,
         _pos: &Position,
     ) -> f32 {
-        if false { //TODO
-            for layout in bar_layouts.iter() {
-                if false { //layout.data.row == bar_layout.data.row - 1 {
-                    return layout.offset;
-                }
-            }
-            bar_layout.offset
-        } else {
-            bar_layout.offset
-        }
+        0.0
     }
     fn calc_line_focus_x_units(&self, bar_layout: &BarLayoutData, pos: &Position) -> Units {
         Units(0.0)
@@ -310,11 +304,12 @@ impl LayoutSettings {
         &self,
         commands: &mut Commands,
         tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
-        bar_layouts: &Arc<Vec<BarLayoutData>>,
+        //bar_layouts: &Arc<Vec<BarLayoutData>>,
         bar_size: f32,
         state: &TabState,
     ) {
         let pos = state.play_control.position;
+        /*
         if let Some(bar_layout) = bar_layouts.get(pos.bar.bar_ordinal - 1) {
             match self.mode {
                 LayoutMode::Grid => {
@@ -336,5 +331,6 @@ impl LayoutSettings {
                 }
             }
         }
+         */
     }
 }

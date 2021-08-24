@@ -1,11 +1,12 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use crate::prelude::{LaneEntry, LaneKind, Slice, Tab, TabBar, TabBarProps, Track};
+use crate::prelude::{LaneEntry, LaneKind, Slice, Tab, TabBar, TabBarProps, Track, TrackProps};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct BarLaneProps {
     pub index: usize,
+    pub track: TrackProps,
 }
 
 #[derive(Debug)]
@@ -33,6 +34,9 @@ impl BarLane {
     pub fn id(&self) -> String {
         format!("{}:{}", self.track.id, self.kind)
     }
+    pub fn order(&self) -> (usize, LaneKind) {
+        (self.track.props.index, self.kind)
+    }
     pub fn try_new_arc(
         bar: Weak<TabBar>,
         index: usize,
@@ -44,6 +48,7 @@ impl BarLane {
             Some(Arc::<Self>::new_cyclic(|weak_self| {
                 let props = BarLaneProps {
                     index,
+                    track: track.props,
                 };
                 let entries = LaneEntry::new_entries(model_entries, weak_self);
                 Self {

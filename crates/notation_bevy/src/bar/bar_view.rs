@@ -15,7 +15,7 @@ use crate::prelude::{AddEntryEvent};
 use notation_model::prelude::{TabBar};
 
 use super::bar_beat::{BarBeat, BarBeatData, BarBeatValue};
-use super::bar_separator::{BarSeparator, BarSeparatorData};
+use super::bar_separator::{BarSeparator, BarSeparatorData, BarSeparatorValue};
 
 pub type BarView = BarData<BarLayoutData>;
 
@@ -61,13 +61,13 @@ impl BarView {
         for (entity, view, layout) in query.iter() {
             for (entity, mut data) in sep_query.iter_mut() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
+                    data.value.bar_size = layout.size;
                     BarSeparator::update(&mut commands, &theme, entity, &data);
                 }
             }
             for (entity, mut data) in beat_query.iter_mut() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
+                    data.value.bar_size = layout.size;
                     BarBeat::update(&mut commands, &theme, entity, &data);
                 }
             }
@@ -104,37 +104,33 @@ impl BarView {
         query: Query<(Entity, &Arc<BarView>, &Arc<TabBar>, &BarLayoutData), Added<Arc<BarView>>>,
         mut add_entry_evts: EventWriter<AddEntryEvent>,
     ) {
-        for (entity, view, bar, bar_layout) in query.iter() {
-            let lanes = theme.sizes.layout.sort_lanes(&bar.lanes);
-            for lane in lanes.iter() {
-                if let Some(lane_layout) = bar_layout.lane_layouts.get(&lane.id()) {
-                    LaneView::create_lane(
-                        &mut commands,
-                        entity,
-                        &bar,
-                        &mut add_entry_evts,
-                        lane,
-                        lane_layout,
-                    );
-                }
+        for (entity, _view, bar, bar_layout) in query.iter() {
+            for lane_layout in bar_layout.lane_layouts.iter() {
+                LaneView::create_lane(
+                    &mut commands,
+                    entity,
+                    &bar,
+                    &mut add_entry_evts,
+                    lane_layout,
+                );
             }
             if false { //TODO
                 BarSeparator::create(
                     &mut commands,
                     &theme,
                     entity,
-                    BarSeparatorData::new_data(bar, bar_layout, true),
+                    BarSeparatorData::new(bar, BarSeparatorValue::new(true)),
                 );
             }
             BarSeparator::create(
                 &mut commands,
                 &theme,
                 entity,
-                BarSeparatorData::new_data(bar, bar_layout, false),
+            BarSeparatorData::new(bar, BarSeparatorValue::new(false)),
             );
             let signature = bar.signature();
             for beat in 0..signature.bar_beats {
-                BarBeatValue::may_new(&theme, bar, &signature, bar_layout, beat)
+                BarBeatValue::may_new(&theme, bar, &signature, beat)
                     .map(|value| BarBeatData::new(bar, value))
                     .map(|data| BarBeat::create(&mut commands, &theme, entity, data));
             }

@@ -144,6 +144,7 @@ pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
         } else {
             data
         };
+        /*
         if need_adjust {
             println!(
                 "{}.set_layout_data(\n\t{} {} ->\n\t{}\n)",
@@ -155,6 +156,7 @@ pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
         } else {
             println!("{}.set_layout_data(\n\t{}\n)", self.to_string(), adjusted);
         }
+         */
         match layout_query.get_mut(entity) {
             Ok((mut layout_data, mut transform)) => {
                 *layout_data = adjusted;

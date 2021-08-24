@@ -34,7 +34,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.data.bar_size.width,
-            height: self.data.bar_size.height,
+            height: self.data.bar_size.height + self.theme.grid.bar_separator_extra * 2.0,
             origin: shapes::RectangleOrigin::TopLeft,
         }
     }

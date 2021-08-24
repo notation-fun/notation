@@ -1,8 +1,9 @@
 use bevy::prelude::*;
-use bevy_utils::prelude::LayoutData;
 use std::sync::Arc;
 
 use notation_model::prelude::BarLane;
+
+use bevy_utils::prelude::LayoutData;
 
 use crate::prelude::LaneLayoutData;
 
@@ -14,7 +15,6 @@ pub struct LaneBundle {
     pub lane: Arc<BarLane>,
     pub view: Arc<LaneView>,
     pub layout: LayoutData,
-    pub lane_layout: LaneLayoutData,
     pub transform: Transform,
     pub global_cransform: GlobalTransform,
 }
@@ -24,13 +24,12 @@ impl LaneBundle {
         let name = format!("{} {}", lane.bar_props().bar_ordinal, lane)
             .as_str()
             .into();
-        let view = Arc::new(LaneView::new(&lane, lane.kind));
+        let view = Arc::new(lane_layout);
         Self {
             name,
             lane,
             view,
             layout: LayoutData::ZERO,
-            lane_layout,
             transform: Transform::default(),
             global_cransform: GlobalTransform::default(),
         }

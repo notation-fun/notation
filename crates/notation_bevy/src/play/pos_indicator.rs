@@ -40,7 +40,7 @@ impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
             Vec2::ZERO,
             Vec2::new(
                 0.0,
-                -self.data.bar_size.height,
+                -self.data.bar_size.height - self.theme.grid.bar_separator_extra * 2.0,
             ),
         )
     }

@@ -5,28 +5,34 @@ use crate::prelude::{LaneLayoutData};
 
 #[derive(Clone, Debug)]
 pub struct BarLayoutData {
-    pub offset: f32,
     pub height: f32,
-    pub margin: f32,
-    pub lane_layouts: Arc<HashMap<String, LaneLayoutData>>,
+    pub lane_layouts: Vec<LaneLayoutData>,
 }
 impl Display for BarLayoutData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<BarLayoutData>(m:{} L:[{}])", self.margin, self.lane_layouts.len())
+        write!(f, "<BarLayoutData>({} [{}])", self.height, self.lane_layouts.len())
     }
 }
 impl BarLayoutData {
     pub fn new(
-        offset: f32,
-        height: f32,
-        margin: f32,
-        lane_layouts_data: Arc<HashMap<String, LaneLayoutData>>,
+        lane_layouts: Vec<LaneLayoutData>,
     ) -> Self {
         Self {
-            offset,
-            height,
-            margin,
-            lane_layouts: lane_layouts_data,
+            height: Self::calc_height(&lane_layouts),
+            lane_layouts: lane_layouts,
         }
+    }
+    pub fn calc_height(lane_layouts: &Vec<LaneLayoutData>) -> f32 {
+        let mut height = 0.0;
+        let len = lane_layouts.len();
+        for (index, lane_layout) in lane_layouts.iter().enumerate() {
+            if lane_layout.visible {
+                height += lane_layout.height;
+                if index < len - 1 {
+                    height += lane_layout.margin;
+                }
+            }
+        }
+        height
     }
 }

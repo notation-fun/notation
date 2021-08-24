@@ -110,17 +110,17 @@ impl GridData {
         if total == 0 || content_size <= cell_size_range.0 {
             return (0, 0.0);
         }
-        let mut cell_size = content_size / total as f32;
-        if cell_size < cell_size_range.0 {
-            cell_size = cell_size_range.0;
-        } else if cell_size > cell_size_range.1 {
-            cell_size = cell_size_range.1;
+        let mut cell_size_with_margin = content_size / total as f32;
+        if cell_size_with_margin < cell_size_range.0 + margin {
+            cell_size_with_margin = cell_size_range.0 + margin ;
+        } else if cell_size_with_margin > cell_size_range.1 + margin {
+            cell_size_with_margin = cell_size_range.1 + margin;
         }
-        let mut cell_count = (content_size / cell_size).floor() as usize;
+        let mut cell_count = (content_size / cell_size_with_margin).floor() as usize;
         if cell_count == 0 {
             cell_count = 1;
         }
-        (cell_count, cell_size)
+        (cell_count, cell_size_with_margin - margin)
     }
     pub fn calc_rows(total: usize, cols: usize) -> usize {
         if total == 0 || cols == 0 {

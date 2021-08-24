@@ -13,7 +13,6 @@ use super::tab_view::TabView;
 pub struct TabBundle {
     pub name: Name,
     pub tab: Arc<Tab>,
-    pub bar_layouts: Arc<Vec<BarLayoutData>>,
     pub state: TabState,
     pub view: Arc<TabView>,
     pub layout: LayoutData,
@@ -22,14 +21,13 @@ pub struct TabBundle {
 }
 
 impl TabBundle {
-    pub fn new(tab: Arc<Tab>, bar_layouts: Arc<Vec<BarLayoutData>>) -> Self {
+    pub fn new(tab: Arc<Tab>) -> Self {
         let name = tab.to_string().as_str().into();
         let state = TabState::new(&tab);
         let view = Arc::new(TabView::new(tab.clone()));
         Self {
             name,
             tab,
-            bar_layouts,
             state,
             view,
             layout: LayoutData::default(),

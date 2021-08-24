@@ -2,7 +2,9 @@ use bevy::prelude::*;
 
 use crate::prelude::{LayoutAnchor, LayoutConstraint, LayoutData, LayoutEnv, LayoutQuery, LayoutSize, View, ViewQuery};
 
-pub trait VBoxCell<TE: LayoutEnv>: View<TE> {}
+pub trait VBoxCell<TE: LayoutEnv>: View<TE> {
+    fn order(&self) -> usize;
+}
 
 #[derive(Clone, Debug)]
 pub struct VBoxCellData {
@@ -21,7 +23,8 @@ pub trait VBoxView<TE: LayoutEnv, TC: VBoxCell<TE>>: View<TE> {
         if self.is_root() {
             self.set_layout_data(layout_query, entity, data);
         }
-        let cells = engine.get_children(cell_query, entity);
+        let mut cells = engine.get_children(cell_query, entity);
+        cells.sort_by(|a, b| {a.view.order().cmp(&b.view.order())});
         let mut y = 0.0;
         let mut height = data.size.height;
         for (index, cell) in cells.iter().enumerate() {

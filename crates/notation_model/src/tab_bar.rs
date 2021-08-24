@@ -121,10 +121,13 @@ impl TabBar {
     pub fn tab(&self) -> Option<Arc<Tab>> {
         self.tab.upgrade().map(|x| x.clone())
     }
-    pub fn get_lane_of_kind(&self, kind: LaneKind) -> Option<Arc<BarLane>> {
+    pub fn get_lane_of_kind(&self, kind: LaneKind, track_index: Option<usize>) -> Option<Arc<BarLane>> {
         for lane in self.lanes.iter() {
             if lane.kind == kind {
-                return Some(lane.clone());
+                if track_index.is_none()
+                    || track_index.unwrap() == lane.track.props.index {
+                    return Some(lane.clone());
+                }
             }
         }
         None
@@ -132,10 +135,11 @@ impl TabBar {
     pub fn get_entry_in_other_lane<T, F: Fn(&LaneEntry) -> Option<T>>(
         &self,
         lane_kind: LaneKind,
+        track_index: Option<usize>,
         in_bar_pos: Option<Units>,
         predicate: &F,
     ) -> Option<T> {
-        if let Some(lane) = self.get_lane_of_kind(lane_kind) {
+        if let Some(lane) = self.get_lane_of_kind(lane_kind, track_index) {
             for entry in lane.entries.iter() {
                 if let Some(in_bar_pos) = in_bar_pos {
                     if in_bar_pos > entry.props.in_bar_pos + entry.model().props.tied_units {
@@ -153,7 +157,7 @@ impl TabBar {
         None
     }
     pub fn get_chord(&self, in_bar_pos: Option<Units>) -> Option<Chord> {
-        self.get_entry_in_other_lane(LaneKind::Chord, in_bar_pos, &|x: &LaneEntry| {
+        self.get_entry_in_other_lane(LaneKind::Chord, None, in_bar_pos, &|x: &LaneEntry| {
             x.proto()
                 .as_core()
                 .and_then(|x| x.as_chord())
@@ -171,6 +175,7 @@ macro_rules! impl_get_fretted_shape {
             pub fn $name(&self, entry: &LaneEntry) -> Option<($fretboard, $hand_shape)> {
                 self.get_entry_in_other_lane(
                     LaneKind::Shapes,
+                    Some(entry.lane_props().track.index),
                     Some(entry.props.in_bar_pos),
                     &|x: &LaneEntry| {
                         x.model()

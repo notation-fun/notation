@@ -8,7 +8,7 @@ use bevy_utils::prelude::{
 use notation_model::prelude::Tab;
 
 use crate::mini::mini_map::MiniMap;
-use crate::prelude::{NotationAppState, NotationSettings, NotationTheme};
+use crate::prelude::{BarLayoutData, NotationAppState, NotationSettings, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::tab_content::TabContent;

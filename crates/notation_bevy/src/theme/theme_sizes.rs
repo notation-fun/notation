@@ -162,10 +162,6 @@ pub struct LayoutSizes {
     pub strings_height: f32,
     pub lyrics_height: f32,
     pub melody_height: f32,
-    pub shapes_lane_order: u8,
-    pub strings_lane_order: u8,
-    pub lyrics_lane_order: u8,
-    pub melody_lane_order: u8,
 }
 
 impl Default for LayoutSizes {
@@ -174,26 +170,13 @@ impl Default for LayoutSizes {
             bar_margin: 32.0,
             lane_margin: 4.0,
             shapes_height: 46.0,
-            strings_height: 72.0,
+            strings_height: 80.0,
             lyrics_height: 20.0,
             melody_height: 36.0,
-            shapes_lane_order: 1,
-            strings_lane_order: 2,
-            lyrics_lane_order: 3,
-            melody_lane_order: 4,
         }
     }
 }
 impl LayoutSizes {
-    pub fn calc_lane_order(&self, lane_kind: LaneKind) -> u8 {
-        match lane_kind {
-            LaneKind::Lyrics => self.lyrics_lane_order,
-            LaneKind::Melody => self.melody_lane_order,
-            LaneKind::Strings => self.strings_lane_order,
-            LaneKind::Shapes => self.shapes_lane_order,
-            _ => 0,
-        }
-    }
     pub fn calc_lane_height(&self, lane_kind: LaneKind) -> f32 {
         match lane_kind {
             LaneKind::Lyrics => self.lyrics_height,
@@ -202,12 +185,5 @@ impl LayoutSizes {
             LaneKind::Shapes => self.shapes_height,
             _ => 0.0,
         }
-    }
-    pub fn sort_lanes(&self, lanes: &Vec<Arc<BarLane>>) -> Vec<Arc<BarLane>> {
-        let mut sorted_lanes: Vec<Arc<BarLane>> = lanes.clone();
-        sorted_lanes.sort_by(|a, b| {
-            self.calc_lane_order(a.kind).cmp(&self.calc_lane_order(b.kind))
-        });
-        sorted_lanes
     }
 }

@@ -41,7 +41,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab_bar::{TabBar, TabBarProps};
     #[doc(hidden)]
-    pub use crate::track::Track;
+    pub use crate::track::{Track, TrackProps};
     #[doc(hidden)]
     pub use notation_proto::prelude::Tab as ProtoTab;
     #[doc(hidden)]

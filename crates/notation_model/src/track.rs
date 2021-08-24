@@ -5,16 +5,17 @@ use notation_proto::prelude::Chord;
 
 use crate::prelude::{Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, TrackKind};
 
+#[derive(Copy, Clone, Debug, Default)]
+pub struct TrackProps {
+    pub index: usize,
+}
+
 #[derive(Debug)]
 pub struct Track {
     pub id: String,
     pub kind: TrackKind,
     pub entries: Vec<Arc<ModelEntry>>,
-}
-impl Track {
-    pub fn new(id: String, kind: TrackKind, entries: Vec<Arc<ModelEntry>>) -> Self {
-        Self { id, kind, entries }
-    }
+    pub props: TrackProps,
 }
 impl Display for Track {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -28,10 +29,16 @@ impl Display for Track {
     }
 }
 impl Track {
-    pub fn new_arc(v: notation_proto::prelude::Track) -> Arc<Self> {
+    pub fn new(index: usize, id: String, kind: TrackKind, entries: Vec<Arc<ModelEntry>>) -> Self {
+        let props = TrackProps {
+            index,
+        };
+        Self { id, kind, entries, props }
+    }
+    pub fn new_arc(index: usize, v: notation_proto::prelude::Track) -> Arc<Self> {
         Arc::<Self>::new_cyclic(|weak_self| {
             let entries = ModelEntry::new_entries(v.entries, weak_self);
-            Self::new(v.id, v.kind, entries)
+            Self::new(index, v.id, v.kind, entries)
         })
     }
 }

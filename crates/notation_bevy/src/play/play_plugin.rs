@@ -85,13 +85,13 @@ fn on_tab_play_state_changed(
     mut commands: Commands,
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
-    mut query: Query<(Entity, &Arc<Vec<BarLayoutData>>, &TabState), Added<TabPlayStateChanged>>,
+    mut query: Query<(Entity, &TabState), Added<TabPlayStateChanged>>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying)>,
     mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
     mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
 ) {
-    for (state_entity, bar_layouts, tab_state) in query.iter_mut() {
+    for (state_entity, tab_state) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
         PosIndicator::update_pos(
             &mut commands,
@@ -102,7 +102,6 @@ fn on_tab_play_state_changed(
         settings.layout.focus_bar(
             &mut commands,
             &mut tab_bars_query,
-            bar_layouts,
             240.0, //TODO
             &tab_state,
         );
@@ -124,7 +123,6 @@ fn on_tick(
     chord_playing_query: &mut Query<(Entity, &mut ChordPlaying)>,
     tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>)>,
     state_entity: Entity,
-    bar_layouts: &Arc<Vec<BarLayoutData>>,
     tab_state: &mut TabState,
     new_position: &Position,
     tick_result: &TickResult,
@@ -152,7 +150,6 @@ fn on_tick(
             settings.layout.focus_bar(
                 commands,
                 tab_bars_query,
-                bar_layouts,
                 200.0, //TODO
                 tab_state,
             );
@@ -169,7 +166,7 @@ fn on_play_control_evt(
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut evts: EventReader<PlayControlEvt>,
-    mut tab_state_query: Query<(Entity, &Arc<Vec<BarLayoutData>>, &mut TabState)>,
+    mut tab_state_query: Query<(Entity, &mut TabState)>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData)>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying)>,
     mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
@@ -177,7 +174,7 @@ fn on_play_control_evt(
     mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
 ) {
     for evt in evts.iter() {
-        for (state_entity, bar_layouts, mut tab_state) in tab_state_query.iter_mut() {
+        for (state_entity, mut tab_state) in tab_state_query.iter_mut() {
             if !tab_state.under_control {
                 continue;
             }
@@ -195,7 +192,6 @@ fn on_play_control_evt(
                     &mut chord_playing_query,
                     &mut tab_bars_query,
                     state_entity,
-                    bar_layouts,
                     &mut tab_state,
                     position,
                     tick_result,

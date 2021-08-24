@@ -80,8 +80,7 @@ fn on_add_tab(
 ) {
     for evt in evts.iter() {
         let tab = evt.0.clone();
-        let bar_layouts = Arc::new(TabBars::calc_bar_layouts(&theme.sizes.layout, &tab));
-        let tab_bundle = TabBundle::new(tab.clone(), bar_layouts.clone());
+        let tab_bundle = TabBundle::new(tab.clone());
         let tab_entity = commands.spawn_bundle(tab_bundle).id();
         MiniMap::spawn(&mut commands, &theme, tab_entity, &tab);
         let content_entity = BevyUtil::spawn_child_bundle(
@@ -94,10 +93,11 @@ fn on_add_tab(
             content_entity,
             ViewBundle::from(TabChords::new(tab.clone())),
         );
+        let bar_layouts = TabBars::calc_bar_layouts(&theme, &settings, &tab);
         BevyUtil::spawn_child_bundle(
             &mut commands,
             content_entity,
-            ViewBundle::from(TabBars::new(tab.clone(), bar_layouts)),
+            ViewBundle::from(TabBars::new(tab.clone(), Arc::new(bar_layouts))),
         );
         switch_tab_evts.send(SwitchTabEvent::new(evt.0.clone()));
     }
