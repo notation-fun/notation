@@ -11,6 +11,7 @@ use super::tab_content::TabContent;
 
 #[derive(Debug)]
 pub struct AddTabEvent(pub Arc<Tab>);
+pub struct TabResizedEvent(pub Arc<Tab>);
 
 pub type TabContentDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabContent>;
 pub type TabChordsDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabChords>;

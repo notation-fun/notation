@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-use crate::prelude::{DoLayoutEvent, LayoutChangedQuery, LayoutEnv, View};
-
 pub struct BevyUtil();
 
 impl BevyUtil {
@@ -13,6 +11,18 @@ impl BevyUtil {
         let child_entity = commands.spawn_bundle(bundle).id();
         commands.entity(entity).push_children(&[child_entity]);
         child_entity
+    }
+    pub fn in_range(v: f32, range: (f32, f32)) -> f32 {
+        if v < range.0 {
+            range.0
+        } else if v > range.1 {
+            range.1
+        } else {
+            v
+        }
+    }
+    pub fn in_range_with_margin(v: f32, range: (f32, f32), margin: f32) -> f32 {
+        Self::in_range(v, (range.0 + margin, range.1 + margin))
     }
     /*
     pub fn get_sibling(

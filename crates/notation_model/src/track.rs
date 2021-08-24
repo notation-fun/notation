@@ -1,4 +1,5 @@
-use std::{collections::HashMap, fmt::Display};
+use std::collections::HashMap;
+use std::fmt::Display;
 use std::sync::Arc;
 
 use notation_proto::prelude::Chord;
@@ -30,10 +31,13 @@ impl Display for Track {
 }
 impl Track {
     pub fn new(index: usize, id: String, kind: TrackKind, entries: Vec<Arc<ModelEntry>>) -> Self {
-        let props = TrackProps {
-            index,
-        };
-        Self { id, kind, entries, props }
+        let props = TrackProps { index };
+        Self {
+            id,
+            kind,
+            entries,
+            props,
+        }
     }
     pub fn new_arc(index: usize, v: notation_proto::prelude::Track) -> Arc<Self> {
         Arc::<Self>::new_cyclic(|weak_self| {
@@ -86,10 +90,12 @@ impl Track {
     pub fn get_chords(&self) -> Vec<(Arc<ModelEntry>, Chord)> {
         let mut chords = Vec::new();
         for entry in self.entries.iter() {
-            if let Some(chord) = entry.proto
+            if let Some(chord) = entry
+                .proto
                 .as_core()
                 .and_then(|x| x.as_chord())
-                .map(|z|z.to_owned()) {
+                .map(|z| z.to_owned())
+            {
                 chords.push((entry.clone(), chord));
             }
         }
@@ -106,11 +112,10 @@ impl Track {
                 unique_chords.insert(chord, entry);
             }
         }
-        let mut chords = unique_chords.into_iter()
+        let mut chords = unique_chords
+            .into_iter()
             .collect::<Vec<(Chord, Arc<ModelEntry>)>>();
-        chords.sort_by(|(a, _), (b, _)| {
-                a.cmp(&b)
-            });
+        chords.sort_by(|(a, _), (b, _)| a.cmp(&b));
         chords
     }
 }

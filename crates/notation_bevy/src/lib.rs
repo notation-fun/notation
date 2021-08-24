@@ -40,12 +40,6 @@ pub mod inspector;
 pub mod dev;
 
 pub mod prelude {
-    pub struct NotationLabels();
-    impl NotationLabels {
-        pub const TAB: &'static str = "tab";
-        pub const MINI_MAP: &'static str = "mini_map";
-    }
-
     #[doc(hidden)]
     pub use crate::app::notation_app::{NotationApp, NotationPlugins};
     #[doc(hidden)]

@@ -5,7 +5,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use notation_model::prelude::Syllable;
 
-use crate::prelude::{ModelEntryData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{LyonShape, LyonShapeOp, ModelEntryData, NotationTheme};
 
 use super::chord_interval::ChordIntervalValue;
 

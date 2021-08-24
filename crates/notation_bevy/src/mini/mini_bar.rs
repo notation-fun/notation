@@ -47,10 +47,7 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         format!("{}: {:?}", self.data.bar_props.bar_ordinal, self.data.value)
     }
     fn get_shape(&self) -> shapes::Rectangle {
-        let (mut width, mut height) = (
-            self.data.value.width,
-            self.theme.sizes.mini_map.bar_height,
-        );
+        let (mut width, mut height) = (self.data.value.width, self.theme.sizes.mini_map.bar_height);
         let outline = self
             .theme
             .sizes
@@ -114,7 +111,11 @@ impl<'a> View<NotationLayout<'a>> for MiniBar {
         LayoutAnchor::CENTER
     }
 }
-impl<'a> GridCell<NotationLayout<'a>> for MiniBar {}
+impl<'a> GridCell<NotationLayout<'a>> for MiniBar {
+    fn order(&self) -> usize {
+        self.bar_props.bar_ordinal
+    }
+}
 impl MiniBar {
     pub fn on_added(
         mut commands: Commands,

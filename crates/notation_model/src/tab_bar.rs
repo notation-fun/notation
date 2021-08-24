@@ -58,9 +58,12 @@ impl TabBar {
             for layer in bar.layers.iter() {
                 for slice in layer.slices.iter() {
                     if slice.in_round(section_round) {
-                        if let Some(lane) =
-                            BarLane::try_new_arc(weak_self.clone(), index, &layer.track, slice.clone())
-                        {
+                        if let Some(lane) = BarLane::try_new_arc(
+                            weak_self.clone(),
+                            index,
+                            &layer.track,
+                            slice.clone(),
+                        ) {
                             lanes.push(lane);
                             index += 1;
                         }
@@ -121,11 +124,14 @@ impl TabBar {
     pub fn tab(&self) -> Option<Arc<Tab>> {
         self.tab.upgrade().map(|x| x.clone())
     }
-    pub fn get_lane_of_kind(&self, kind: LaneKind, track_index: Option<usize>) -> Option<Arc<BarLane>> {
+    pub fn get_lane_of_kind(
+        &self,
+        kind: LaneKind,
+        track_index: Option<usize>,
+    ) -> Option<Arc<BarLane>> {
         for lane in self.lanes.iter() {
             if lane.kind == kind {
-                if track_index.is_none()
-                    || track_index.unwrap() == lane.track.props.index {
+                if track_index.is_none() || track_index.unwrap() == lane.track.props.index {
                     return Some(lane.clone());
                 }
             }

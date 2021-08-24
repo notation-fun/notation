@@ -24,9 +24,11 @@ fn create_tone_notes(
     lane_query: Query<(&Arc<BarLane>, &ToneMode)>,
 ) {
     for (parent, entity, entry, tone) in query.iter() {
+        /* TODO: check whether is the first on in row
         if entry.prev_is_tie() {
             continue;
         }
+         */
         if let Ok((lane, mode)) = lane_query.get(parent.0) {
             let bar = lane.bar().unwrap();
             for note in tone.get_notes() {

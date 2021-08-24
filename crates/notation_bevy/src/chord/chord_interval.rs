@@ -6,7 +6,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use notation_model::prelude::{Interval, Syllable};
 
-use crate::prelude::{ModelEntryData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{LyonShape, LyonShapeOp, ModelEntryData, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct ChordIntervalValue {

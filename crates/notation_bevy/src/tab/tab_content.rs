@@ -24,7 +24,8 @@ impl TabContent {
         Self { tab }
     }
 }
-impl<'a> View<NotationLayout<'a>> for TabContent {}
+impl<'a> View<NotationLayout<'a>> for TabContent {
+}
 impl<'a> DockView<NotationLayout<'a>, TabChords, TabBars> for TabContent {}
 
 impl TabContent {

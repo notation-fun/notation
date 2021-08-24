@@ -4,10 +4,9 @@ use bevy::prelude::*;
 use std::sync::Arc;
 
 use super::pick_bundle::PickBundle;
-use super::pick_note::{PickNoteData, PickNoteShape};
-use super::single_string::{SingleString, SingleStringData};
+
 use super::strings_grid::{StringsGrid4, StringsGrid6};
-use crate::prelude::{LyonShapeOp, NotationTheme};
+use crate::prelude::NotationTheme;
 use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6, TrackKind};
 
 pub struct StringsPlugin;

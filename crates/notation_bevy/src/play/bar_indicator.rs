@@ -1,23 +1,21 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::{Position, Units};
+use bevy_utils::prelude::{LayoutData};
+use notation_model::prelude::TabBarProps;
 
-use crate::prelude::{BarLayoutData, LyonShape, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct BarIndicatorData {
-    pub bar_offset: Vec2,
-    pub bar_size: LayoutSize,
+    pub bar_props: TabBarProps,
+    pub bar_layout: LayoutData,
 }
 
 impl BarIndicatorData {
     pub fn new() -> Self {
         BarIndicatorData {
-            bar_offset: Vec2::ZERO,
-            bar_size: LayoutSize::ZERO,
+            bar_props: TabBarProps::default(),
+            bar_layout: LayoutData::ZERO,
         }
     }
 }
@@ -33,21 +31,21 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
     }
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.data.bar_size.width,
-            height: self.data.bar_size.height + self.theme.grid.bar_separator_extra * 2.0,
+            width: self.data.bar_layout.size.width,
+            height: self.data.bar_layout.size.height + self.theme.grid.bar_separator_extra * 2.0,
             origin: shapes::RectangleOrigin::TopLeft,
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.colors.mini_map.bar_outline.current)
+        ShapeColors::new(self.theme.colors.bar.bar_indicator)
     }
     fn get_draw_mode(&self) -> DrawMode {
         let line_width = self.theme.grid.pos_indicator_size;
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let x = self.data.bar_offset.x;
-        let y = self.data.bar_offset.y + self.theme.grid.bar_separator_extra;
+        let x = self.data.bar_layout.offset.x;
+        let y = self.data.bar_layout.offset.y + self.theme.grid.bar_separator_extra;
         Transform::from_xyz(x, y, self.theme.core.bar_indicator_z)
     }
 }

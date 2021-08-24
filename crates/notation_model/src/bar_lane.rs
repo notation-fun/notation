@@ -41,7 +41,7 @@ impl BarLane {
         bar: Weak<TabBar>,
         index: usize,
         track: &Arc<Track>,
-        slice: Slice
+        slice: Slice,
     ) -> Option<Arc<Self>> {
         let model_entries = track.get_entries(&slice.begin, &slice.end);
         if let Some(kind) = LaneKind::of_entries(&track.kind, &model_entries) {

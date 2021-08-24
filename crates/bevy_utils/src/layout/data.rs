@@ -17,7 +17,10 @@ impl Display for LayoutSize {
     }
 }
 impl LayoutSize {
-    pub const ZERO: Self = Self { width: 0.0, height: 0.0 };
+    pub const ZERO: Self = Self {
+        width: 0.0,
+        height: 0.0,
+    };
     pub fn new(width: f32, height: f32) -> Self {
         Self { width, height }
     }

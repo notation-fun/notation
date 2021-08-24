@@ -23,7 +23,7 @@ macro_rules! impl_strings_grid {
                         commands,
                         theme,
                         entity,
-                        SingleStringData::new(lane, SingleStringValue{
+                        SingleStringData::new(lane, SingleStringValue {
                             string: string as u8,
                             bar_size: 0.0,
                         }),

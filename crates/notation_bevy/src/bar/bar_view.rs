@@ -2,27 +2,35 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{GridCell, LayoutChangedQuery, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery};
 use crate::lane::lane_view::LaneView;
-use crate::prelude::{BarData, BarLayoutData, NotationAppState, NotationSettings, NotationTheme};
+use crate::prelude::{
+    AddEntryEvent, BarData, BarLayoutData, NotationAppState, NotationSettings, NotationTheme,
+};
 use crate::strings::pick_note::{PickNoteData, PickNoteShape};
 use crate::strings::single_string::{SingleString, SingleStringData};
 use crate::tab::tab_events::BarViewDoLayoutEvent;
 use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
 use crate::ui::layout::NotationLayout;
 use crate::word::word_text::{WordTextData, WordTextShape};
-use crate::prelude::{AddEntryEvent};
-use notation_model::prelude::{TabBar};
+use bevy_utils::prelude::{GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery};
+use notation_model::prelude::TabBar;
 
 use super::bar_beat::{BarBeat, BarBeatData, BarBeatValue};
 use super::bar_separator::{BarSeparator, BarSeparatorData, BarSeparatorValue};
 
 pub type BarView = BarData<BarLayoutData>;
 
-impl<'a> View<NotationLayout<'a>> for BarView {
+impl<'a> View<NotationLayout<'a>> for BarView {}
+impl<'a> GridCell<NotationLayout<'a>> for BarView {
+    fn order(&self) -> usize {
+        self.bar_props.bar_ordinal
+    }
 }
-impl<'a> GridCell<NotationLayout<'a>> for BarView {}
-impl<'a> VBoxView<NotationLayout<'a>, LaneView> for BarView {}
+impl<'a> VBoxView<NotationLayout<'a>, LaneView> for BarView {
+    fn sort_cells(&self) -> bool {
+        true
+    }
+}
 
 impl BarView {
     pub fn do_layout(
@@ -104,7 +112,8 @@ impl BarView {
                     lane_layout,
                 );
             }
-            if false { //TODO
+            if false {
+                //TODO
                 BarSeparator::create(
                     &mut commands,
                     &theme,
@@ -116,7 +125,7 @@ impl BarView {
                 &mut commands,
                 &theme,
                 entity,
-            BarSeparatorData::new(bar, BarSeparatorValue::new(false)),
+                BarSeparatorData::new(bar, BarSeparatorValue::new(false)),
             );
             let signature = bar.signature();
             for beat in 0..signature.bar_beats {

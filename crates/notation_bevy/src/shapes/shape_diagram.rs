@@ -68,5 +68,15 @@ macro_rules! impl_shape_diagram {
     }
 }
 
-impl_shape_diagram!(HandShape6, ShapeDiagram6, ShapeDiagramData6, ShapeDiagramValue6);
-impl_shape_diagram!(HandShape4, ShapeDiagram4, ShapeDiagramData4, ShapeDiagramValue4);
+impl_shape_diagram!(
+    HandShape6,
+    ShapeDiagram6,
+    ShapeDiagramData6,
+    ShapeDiagramValue6
+);
+impl_shape_diagram!(
+    HandShape4,
+    ShapeDiagram4,
+    ShapeDiagramData4,
+    ShapeDiagramValue4
+);

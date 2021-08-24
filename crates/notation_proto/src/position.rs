@@ -14,6 +14,7 @@ impl Display for TabPosition {
     }
 }
 impl TabPosition {
+    pub const ZERO: Self = Self { in_tab_pos: Units(0.0) };
     pub fn new(in_tab_pos: Units) -> Self {
         Self { in_tab_pos }
     }
@@ -45,6 +46,11 @@ impl From<BarPosition> for Units {
     }
 }
 impl BarPosition {
+    pub const ZERO: Self = Self {
+        bar_units: Units(0.0),
+        bar_ordinal: 0,
+        in_bar_pos: Units(0.0),
+    };
     pub fn new(bar_units: Units, bar_ordinal: usize, in_bar_pos: Units) -> Self {
         Self {
             bar_units,

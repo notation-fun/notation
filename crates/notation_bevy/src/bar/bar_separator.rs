@@ -2,8 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::LayoutSize;
 
-use crate::prelude::{BarData, BarLayoutData, LyonShape, LyonShapeOp, NotationTheme};
-use notation_model::prelude::{TabBar};
+use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct BarSeparatorValue {

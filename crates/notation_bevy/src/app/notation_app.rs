@@ -122,7 +122,6 @@ fn load_tab(
     mut state: ResMut<NotationAppState>,
     assets: ResMut<Assets<TabAsset>>,
     mut evts: EventWriter<AddTabEvent>,
-    mut config_evts: EventWriter<WindowResizedEvent>,
 ) {
     if state.tab.is_none() && state.parse_error.is_none() {
         if let Some(asset) = assets.get(&state.tab_asset) {
@@ -130,7 +129,6 @@ fn load_tab(
                 Ok(tab) => {
                     state.tab = Some(tab.clone());
                     evts.send(AddTabEvent(tab));
-                    config_evts.send(WindowResizedEvent());
                 }
                 Err(err) => {
                     println!("Parse Tab Failed: {:?}", err);
@@ -168,11 +166,7 @@ fn update_camera(
     }
 }
 
-fn setup_window_size(
-    window: Res<WindowDescriptor>,
-    mut app_state: ResMut<NotationAppState>,
-    settings: Res<NotationSettings>,
-) {
+fn setup_window_size(window: Res<WindowDescriptor>, mut app_state: ResMut<NotationAppState>) {
     app_state.window_width = window.width;
     app_state.window_height = window.height;
 }
@@ -181,7 +175,6 @@ fn on_window_resized(
     mut window: ResMut<WindowDescriptor>,
     mut evts: EventReader<WindowResized>,
     mut app_state: ResMut<NotationAppState>,
-    settings: Res<NotationSettings>,
     mut config_evts: EventWriter<WindowResizedEvent>,
 ) {
     for evt in evts.iter() {

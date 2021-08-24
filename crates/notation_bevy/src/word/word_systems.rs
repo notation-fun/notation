@@ -22,9 +22,11 @@ fn on_word_text(
     query: Query<(Entity, &Arc<LaneEntry>, &WordTextValue), Added<WordTextValue>>,
 ) {
     for (entity, entry, text) in query.iter() {
-        if entry.as_ref().prev_is_tie() {
+        /* TODO: check whether is the first on in row
+        if entry.prev_is_tie() {
             continue;
         }
+         */
         let data = WordTextData::new(entry, text.clone());
         WordTextShape::create_with_child(&mut commands, &theme, entity, data, |child_commands| {
             if text.word.text != "" {

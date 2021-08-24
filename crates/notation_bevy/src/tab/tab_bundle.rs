@@ -4,8 +4,6 @@ use std::sync::Arc;
 
 use notation_model::prelude::Tab;
 
-use crate::bar::bar_layout::BarLayoutData;
-
 use super::tab_state::TabState;
 use super::tab_view::TabView;
 

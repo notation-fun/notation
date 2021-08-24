@@ -7,9 +7,12 @@ use std::sync::Arc;
 use crate::prelude::{
     LyonShape, LyonShapeOp, NotationAppState, NotationLayout, NotationSettings, NotationTheme,
 };
-use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutData, LayoutQuery, LayoutSize, View, ViewAddedQuery, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutConstraint, LayoutQuery,
+    LayoutSize, View, ViewAddedQuery, ViewBundle, ViewQuery,
+};
 
-use super::mini_bar::{MiniBar};
+use super::mini_bar::MiniBar;
 use super::mini_plugin::MiniMapDoLayoutEvent;
 
 #[derive(Clone, Debug)]
@@ -25,16 +28,23 @@ impl MiniMap {
     pub fn new(tab: Arc<Tab>) -> Self {
         Self { tab }
     }
-    pub fn calc_grid_data(
-        &self,
-        engine: &NotationLayout,
-        grid_size: LayoutSize,
-    ) -> GridData {
+    pub fn calc_grid_data(&self, engine: &NotationLayout, grid_size: LayoutSize) -> GridData {
         let sizes = engine.theme.sizes.mini_map;
         let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
-            grid_size.width, sizes.bar_width_range, sizes.bar_margin().width, self.tab.bars.len());
+            grid_size.width,
+            sizes.bar_width_range,
+            sizes.bar_margin().width,
+            self.tab.bars.len(),
+        );
         let size = LayoutSize::new(cell_width, sizes.bar_height);
-        GridData::new_fixed(grid_size, rows, cols, size, sizes.bar_margin(), LayoutAnchor::TOP_LEFT)
+        GridData::new_fixed(
+            rows,
+            cols,
+            size,
+            sizes.bar_margin(),
+            LayoutAnchor::TOP_LEFT,
+            grid_size,
+        )
     }
 }
 impl<'a> DockPanel<NotationLayout<'a>> for MiniMap {
@@ -45,7 +55,8 @@ impl<'a> DockPanel<NotationLayout<'a>> for MiniMap {
 impl<'a> View<NotationLayout<'a>> for MiniMap {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
         let grid_data = self.calc_grid_data(engine, constraint.max);
-        let height = grid_data.content_size().height + engine.theme.sizes.mini_map.bar_margin().height * 2.0;
+        let height =
+            grid_data.content_size().height + engine.theme.sizes.mini_map.bar_margin().height * 2.0;
         LayoutSize::new(constraint.max.width, height)
     }
 }

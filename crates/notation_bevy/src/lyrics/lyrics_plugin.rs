@@ -1,8 +1,7 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use crate::prelude::{LyonShapeOp, NotationTheme};
-use crate::word::word_text::{WordText, WordTextData, WordTextShape, WordTextValue};
+use crate::word::word_text::{WordText, WordTextValue};
 use notation_model::prelude::{BarLane, LyricEntry};
 
 use super::lyrics_grid::LyricsGrid;
@@ -10,8 +9,7 @@ use super::lyrics_grid::LyricsGrid;
 pub struct LyricsPlugin;
 
 impl Plugin for LyricsPlugin {
-    fn build(&self, app: &mut AppBuilder) {
-    }
+    fn build(&self, _app: &mut AppBuilder) {}
 }
 
 impl LyricsPlugin {

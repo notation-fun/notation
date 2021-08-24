@@ -1,28 +1,34 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::{Position, Units};
+use bevy_utils::prelude::{LayoutData};
+use notation_model::prelude::{BarPosition, Position, TabBarProps, Units};
 
-use crate::prelude::{BarLayoutData, LyonShape, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct PosIndicatorData {
-    pub bar_offset: Vec2,
-    pub bar_size: LayoutSize,
+    pub bar_props: TabBarProps,
+    pub bar_layout: LayoutData,
     pub bar_units: Units,
-    pub in_bar_pos: Units,
+    pub bar_position: BarPosition,
 }
 
 impl PosIndicatorData {
     pub fn new(bar_units: Units) -> Self {
         PosIndicatorData {
-            bar_offset: Vec2::ZERO,
-            bar_size: LayoutSize::ZERO,
+            bar_props: TabBarProps::default(),
+            bar_layout: LayoutData::ZERO,
             bar_units,
-            in_bar_pos: Units(0.0),
+            bar_position: BarPosition::ZERO,
         }
+    }
+    pub fn is_synced(&self) -> bool {
+        self.bar_position.bar_ordinal == self.bar_props.bar_ordinal
+    }
+    pub fn offset_x(&self) -> f32 {
+        let mut x = self.bar_layout.offset.x;
+        x += self.bar_layout.size.width * self.bar_position.in_bar_pos.0 / self.bar_units.0;
+        x
     }
 }
 
@@ -40,7 +46,7 @@ impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
             Vec2::ZERO,
             Vec2::new(
                 0.0,
-                -self.data.bar_size.height - self.theme.grid.bar_separator_extra * 2.0,
+                -self.data.bar_layout.size.height - self.theme.grid.bar_separator_extra * 2.0,
             ),
         )
     }
@@ -52,11 +58,12 @@ impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let mut x = self.data.bar_offset.x;
-        let y = self.data.bar_offset.y;
-        x += self.data.bar_size.width
-            * self.data.in_bar_pos.0 / self.data.bar_units.0;
-        Transform::from_xyz(x, y + self.theme.grid.bar_separator_extra, self.theme.core.pos_indicator_z)
+        let y = self.data.bar_layout.offset.y;
+        Transform::from_xyz(
+            self.data.offset_x(),
+            y + self.theme.grid.bar_separator_extra,
+            self.theme.core.pos_indicator_z,
+        )
     }
 }
 
@@ -74,10 +81,13 @@ impl<'a> PosIndicator<'a> {
         theme: &'a NotationTheme,
         pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData)>,
         pos: Position,
-    ) {
+    ) -> Option<PosIndicatorData> {
         if let Ok((entity, mut data)) = pos_indicator_query.single_mut() {
-            data.in_bar_pos = pos.bar.in_bar_pos;
+            data.bar_position = pos.bar;
             Self::update(commands, theme, entity, &data);
+            Some(data.clone())
+        } else {
+            None
         }
     }
 }

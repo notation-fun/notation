@@ -20,8 +20,12 @@ impl Tab {
     #[throws(ParseError)]
     pub fn try_parse_arc(v: notation_proto::prelude::Tab) -> Arc<Self> {
         let meta = Arc::new(v.meta);
-        let tracks = v.tracks.into_iter().enumerate()
-            .map(|(index, track)| Track::new_arc(index, track)).collect();
+        let tracks = v
+            .tracks
+            .into_iter()
+            .enumerate()
+            .map(|(index, track)| Track::new_arc(index, track))
+            .collect();
         let mut sections = Vec::new();
         for (index, section) in v.sections.into_iter().enumerate() {
             sections.push(Section::try_new(index, section, &tracks).map(Arc::new)?);

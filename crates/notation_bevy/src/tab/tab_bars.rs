@@ -1,22 +1,23 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutQuery, LayoutSize, View, ViewAddedQuery, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutQuery, LayoutSize, View,
+    ViewAddedQuery, ViewQuery,
+};
 use notation_model::prelude::{Tab, TabBar};
 
 use crate::bar::bar_layout::BarLayoutData;
 use crate::bar::bar_view::BarView;
 use crate::lane::lane_layout::LaneLayoutData;
-use crate::prelude::{
-    BarBundle, NotationAppState, NotationSettings,
-    NotationTheme, PlayPlugin,
-};
+use crate::prelude::{BarBundle, NotationAppState, NotationSettings, NotationTheme, PlayPlugin};
+use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
 
-use super::tab_events::TabBarsDoLayoutEvent;
+use super::tab_events::{TabBarsDoLayoutEvent, TabResizedEvent};
 
 pub struct TabBars {
     pub tab: Arc<Tab>,
@@ -36,17 +37,58 @@ impl<'a> View<NotationLayout<'a>> for TabBars {}
 
 impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
     fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
+        if self.tab.bars.len() == 0 {
+            return GridData::ZERO;
+        }
         let sizes = engine.theme.sizes.bar;
         let bar_beats = self.tab.bar_beats() as f32;
-        let bar_width_range = (sizes.beat_size_range.0 * bar_beats, sizes.beat_size_range.1 * bar_beats);
+        let bar_width_range = (
+            sizes.beat_size_range.0 * bar_beats,
+            sizes.beat_size_range.1 * bar_beats,
+        );
         let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
-            grid_size.width - sizes.row_margin * 2.0, bar_width_range, 0.0, self.tab.bars.len());
-        let height = self.bar_layouts.get(0)
-            .map(|x| x.height)
-            .unwrap_or(240.0);
-        let size = LayoutSize::new(cell_width, height);
-        let margin = LayoutSize::new(0.0, engine.theme.sizes.layout.bar_margin);
-        GridData::new_fixed(grid_size, rows, cols, size, margin, LayoutAnchor::TOP_LEFT)
+            grid_size.width - sizes.row_margin * 2.0,
+            bar_width_range,
+            0.0,
+            self.tab.bars.len(),
+        );
+        let margin = engine.theme.sizes.layout.bar_margin();
+        if engine.settings.layout.mode == LayoutMode::Line {
+            let height = self.bar_layouts.get(0).map(|x| x.height()).unwrap_or(grid_size.height);
+            let size = LayoutSize::new(cell_width, height);
+            let grid_data = GridData::new_fixed(1, self.tab.bars.len(), size, margin, LayoutAnchor::TOP_LEFT, grid_size);
+            GridData {
+                offset: grid_data.offset + Vec2::new(sizes.row_margin, 0.0),
+                ..grid_data
+            }
+        } else {
+            let mut row_sizes = Vec::new();
+            for row in 0..rows {
+                let mut non_ghost_lanes: HashSet<String> = HashSet::new();
+                for col in 0..cols {
+                    if let Some(bar_layout) = self.bar_layouts.get(row * cols + col) {
+                        for lane_layout in bar_layout.lane_layouts.iter() {
+                            if !lane_layout.is_ghost() {
+                                non_ghost_lanes.insert(lane_layout.id());
+                            }
+                        }
+                    }
+                }
+                for col in 0..cols {
+                    if let Some(bar_layout) = self.bar_layouts.get(row * cols + col) {
+                        for lane_layout in bar_layout.lane_layouts.iter() {
+                            if lane_layout.is_ghost() {
+                                let visible = non_ghost_lanes.contains(&lane_layout.id());
+                                lane_layout.set_visible(visible);
+                            }
+                        }
+                    }
+                }
+                let bar_layout = self.bar_layouts.get(row * cols).unwrap();
+                row_sizes.push(LayoutSize::new(cell_width, bar_layout.height()));
+            }
+            GridData::new_rows(rows, cols, row_sizes, margin, LayoutAnchor::TOP_LEFT, grid_size)
+        }
     }
 }
 
@@ -54,7 +96,7 @@ impl TabBars {
     fn calc_all_lane_layouts(
         theme: &NotationTheme,
         settings: &NotationSettings,
-        tab: &Tab
+        tab: &Tab,
     ) -> Vec<LaneLayoutData> {
         let mut lane_layouts: HashMap<String, LaneLayoutData> = HashMap::new();
         for bar in tab.bars.iter() {
@@ -68,19 +110,21 @@ impl TabBars {
                 }
             }
         }
-        let result = lane_layouts.into_iter()
+        let result = lane_layouts
+            .into_iter()
             .map(|(_, lane_layout)| lane_layout)
             .collect::<Vec<LaneLayoutData>>();
         settings.layout.sort_lane_layouts(&result)
     }
-    fn calc_bar_layout_data(
-        all_lane_layouts: &Vec<LaneLayoutData>,
-        bar: &TabBar
-    ) -> BarLayoutData {
-        let mut lane_layouts = all_lane_layouts.clone();
-        for lane_layout in lane_layouts.iter_mut() {
-            lane_layout.lane = bar.get_lane_of_kind(lane_layout.lane_kind, Some(lane_layout.track_props.index));
-            lane_layout.visible = lane_layout.height > 0.0;
+    fn calc_bar_layout_data(all_lane_layouts: &Vec<LaneLayoutData>, bar: &TabBar) -> BarLayoutData {
+        let mut lane_layouts = Vec::new();
+        for lane_layout in all_lane_layouts.iter() {
+            let lane = bar.get_lane_of_kind(lane_layout.lane_kind, Some(lane_layout.track_props.index));
+            lane_layouts.push(Arc::new(LaneLayoutData {
+                lane,
+                visible: Arc::new(RwLock::new(lane_layout.height > 0.0)),
+                ..lane_layout.clone()
+            }));
         }
         BarLayoutData::new(lane_layouts)
     }
@@ -90,12 +134,9 @@ impl TabBars {
         tab: &Tab,
     ) -> Vec<BarLayoutData> {
         let all_lane_layouts = Self::calc_all_lane_layouts(theme, settings, tab);
-        tab
-            .bars
+        tab.bars
             .iter()
-            .map(|bar| {
-                Self::calc_bar_layout_data(&all_lane_layouts, bar)
-            })
+            .map(|bar| Self::calc_bar_layout_data(&all_lane_layouts, bar))
             .collect()
     }
 }
@@ -107,12 +148,7 @@ impl TabBars {
         query: ViewAddedQuery<TabBars>,
     ) {
         for (_parent, entity, view) in query.iter() {
-            PlayPlugin::spawn_indicators(
-                &mut commands,
-                &theme,
-                entity,
-                &view.tab,
-            );
+            PlayPlugin::spawn_indicators(&mut commands, &theme, entity, &view.tab);
             let bar_bundles: Vec<(&BarLayoutData, BarBundle)> = view
                 .tab
                 .bars
@@ -121,10 +157,7 @@ impl TabBars {
                 .filter_map(|(index, bar)| {
                     view.bar_layouts.get(index).map(|bar_layout| {
                         //let transform = theme.grid.calc_bar_transform(&bar_layout);
-                        (
-                            bar_layout,
-                            BarBundle::new(bar.clone(), bar_layout.clone()),
-                        )
+                        (bar_layout, BarBundle::new(bar.clone(), bar_layout.clone()))
                     })
                 })
                 .collect();
@@ -141,6 +174,7 @@ impl TabBars {
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<BarView>,
+        mut tab_resized_evts: EventWriter<TabResizedEvent>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
@@ -151,7 +185,8 @@ impl TabBars {
                 &cell_query,
                 evt.entity,
                 evt.layout,
-            )
+            );
+            tab_resized_evts.send(TabResizedEvent(evt.view.tab.clone()));
         }
     }
     pub fn on_layout_changed(
@@ -161,4 +196,5 @@ impl TabBars {
         for (entity, view, layout) in query.iter() {
             evts.send(TabBarsDoLayoutEvent::new(entity, &view, layout))
         }
-    }}
+    }
+}

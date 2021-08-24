@@ -1,11 +1,10 @@
 use std::fmt::Display;
-use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::LayoutSize;
 
-use crate::prelude::{BarData, BarLayoutData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 use notation_model::prelude::{Signature, TabBar};
 
 #[derive(Clone, Debug)]
@@ -21,11 +20,7 @@ impl Display for BarBeatValue {
     }
 }
 impl BarBeatValue {
-    pub fn new(
-        tab_bar: &TabBar,
-        signature: &Signature,
-        beat: u8,
-    ) -> Self {
+    pub fn new(tab_bar: &TabBar, signature: &Signature, beat: u8) -> Self {
         let bar_beats = tab_bar.bar_beats();
         BarBeatValue {
             signature: *signature,

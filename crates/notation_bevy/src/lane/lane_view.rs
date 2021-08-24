@@ -1,21 +1,18 @@
-use std::fmt::Display;
-use std::sync::Arc;
-
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle};
 use crate::lyrics::lyrics_plugin::LyricsPlugin;
+use crate::prelude::{AddEntryEvent, BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin};
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
 use crate::ui::layout::NotationLayout;
-use crate::prelude::{AddEntryEvent, BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin};
+use bevy_utils::prelude::{LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle};
 use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar};
 
 pub type LaneView = LaneLayoutData;
 
 impl<'a> View<NotationLayout<'a>> for LaneView {
     fn calc_size(&self, _engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        if self.visible {
+        if self.visible() {
             LayoutSize::new(constraint.max.width, self.height + self.margin)
         } else {
             LayoutSize::ZERO
@@ -53,14 +50,10 @@ impl LaneView {
             }
         } else {
             let view_bundle = ViewBundle::from(lane_layout.clone());
-            let lane_entity = BevyUtil::spawn_child_bundle(commands, bar_entity, view_bundle);
+            BevyUtil::spawn_child_bundle(commands, bar_entity, view_bundle);
         }
     }
-    pub fn setup_lane(
-        commands: &mut Commands,
-        lane: &BarLane,
-        lane_entity: Entity,
-    ) {
+    pub fn setup_lane(commands: &mut Commands, lane: &BarLane, lane_entity: Entity) {
         match lane.kind {
             LaneKind::Lyrics => {
                 LyricsPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)

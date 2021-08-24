@@ -13,4 +13,3 @@ impl Plugin for BarPlugin {
         app.add_system(BarView::do_layout.system());
     }
 }
-

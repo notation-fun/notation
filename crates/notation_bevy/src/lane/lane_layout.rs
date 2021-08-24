@@ -1,7 +1,6 @@
-use std::fmt::Display;
-use std::sync::Arc;
-use bevy::prelude::*;
 use notation_model::prelude::{BarLane, LaneKind, TrackProps};
+use std::fmt::Display;
+use std::sync::{Arc, RwLock};
 
 #[derive(Clone, Debug)]
 pub struct LaneLayoutData {
@@ -12,7 +11,7 @@ pub struct LaneLayoutData {
     pub height: f32,
     pub margin: f32,
     pub lane: Option<Arc<BarLane>>,
-    pub visible: bool,
+    pub visible: Arc<RwLock<bool>>,
 }
 impl LaneLayoutData {
     pub fn new(index: usize, lane: &BarLane, height: f32, margin: f32) -> Self {
@@ -24,7 +23,7 @@ impl LaneLayoutData {
             height,
             margin,
             lane: None,
-            visible: false,
+            visible: Arc::new(RwLock::new(false)),
         }
     }
     pub fn id(&self) -> String {
@@ -33,21 +32,29 @@ impl LaneLayoutData {
     pub fn order(&self) -> (usize, LaneKind) {
         (self.track_props.index, self.lane_kind)
     }
-    pub fn is_ghose(&self) -> bool {
+    pub fn is_ghost(&self) -> bool {
         self.lane.is_none()
+    }
+    pub fn visible(&self) -> bool {
+        self.height > 0.0 && *self.visible.read().unwrap()
+    }
+    pub fn set_visible(&self, visible: bool) {
+        if self.height > 0.0 {
+            *self.visible.write().unwrap() = visible;
+        }
     }
 }
 impl Display for LaneLayoutData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let lane = self.lane.as_ref().map(|x| x.to_string()).unwrap_or_default();
+        let lane = self
+            .lane
+            .as_ref()
+            .map(|x| x.to_string())
+            .unwrap_or_default();
         write!(
             f,
-            "<LaneLayoutData>({} {:?} {}: {}, V:{})",
-            self.track_id,
-            self.track_props,
-            self.lane_kind,
-            lane,
-            self.visible,
+            "<LaneLayoutData>({} {:?} {}: {}, H:{})",
+            self.track_id, self.track_props, self.lane_kind, lane, self.height,
         )
     }
 }

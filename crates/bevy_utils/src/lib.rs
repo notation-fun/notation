@@ -18,7 +18,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::layout::dock::{DockPanel, DockSide, DockView};
     #[doc(hidden)]
-    pub use crate::layout::grid::{GridCell, GridCellSize, GridData, GridCellData, GridView};
+    pub use crate::layout::grid::{GridCell, GridCellData, GridCellSize, GridData, GridView};
     #[doc(hidden)]
     pub use crate::layout::vbox::{VBoxCell, VBoxCellData, VBoxView};
     #[doc(hidden)]

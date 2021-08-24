@@ -3,9 +3,9 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use notation_model::prelude::{Chord, PlayingState, ModelEntryProps};
+use notation_model::prelude::{Chord, ModelEntryProps, PlayingState};
 
-use crate::prelude::{ModelEntryData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{LyonShape, LyonShapeOp, ModelEntryData, NotationTheme};
 
 use super::chord_base::{ChordBase, ChordBaseData, ChordBaseValue};
 use super::chord_interval::{ChordInterval, ChordIntervalData, ChordIntervalValue};
@@ -56,7 +56,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
         let outline = self
             .theme
             .colors
-            .chords
+            .chord
             .diagram_outline
             .of_state(&self.data.value.playing_state);
         ShapeColors::outlined(fill, outline)

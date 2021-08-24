@@ -41,12 +41,13 @@ where
             layout: layout.clone(),
         }
     }
-    pub fn on_layout_changed(
-        query: LayoutChangedQuery<T>,
-        mut evts: EventWriter<Self>,
-    ) {
+    pub fn on_layout_changed(query: LayoutChangedQuery<T>, mut evts: EventWriter<Self>) {
         for (entity, view, layout) in query.iter() {
-            println!("<{}>::on_layout_changed({})", std::any::type_name::<T>(), layout);
+            println!(
+                "<{}>::on_layout_changed({})",
+                std::any::type_name::<T>(),
+                layout
+            );
             evts.send(Self::new(entity, view, layout))
         }
     }
@@ -137,7 +138,8 @@ pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
     fn pivot(&self) -> LayoutAnchor {
         LayoutAnchor::default()
     }
-    fn calc_size(&self, _engine: &TE, constraint: LayoutConstraint) -> LayoutSize {
+    #[allow(unused_variables)]
+    fn calc_size(&self, engine: &TE, constraint: LayoutConstraint) -> LayoutSize {
         constraint.max
     }
     fn calc_root_layout(
@@ -169,7 +171,7 @@ pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
         } else {
             println!("{}.set_layout_data(\n\t{}\n)", self.to_string(), adjusted);
         }
-         */
+        */
         match layout_query.get_mut(entity) {
             Ok((mut layout_data, mut transform)) => {
                 *layout_data = adjusted;

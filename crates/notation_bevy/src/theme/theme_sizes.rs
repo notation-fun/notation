@@ -1,9 +1,5 @@
-use std::sync::Arc;
-
-use bevy::prelude::*;
-
 use bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::{BarLane, LaneKind, PlayingState};
+use notation_model::prelude::{LaneKind, PlayingState};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -185,5 +181,8 @@ impl LayoutSizes {
             LaneKind::Shapes => self.shapes_height,
             _ => 0.0,
         }
+    }
+    pub fn bar_margin(&self) -> LayoutSize {
+        LayoutSize::new(0.0, self.bar_margin)
     }
 }

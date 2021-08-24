@@ -34,12 +34,10 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
         shapes::Line(
             Vec2::new(
                 0.0,
-                self.theme.sizes.mini_map.bar_height / 2.0 + self.theme.sizes.mini_map.bar_margin().height * 2.0,
+                self.theme.sizes.mini_map.bar_height / 2.0
+                    + self.theme.sizes.mini_map.bar_margin().height * 2.0,
             ),
-            Vec2::new(
-                0.0,
-                -self.theme.sizes.mini_map.bar_height / 2.0,
-            ),
+            Vec2::new(0.0, -self.theme.sizes.mini_map.bar_height / 2.0),
         )
     }
     fn get_colors(&self) -> ShapeColors {

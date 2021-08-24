@@ -1,16 +1,14 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use crate::prelude::{LyonShapeOp, MelodyGrid, NotationTheme};
+use crate::prelude::MelodyGrid;
 use crate::tone::tone_mode::ToneMode;
-use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
 use notation_model::prelude::BarLane;
 
 pub struct MelodyPlugin;
 
 impl Plugin for MelodyPlugin {
-    fn build(&self, app: &mut AppBuilder) {
-    }
+    fn build(&self, _app: &mut AppBuilder) {}
 }
 
 impl MelodyPlugin {

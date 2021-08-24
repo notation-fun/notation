@@ -16,7 +16,8 @@ impl From<(ModelEntryProps, Chord)> for ChordPlaying {
         (v.0, ChordPlayingValue {
             chord: v.1,
             state: PlayingState::Idle,
-        }).into()
+        })
+            .into()
     }
 }
 
@@ -26,10 +27,10 @@ impl ChordPlaying {
         tab_state: &TabState,
         new_position: &Position,
     ) {
-        let chord =
-            tab_state.tab
-                .get_bar(new_position.bar)
-                .and_then(|x| x.get_chord(Some(new_position.bar.in_bar_pos)));
+        let chord = tab_state
+            .tab
+            .get_bar(new_position.bar)
+            .and_then(|x| x.get_chord(Some(new_position.bar.in_bar_pos)));
         if let Some(chord) = chord {
             for (_entity, mut chord_playing) in query.iter_mut() {
                 if chord_playing.value.chord == chord {

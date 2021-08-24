@@ -2,8 +2,7 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
 use super::hand_bundles::{HandShapeBundle4, HandShapeBundle6};
-use super::shape_diagram::{ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6};
-use crate::prelude::{LyonShapeOp, NotationTheme};
+
 use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6};
 
 pub struct ShapesPlugin;

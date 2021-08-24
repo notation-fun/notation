@@ -5,8 +5,6 @@ use bevy::prelude::*;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::prelude::{BarLayoutData, NotationAppState, NotationSettings};
-
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct GridTheme {

@@ -47,9 +47,10 @@ pub fn color_of_hex(hex: &str) -> Color {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeColors {
     pub syllables: SyllableColors,
-    pub chords: ChordsColors,
+    pub bar: BarColors,
+    pub chord: ChordColors,
     pub lyrics: LyricsColors,
-    pub sections: SectionColors,
+    pub section: SectionColors,
     pub strings: StringsColors,
     pub mini_map: MiniMapColors,
 }
@@ -85,10 +86,23 @@ impl Default for SyllableColors {
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
-pub struct ChordsColors {
+pub struct BarColors {
+    pub bar_indicator: Color,
+}
+impl Default for BarColors {
+    fn default() -> Self {
+        Self {
+            bar_indicator: color_of_hex("FF00FF"),
+        }
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct ChordColors {
     pub diagram_outline: PlayingColors,
 }
-impl Default for ChordsColors {
+impl Default for ChordColors {
     fn default() -> Self {
         Self {
             diagram_outline: PlayingColors::default(),
@@ -192,6 +206,6 @@ impl ThemeColors {
         self.syllables.of_syllable(v)
     }
     pub fn of_section(&self, v: usize) -> Color {
-        self.sections.of_section(v)
+        self.section.of_section(v)
     }
 }

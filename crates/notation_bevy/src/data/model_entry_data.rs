@@ -34,4 +34,3 @@ impl<T: Send + Sync + 'static> ModelEntryData<T> {
         }
     }
 }
-

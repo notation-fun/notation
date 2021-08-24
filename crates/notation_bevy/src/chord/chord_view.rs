@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy_utils::prelude::{
     GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewAddedQuery,
 };
-use notation_model::prelude::{Chord, PlayingState};
+use notation_model::prelude::Chord;
 
 use crate::prelude::{ModelEntryData, NotationTheme};
 use crate::ui::layout::NotationLayout;
@@ -22,7 +22,11 @@ impl<'a> View<NotationLayout<'a>> for ChordView {
         LayoutAnchor::CENTER
     }
 }
-impl<'a> GridCell<NotationLayout<'a>> for ChordView {}
+impl<'a> GridCell<NotationLayout<'a>> for ChordView {
+    fn order(&self) -> usize {
+        0
+    }
+}
 
 impl ChordView {
     pub fn on_layout_changed(
@@ -77,7 +81,10 @@ impl ChordView {
     pub fn on_chord_playing_changed(
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        mut query: Query<(Entity, &ChordPlaying, &Arc<ChordView>, &Children), Changed<ChordPlaying>>,
+        mut query: Query<
+            (Entity, &ChordPlaying, &Arc<ChordView>, &Children),
+            Changed<ChordPlaying>,
+        >,
         mut diagram_query: Query<(Entity, &mut ChordDiagramData)>,
     ) {
         for (_entity, playing, _view, children) in query.iter_mut() {
