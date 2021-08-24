@@ -14,11 +14,10 @@ pub struct MiniPlugin;
 
 impl Plugin for MiniPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_event::<MiniMapDoLayoutEvent>();
+        MiniMapDoLayoutEvent::setup(app);
         app.add_system(on_bar_playing_changed.system());
         app.add_system(MiniMap::on_added.system());
         app.add_system(MiniMap::do_layout.system());
-        app.add_system(MiniMap::on_layout_changed.system());
         app.add_system(MiniBar::on_added.system());
         app.add_system(MiniBar::on_layout_changed.system());
     }

@@ -1,7 +1,7 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use crate::prelude::{LyonShapeOp, NotationTheme, WindowResizedEvent};
+use crate::prelude::{LyonShapeOp, NotationTheme};
 use crate::word::word_text::{WordText, WordTextData, WordTextShape, WordTextValue};
 use notation_model::prelude::{BarLane, LyricEntry};
 

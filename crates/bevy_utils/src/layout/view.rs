@@ -30,7 +30,7 @@ where
 }
 impl<TE, T> DoLayoutEvent<TE, T>
 where
-    TE: LayoutEnv,
+    TE: LayoutEnv + Send + Sync + 'static,
     T: View<TE>,
 {
     pub fn new(entity: Entity, view: &Arc<T>, layout: &LayoutData) -> Self {
@@ -40,6 +40,19 @@ where
             view: view.clone(),
             layout: layout.clone(),
         }
+    }
+    pub fn on_layout_changed(
+        query: LayoutChangedQuery<T>,
+        mut evts: EventWriter<Self>,
+    ) {
+        for (entity, view, layout) in query.iter() {
+            println!("<{}>::on_layout_changed({})", std::any::type_name::<T>(), layout);
+            evts.send(Self::new(entity, view, layout))
+        }
+    }
+    pub fn setup(app: &mut AppBuilder) {
+        app.add_event::<Self>();
+        app.add_system(Self::on_layout_changed.system());
     }
 }
 

@@ -33,6 +33,12 @@ impl BarView {
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<LaneView>,
+        mut sep_query: Query<(Entity, &mut BarSeparatorData)>,
+        mut beat_query: Query<(Entity, &mut BarBeatData)>,
+        mut tone_note_query: Query<(Entity, &mut ToneNoteData)>,
+        mut pick_note_query: Query<(Entity, &mut PickNoteData)>,
+        mut single_string_query: Query<(Entity, &mut SingleStringData)>,
+        mut word_text_query: Query<(Entity, &mut WordTextData)>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
@@ -43,59 +49,43 @@ impl BarView {
                 &cell_query,
                 evt.entity,
                 evt.layout,
-            )
-        }
-    }
-    pub fn on_layout_changed(
-        mut commands: Commands,
-        theme: Res<NotationTheme>,
-        query: LayoutChangedQuery<BarView>,
-        mut sep_query: Query<(Entity, &mut BarSeparatorData)>,
-        mut beat_query: Query<(Entity, &mut BarBeatData)>,
-        mut tone_note_query: Query<(Entity, &mut ToneNoteData)>,
-        mut pick_note_query: Query<(Entity, &mut PickNoteData)>,
-        mut single_string_query: Query<(Entity, &mut SingleStringData)>,
-        mut word_text_query: Query<(Entity, &mut WordTextData)>,
-        mut evts: EventWriter<BarViewDoLayoutEvent>,
-    ) {
-        for (entity, view, layout) in query.iter() {
+            );
             for (entity, mut data) in sep_query.iter_mut() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size;
+                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
+                    data.value.bar_size = evt.layout.size;
                     BarSeparator::update(&mut commands, &theme, entity, &data);
                 }
             }
             for (entity, mut data) in beat_query.iter_mut() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size;
+                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
+                    data.value.bar_size = evt.layout.size;
                     BarBeat::update(&mut commands, &theme, entity, &data);
                 }
             }
             for (entity, mut data) in tone_note_query.iter_mut() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
+                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
+                    data.value.bar_size = evt.layout.size.width;
                     ToneNoteShape::update(&mut commands, &theme, entity, &data);
                 }
             }
             for (entity, mut data) in pick_note_query.iter_mut() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
+                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
+                    data.value.bar_size = evt.layout.size.width;
                     PickNoteShape::update(&mut commands, &theme, entity, &data);
                 }
             }
             for (entity, mut data) in single_string_query.iter_mut() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
+                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
+                    data.value.bar_size = evt.layout.size.width;
                     SingleString::update(&mut commands, &theme, entity, &data);
                 }
             }
             for (entity, mut data) in word_text_query.iter_mut() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
+                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
+                    data.value.bar_size = evt.layout.size.width;
                     WordTextShape::update(&mut commands, &theme, entity, &data);
                 }
             }
-            evts.send(BarViewDoLayoutEvent::new(entity, view, layout))
         }
     }
     pub fn on_added(
@@ -106,7 +96,7 @@ impl BarView {
     ) {
         for (entity, _view, bar, bar_layout) in query.iter() {
             for lane_layout in bar_layout.lane_layouts.iter() {
-                LaneView::create_lane(
+                LaneView::spawn(
                     &mut commands,
                     entity,
                     &bar,

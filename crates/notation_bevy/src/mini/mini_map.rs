@@ -138,9 +138,14 @@ impl MiniMap {
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<MiniBar>,
+        mut mini_map_back_query: Query<(Entity, &mut MiniMapBackData)>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
+            if let Ok((back_entity, mut back_data)) = mini_map_back_query.single_mut() {
+                *back_data = MiniMapBackData::new(evt.layout.size.width, evt.layout.size.height);
+                MiniMapBack::update(&mut commands, &theme, back_entity, &back_data);
+            }
             evt.view.do_layout(
                 &mut commands,
                 &engine,
@@ -149,21 +154,6 @@ impl MiniMap {
                 evt.entity,
                 evt.layout,
             )
-        }
-    }
-    pub fn on_layout_changed(
-        mut commands: Commands,
-        theme: Res<NotationTheme>,
-        query: LayoutChangedQuery<MiniMap>,
-        mut mini_map_back_query: Query<(Entity, &mut MiniMapBackData)>,
-        mut evts: EventWriter<MiniMapDoLayoutEvent>,
-    ) {
-        for (entity, view, layout) in query.iter() {
-            if let Ok((back_entity, mut back_data)) = mini_map_back_query.single_mut() {
-                *back_data = MiniMapBackData::new(layout.size.width, layout.size.height);
-                MiniMapBack::update(&mut commands, &theme, back_entity, &back_data);
-            }
-            evts.send(MiniMapDoLayoutEvent::new(entity, view, layout))
         }
     }
 }

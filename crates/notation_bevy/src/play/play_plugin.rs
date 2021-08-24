@@ -11,7 +11,7 @@ use crate::bar::bar_view::BarView;
 use crate::chord::chord_playing::ChordPlaying;
 use crate::prelude::{
     BarPlaying, EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme, TabBars,
-    TabState, WindowResizedEvent,
+    TabState,
 };
 
 use crate::tab::tab_state::TabPlayStateChanged;
@@ -23,7 +23,6 @@ pub struct PlayPlugin;
 
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_system(on_config_changed.system());
         app.add_system(on_bar_playing_changed.system());
         app.add_system(on_tab_play_state_changed.system());
         app.add_system(on_play_control_evt.system());
@@ -42,19 +41,6 @@ impl PlayPlugin {
         BarIndicator::create(commands, &theme, entity, bar_data);
         let pos_data = PosIndicatorData::new(tab.bar_units());
         PosIndicator::create(commands, &theme, entity, pos_data);
-    }
-}
-
-fn on_config_changed(
-    mut commands: Commands,
-    mut evts: EventReader<WindowResizedEvent>,
-    theme: Res<NotationTheme>,
-    indicator_query: Query<(Entity, &PosIndicatorData)>,
-) {
-    for _evt in evts.iter() {
-        for (entity, data) in indicator_query.iter() {
-            PosIndicator::update(&mut commands, &theme, entity, data);
-        }
     }
 }
 

@@ -24,24 +24,20 @@ pub struct TabPlugin;
 
 impl Plugin for TabPlugin {
     fn build(&self, app: &mut AppBuilder) {
+        TabContentDoLayoutEvent::setup(app);
+        TabChordsDoLayoutEvent::setup(app);
+        TabBarsDoLayoutEvent::setup(app);
         app.add_event::<AddTabEvent>();
-        app.add_event::<TabContentDoLayoutEvent>();
-        app.add_event::<TabChordsDoLayoutEvent>();
-        app.add_event::<TabBarsDoLayoutEvent>();
-        app.add_event::<BarViewDoLayoutEvent>();
         app.add_asset::<TabAsset>();
         app.init_asset_loader::<TabAssetLoader>();
         app.add_system(on_add_tab.system());
         app.add_system(on_config_changed.system().label(NotationLabels::TAB));
         app.add_system(TabView::on_added.system());
         app.add_system(TabContent::do_layout.system());
-        app.add_system(TabContent::on_layout_changed.system());
         app.add_system(TabChords::on_added.system());
         app.add_system(TabChords::do_layout.system());
-        app.add_system(TabChords::on_layout_changed.system());
         app.add_system(TabBars::on_added.system());
         app.add_system(TabBars::do_layout.system());
-        app.add_system(TabBars::on_layout_changed.system());
     }
 }
 

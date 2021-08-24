@@ -83,8 +83,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::lane::lane_layout::LaneLayoutData;
     #[doc(hidden)]
-    pub use crate::lane::lane_plugin::LanePlugin;
-    #[doc(hidden)]
     pub use crate::lyrics::lyrics_grid::LyricsGrid;
     #[doc(hidden)]
     pub use crate::lyrics::lyrics_plugin::LyricsPlugin;

@@ -20,7 +20,6 @@ impl PluginGroup for NotationPlugins {
         group.add(EntryPlugin);
         group.add(MelodyPlugin);
         group.add(LyricsPlugin);
-        group.add(LanePlugin);
         group.add(BarPlugin);
         group.add(StringsPlugin);
         group.add(ShapesPlugin);
@@ -123,6 +122,7 @@ fn load_tab(
     mut state: ResMut<NotationAppState>,
     assets: ResMut<Assets<TabAsset>>,
     mut evts: EventWriter<AddTabEvent>,
+    mut config_evts: EventWriter<WindowResizedEvent>,
 ) {
     if state.tab.is_none() && state.parse_error.is_none() {
         if let Some(asset) = assets.get(&state.tab_asset) {
@@ -130,6 +130,7 @@ fn load_tab(
                 Ok(tab) => {
                     state.tab = Some(tab.clone());
                     evts.send(AddTabEvent(tab));
+                    config_evts.send(WindowResizedEvent());
                 }
                 Err(err) => {
                     println!("Parse Tab Failed: {:?}", err);
