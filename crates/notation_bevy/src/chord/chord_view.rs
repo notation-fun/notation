@@ -14,6 +14,7 @@ use super::chord_base::ChordBaseData;
 use super::chord_diagram::{ChordDiagram, ChordDiagramData};
 use super::chord_interval::ChordIntervalData;
 use super::chord_playing::ChordPlaying;
+use super::interval_dot::IntervalDotData;
 
 pub type ChordView = ModelEntryData<Chord>;
 
@@ -34,8 +35,9 @@ impl ChordView {
         theme: Res<NotationTheme>,
         query: LayoutChangedWithChildrenQuery<ChordView>,
         mut diagram_query: Query<(Entity, &mut ChordDiagramData, &Children)>,
-        mut interval_query: Query<(Entity, &mut ChordIntervalData)>,
-        mut base_query: Query<(Entity, &mut ChordBaseData)>,
+        mut interval_query: Query<(Entity, &mut ChordIntervalData, &Children)>,
+        mut base_query: Query<(Entity, &mut ChordBaseData, &Children)>,
+        mut dot_query: Query<(Entity, &mut IntervalDotData)>,
     ) {
         for (_entity, _view, layout, children) in query.iter() {
             let radius = layout.size.width * theme.sizes.chord.diagram_factor;
@@ -48,6 +50,7 @@ impl ChordView {
                         &theme,
                         &mut interval_query,
                         &mut base_query,
+                        &mut dot_query,
                         diagram_entity,
                         &mut diagram_data,
                         diagram_children,

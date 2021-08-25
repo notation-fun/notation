@@ -1,4 +1,4 @@
-use notation_model::prelude::{Octave, PlayingState, Semitones, Syllable};
+use notation_model::prelude::{IntervalQuality, Octave, PlayingState, Semitones, Syllable};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -36,6 +36,41 @@ impl Default for PlayingColors {
             color_of_hex("FF00FF"),
             color_of_hex("555555"),
         )
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct IntervalColors {
+    pub perfect: Color,
+    pub major: Color,
+    pub minor: Color,
+    pub augmented: Color,
+    pub diminishd: Color,
+    pub tritone: Color,
+}
+impl IntervalColors {
+    pub fn of_quality(&self, quality: &IntervalQuality) -> Color {
+        match quality {
+            IntervalQuality::Perfect => self.perfect,
+            IntervalQuality::Major => self.major,
+            IntervalQuality::Minor => self.minor,
+            IntervalQuality::Augmented => self.augmented,
+            IntervalQuality::Diminished => self.diminishd,
+            IntervalQuality::Tritone => self.tritone,
+        }
+    }
+}
+impl Default for IntervalColors {
+    fn default() -> Self {
+        Self {
+            perfect: color_of_hex("FFFFFF"),
+            major: color_of_hex("FFFFFF"),
+            minor: color_of_hex("222222"),
+            augmented: color_of_hex("FF00FF"),
+            diminishd: color_of_hex("222222"),
+            tritone: color_of_hex("FF00FF"),
+        }
     }
 }
 
@@ -101,11 +136,13 @@ impl Default for BarColors {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ChordColors {
     pub diagram_outline: PlayingColors,
+    pub dot: IntervalColors,
 }
 impl Default for ChordColors {
     fn default() -> Self {
         Self {
             diagram_outline: PlayingColors::default(),
+            dot: IntervalColors::default(),
         }
     }
 }

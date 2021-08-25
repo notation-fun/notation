@@ -1,28 +1,29 @@
 use std::f32::consts::PI;
-use std::fmt::Display;
 
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
+use notation_model::prelude::{Interval, ModelEntryProps, Syllable};
 
-use notation_model::prelude::{Interval, Syllable};
+use crate::prelude::NotationTheme;
 
-use crate::prelude::{LyonShape, LyonShapeOp, ModelEntryData, NotationTheme};
+use super::chord_note::{ChordNote, ChordNoteData, ChordNoteExtra, ChordNoteValue};
 
 #[derive(Clone, Debug)]
-pub struct ChordIntervalValue {
+pub struct ChordIntervalExtra {
     pub total: usize,
     pub index: usize,
-    pub radius: f32,
-    pub root: Syllable,
-    pub interval: Interval,
+    pub diagram_radius: f32,
 }
-impl Display for ChordIntervalValue {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
+pub type ChordIntervalData = ChordNoteData<ChordIntervalExtra>;
+pub type ChordInterval<'a> = ChordNote<'a, ChordIntervalExtra>;
+
+impl ChordNoteExtra for ChordIntervalExtra {
+    fn set_diagram_radius(&mut self, diagram_radius: f32) {
+        self.diagram_radius = diagram_radius;
     }
-}
-impl ChordIntervalValue {
-    pub fn calc_xy(&self) -> (f32, f32) {
+    fn radius(&self, theme: &NotationTheme) -> f32 {
+        self.diagram_radius * theme.sizes.chord.diagram_interval_radius_factor
+    }
+    fn offset(&self, theme: &NotationTheme) -> Vec2 {
         let angle_offset = match self.total {
             2 => -180,
             3 => -150,
@@ -32,54 +33,31 @@ impl ChordIntervalValue {
             * PI
             / 180.0;
         let angle = PI * 2.0 * self.index as f32 / self.total as f32 + angle_offset;
-        (
-            self.radius * 1.4 * angle.cos(),
-            self.radius * 1.4 * angle.sin(),
+        let factor = theme.sizes.chord.diagram_interval_offset_factor;
+        Vec2::new(
+            self.diagram_radius * factor * angle.cos(),
+            self.diagram_radius * factor * angle.sin(),
         )
     }
-    pub fn calc_syllable(&self) -> Syllable {
-        Syllable::from((self.root, self.interval))
+}
+
+impl ChordIntervalData {
+    pub fn new_data(
+        entry_props: ModelEntryProps,
+        root: Syllable,
+        interval: Interval,
+        total: usize,
+        index: usize,
+        diagram_radius: f32,
+    ) -> Self {
+        let extra = ChordIntervalExtra { total, index, diagram_radius };
+        Self::from((entry_props,
+            ChordNoteValue::<ChordIntervalExtra>::new(
+                root,
+                interval,
+                extra,
+            )
+        ))
     }
 }
 
-pub type ChordIntervalData = ModelEntryData<ChordIntervalValue>;
-
-pub struct ChordInterval<'a> {
-    theme: &'a NotationTheme,
-    data: ChordIntervalData,
-}
-
-impl<'a> LyonShape<shapes::Circle> for ChordInterval<'a> {
-    fn get_name(&self) -> String {
-        format!("{}", self.data)
-    }
-    fn get_shape(&self) -> shapes::Circle {
-        shapes::Circle {
-            center: Vec2::ZERO,
-            radius: self.data.value.radius,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let color = self
-            .theme
-            .colors
-            .of_syllable(self.data.value.calc_syllable());
-        ShapeColors::new(color)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-
-    fn get_transform(&self) -> Transform {
-        let (x, y) = self.data.value.calc_xy();
-        Transform::from_xyz(x, y, 1.0)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, ChordIntervalData, shapes::Circle, ChordInterval<'a>>
-    for ChordInterval<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: ChordIntervalData) -> ChordInterval<'a> {
-        ChordInterval::<'a> { theme, data }
-    }
-}

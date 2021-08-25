@@ -14,6 +14,11 @@ pub enum IntervalQuality {
     Diminished,
     Tritone,
 }
+impl Display for IntervalQuality {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub enum Interval {
@@ -45,7 +50,7 @@ impl From<Interval> for IntervalQuality {
         match v {
             Interval::Unison => Self::Perfect,
             Interval::Minor2nd => Self::Minor,
-            Interval::Major2nd => Self::Minor,
+            Interval::Major2nd => Self::Major,
             Interval::Minor3nd => Self::Minor,
             Interval::Major3nd => Self::Major,
             Interval::Perfect4th => Self::Perfect,
@@ -139,6 +144,26 @@ impl From<Semitones> for Interval {
     }
 }
 impl Interval {
+    pub fn dot_count(&self) -> usize {
+        match self {
+            Interval::Unison => 1,
+            Interval::Minor2nd => 2,
+            Interval::Major2nd => 2,
+            Interval::Minor3nd => 3,
+            Interval::Major3nd => 3,
+            Interval::Perfect4th => 4,
+            Interval::Augmented4th => 4,
+            Interval::Tritone => 4,
+            Interval::Diminished5th => 5,
+            Interval::Perfect5th => 5,
+            Interval::Augmented5th => 5,
+            Interval::Minor6th => 6,
+            Interval::Major6th => 6,
+            Interval::Minor7th => 7,
+            Interval::Major7th => 7,
+            Interval::Perfect8ve => 1,
+        }
+    }
     pub fn to_text(&self) -> String {
         match self {
             Interval::Unison => "1",

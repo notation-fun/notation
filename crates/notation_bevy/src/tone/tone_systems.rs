@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use notation_model::prelude::{BarLane, Entry, LaneEntry, Tone};
+use notation_model::prelude::{BarLane, LaneEntry, Tone};
 
 use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme};
 

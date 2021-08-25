@@ -62,9 +62,15 @@ pub struct ChordSizes {
     pub chord_size_range: (f32, f32),
     pub diagram_factor: f32,
     pub diagram_outline: PlayingSize,
-    pub diagram_interval_factor: f32,
+    pub diagram_interval_radius_factor: f32,
+    pub diagram_interval_offset_factor: f32,
     pub diagram_base_factor: f32,
     pub diagram_base_y_factor: f32,
+    pub interval_dot_radius_factor: f32,
+    pub interval_dot_offset_2_factor: f32,
+    pub interval_dot_offset_3_4_factor: f32,
+    pub interval_dot_offset_5_7_factor: f32,
+    pub interval_dot_offset_6_factor: (f32, f32),
 }
 impl Default for ChordSizes {
     fn default() -> Self {
@@ -72,9 +78,15 @@ impl Default for ChordSizes {
             chord_size_range: (32.0, 80.0),
             diagram_factor: 0.45,
             diagram_outline: PlayingSize::new(0.5, 2.0, 1.0),
-            diagram_interval_factor: 0.33,
+            diagram_interval_radius_factor: 0.33,
+            diagram_interval_offset_factor: 0.45,
             diagram_base_factor: 0.25,
             diagram_base_y_factor: 3.4,
+            interval_dot_radius_factor: 0.22,
+            interval_dot_offset_2_factor: 0.3,
+            interval_dot_offset_3_4_factor: 0.4,
+            interval_dot_offset_5_7_factor: 0.6,
+            interval_dot_offset_6_factor: (0.4, 0.5),
         }
     }
 }

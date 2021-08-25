@@ -5,40 +5,39 @@ pub fn new_tab_test() -> Tab {
     tab! {
         Meta: TabMeta::new(Key::G, Scale::Major, Signature::_4_4, Tempo::Bpm(60))
         Tracks: [
-            {"guitar" Guitar [
+            {chord Chord [
+                $duration = _1
+                "1" Chord ( 1: 3 5 )
+                "1:246" Chord ( 1: 2- 4+ 6- )
+                "6-" Chord ( 6: 3- 5 )
+            ]}
+            {guitar Guitar [
                 Fretboard
                 $duration = _1
-                "G" Shape ( 3 2 0 0 0 3 )
                 "Em" Shape ( 0 2 2 0 0 0 )
-                "C" Shape ( 0 3 2 0 1 0 )
-                "D" Shape ( 0 0 0 2 3 2 )
+                "G" Shape ( 3 2 0 0 0 0 )
                 $duration = T_1_8
-                "picks:1" Pick [ 6 3 2 1 2 3 ] |
-                "picks:2" Pick [ 6 3 2 1 2 3 ] |
-                "picks:3" Pick [ 5 3 2 1 2 3 ] |
-                "picks:4" Pick [ 5 3 2 1 2 3 ] |
-                "picks:5" Pick [ 4 3 2 1 2 3 ] |
-                "picks:6" Pick [ 4 3 2 1 2 3 ] |
+                "picks" Pick [ 6 3 2 1 2 3 ]
+                Pick [ 6 3 2 1 2 3 ] |
             ]}
         ]
         Sections: [
             {"A" Verse [
                 {
-                    guitar [
-                        "G" 1
-                        "picks:1" |
-                    ]
-                }
-            ]}
-            {"B" Verse [
-                {
-                    guitar [
-                        "G" 1
-                        "picks:1" |
-                    ]
+                    chord [ "6-" 1 ]
+                    guitar [ "Em" 1 ; "picks" | ]
+                } {
+                    chord [ "6-" 1 ]
+                    guitar [ "Em" 1 ; "picks" | ]
+                } {
+                    chord [ "1" 1 ]
+                    guitar [ "G" 1 ; "picks" | ]
+                } {
+                    chord [ "1:246" 1 ]
+                    guitar [ "G" 1 ; "picks" | ]
                 }
             ]}
         ]
-        Form: "A" "A" "B" "A"
+        Form: "A" "A"
     }
 }
