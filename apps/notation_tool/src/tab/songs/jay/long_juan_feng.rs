@@ -140,7 +140,7 @@ pub fn new_tab() -> Tab {
                     $duration = _1_16
                     Tone [ 3 4, 3, 2 3, 4, 4 5, 4, 3 4, 5, ] |
                 "c:4@2" $duration = _1_8
-                    Tone [ _ 1, 2, _ 1, 2, 3 4 5 ^1 ] |
+                    Tone [ _ 1, 2, _ 1, 2, 3 4 5 ^1 @ ] |
                 "c:5" $duration = _1
                     Tone [ @ ^1 ] |
                 "b" $duration = _1_8
@@ -240,7 +240,7 @@ pub fn new_tab() -> Tab {
                     chord [ "1" 1 ]
                     guitar [ "G" 1 ; "i:1,2" | ]
                     lyrics [ "b:1" | ]
-                    vocal [ "b" | ]
+                    vocal [ "b" | ; "c:5" | @ 1 ]
                 } {
                     chord [ "6-" 1 ]
                     guitar [ "Em7" 1 ; "i:1,2" | ]

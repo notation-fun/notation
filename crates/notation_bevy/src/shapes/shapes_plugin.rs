@@ -1,6 +1,8 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
+use crate::prelude::NotationAssetsStates;
+
 use super::hand_bundles::{HandShapeBundle4, HandShapeBundle6};
 
 use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6};
@@ -9,7 +11,10 @@ pub struct ShapesPlugin;
 
 impl Plugin for ShapesPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_system_set(super::hand_systems::new_system_set());
+        app.add_system_set(SystemSet::on_update(NotationAssetsStates::Loaded)
+            .with_system(super::hand_systems::on_add_hand_shape6.system())
+            .with_system(super::hand_systems::on_add_hand_shape4.system())
+        );
     }
 }
 

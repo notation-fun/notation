@@ -4,19 +4,13 @@ use bevy::prelude::*;
 
 use notation_model::prelude::LaneEntry;
 
-use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme, NotationAssets};
 
 use super::word_text::{WordTextData, WordTextShape, WordTextValue};
 
-pub fn new_system_set() -> SystemSet {
-    SystemSet::new()
-        .with_system(on_word_text.system())
-        .with_system(on_entry_playing_changed.system())
-}
-
-fn on_word_text(
+pub fn on_word_text(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
+    assets: Res<NotationAssets>,
     theme: Res<NotationTheme>,
     _settings: Res<NotationSettings>,
     query: Query<(Entity, &Arc<LaneEntry>, &WordTextValue), Added<WordTextValue>>,
@@ -32,7 +26,7 @@ fn on_word_text(
             if text.word.text != "" {
                 theme.lyrics.insert_word_text(
                     child_commands,
-                    &asset_server,
+                    &assets,
                     text.word.text.as_str(),
                 )
             }
@@ -40,7 +34,7 @@ fn on_word_text(
     }
 }
 
-fn on_entry_playing_changed(
+pub fn on_entry_playing_changed(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,

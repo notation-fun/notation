@@ -3,19 +3,12 @@ use bevy::prelude::*;
 use notation_model::prelude::{Entry, LaneEntry};
 use std::sync::Arc;
 
-use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme, NotationAssets};
 use notation_model::prelude::Pick;
 
 use super::pick_note::{PickNoteData, PickNoteShape, PickNoteValue};
 
-pub fn new_system_set() -> SystemSet {
-    SystemSet::new()
-        .with_system(on_entry_playing_changed.system())
-        .with_system(create_pick_notes6.system())
-        .with_system(create_pick_notes4.system())
-}
-
-fn on_entry_playing_changed(
+pub fn on_entry_playing_changed(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
@@ -35,9 +28,9 @@ fn on_entry_playing_changed(
 macro_rules! impl_pick_system {
     ($create_pick_notes:ident, $fretboard:ident, $hand_shape:ident, $get_fretted_shape:ident
     ) => {
-        fn $create_pick_notes(
+        pub fn $create_pick_notes(
             mut commands: Commands,
-            asset_server: Res<AssetServer>,
+            assets: Res<NotationAssets>,
             theme: Res<NotationTheme>,
             settings: Res<NotationSettings>,
             query: Query<(Entity, &Arc<LaneEntry>, &Pick), Added<Pick>>,
@@ -67,7 +60,7 @@ macro_rules! impl_pick_system {
                                         if settings.always_show_fret || pick_note.fret.is_some() {
                                             theme.strings.insert_fret_text(
                                                 child_commands,
-                                                &asset_server,
+                                                &assets,
                                                 fret,
                                                 width,
                                                 height,

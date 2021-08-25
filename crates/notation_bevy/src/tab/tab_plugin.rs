@@ -6,10 +6,7 @@ use notation_midi::prelude::SwitchTabEvent;
 
 use crate::mini::mini_map::MiniMap;
 
-use crate::prelude::{
-    AddTabEvent, BevyUtil, NotationAppState, NotationSettings, NotationTheme, TabAsset, TabBars,
-    WindowResizedEvent,
-};
+use crate::prelude::{AddTabEvent, BevyUtil, NotationAppState, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars, WindowResizedEvent};
 use crate::ui::layout::NotationLayout;
 
 use super::tab_asset::TabAssetLoader;
@@ -33,14 +30,16 @@ impl Plugin for TabPlugin {
         app.add_event::<TabResizedEvent>();
         app.add_asset::<TabAsset>();
         app.init_asset_loader::<TabAssetLoader>();
-        app.add_system(on_add_tab.system());
-        app.add_system(on_window_resized.system());
-        app.add_system(TabView::on_added.system());
-        app.add_system(TabContent::do_layout.system());
-        app.add_system(TabChords::on_added.system());
-        app.add_system(TabChords::do_layout.system());
-        app.add_system(TabBars::on_added.system());
-        app.add_system(TabBars::do_layout.system());
+        app.add_system_set(SystemSet::on_update(NotationAssetsStates::Loaded)
+            .with_system(on_add_tab.system())
+            .with_system(on_window_resized.system())
+            .with_system(TabView::on_added.system())
+            .with_system(TabContent::do_layout.system())
+            .with_system(TabChords::on_added.system())
+            .with_system(TabChords::do_layout.system())
+            .with_system(TabBars::on_added.system())
+            .with_system(TabBars::do_layout.system())
+        );
     }
 }
 
@@ -103,14 +102,5 @@ fn on_add_tab(
             ViewBundle::from(TabBars::new(tab.clone(), Arc::new(bar_layouts))),
         );
         switch_tab_evts.send(SwitchTabEvent::new(evt.0.clone()));
-        let engine = NotationLayout::new(&theme, &state, &settings);
-        TabView::do_layout(
-            &engine,
-            &mut layout_query,
-            &mini_map_query,
-            &content_query,
-            tab_entity,
-            &tab_view,
-        );
     }
 }

@@ -6,16 +6,20 @@ use std::sync::Arc;
 use super::pick_bundle::PickBundle;
 
 use super::strings_grid::{StringsGrid4, StringsGrid6};
-use crate::prelude::NotationTheme;
+use crate::prelude::{NotationAssetsStates, NotationTheme};
 use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6, TrackKind};
 
 pub struct StringsPlugin;
 
 impl Plugin for StringsPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_system(on_add_fretted_grid6.system());
-        app.add_system(on_add_fretted_grid4.system());
-        app.add_system_set(super::pick_systems::new_system_set());
+        app.add_system_set(SystemSet::on_update(NotationAssetsStates::Loaded)
+            .with_system(on_add_fretted_grid6.system())
+            .with_system(on_add_fretted_grid4.system())
+            .with_system(super::pick_systems::on_entry_playing_changed.system())
+            .with_system(super::pick_systems::create_pick_notes6.system())
+            .with_system(super::pick_systems::create_pick_notes4.system())
+        );
     }
 }
 

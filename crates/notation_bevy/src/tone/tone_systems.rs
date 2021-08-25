@@ -4,20 +4,14 @@ use bevy::prelude::*;
 
 use notation_model::prelude::{BarLane, LaneEntry, Tone};
 
-use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme};
+use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme, NotationAssets};
 
 use super::tone_mode::ToneMode;
 use super::tone_note::{ToneNoteData, ToneNoteShape, ToneNoteValue};
 
-pub fn new_system_set() -> SystemSet {
-    SystemSet::new()
-        .with_system(create_tone_notes.system())
-        .with_system(on_entry_playing_changed.system())
-}
-
-fn create_tone_notes(
+pub fn create_tone_notes(
     mut commands: Commands,
-    _asset_server: Res<AssetServer>,
+    _assets: Res<NotationAssets>,
     theme: Res<NotationTheme>,
     _settings: Res<NotationSettings>,
     query: Query<(&Parent, Entity, &Arc<LaneEntry>, &Tone), Added<Tone>>,
@@ -39,7 +33,7 @@ fn create_tone_notes(
     }
 }
 
-fn on_entry_playing_changed(
+pub fn on_entry_playing_changed(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,

@@ -41,6 +41,8 @@ pub mod dev;
 
 pub mod prelude {
     #[doc(hidden)]
+    pub use crate::app::notation_assets::{NotationAssets, NotationAssetsStates};
+    #[doc(hidden)]
     pub use crate::app::notation_app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
     pub use crate::app::notation_app_events::WindowResizedEvent;

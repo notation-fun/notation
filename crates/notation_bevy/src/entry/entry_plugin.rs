@@ -2,10 +2,7 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
 use crate::chord::chord_view::ChordView;
-use crate::prelude::{
-    AddEntryEvent, BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, ShapesPlugin, StringsPlugin,
-    ToneBundle,
-};
+use crate::prelude::{AddEntryEvent, BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssetsStates, ShapesPlugin, StringsPlugin, ToneBundle};
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;
@@ -13,12 +10,16 @@ pub struct EntryPlugin;
 impl Plugin for EntryPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_event::<AddEntryEvent>();
-        app.add_system_set(crate::tone::tone_systems::new_system_set());
-        app.add_system_set(crate::word::word_systems::new_system_set());
-        app.add_system(on_add_entry.system());
-        app.add_system(ChordView::on_added.system());
-        app.add_system(ChordView::on_layout_changed.system());
-        app.add_system(ChordView::on_chord_playing_changed.system());
+        app.add_system_set(SystemSet::on_update(NotationAssetsStates::Loaded)
+            .with_system(crate::tone::tone_systems::create_tone_notes.system())
+            .with_system(crate::tone::tone_systems::on_entry_playing_changed.system())
+            .with_system(crate::word::word_systems::on_word_text.system())
+            .with_system(crate::word::word_systems::on_entry_playing_changed.system())
+            .with_system(on_add_entry.system())
+            .with_system(ChordView::on_added.system())
+            .with_system(ChordView::on_layout_changed.system())
+            .with_system(ChordView::on_chord_playing_changed.system())
+        );
     }
 }
 

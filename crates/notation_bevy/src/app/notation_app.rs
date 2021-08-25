@@ -1,10 +1,11 @@
 use std::sync::Arc;
 
+use bevy::prelude::*;
 use bevy::app::PluginGroupBuilder;
 use bevy::input::mouse::MouseMotion;
-use bevy::prelude::*;
-
 use bevy::window::WindowResized;
+
+use bevy_asset_loader::{AssetLoader};
 
 use crate::prelude::*;
 
@@ -38,6 +39,10 @@ pub struct NotationApp;
 impl NotationApp {
     pub fn new_builder(title: &str) -> AppBuilder {
         let mut app = App::build();
+        AssetLoader::new(NotationAssetsStates::Loading, NotationAssetsStates::Loaded)
+            .with_collection::<NotationAssets>()
+            .build(&mut app);
+        app.add_state(NotationAssetsStates::Loading);
         insert_window_descriptor(&mut app, String::from(title));
         super::notation_app_events::add_notation_app_events(&mut app);
 
@@ -87,22 +92,23 @@ impl NotationApp {
         F: Fn(&mut AppBuilder),
     {
         let mut app = NotationApp::new_builder(title);
-        app.add_startup_system(setup_camera.system());
 
         app.insert_resource(TabPathes(tab_pathes));
         app.init_resource::<NotationAppState>();
 
-        app.add_startup_system(setup_window_size.system());
-        app.add_system(on_window_resized.system());
+        app.add_startup_system(setup_camera.system());
 
-        app.add_system(update_camera.system());
-
-        app.add_system(load_tab.system());
-
-        app.add_system(top_panel::top_panel_ui.system());
+        app.add_system_set(SystemSet::on_enter(NotationAssetsStates::Loaded)
+            .with_system(setup_window_size.system())
+        );
+        app.add_system_set(SystemSet::on_update(NotationAssetsStates::Loaded)
+            .with_system(on_window_resized.system())
+            .with_system(update_camera.system())
+            .with_system(load_tab.system())
+            .with_system(top_panel::top_panel_ui.system())
+        );
 
         extra(&mut app);
-
         app.run();
     }
 }

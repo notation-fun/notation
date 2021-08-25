@@ -19,7 +19,7 @@ impl MidiSynth {
     pub fn try_new() -> Option<MidiSynth> {
         fluidlite::Settings::new()
             .and_then(fluidlite::Synth::new)
-            .and_then(|synth| synth.sfload("assets/sf2/SBLive.sf2", true).map(|_| synth))
+            .and_then(|synth| synth.sfload("assets/sblive.sf2", true).map(|_| synth))
             .map(Self::new)
             .map_err(|err| {
                 println!("MidiSynth try_new() failed: {:?}", err);

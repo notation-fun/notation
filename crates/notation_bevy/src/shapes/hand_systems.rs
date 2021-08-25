@@ -5,21 +5,15 @@ use std::sync::Arc;
 
 use super::shape_diagram::{ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6};
 use super::shape_finger::{ShapeFingerData, ShapeFingerShape};
-use crate::prelude::{LyonShapeOp, NotationTheme};
+use crate::prelude::{LyonShapeOp, NotationTheme, NotationAssets};
 use notation_model::prelude::{HandShape4, HandShape6};
-
-pub fn new_system_set() -> SystemSet {
-    SystemSet::new()
-        .with_system(on_add_hand_shape6.system())
-        .with_system(on_add_hand_shape4.system())
-}
 
 macro_rules! impl_on_add_hand_shape {
     ($type:ident, $hand_shape:ident, $diagram:ident, $diagram_data:ident) => {
-        fn $type(
+        pub fn $type(
             mut commands: Commands,
-            asset_server: Res<AssetServer>,
             theme: Res<NotationTheme>,
+            assets: Res<NotationAssets>,
             query: Query<(Entity, &Arc<LaneEntry>, &$hand_shape), Added<$hand_shape>>,
         ) {
             for (entity, entry, shape) in query.iter() {
@@ -33,7 +27,7 @@ macro_rules! impl_on_add_hand_shape {
                         if let Some(mark) = entry.model().prev_as_mark() {
                             theme
                                 .shapes
-                                .insert_shape_text(child_commands, &asset_server, &mark);
+                                .insert_shape_text(child_commands, &assets, &mark);
                         }
                     },
                 );

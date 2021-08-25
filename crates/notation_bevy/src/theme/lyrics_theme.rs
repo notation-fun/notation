@@ -2,6 +2,8 @@ use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use crate::prelude::NotationAssets;
+
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
@@ -37,10 +39,10 @@ impl LyricsTheme {
     pub fn insert_word_text(
         &self,
         entity_commands: &mut EntityCommands,
-        asset_server: &AssetServer,
+        assets: &NotationAssets,
         text: &str,
     ) {
-        let font = asset_server.load("fonts/NotoSansSC-Medium.otf");
+        let font = assets.cn_font.clone();
         let style = TextStyle {
             font,
             font_size: self.word_font_size,

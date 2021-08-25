@@ -6,6 +6,8 @@ use bevy::prelude::*;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
+use crate::prelude::NotationAssets;
+
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsTheme {
@@ -46,12 +48,12 @@ impl StringsTheme {
     pub fn insert_fret_text(
         &self,
         entity_commands: &mut EntityCommands,
-        asset_server: &AssetServer,
+        assets: &NotationAssets,
         fret: u8,
         note_width: f32,
         note_height: f32,
     ) {
-        let font = asset_server.load("fonts/FiraMono-Medium.ttf");
+        let font = assets.en_font.clone();
         let style = TextStyle {
             font,
             font_size: self.fret_font_size,

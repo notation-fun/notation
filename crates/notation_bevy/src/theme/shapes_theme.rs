@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
+use crate::prelude::NotationAssets;
+
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
@@ -56,10 +58,10 @@ impl ShapesTheme {
     pub fn insert_shape_text(
         &self,
         entity_commands: &mut EntityCommands,
-        asset_server: &AssetServer,
+        assets: &NotationAssets,
         text: &String,
     ) {
-        let font = asset_server.load("fonts/FiraMono-Medium.ttf");
+        let font = assets.en_font.clone();
         let style = TextStyle {
             font,
             font_size: self.shape_font_size,
