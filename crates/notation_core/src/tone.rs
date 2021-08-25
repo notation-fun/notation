@@ -86,14 +86,16 @@ impl From<(Note, Note, Note, Note, Note, Note)> for Tone {
 impl From<Vec<Note>> for Tone {
     fn from(v: Vec<Note>) -> Self {
         match v.len() {
+            0 => Self::None,
             1 => Self::from(v[0]),
             2 => Self::from((v[0], v[1])),
             3 => Self::from((v[0], v[1], v[2])),
             4 => Self::from((v[0], v[1], v[2], v[3])),
             5 => Self::from((v[0], v[1], v[2], v[3], v[4])),
+            6 => Self::from((v[0], v[1], v[2], v[3], v[4], v[5])),
             _ => {
-                println!("Unsupported Tones: {}", v.len());
-                Self::None
+                println!("ToneNote lost: {}", v.len() - 6);
+                Self::from((v[0], v[1], v[2], v[3], v[4], v[5]))
             }
         }
     }

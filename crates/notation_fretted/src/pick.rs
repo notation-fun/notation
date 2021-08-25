@@ -66,6 +66,7 @@ pub enum Pick {
     Triple(PickNote, PickNote, PickNote),
     Tetra(PickNote, PickNote, PickNote, PickNote),
     Penta(PickNote, PickNote, PickNote, PickNote, PickNote),
+    Hexa(PickNote, PickNote, PickNote, PickNote, PickNote, PickNote),
 }
 
 impl Display for Pick {
@@ -80,6 +81,9 @@ impl Display for Pick {
             }
             Pick::Penta(p1, p2, p3, p4, p5) => {
                 write!(f, "<Pick>({}, {}, {}, {}, {})", p1, p2, p3, p4, p5)
+            }
+            Pick::Hexa(p1, p2, p3, p4, p5, p6) => {
+                write!(f, "<Pick>({}, {}, {}, {}, {}, {})", p1, p2, p3, p4, p5, p6)
             }
         }
     }
@@ -121,15 +125,26 @@ impl From<(PickNote, PickNote, PickNote, PickNote, PickNote)> for Pick {
     }
 }
 
+impl From<(PickNote, PickNote, PickNote, PickNote, PickNote, PickNote)> for Pick {
+    fn from(v: (PickNote, PickNote, PickNote, PickNote, PickNote, PickNote)) -> Self {
+        Self::Hexa(v.0, v.1, v.2, v.3, v.4, v.5)
+    }
+}
+
 impl From<Vec<PickNote>> for Pick {
     fn from(v: Vec<PickNote>) -> Self {
         match v.len() {
+            0 => Self::None,
             1 => Self::from(v[0]),
             2 => Self::from((v[0], v[1])),
             3 => Self::from((v[0], v[1], v[2])),
             4 => Self::from((v[0], v[1], v[2], v[3])),
             5 => Self::from((v[0], v[1], v[2], v[3], v[4])),
-            _ => Self::None,
+            6 => Self::from((v[0], v[1], v[2], v[3], v[4], v[5])),
+            _ => {
+                println!("PickNote lost: {}", v.len() - 6);
+                Self::from((v[0], v[1], v[2], v[3], v[4], v[5]))
+            }
         }
     }
 }
@@ -143,6 +158,7 @@ impl Pick {
             Self::Triple(p1, p2, p3) => vec![p1, p2, p3],
             Self::Tetra(p1, p2, p3, p4) => vec![p1, p2, p3, p4],
             Self::Penta(p1, p2, p3, p4, p5) => vec![p1, p2, p3, p4, p5],
+            Self::Hexa(p1, p2, p3, p4, p5, p6) => vec![p1, p2, p3, p4, p5, p6],
         }
     }
 }

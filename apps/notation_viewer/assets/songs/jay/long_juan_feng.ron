@@ -961,7 +961,7 @@
                 Mark("|"),// [78]
                 Mark("o:4"),// [79]
                 Fretted6(Pick(
-                    Penta(
+                    Hexa(
                         (
                             string: 6,
                             fret: None,
@@ -992,6 +992,13 @@
                         ),
                         (
                             string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
                             fret: None,
                             fret_finger: None,
                             pick_finger: None,
@@ -1392,7 +1399,7 @@
                 ),// [126]
                 Mark("c:1,2"),// [127]
                 Fretted6(Pick(
-                    Penta(
+                    Hexa(
                         (
                             string: 6,
                             fret: None,
@@ -1423,6 +1430,13 @@
                         ),
                         (
                             string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
                             fret: None,
                             fret_finger: None,
                             pick_finger: None,
@@ -1432,7 +1446,7 @@
                     Simple(Quarter),
                 )),// [128]
                 Fretted6(Pick(
-                    Penta(
+                    Hexa(
                         (
                             string: 6,
                             fret: None,
@@ -1463,6 +1477,13 @@
                         ),
                         (
                             string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
                             fret: None,
                             fret_finger: None,
                             pick_finger: None,
@@ -1472,7 +1493,7 @@
                     Simple(Quarter),
                 )),// [129]
                 Fretted6(Pick(
-                    Penta(
+                    Hexa(
                         (
                             string: 6,
                             fret: None,
@@ -1503,6 +1524,13 @@
                         ),
                         (
                             string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
                             fret: None,
                             fret_finger: None,
                             pick_finger: None,

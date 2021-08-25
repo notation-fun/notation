@@ -103,32 +103,9 @@ macro_rules! impl_fretboard {
                 }
             }
             pub fn pick_tone(&self, shape: &$hand_shape, pick: &Pick) -> Tone {
-                let notes = match pick {
-                    Pick::None => vec![],
-                    Pick::Single(p1) => vec![self.shape_pick_note(shape, *p1)],
-                    Pick::Double(p1, p2) => vec![
-                        self.shape_pick_note(shape, *p1),
-                        self.shape_pick_note(shape, *p2),
-                    ],
-                    Pick::Triple(p1, p2, p3) => vec![
-                        self.shape_pick_note(shape, *p1),
-                        self.shape_pick_note(shape, *p2),
-                        self.shape_pick_note(shape, *p3),
-                    ],
-                    Pick::Tetra(p1, p2, p3, p4) => vec![
-                        self.shape_pick_note(shape, *p1),
-                        self.shape_pick_note(shape, *p2),
-                        self.shape_pick_note(shape, *p3),
-                        self.shape_pick_note(shape, *p4),
-                    ],
-                    Pick::Penta(p1, p2, p3, p4, p5) => vec![
-                        self.shape_pick_note(shape, *p1),
-                        self.shape_pick_note(shape, *p2),
-                        self.shape_pick_note(shape, *p3),
-                        self.shape_pick_note(shape, *p4),
-                        self.shape_pick_note(shape, *p5),
-                    ],
-                };
+                let notes: Vec<Option<Note>> = pick.get_notes().into_iter()
+                    .map(|x| self.shape_pick_note(shape, x))
+                    .collect();
                 notes.into()
             }
         }
