@@ -1,7 +1,7 @@
 use notation_dsl::tab;
 use notation_proto::prelude::*;
 
-pub fn new_tab_1_right_hand() -> Tab {
+pub fn new_tab() -> Tab {
     tab! {
         Meta: TabMeta::new(Key::G, Scale::Major, Signature::_4_4, Tempo::Bpm(60))
         Tracks: [

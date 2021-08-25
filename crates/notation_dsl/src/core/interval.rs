@@ -19,7 +19,7 @@ impl Parse for IntervalDsl {
     fn parse(input: ParseStream) -> Self {
         let interval = match input.parse::<LitInt>()?.base10_parse::<u8>()? {
             1 => Interval::Unison,
-            2 => {
+            2 | 9 => {
                 if input.peek(Token![-]) {
                     input.parse::<Token![-]>()?;
                     Interval::Minor2nd

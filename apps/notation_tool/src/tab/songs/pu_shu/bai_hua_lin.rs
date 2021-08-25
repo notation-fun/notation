@@ -1,7 +1,7 @@
 use notation_dsl::tab;
 use notation_proto::prelude::*;
 
-pub fn new_tab_bai_hua_lin() -> Tab {
+pub fn new_tab() -> Tab {
     tab! {
         Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(118))
         Tracks: [

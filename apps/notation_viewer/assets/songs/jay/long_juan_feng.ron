@@ -41,7 +41,20 @@
                     ),
                     Simple(Whole),
                 )),// [4]
-                Mark("2-"),// [5]
+                Mark("1_9"),// [5]
+                Core(Chord(
+                    (
+                        root: Do,
+                        intervals: Tetrad(
+                            Major3nd,
+                            Perfect5th,
+                            Major2nd,
+                        ),
+                        base: None,
+                    ),
+                    Simple(Whole),
+                )),// [6]
+                Mark("2-"),// [7]
                 Core(Chord(
                     (
                         root: Re,
@@ -53,8 +66,8 @@
                         base: None,
                     ),
                     Simple(Whole),
-                )),// [6]
-                Mark("3-"),// [7]
+                )),// [8]
+                Mark("3-"),// [9]
                 Core(Chord(
                     (
                         root: Mi,
@@ -66,8 +79,8 @@
                         base: None,
                     ),
                     Simple(Whole),
-                )),// [8]
-                Mark("4"),// [9]
+                )),// [10]
+                Mark("4"),// [11]
                 Core(Chord(
                     (
                         root: Fa,
@@ -79,8 +92,8 @@
                         base: None,
                     ),
                     Simple(Whole),
-                )),// [10]
-                Mark("5"),// [11]
+                )),// [12]
+                Mark("5"),// [13]
                 Core(Chord(
                     (
                         root: So,
@@ -91,8 +104,8 @@
                         base: None,
                     ),
                     Simple(Whole),
-                )),// [12]
-                Mark("b6"),// [13]
+                )),// [14]
+                Mark("b6"),// [15]
                 Core(Chord(
                     (
                         root: Li,
@@ -104,8 +117,8 @@
                         base: None,
                     ),
                     Simple(Whole),
-                )),// [14]
-                Mark("6-"),// [15]
+                )),// [16]
+                Mark("6-"),// [17]
                 Core(Chord(
                     (
                         root: La,
@@ -117,6 +130,33 @@
                         base: None,
                     ),
                     Simple(Whole),
+                )),// [18]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_2",
+                ),// [19]
+                Mark("1,4"),// [20]
+                Core(Chord(
+                    (
+                        root: Do,
+                        intervals: Triad(
+                            Major3nd,
+                            Perfect5th,
+                        ),
+                        base: Some(Perfect4th),
+                    ),
+                    Simple(Half),
+                )),// [21]
+                Core(Chord(
+                    (
+                        root: Fa,
+                        intervals: Triad(
+                            Major3nd,
+                            Perfect5th,
+                        ),
+                        base: Some(Major2nd),
+                    ),
+                    Simple(Half),
                 )),
             ],
         ),// [0]
@@ -919,44 +959,56 @@
                     Simple(Whole),
                 )),// [77]
                 Mark("|"),// [78]
+                Mark("o:4"),// [79]
+                Fretted6(Pick(
+                    Penta(
+                        (
+                            string: 6,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Whole),
+                )),// [80]
+                Mark("|"),// [81]
                 Extra(
                     "dsl::context::duration",
                     "_1_8",
-                ),// [79]
-                Mark("b:1"),// [80]
+                ),// [82]
+                Mark("p:1"),// [83]
                 Fretted6(Pick(
                     Single((
                         string: 5,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Simple(Eighth),
-                )),// [81]
-                Fretted6(Pick(
-                    Single((
-                        string: 4,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Simple(Eighth),
-                )),// [82]
-                Fretted6(Pick(
-                    Single((
-                        string: 2,
-                        fret: Some(3),
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Simple(Eighth),
-                )),// [83]
-                Fretted6(Pick(
-                    Single((
-                        string: 3,
                         fret: None,
                         fret_finger: None,
                         pick_finger: None,
@@ -966,7 +1018,7 @@
                 )),// [84]
                 Fretted6(Pick(
                     Single((
-                        string: 2,
+                        string: 4,
                         fret: None,
                         fret_finger: None,
                         pick_finger: None,
@@ -976,6 +1028,16 @@
                 )),// [85]
                 Fretted6(Pick(
                     Single((
+                        string: 2,
+                        fret: Some(3),
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [86]
+                Fretted6(Pick(
+                    Single((
                         string: 3,
                         fret: None,
                         fret_finger: None,
@@ -983,7 +1045,27 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [86]
+                )),// [87]
+                Fretted6(Pick(
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [88]
+                Fretted6(Pick(
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [89]
                 Fretted6(Pick(
                     Single((
                         string: 2,
@@ -993,22 +1075,10 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [87]
+                )),// [90]
                 Fretted6(Pick(
                     Single((
                         string: 3,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Simple(Eighth),
-                )),// [88]
-                Mark("|"),// [89]
-                Mark("b:2"),// [90]
-                Fretted6(Pick(
-                    Single((
-                        string: 5,
                         fret: None,
                         fret_finger: None,
                         pick_finger: None,
@@ -1016,29 +1086,11 @@
                     )),
                     Simple(Eighth),
                 )),// [91]
+                Mark("|"),// [92]
+                Mark("p:2"),// [93]
                 Fretted6(Pick(
                     Single((
-                        string: 4,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Simple(Eighth),
-                )),// [92]
-                Fretted6(Pick(
-                    Single((
-                        string: 2,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Simple(Eighth),
-                )),// [93]
-                Fretted6(Pick(
-                    Single((
-                        string: 3,
+                        string: 5,
                         fret: None,
                         fret_finger: None,
                         pick_finger: None,
@@ -1048,8 +1100,8 @@
                 )),// [94]
                 Fretted6(Pick(
                     Single((
-                        string: 3,
-                        fret: Some(4),
+                        string: 4,
+                        fret: None,
                         fret_finger: None,
                         pick_finger: None,
                         pick_direction: None,
@@ -1058,7 +1110,7 @@
                 )),// [95]
                 Fretted6(Pick(
                     Single((
-                        string: 3,
+                        string: 2,
                         fret: None,
                         fret_finger: None,
                         pick_finger: None,
@@ -1068,6 +1120,36 @@
                 )),// [96]
                 Fretted6(Pick(
                     Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [97]
+                Fretted6(Pick(
+                    Single((
+                        string: 3,
+                        fret: Some(4),
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [98]
+                Fretted6(Pick(
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [99]
+                Fretted6(Pick(
+                    Single((
                         string: 2,
                         fret: None,
                         fret_finger: None,
@@ -1075,9 +1157,9 @@
                         pick_direction: None,
                     )),
                     Simple(Quarter),
-                )),// [97]
-                Mark("|"),// [98]
-                Mark("b:3"),// [99]
+                )),// [100]
+                Mark("|"),// [101]
+                Mark("p:3"),// [102]
                 Fretted6(Pick(
                     Single((
                         string: 5,
@@ -1087,7 +1169,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [100]
+                )),// [103]
                 Fretted6(Pick(
                     Single((
                         string: 4,
@@ -1097,7 +1179,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [101]
+                )),// [104]
                 Fretted6(Pick(
                     Single((
                         string: 2,
@@ -1107,7 +1189,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [102]
+                )),// [105]
                 Fretted6(Pick(
                     Single((
                         string: 4,
@@ -1117,7 +1199,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [103]
+                )),// [106]
                 Fretted6(Pick(
                     Double(
                         (
@@ -1136,7 +1218,7 @@
                         ),
                     ),
                     Simple(Eighth),
-                )),// [104]
+                )),// [107]
                 Fretted6(Pick(
                     Single((
                         string: 4,
@@ -1146,7 +1228,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [105]
+                )),// [108]
                 Fretted6(Pick(
                     Single((
                         string: 2,
@@ -1156,19 +1238,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [106]
-                Fretted6(Pick(
-                    Single((
-                        string: 4,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Simple(Eighth),
-                )),// [107]
-                Mark("|"),// [108]
-                Mark("b:4"),// [109]
+                )),// [109]
                 Fretted6(Pick(
                     Single((
                         string: 4,
@@ -1179,6 +1249,18 @@
                     )),
                     Simple(Eighth),
                 )),// [110]
+                Mark("|"),// [111]
+                Mark("p:4"),// [112]
+                Fretted6(Pick(
+                    Single((
+                        string: 4,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [113]
                 Fretted6(Pick(
                     Single((
                         string: 3,
@@ -1188,7 +1270,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [111]
+                )),// [114]
                 Fretted6(Pick(
                     Single((
                         string: 2,
@@ -1198,7 +1280,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [112]
+                )),// [115]
                 Fretted6(Pick(
                     Single((
                         string: 1,
@@ -1208,7 +1290,7 @@
                         pick_direction: None,
                     )),
                     Simple(Eighth),
-                )),// [113]
+                )),// [116]
                 Fretted6(Pick(
                     Single((
                         string: 1,
@@ -1218,7 +1300,902 @@
                         pick_direction: None,
                     )),
                     Simple(Half),
-                )),// [114]
+                )),// [117]
+                Mark("|"),// [118]
+                Mark("o:3"),// [119]
+                Fretted6(Pick(
+                    Double(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [120]
+                Fretted6(Pick(
+                    Single((
+                        string: 4,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [121]
+                Fretted6(Pick(
+                    Single((
+                        string: 2,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [122]
+                Fretted6(Pick(
+                    Single((
+                        string: 3,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Eighth),
+                )),// [123]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Half),
+                )),// [124]
+                Mark("|"),// [125]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_4",
+                ),// [126]
+                Mark("c:1,2"),// [127]
+                Fretted6(Pick(
+                    Penta(
+                        (
+                            string: 6,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Quarter),
+                )),// [128]
+                Fretted6(Pick(
+                    Penta(
+                        (
+                            string: 6,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Quarter),
+                )),// [129]
+                Fretted6(Pick(
+                    Penta(
+                        (
+                            string: 6,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Quarter),
+                )),// [130]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [131]
+                Fretted6(Pick(
+                    Triple(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [132]
+                Mark("|"),// [133]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [134]
+                Mark("c:3"),// [135]
+                Fretted6(Pick(
+                    Triple(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [136]
+                Fretted6(Pick(
+                    Triple(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [137]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [138]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [139]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [140]
+                Fretted6(Pick(
+                    Triple(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [141]
+                Fretted6(Pick(
+                    Triple(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [142]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [143]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [144]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [145]
+                Mark("|"),// [146]
+                Mark("c:4"),// [147]
+                Fretted6(Pick(
+                    Triple(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [148]
+                Fretted6(Pick(
+                    Triple(
+                        (
+                            string: 5,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [149]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [150]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [151]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [152]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [153]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Sixteenth),
+                )),// [154]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [155]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [156]
+                Fretted6(Pick(
+                    Tetra(
+                        (
+                            string: 4,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 3,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 2,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                        (
+                            string: 1,
+                            fret: None,
+                            fret_finger: None,
+                            pick_finger: None,
+                            pick_direction: None,
+                        ),
+                    ),
+                    Simple(Eighth),
+                )),// [157]
                 Mark("|"),
             ],
         ),// [1]
@@ -1508,7 +2485,7 @@
                     "dsl::context::duration",
                     "_1_8",
                 ),// [60]
-                Mark("b:1"),// [61]
+                Mark("p:1"),// [61]
                 Lyric(Word(
                     (
                         text: "静",
@@ -1558,7 +2535,7 @@
                     Simple(Eighth),
                 )),// [69]
                 Mark("|"),// [70]
-                Mark("b:2"),// [71]
+                Mark("p:2"),// [71]
                 Lyric(Word(
                     (
                         text: "入",
@@ -1608,7 +2585,7 @@
                     Simple(Eighth),
                 )),// [79]
                 Mark("|"),// [80]
-                Mark("b:3"),// [81]
+                Mark("p:3"),// [81]
                 Core(Rest(Simple(Eighth))),// [82]
                 Lyric(Word(
                     (
@@ -1660,7 +2637,7 @@
                 )),// [90]
                 Core(Tie),// [91]
                 Mark("|"),// [92]
-                Mark("b:4"),// [93]
+                Mark("p:4"),// [93]
                 Core(Tie),// [94]
                 Lyric(Word(
                     (
@@ -1687,7 +2664,852 @@
                     ),
                     Simple(Quarter),
                 )),// [99]
-                Mark("|"),
+                Mark("|"),// [100]
+                Mark("c:1"),// [101]
+                Extra(
+                    "dsl::context::duration",
+                    "T_1_8",
+                ),// [102]
+                Lyric(Word(
+                    (
+                        text: "爱",
+                    ),
+                    Triplet(Eighth),
+                )),// [103]
+                Lyric(Word(
+                    (
+                        text: "情",
+                    ),
+                    Triplet(Eighth),
+                )),// [104]
+                Lyric(Word(
+                    (
+                        text: "来",
+                    ),
+                    Triplet(Eighth),
+                )),// [105]
+                Lyric(Word(
+                    (
+                        text: "的",
+                    ),
+                    Triplet(Eighth),
+                )),// [106]
+                Lyric(Word(
+                    (
+                        text: "太",
+                    ),
+                    Triplet(Eighth),
+                )),// [107]
+                Lyric(Word(
+                    (
+                        text: "快",
+                    ),
+                    Triplet(Eighth),
+                )),// [108]
+                Lyric(Word(
+                    (
+                        text: "就",
+                    ),
+                    Triplet(Eighth),
+                )),// [109]
+                Lyric(Word(
+                    (
+                        text: "像",
+                    ),
+                    Triplet(Eighth),
+                )),// [110]
+                Lyric(Word(
+                    (
+                        text: "龙",
+                    ),
+                    Triplet(Eighth),
+                )),// [111]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [112]
+                Lyric(Word(
+                    (
+                        text: "卷",
+                    ),
+                    Simple(Eighth),
+                )),// [113]
+                Lyric(Word(
+                    (
+                        text: "风",
+                    ),
+                    Simple(Eighth),
+                )),// [114]
+                Mark("|"),// [115]
+                Mark("c:2"),// [116]
+                Extra(
+                    "dsl::context::duration",
+                    "T_1_8",
+                ),// [117]
+                Lyric(Word(
+                    (
+                        text: "离",
+                    ),
+                    Triplet(Eighth),
+                )),// [118]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Triplet(Eighth),
+                )),// [119]
+                Lyric(Word(
+                    (
+                        text: "开",
+                    ),
+                    Triplet(Eighth),
+                )),// [120]
+                Lyric(Word(
+                    (
+                        text: "暴",
+                    ),
+                    Triplet(Eighth),
+                )),// [121]
+                Lyric(Word(
+                    (
+                        text: "风",
+                    ),
+                    Triplet(Eighth),
+                )),// [122]
+                Lyric(Word(
+                    (
+                        text: "圈",
+                    ),
+                    Triplet(Eighth),
+                )),// [123]
+                Lyric(Word(
+                    (
+                        text: "来",
+                    ),
+                    Triplet(Eighth),
+                )),// [124]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Triplet(Eighth),
+                )),// [125]
+                Lyric(Word(
+                    (
+                        text: "及",
+                    ),
+                    Triplet(Eighth),
+                )),// [126]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [127]
+                Lyric(Word(
+                    (
+                        text: "逃",
+                    ),
+                    Simple(Eighth),
+                )),// [128]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [129]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [130]
+                Mark("|"),// [131]
+                Mark("c:3"),// [132]
+                Lyric(Word(
+                    (
+                        text: "能",
+                    ),
+                    Simple(Eighth),
+                )),// [133]
+                Lyric(Word(
+                    (
+                        text: "再",
+                    ),
+                    Simple(Eighth),
+                )),// [134]
+                Lyric(Word(
+                    (
+                        text: "想",
+                    ),
+                    Simple(Eighth),
+                )),// [135]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [136]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [137]
+                Lyric(Word(
+                    (
+                        text: "能",
+                    ),
+                    Simple(Eighth),
+                )),// [138]
+                Lyric(Word(
+                    (
+                        text: "再",
+                    ),
+                    Simple(Eighth),
+                )),// [139]
+                Lyric(Word(
+                    (
+                        text: "想",
+                    ),
+                    Simple(Eighth),
+                )),// [140]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [141]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [142]
+                Mark("|"),// [143]
+                Mark("c:4"),// [144]
+                Core(Rest(Simple(Eighth))),// [145]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [146]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [147]
+                Core(Rest(Simple(Eighth))),// [148]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [149]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [150]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_2",
+                ),// [151]
+                Lyric(Word(
+                    (
+                        text: "能",
+                    ),
+                    Simple(Half),
+                )),// [152]
+                Mark("|"),// [153]
+                Mark("c:1@2"),// [154]
+                Extra(
+                    "dsl::context::duration",
+                    "T_1_8",
+                ),// [155]
+                Lyric(Word(
+                    (
+                        text: "爱",
+                    ),
+                    Triplet(Eighth),
+                )),// [156]
+                Lyric(Word(
+                    (
+                        text: "情",
+                    ),
+                    Triplet(Eighth),
+                )),// [157]
+                Lyric(Word(
+                    (
+                        text: "走",
+                    ),
+                    Triplet(Eighth),
+                )),// [158]
+                Lyric(Word(
+                    (
+                        text: "的",
+                    ),
+                    Triplet(Eighth),
+                )),// [159]
+                Lyric(Word(
+                    (
+                        text: "太",
+                    ),
+                    Triplet(Eighth),
+                )),// [160]
+                Lyric(Word(
+                    (
+                        text: "快",
+                    ),
+                    Triplet(Eighth),
+                )),// [161]
+                Lyric(Word(
+                    (
+                        text: "就",
+                    ),
+                    Triplet(Eighth),
+                )),// [162]
+                Lyric(Word(
+                    (
+                        text: "像",
+                    ),
+                    Triplet(Eighth),
+                )),// [163]
+                Lyric(Word(
+                    (
+                        text: "龙",
+                    ),
+                    Triplet(Eighth),
+                )),// [164]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [165]
+                Lyric(Word(
+                    (
+                        text: "卷",
+                    ),
+                    Simple(Eighth),
+                )),// [166]
+                Lyric(Word(
+                    (
+                        text: "风",
+                    ),
+                    Simple(Eighth),
+                )),// [167]
+                Mark("|"),// [168]
+                Mark("c:2@2"),// [169]
+                Extra(
+                    "dsl::context::duration",
+                    "T_1_8",
+                ),// [170]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Triplet(Eighth),
+                )),// [171]
+                Lyric(Word(
+                    (
+                        text: "能",
+                    ),
+                    Triplet(Eighth),
+                )),// [172]
+                Lyric(Word(
+                    (
+                        text: "承",
+                    ),
+                    Triplet(Eighth),
+                )),// [173]
+                Lyric(Word(
+                    (
+                        text: "受",
+                    ),
+                    Triplet(Eighth),
+                )),// [174]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Triplet(Eighth),
+                )),// [175]
+                Lyric(Word(
+                    (
+                        text: "已",
+                    ),
+                    Triplet(Eighth),
+                )),// [176]
+                Lyric(Word(
+                    (
+                        text: "无",
+                    ),
+                    Triplet(Eighth),
+                )),// [177]
+                Lyric(Word(
+                    (
+                        text: "处",
+                    ),
+                    Triplet(Eighth),
+                )),// [178]
+                Lyric(Word(
+                    (
+                        text: "可",
+                    ),
+                    Triplet(Eighth),
+                )),// [179]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [180]
+                Lyric(Word(
+                    (
+                        text: "躲",
+                    ),
+                    Simple(Eighth),
+                )),// [181]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [182]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [183]
+                Mark("|"),// [184]
+                Mark("c:3@2"),// [185]
+                Lyric(Word(
+                    (
+                        text: "要",
+                    ),
+                    Simple(Eighth),
+                )),// [186]
+                Lyric(Word(
+                    (
+                        text: "再",
+                    ),
+                    Simple(Eighth),
+                )),// [187]
+                Lyric(Word(
+                    (
+                        text: "想",
+                    ),
+                    Simple(Eighth),
+                )),// [188]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [189]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [190]
+                Lyric(Word(
+                    (
+                        text: "要",
+                    ),
+                    Simple(Eighth),
+                )),// [191]
+                Lyric(Word(
+                    (
+                        text: "再",
+                    ),
+                    Simple(Eighth),
+                )),// [192]
+                Lyric(Word(
+                    (
+                        text: "想",
+                    ),
+                    Simple(Eighth),
+                )),// [193]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [194]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [195]
+                Mark("|"),// [196]
+                Mark("c:4@2"),// [197]
+                Core(Rest(Simple(Eighth))),// [198]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [199]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [200]
+                Core(Rest(Simple(Eighth))),// [201]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Sixteenth),
+                )),// [202]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Sixteenth),
+                )),// [203]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [204]
+                Lyric(Word(
+                    (
+                        text: "要",
+                    ),
+                    Simple(Eighth),
+                )),// [205]
+                Lyric(Word(
+                    (
+                        text: "再",
+                    ),
+                    Simple(Eighth),
+                )),// [206]
+                Lyric(Word(
+                    (
+                        text: "想",
+                    ),
+                    Simple(Eighth),
+                )),// [207]
+                Lyric(Word(
+                    (
+                        text: "你",
+                    ),
+                    Simple(Eighth),
+                )),// [208]
+                Mark("|"),// [209]
+                Mark("b:1"),// [210]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Eighth),
+                )),// [211]
+                Lyric(Word(
+                    (
+                        text: "知",
+                    ),
+                    Simple(Eighth),
+                )),// [212]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Eighth),
+                )),// [213]
+                Lyric(Word(
+                    (
+                        text: "觉",
+                    ),
+                    Simple(Eighth),
+                )),// [214]
+                Lyric(Word(
+                    (
+                        text: "你",
+                    ),
+                    Simple(Eighth),
+                )),// [215]
+                Lyric(Word(
+                    (
+                        text: "已",
+                    ),
+                    Simple(Sixteenth),
+                )),// [216]
+                Lyric(Word(
+                    (
+                        text: "经",
+                    ),
+                    Simple(Sixteenth),
+                )),// [217]
+                Lyric(Word(
+                    (
+                        text: "离",
+                    ),
+                    Simple(Sixteenth),
+                )),// [218]
+                Lyric(Word(
+                    (
+                        text: "开",
+                    ),
+                    Simple(Sixteenth),
+                )),// [219]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Eighth),
+                )),// [220]
+                Mark("|"),// [221]
+                Mark("b:2"),// [222]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Eighth),
+                )),// [223]
+                Lyric(Word(
+                    (
+                        text: "知",
+                    ),
+                    Simple(Eighth),
+                )),// [224]
+                Lyric(Word(
+                    (
+                        text: "不",
+                    ),
+                    Simple(Eighth),
+                )),// [225]
+                Lyric(Word(
+                    (
+                        text: "觉",
+                    ),
+                    Simple(Eighth),
+                )),// [226]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Eighth),
+                )),// [227]
+                Lyric(Word(
+                    (
+                        text: "跟",
+                    ),
+                    Simple(Sixteenth),
+                )),// [228]
+                Lyric(Word(
+                    (
+                        text: "了",
+                    ),
+                    Simple(Sixteenth),
+                )),// [229]
+                Lyric(Word(
+                    (
+                        text: "这",
+                    ),
+                    Simple(Sixteenth),
+                )),// [230]
+                Lyric(Word(
+                    (
+                        text: "节",
+                    ),
+                    Simple(Sixteenth),
+                )),// [231]
+                Lyric(Word(
+                    (
+                        text: "奏",
+                    ),
+                    Simple(Eighth),
+                )),// [232]
+                Mark("|"),// [233]
+                Mark("b:3"),// [234]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [235]
+                Lyric(Word(
+                    (
+                        text: "知",
+                    ),
+                    Simple(Eighth),
+                )),// [236]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [237]
+                Lyric(Word(
+                    (
+                        text: "觉",
+                    ),
+                    Simple(Eighth),
+                )),// [238]
+                Lyric(Word(
+                    (
+                        text: "又",
+                    ),
+                    Simple(Eighth),
+                )),// [239]
+                Lyric(Word(
+                    (
+                        text: "过",
+                    ),
+                    Simple(Sixteenth),
+                )),// [240]
+                Lyric(Word(
+                    (
+                        text: "了",
+                    ),
+                    Simple(Sixteenth),
+                )),// [241]
+                Lyric(Word(
+                    (
+                        text: "一",
+                    ),
+                    Simple(Sixteenth),
+                )),// [242]
+                Lyric(Word(
+                    (
+                        text: "个",
+                    ),
+                    Simple(Sixteenth),
+                )),// [243]
+                Lyric(Word(
+                    (
+                        text: "秋",
+                    ),
+                    Simple(Eighth),
+                )),// [244]
+                Mark("|"),// [245]
+                Mark("b:4"),// [246]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [247]
+                Lyric(Word(
+                    (
+                        text: "知",
+                    ),
+                    Simple(Eighth),
+                )),// [248]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [249]
+                Lyric(Word(
+                    (
+                        text: "觉",
+                    ),
+                    Simple(Eighth),
+                )),// [250]
+                Lyric(Word(
+                    (
+                        text: "我",
+                    ),
+                    Simple(Eighth),
+                )),// [251]
+                Lyric(Word(
+                    (
+                        text: "该",
+                    ),
+                    Simple(Sixteenth),
+                )),// [252]
+                Lyric(Word(
+                    (
+                        text: "好",
+                    ),
+                    Simple(Sixteenth),
+                )),// [253]
+                Lyric(Word(
+                    (
+                        text: "好",
+                    ),
+                    Simple(Sixteenth),
+                )),// [254]
+                Lyric(Word(
+                    (
+                        text: "生",
+                    ),
+                    Simple(Sixteenth),
+                )),// [255]
+                Lyric(Word(
+                    (
+                        text: "活",
+                    ),
+                    Simple(Eighth),
+                )),// [256]
+                Mark("|"),// [257]
+                Mark("o:3"),// [258]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [259]
+                Lyric(Word(
+                    (
+                        text: "知",
+                    ),
+                    Simple(Eighth),
+                )),// [260]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [261]
+                Lyric(Word(
+                    (
+                        text: "觉",
+                    ),
+                    Simple(Eighth),
+                )),// [262]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [263]
+                Lyric(Word(
+                    (
+                        text: "知",
+                    ),
+                    Simple(Eighth),
+                )),// [264]
+                Lyric(Word(
+                    (
+                        text: "后",
+                    ),
+                    Simple(Eighth),
+                )),// [265]
+                Lyric(Word(
+                    (
+                        text: "觉",
+                    ),
+                    Simple(Eighth),
+                )),// [266]
+                Core(Tie),// [267]
+                Mark("|"),// [268]
+                Mark("o:4"),// [269]
+                Extra(
+                    "dsl::context::duration",
+                    "_1",
+                ),// [270]
+                Core(Tie),// [271]
+                Lyric(Word(
+                    (
+                        text: "",
+                    ),
+                    Simple(Whole),
+                )),
             ],
         ),// [2]
         (
@@ -1978,7 +3800,7 @@
                     "dsl::context::duration",
                     "_1_8",
                 ),// [37]
-                Mark("b:1"),// [38]
+                Mark("p:1"),// [38]
                 Core(Tone(
                     Single((
                         octave: P5,
@@ -2060,7 +3882,7 @@
                     Simple(Eighth),
                 )),// [46]
                 Mark("|"),// [47]
-                Mark("b:2"),// [48]
+                Mark("p:2"),// [48]
                 Core(Tone(
                     Single((
                         octave: P5,
@@ -2142,7 +3964,7 @@
                     Simple(Eighth),
                 )),// [56]
                 Mark("|"),// [57]
-                Mark("b:3"),// [58]
+                Mark("p:3"),// [58]
                 Core(Rest(Simple(Eighth))),// [59]
                 Core(Tone(
                     Single((
@@ -2226,7 +4048,7 @@
                 )),// [67]
                 Core(Tie),// [68]
                 Mark("|"),// [69]
-                Mark("b:4"),// [70]
+                Mark("p:4"),// [70]
                 Core(Tie),// [71]
                 Core(Tone(
                     Single((
@@ -2279,6 +4101,841 @@
                     )),
                     Simple(Eighth),
                 )),// [77]
+                Mark("|"),// [78]
+                Mark("c:1"),// [79]
+                Extra(
+                    "dsl::context::duration",
+                    "T_1_8",
+                ),// [80]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [81]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [82]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [83]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [84]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [85]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [86]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [87]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [88]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [89]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [90]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [91]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [92]
+                Mark("|"),// [93]
+                Mark("c:2"),// [94]
+                Extra(
+                    "dsl::context::duration",
+                    "T_1_8",
+                ),// [95]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [96]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [97]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [98]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [99]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [100]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [101]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [102]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [103]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Triplet(Eighth),
+                )),// [104]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [105]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [106]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [107]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [108]
+                Mark("|"),// [109]
+                Mark("c:3"),// [110]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [111]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [112]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [113]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [114]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [115]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [116]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [117]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [118]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [119]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [120]
+                Mark("|"),// [121]
+                Mark("c:4"),// [122]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_16",
+                ),// [123]
+                Core(Rest(Simple(Eighth))),// [124]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [125]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [126]
+                Core(Rest(Simple(Eighth))),// [127]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [128]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [129]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_16",
+                ),// [130]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [131]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [132]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [133]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [134]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [135]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [136]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [137]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [138]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [139]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [140]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [141]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(ThirtySecondth),
+                )),// [142]
+                Mark("|"),// [143]
+                Mark("c:4@2"),// [144]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [145]
+                Core(Rest(Simple(Eighth))),// [146]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [147]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [148]
+                Core(Rest(Simple(Eighth))),// [149]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [150]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [151]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [152]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [153]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [154]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [155]
+                Mark("|"),// [156]
+                Mark("c:5"),// [157]
+                Extra(
+                    "dsl::context::duration",
+                    "_1",
+                ),// [158]
+                Core(Tie),// [159]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Whole),
+                )),// [160]
+                Mark("|"),// [161]
+                Mark("b"),// [162]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_8",
+                ),// [163]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [164]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [165]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [166]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [167]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: D,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [168]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [169]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [170]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [171]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Sixteenth),
+                )),// [172]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: B,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [173]
+                Mark("|"),// [174]
+                Mark("o:3"),// [175]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [176]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [177]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [178]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [179]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [180]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: E,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [181]
+                Core(Tone(
+                    Single((
+                        octave: P5,
+                        pitch: (
+                            name: C,
+                            sign: Sharp,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [182]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Eighth),
+                )),// [183]
+                Core(Tie),// [184]
+                Mark("|"),// [185]
+                Mark("o:4"),// [186]
+                Extra(
+                    "dsl::context::duration",
+                    "_1",
+                ),// [187]
+                Core(Tie),// [188]
+                Core(Tone(
+                    Single((
+                        octave: P4,
+                        pitch: (
+                            name: A,
+                            sign: Natural,
+                        ),
+                    )),
+                    Simple(Whole),
+                )),// [189]
                 Mark("|"),
             ],
         ),
@@ -2444,14 +5101,16 @@
                                     begin: Mark("1:1"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        1,
+                                        1,// [0]
+                                        3,
                                     ]),
                                 ),// [0]
                                 (
                                     begin: Mark("2:1"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        2,
+                                        2,// [0]
+                                        4,
                                     ]),
                                 ),
                             ],
@@ -2502,14 +5161,16 @@
                                     begin: Mark("1:2"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        1,
+                                        1,// [0]
+                                        3,
                                     ]),
                                 ),// [0]
                                 (
                                     begin: Mark("2:2"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        2,
+                                        2,// [0]
+                                        4,
                                     ]),
                                 ),
                             ],
@@ -2560,14 +5221,16 @@
                                     begin: Mark("1:3"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        1,
+                                        1,// [0]
+                                        3,
                                     ]),
                                 ),// [0]
                                 (
                                     begin: Mark("2:3"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        2,
+                                        2,// [0]
+                                        4,
                                     ]),
                                 ),
                             ],
@@ -2618,14 +5281,16 @@
                                     begin: Mark("1:4"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        1,
+                                        1,// [0]
+                                        3,
                                     ]),
                                 ),// [0]
                                 (
                                     begin: Mark("2:4"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        2,
+                                        2,// [0]
+                                        4,
                                     ]),
                                 ),
                             ],
@@ -2637,14 +5302,16 @@
                                     begin: Mark("v:4_1"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        1,
+                                        1,// [0]
+                                        3,
                                     ]),
                                 ),// [0]
                                 (
                                     begin: Mark("v:4_2"),
                                     end: Mark("|"),
                                     rounds: Some([
-                                        2,
+                                        2,// [0]
+                                        4,
                                     ]),
                                 ),
                             ],
@@ -2654,8 +5321,8 @@
             ],
         ),// [1]
         (
-            id: "bridge",
-            kind: Bridge,
+            id: "pre",
+            kind: PreChorus,
             bars: [
                 (
                     layers: [
@@ -2678,27 +5345,27 @@
                                     rounds: None,
                                 ),// [0]
                                 (
-                                    begin: Mark("b:1"),
+                                    begin: Mark("p:1"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
                         ),// [1]
                         (
-                            track: "vocal",
+                            track: "lyrics",
                             slices: [
                                 (
-                                    begin: Mark("b:1"),
+                                    begin: Mark("p:1"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
                         ),// [2]
                         (
-                            track: "lyrics",
+                            track: "vocal",
                             slices: [
                                 (
-                                    begin: Mark("b:1"),
+                                    begin: Mark("p:1"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
@@ -2727,27 +5394,27 @@
                                     rounds: None,
                                 ),// [0]
                                 (
-                                    begin: Mark("b:2"),
+                                    begin: Mark("p:2"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
                         ),// [1]
                         (
-                            track: "vocal",
+                            track: "lyrics",
                             slices: [
                                 (
-                                    begin: Mark("b:2"),
+                                    begin: Mark("p:2"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
                         ),// [2]
                         (
-                            track: "lyrics",
+                            track: "vocal",
                             slices: [
                                 (
-                                    begin: Mark("b:2"),
+                                    begin: Mark("p:2"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
@@ -2776,27 +5443,27 @@
                                     rounds: None,
                                 ),// [0]
                                 (
-                                    begin: Mark("b:3"),
+                                    begin: Mark("p:3"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
                         ),// [1]
                         (
-                            track: "vocal",
+                            track: "lyrics",
                             slices: [
                                 (
-                                    begin: Mark("b:3"),
+                                    begin: Mark("p:3"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
                         ),// [2]
                         (
-                            track: "lyrics",
+                            track: "vocal",
                             slices: [
                                 (
-                                    begin: Mark("b:3"),
+                                    begin: Mark("p:3"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
@@ -2825,14 +5492,473 @@
                                     rounds: None,
                                 ),// [0]
                                 (
-                                    begin: Mark("b:4"),
+                                    begin: Mark("p:4"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
                             ],
                         ),// [1]
                         (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("p:4"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
                             track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("p:4"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        ),// [2]
+        (
+            id: "chorus",
+            kind: Chorus,
+            bars: [
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("G"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("c:1,2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("c:1"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        1,// [0]
+                                        3,
+                                    ]),
+                                ),// [0]
+                                (
+                                    begin: Mark("c:1@2"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        2,// [0]
+                                        4,
+                                    ]),
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("c:1"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("Em7"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("c:1,2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("c:2"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        1,// [0]
+                                        3,
+                                    ]),
+                                ),// [0]
+                                (
+                                    begin: Mark("c:2@2"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        2,// [0]
+                                        4,
+                                    ]),
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("c:2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("4"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("Cmaj7"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("c:3"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("c:3"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        1,// [0]
+                                        3,
+                                    ]),
+                                ),// [0]
+                                (
+                                    begin: Mark("c:3@2"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        2,// [0]
+                                        4,
+                                    ]),
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("c:3"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("5"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("D"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("c:4"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("c:4"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        1,// [0]
+                                        3,
+                                    ]),
+                                ),// [0]
+                                (
+                                    begin: Mark("c:4@2"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        2,// [0]
+                                        4,
+                                    ]),
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("c:4"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        1,// [0]
+                                        3,
+                                    ]),
+                                ),// [0]
+                                (
+                                    begin: Mark("c:4@2"),
+                                    end: Mark("|"),
+                                    rounds: Some([
+                                        2,// [0]
+                                        4,
+                                    ]),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        ),// [3]
+        (
+            id: "bridge",
+            kind: Bridge,
+            bars: [
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("G"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("i:1,2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("b:1"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("b"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("Em7"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("i:1,2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("b:2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("b"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("4"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("Cmaj7"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("i:3"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("b:3"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("b"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("5"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("G"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("i:4"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
                             slices: [
                                 (
                                     begin: Mark("b:4"),
@@ -2842,10 +5968,212 @@
                             ],
                         ),// [2]
                         (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("b"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        ),// [4]
+        (
+            id: "outro",
+            kind: Outro,
+            bars: [
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("G"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("i:1,2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
                             track: "lyrics",
                             slices: [
                                 (
-                                    begin: Mark("b:4"),
+                                    begin: Mark("b:1"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("b"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("Em7"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("i:1,2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("b:2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("b"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [1]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1,4"),
+                                    end: Count(2),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("Cmaj7"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("o:3"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("o:3"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("o:3"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [2]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("1_9"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("G"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),// [0]
+                                (
+                                    begin: Mark("o:4"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [1]
+                        (
+                            track: "lyrics",
+                            slices: [
+                                (
+                                    begin: Mark("0:4"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [2]
+                        (
+                            track: "vocal",
+                            slices: [
+                                (
+                                    begin: Mark("o:4"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
@@ -2861,7 +6189,12 @@
             "intro",// [0]
             "verse",// [1]
             "verse",// [2]
-            "bridge",
+            "pre",// [3]
+            "chorus",// [4]
+            "chorus",// [5]
+            "bridge",// [6]
+            "bridge",// [7]
+            "outro",
         ],
     ),
 )
