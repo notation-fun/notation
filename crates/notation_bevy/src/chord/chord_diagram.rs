@@ -102,10 +102,30 @@ impl<'a> ChordDiagram<'a> {
         data.value.radius = radius;
         ChordDiagram::update(commands, theme, entity, data);
         for child in children.iter() {
-            if let Ok((interval_entity, mut interval_data, interval_children)) = interval_query.get_mut(*child) {
-                ChordInterval::update_size(commands, theme, dot_query, interval_entity, &mut interval_data, interval_children, radius);
-            } else if let Ok((base_entity, mut base_data, base_chidren)) = base_query.get_mut(*child) {
-                ChordBase::update_size(commands, theme, dot_query, base_entity, &mut base_data, base_chidren, radius);
+            if let Ok((interval_entity, mut interval_data, interval_children)) =
+                interval_query.get_mut(*child)
+            {
+                ChordInterval::update_size(
+                    commands,
+                    theme,
+                    dot_query,
+                    interval_entity,
+                    &mut interval_data,
+                    interval_children,
+                    radius,
+                );
+            } else if let Ok((base_entity, mut base_data, base_chidren)) =
+                base_query.get_mut(*child)
+            {
+                ChordBase::update_size(
+                    commands,
+                    theme,
+                    dot_query,
+                    base_entity,
+                    &mut base_data,
+                    base_chidren,
+                    radius,
+                );
             }
         }
     }
@@ -139,13 +159,18 @@ impl<'a> ChordDiagram<'a> {
         let diagram_entity = ChordDiagram::create(commands, theme, entity, chord_data);
         let intervals = chord.intervals.get_intervals();
         for (index, interval) in intervals.iter().enumerate() {
-            let interval_data = ChordIntervalData::new_data(entry_props,
-                chord.root, interval.clone(), intervals.len(), index, radius);
+            let interval_data = ChordIntervalData::new_data(
+                entry_props,
+                chord.root,
+                interval.clone(),
+                intervals.len(),
+                index,
+                radius,
+            );
             ChordInterval::spawn(commands, theme, diagram_entity, interval_data);
         }
         if let Some(base) = chord.base {
-            let base_data = ChordBaseData::new_data(entry_props,
-                chord.root, base.clone(), radius);
+            let base_data = ChordBaseData::new_data(entry_props, chord.root, base.clone(), radius);
             ChordBase::spawn(commands, theme, diagram_entity, base_data);
         }
     }

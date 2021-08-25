@@ -14,7 +14,9 @@ impl Display for TabPosition {
     }
 }
 impl TabPosition {
-    pub const ZERO: Self = Self { in_tab_pos: Units(0.0) };
+    pub const ZERO: Self = Self {
+        in_tab_pos: Units(0.0),
+    };
     pub fn new(in_tab_pos: Units) -> Self {
         Self { in_tab_pos }
     }

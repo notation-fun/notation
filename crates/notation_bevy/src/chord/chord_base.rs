@@ -34,12 +34,9 @@ impl ChordBaseData {
         diagram_radius: f32,
     ) -> Self {
         let extra = ChordBaseExtra { diagram_radius };
-        Self::from((entry_props,
-            ChordNoteValue::<ChordBaseExtra>::new(
-                root,
-                interval,
-                extra,
-            )
+        Self::from((
+            entry_props,
+            ChordNoteValue::<ChordBaseExtra>::new(root, interval, extra),
         ))
     }
 }

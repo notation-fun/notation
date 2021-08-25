@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use crate::prelude::{BevyUtil, LayoutAnchor, LayoutData, LayoutEnv, LayoutQuery, LayoutSize, View, ViewQuery};
+use crate::prelude::{
+    BevyUtil, LayoutAnchor, LayoutData, LayoutEnv, LayoutQuery, LayoutSize, View, ViewQuery,
+};
 
 #[derive(Clone, Debug)]
 pub enum GridCellSize {
@@ -94,8 +96,8 @@ impl GridData {
         } else {
             0.0
         };
-        let offset = content_size.calc_offset(LayoutAnchor::TOP_LEFT, anchor)
-            + Vec2::new(space_x, space_y);
+        let offset =
+            content_size.calc_offset(LayoutAnchor::TOP_LEFT, anchor) + Vec2::new(space_x, space_y);
         GridData {
             rows,
             cols,
@@ -115,7 +117,15 @@ impl GridData {
         grid_size: LayoutSize,
     ) -> Self {
         let content_size = Self::calc_fixed_content_size(rows, cols, size, margin);
-        Self::new(rows, cols, GridCellSize::Fixed(size), margin, anchor, grid_size, content_size)
+        Self::new(
+            rows,
+            cols,
+            GridCellSize::Fixed(size),
+            margin,
+            anchor,
+            grid_size,
+            content_size,
+        )
     }
     pub fn new_rows(
         rows: usize,
@@ -126,7 +136,15 @@ impl GridData {
         grid_size: LayoutSize,
     ) -> Self {
         let content_size = Self::calc_rows_content_size(rows, cols, &row_sizes, margin);
-        Self::new(rows, cols, GridCellSize::Rows(row_sizes), margin, anchor, grid_size, content_size)
+        Self::new(
+            rows,
+            cols,
+            GridCellSize::Rows(row_sizes),
+            margin,
+            anchor,
+            grid_size,
+            content_size,
+        )
     }
     pub fn calc_fixed_content_size(
         rows: usize,
@@ -173,12 +191,14 @@ impl GridData {
         if total == 0 || content_size <= cell_size_range.0 {
             return (0, 0.0);
         }
-        let cell_size_with_margin = BevyUtil::in_range_with_margin(content_size / total as f32, cell_size_range, margin);
+        let cell_size_with_margin =
+            BevyUtil::in_range_with_margin(content_size / total as f32, cell_size_range, margin);
         let mut cell_count = (content_size / cell_size_with_margin).floor() as usize;
         if cell_count == 0 {
             cell_count = 1;
         }
-        let cell_size = BevyUtil::in_range(content_size / cell_count as f32 - margin, cell_size_range);
+        let cell_size =
+            BevyUtil::in_range(content_size / cell_count as f32 - margin, cell_size_range);
         (cell_count, cell_size)
     }
     pub fn calc_rows(total: usize, cols: usize) -> usize {

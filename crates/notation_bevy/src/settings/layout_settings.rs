@@ -90,19 +90,9 @@ impl LayoutSettings {
             *camera_transform = Transform::from_xyz(x, y, trans.z);
         }
     }
-    pub fn set_transform_xy(
-        &self,
-        transform: &mut Transform,
-        x: Option<f32>,
-        y: Option<f32>,
-    ) {
+    pub fn set_transform_xy(&self, transform: &mut Transform, x: Option<f32>, y: Option<f32>) {
         let trans = transform.translation;
-        *transform =
-            Transform::from_xyz(
-                x.unwrap_or(trans.x),
-                y.unwrap_or(trans.y),
-                trans.z
-            );
+        *transform = Transform::from_xyz(x.unwrap_or(trans.x), y.unwrap_or(trans.y), trans.z);
     }
     pub fn ease_transform_xy(
         &self,
@@ -115,11 +105,7 @@ impl LayoutSettings {
         let mut entity_commands = commands.entity(entity);
         entity_commands.remove::<EasingComponent<Transform>>();
         let from = transform.translation;
-        let to = Vec3::new(
-            x.unwrap_or(from.x),
-            y.unwrap_or(from.y),
-            from.z
-        );
+        let to = Vec3::new(x.unwrap_or(from.x), y.unwrap_or(from.y), from.z);
         if float_ne!(from.x, to.x, abs <= 0.01) || float_ne!(from.y, to.y, abs <= 0.01) {
             println!(
                 "layout_settings.ease_transform_xy(): {}, {} -> {}, {}",
@@ -135,7 +121,8 @@ impl LayoutSettings {
             ));
         }
     }
-    fn calc_grid_focus_y(&self,
+    fn calc_grid_focus_y(
+        &self,
         theme: &NotationTheme,
         _bars: &TabBars,
         _layout: &LayoutData,
@@ -150,7 +137,8 @@ impl LayoutSettings {
         };
         y + theme.grid.margin + theme.grid.header_height
     }
-    fn calc_line_focus_x(&self,
+    fn calc_line_focus_x(
+        &self,
         _theme: &NotationTheme,
         _bars: &TabBars,
         layout: &LayoutData,
@@ -158,7 +146,7 @@ impl LayoutSettings {
         pos_data: &PosIndicatorData,
     ) -> f32 {
         if pos_data.bar_position.bar_ordinal == 1 {
-            - grid_data.offset.x - layout.offset.x
+            -grid_data.offset.x - layout.offset.x
         } else {
             let size = grid_data.calc_cell_size(0, pos_data.bar_position.bar_ordinal - 1);
             pos_data.offset_x() - size.width - layout.offset.x - grid_data.offset.x
@@ -175,14 +163,28 @@ impl LayoutSettings {
         &self,
         commands: &mut Commands,
         theme: &NotationTheme,
-        tab_bars_query: &mut Query<(Entity, &mut Transform, &Arc<TabBars>, &LayoutData, &Arc<GridData>)>,
+        tab_bars_query: &mut Query<(
+            Entity,
+            &mut Transform,
+            &Arc<TabBars>,
+            &LayoutData,
+            &Arc<GridData>,
+        )>,
         pos_data: &PosIndicatorData,
     ) {
-        if let Ok((bars_entity, mut bars_transform, bars, layout, grid_data)) = tab_bars_query.single_mut() {
+        if let Ok((bars_entity, mut bars_transform, bars, layout, grid_data)) =
+            tab_bars_query.single_mut()
+        {
             match self.mode {
                 LayoutMode::Grid => {
                     let y = self.calc_grid_focus_y(theme, bars, layout, grid_data, pos_data);
-                    self.ease_transform_xy(commands, bars_entity, &mut bars_transform, None, Some(-y));
+                    self.ease_transform_xy(
+                        commands,
+                        bars_entity,
+                        &mut bars_transform,
+                        None,
+                        Some(-y),
+                    );
                 }
                 LayoutMode::Line => {
                     let x = self.calc_line_focus_x(theme, bars, layout, grid_data, pos_data);

@@ -50,14 +50,14 @@ impl ChordIntervalData {
         index: usize,
         diagram_radius: f32,
     ) -> Self {
-        let extra = ChordIntervalExtra { total, index, diagram_radius };
-        Self::from((entry_props,
-            ChordNoteValue::<ChordIntervalExtra>::new(
-                root,
-                interval,
-                extra,
-            )
+        let extra = ChordIntervalExtra {
+            total,
+            index,
+            diagram_radius,
+        };
+        Self::from((
+            entry_props,
+            ChordNoteValue::<ChordIntervalExtra>::new(root, interval, extra),
         ))
     }
 }
-

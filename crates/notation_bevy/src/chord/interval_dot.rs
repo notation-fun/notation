@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_model::prelude::{IntervalQuality};
+use notation_model::prelude::IntervalQuality;
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
@@ -15,12 +15,7 @@ pub struct IntervalDotData {
 }
 
 impl IntervalDotData {
-    pub fn new(
-        quality: IntervalQuality,
-        total: usize,
-        index: usize,
-        note_radius: f32,
-    ) -> Self {
+    pub fn new(quality: IntervalQuality, total: usize, index: usize, note_radius: f32) -> Self {
         Self {
             quality,
             total,
@@ -65,10 +60,13 @@ impl IntervalDotData {
                 Self::circle_offset(self.total, self.index, self.note_radius, factor)
             }
         } else {
-            let x = ((self.index % 2) as f32 - 0.5) * 2.0
-                * self.note_radius * theme.sizes.chord.interval_dot_offset_6_factor.0;
+            let x = ((self.index % 2) as f32 - 0.5)
+                * 2.0
+                * self.note_radius
+                * theme.sizes.chord.interval_dot_offset_6_factor.0;
             let y = ((self.index % 3) as f32 - 1.0)
-                * self.note_radius * theme.sizes.chord.interval_dot_offset_6_factor.1;
+                * self.note_radius
+                * theme.sizes.chord.interval_dot_offset_6_factor.1;
             Vec2::new(x, y)
         }
     }

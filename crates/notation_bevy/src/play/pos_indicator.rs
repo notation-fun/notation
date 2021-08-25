@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{LayoutData};
+use bevy_utils::prelude::LayoutData;
 use notation_model::prelude::{BarPosition, Position, TabBarProps, Units};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};

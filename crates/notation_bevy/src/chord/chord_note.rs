@@ -23,15 +23,17 @@ pub struct ChordNoteValue<T: ChordNoteExtra + 'static> {
 }
 impl<T: ChordNoteExtra + 'static> Display for ChordNoteValue<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<ChordNoteValue<{}>>({} {})", std::any::type_name::<T>(), self.root, self.interval)
+        write!(
+            f,
+            "<ChordNoteValue<{}>>({} {})",
+            std::any::type_name::<T>(),
+            self.root,
+            self.interval
+        )
     }
 }
 impl<T: ChordNoteExtra + 'static> ChordNoteValue<T> {
-    pub fn new(
-        root: Syllable,
-        interval: Interval,
-        extra: T,
-    ) -> Self {
+    pub fn new(root: Syllable, interval: Interval, extra: T) -> Self {
         Self {
             root,
             interval,
@@ -45,7 +47,7 @@ impl<T: ChordNoteExtra + 'static> ChordNoteValue<T> {
 
 pub type ChordNoteData<T> = ModelEntryData<ChordNoteValue<T>>;
 
-pub struct ChordNote<'a, T: ChordNoteExtra+ 'static> {
+pub struct ChordNote<'a, T: ChordNoteExtra + 'static> {
     pub theme: &'a NotationTheme,
     pub data: ChordNoteData<T>,
 }
@@ -61,7 +63,8 @@ impl<'a, T: ChordNoteExtra + 'static> LyonShape<shapes::Circle> for ChordNote<'a
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        let color = self.theme
+        let color = self
+            .theme
             .colors
             .of_syllable(self.data.value.calc_syllable());
         ShapeColors::new(color)
@@ -75,7 +78,8 @@ impl<'a, T: ChordNoteExtra + 'static> LyonShape<shapes::Circle> for ChordNote<'a
     }
 }
 
-impl<'a, T: ChordNoteExtra + 'static> LyonShapeOp<'a, NotationTheme, ChordNoteData<T>, shapes::Circle, ChordNote<'a, T>>
+impl<'a, T: ChordNoteExtra + 'static>
+    LyonShapeOp<'a, NotationTheme, ChordNoteData<T>, shapes::Circle, ChordNote<'a, T>>
     for ChordNote<'a, T>
 {
     fn new_shape(theme: &'a NotationTheme, data: ChordNoteData<T>) -> ChordNote<'a, T> {

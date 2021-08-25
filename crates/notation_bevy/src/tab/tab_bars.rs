@@ -54,9 +54,20 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
         );
         let margin = engine.theme.sizes.layout.bar_margin();
         if engine.settings.layout.mode == LayoutMode::Line {
-            let height = self.bar_layouts.get(0).map(|x| x.height()).unwrap_or(grid_size.height);
+            let height = self
+                .bar_layouts
+                .get(0)
+                .map(|x| x.height())
+                .unwrap_or(grid_size.height);
             let size = LayoutSize::new(cell_width, height);
-            let grid_data = GridData::new_fixed(1, self.tab.bars.len(), size, margin, LayoutAnchor::TOP_LEFT, grid_size);
+            let grid_data = GridData::new_fixed(
+                1,
+                self.tab.bars.len(),
+                size,
+                margin,
+                LayoutAnchor::TOP_LEFT,
+                grid_size,
+            );
             GridData {
                 offset: grid_data.offset + Vec2::new(sizes.row_margin, 0.0),
                 ..grid_data
@@ -87,7 +98,14 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 let bar_layout = self.bar_layouts.get(row * cols).unwrap();
                 row_sizes.push(LayoutSize::new(cell_width, bar_layout.height()));
             }
-            GridData::new_rows(rows, cols, row_sizes, margin, LayoutAnchor::TOP_LEFT, grid_size)
+            GridData::new_rows(
+                rows,
+                cols,
+                row_sizes,
+                margin,
+                LayoutAnchor::TOP_LEFT,
+                grid_size,
+            )
         }
     }
 }
@@ -119,7 +137,8 @@ impl TabBars {
     fn calc_bar_layout_data(all_lane_layouts: &Vec<LaneLayoutData>, bar: &TabBar) -> BarLayoutData {
         let mut lane_layouts = Vec::new();
         for lane_layout in all_lane_layouts.iter() {
-            let lane = bar.get_lane_of_kind(lane_layout.lane_kind, Some(lane_layout.track_props.index));
+            let lane =
+                bar.get_lane_of_kind(lane_layout.lane_kind, Some(lane_layout.track_props.index));
             lane_layouts.push(Arc::new(LaneLayoutData {
                 lane,
                 visible: Arc::new(RwLock::new(lane_layout.height > 0.0)),

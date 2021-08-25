@@ -1,4 +1,5 @@
-use std::{fmt::Display, sync::Arc};
+use std::fmt::Display;
+use std::sync::Arc;
 
 use crate::prelude::LaneLayoutData;
 
@@ -8,11 +9,7 @@ pub struct BarLayoutData {
 }
 impl Display for BarLayoutData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "<BarLayoutData>([{}])",
-            self.lane_layouts.len()
-        )
+        write!(f, "<BarLayoutData>([{}])", self.lane_layouts.len())
     }
 }
 impl BarLayoutData {
