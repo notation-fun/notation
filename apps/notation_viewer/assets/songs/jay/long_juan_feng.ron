@@ -98,8 +98,8 @@
                         root: Li,
                         intervals: Tetrad(
                             Minor3nd,
-                            Perfect5th,
-                            Major7th,
+                            Diminished5th,
+                            Diminished7th,
                         ),
                         base: None,
                     ),

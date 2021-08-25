@@ -13,7 +13,7 @@ pub fn new_tab_long_juan_feng() -> Tab {
                 "3-" Chord ( 3: 3- 5 7- )
                 "4" Chord ( 4: 3 5 7 )
                 "5" Chord ( 5: 3 5 )
-                "b6" Chord ( %6: 3- 5o 7o )
+                "b6" Chord ( %6: 3- 5% 7% )
                 "6-" Chord ( 6: 3- 5 7- )
             ]}
             {guitar Guitar [

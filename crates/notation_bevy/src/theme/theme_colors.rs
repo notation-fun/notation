@@ -66,9 +66,9 @@ impl Default for IntervalColors {
         Self {
             perfect: color_of_hex("FFFFFF"),
             major: color_of_hex("FFFFFF"),
-            minor: color_of_hex("222222"),
+            minor: color_of_hex("333333"),
             augmented: color_of_hex("FF00FF"),
-            diminishd: color_of_hex("222222"),
+            diminishd: color_of_hex("000000"),
             tritone: color_of_hex("FF00FF"),
         }
     }

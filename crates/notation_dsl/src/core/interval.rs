@@ -5,10 +5,6 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
 use syn::{LitInt, Token};
 
-mod kw {
-    syn::custom_keyword!(o);
-}
-
 pub struct IntervalDsl {
     pub interval: Interval,
 }
@@ -48,8 +44,8 @@ impl Parse for IntervalDsl {
                 }
             }
             5 => {
-                if input.peek(kw::o) {
-                    input.parse::<kw::o>()?;
+                if input.peek(Token![%]) {
+                    input.parse::<Token![%]>()?;
                     Interval::Diminished5th
                 } else if input.peek(Token![+]) {
                     input.parse::<Token![+]>()?;
@@ -67,8 +63,8 @@ impl Parse for IntervalDsl {
                 }
             }
             7 => {
-                if input.peek(kw::o) {
-                    input.parse::<kw::o>()?;
+                if input.peek(Token![%]) {
+                    input.parse::<Token![%]>()?;
                     Interval::Diminished7th
                 } else if input.peek(Token![-]) {
                     input.parse::<Token![-]>()?;
