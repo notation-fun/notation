@@ -59,11 +59,11 @@
                         root: Re,
                         intervals: Triad(
                             Minor3nd,
-                            Perfect5th,
+                            Diminished5th,
                         ),
                         base: None,
                     ),
-                    Triplet(Whole),
+                    Simple(Whole),
                 )),// [8]
                 Mark("3"),// [9]
                 Core(Chord(
