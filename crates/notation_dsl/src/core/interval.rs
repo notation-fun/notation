@@ -48,10 +48,7 @@ impl Parse for IntervalDsl {
                 }
             }
             5 => {
-                if input.peek(Token![-]) {
-                    input.parse::<Token![-]>()?;
-                    Interval::Diminished5th
-                } else if input.peek(kw::o) {
+                if input.peek(kw::o) {
                     input.parse::<kw::o>()?;
                     Interval::Diminished5th
                 } else if input.peek(Token![+]) {
@@ -70,7 +67,10 @@ impl Parse for IntervalDsl {
                 }
             }
             7 => {
-                if input.peek(Token![-]) {
+                if input.peek(kw::o) {
+                    input.parse::<kw::o>()?;
+                    Interval::Diminished7th
+                } else if input.peek(Token![-]) {
                     input.parse::<Token![-]>()?;
                     Interval::Minor7th
                 } else {

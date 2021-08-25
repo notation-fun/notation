@@ -59,11 +59,11 @@
                         root: Re,
                         intervals: Triad(
                             Minor3nd,
-                            Diminished5th,
+                            Perfect5th,
                         ),
                         base: None,
                     ),
-                    Simple(Whole),
+                    Triplet(Whole),
                 )),// [8]
                 Mark("3"),// [9]
                 Core(Chord(
@@ -124,11 +124,11 @@
                         root: Re,
                         intervals: Triad(
                             Minor3nd,
-                            Diminished5th,
+                            Perfect5th,
                         ),
                         base: None,
                     ),
-                    Simple(Half),
+                    Triplet(Half),
                 )),// [19]
                 Core(Chord(
                     (

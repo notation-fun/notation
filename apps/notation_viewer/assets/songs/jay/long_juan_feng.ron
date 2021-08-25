@@ -97,9 +97,9 @@
                     (
                         root: Li,
                         intervals: Tetrad(
-                            Major3nd,
+                            Minor3nd,
                             Perfect5th,
-                            Minor7th,
+                            Major7th,
                         ),
                         base: None,
                     ),
