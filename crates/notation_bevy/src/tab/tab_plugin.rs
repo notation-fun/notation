@@ -71,13 +71,9 @@ fn on_window_resized(
 fn on_add_tab(
     mut commands: Commands,
     theme: Res<NotationTheme>,
-    state: Res<NotationAppState>,
     settings: Res<NotationSettings>,
     mut evts: EventReader<AddTabEvent>,
     mut switch_tab_evts: EventWriter<SwitchTabEvent>,
-    mut layout_query: LayoutQuery,
-    mini_map_query: ViewQuery<MiniMap>,
-    content_query: ViewQuery<TabContent>,
 ) {
     for evt in evts.iter() {
         let tab = evt.0.clone();
