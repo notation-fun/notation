@@ -103,7 +103,9 @@ macro_rules! impl_fretboard {
                 }
             }
             pub fn pick_tone(&self, shape: &$hand_shape, pick: &Pick) -> Tone {
-                let notes: Vec<Option<Note>> = pick.get_notes().into_iter()
+                let notes: Vec<Option<Note>> = pick
+                    .get_notes()
+                    .into_iter()
                     .map(|x| self.shape_pick_note(shape, x))
                     .collect();
                 notes.into()

@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_asset_loader::{AssetCollection};
+use bevy_asset_loader::AssetCollection;
 
 #[derive(AssetCollection)]
 pub struct NotationAssets {
@@ -14,4 +14,3 @@ pub enum NotationAssetsStates {
     Loading,
     Loaded,
 }
-

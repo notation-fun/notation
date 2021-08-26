@@ -12,6 +12,7 @@ pub struct NotationSettings {
     pub speed_factor: f32,
     pub always_show_fret: bool,
     pub melody_piano_mode: bool,
+    pub mouse_dragged_panning: bool,
 }
 
 impl Default for NotationSettings {
@@ -21,6 +22,7 @@ impl Default for NotationSettings {
             speed_factor: 1.0,
             always_show_fret: false,
             melody_piano_mode: false,
+            mouse_dragged_panning: false,
         }
     }
 }

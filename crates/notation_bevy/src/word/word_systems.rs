@@ -1,37 +1,33 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 
 use notation_model::prelude::LaneEntry;
 
-use crate::prelude::{EntryPlaying, LyonShapeOp, NotationSettings, NotationTheme, NotationAssets};
+use crate::prelude::{EntryPlaying, LyonShapeOp, NotationAssets, NotationSettings, NotationTheme};
 
 use super::word_text::{WordTextData, WordTextShape, WordTextValue};
 
-pub fn on_word_text(
-    mut commands: Commands,
-    assets: Res<NotationAssets>,
-    theme: Res<NotationTheme>,
-    _settings: Res<NotationSettings>,
-    query: Query<(Entity, &Arc<LaneEntry>, &WordTextValue), Added<WordTextValue>>,
+pub fn create_word_text(
+    commands: &mut Commands,
+    assets: &NotationAssets,
+    theme: &NotationTheme,
+    _settings: &NotationSettings,
+    entity: Entity,
+    entry: &LaneEntry,
+    text: &WordTextValue,
 ) {
-    for (entity, entry, text) in query.iter() {
-        /* TODO: check whether is the first on in row
-        if entry.prev_is_tie() {
-            continue;
-        }
-         */
-        let data = WordTextData::new(entry, text.clone());
-        WordTextShape::create_with_child(&mut commands, &theme, entity, data, |child_commands| {
-            if text.word.text != "" {
-                theme.lyrics.insert_word_text(
-                    child_commands,
-                    &assets,
-                    text.word.text.as_str(),
-                )
-            }
-        });
+    /* TODO: check whether is the first on in row
+    if entry.prev_is_tie() {
+        continue;
     }
+        */
+    let data = WordTextData::new(entry, text.clone());
+    WordTextShape::create_with_child(commands, theme, entity, data, |child_commands| {
+        if text.word.text != "" {
+            theme
+                .lyrics
+                .insert_word_text(child_commands, &assets, text.word.text.as_str())
+        }
+    });
 }
 
 pub fn on_entry_playing_changed(

@@ -7,6 +7,7 @@ use crate::prelude::ModelEntry;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum LaneKind {
+    None,
     Meta,
     Chord,
     Lyrics,
@@ -21,36 +22,104 @@ impl Display for LaneKind {
         write!(f, "{:?}", self)
     }
 }
-
+impl Default for LaneKind {
+    fn default() -> Self {
+        Self::None
+    }
+}
 impl LaneKind {
-    pub fn of_entry(track_kind: &TrackKind, entry: &ProtoEntry) -> Option<Self> {
+    pub fn of_entry(track_kind: &TrackKind, entry: &ProtoEntry) -> Self {
         match track_kind {
-            TrackKind::Meta => Some(Self::Meta),
-            TrackKind::Chord => Some(Self::Chord),
-            TrackKind::Lyrics => Some(Self::Lyrics),
-            TrackKind::Vocal => Some(Self::Melody),
+            TrackKind::Meta => Self::Meta,
+            TrackKind::Chord => Self::Chord,
+            TrackKind::Lyrics => Self::Lyrics,
+            TrackKind::Vocal => Self::Melody,
             TrackKind::Guitar => match entry {
                 ProtoEntry::Fretted6(entry) => match entry {
-                    FrettedEntry6::Pick(_, _) => Some(Self::Strings),
-                    FrettedEntry6::Strum(_, _) => Some(Self::Strings),
-                    FrettedEntry6::Shape(_, _) => Some(Self::Shapes),
-                    FrettedEntry6::Fretboard(_) => None,
+                    FrettedEntry6::Pick(_, _) => Self::Strings,
+                    FrettedEntry6::Strum(_, _) => Self::Strings,
+                    FrettedEntry6::Shape(_, _) => Self::Shapes,
+                    FrettedEntry6::Fretboard(_) => Self::None,
                 },
-                _ => None,
+                _ => Self::None,
             },
-            TrackKind::Synth => Some(Self::Keyboard),
-            TrackKind::Piano => Some(Self::Keyboard),
-            TrackKind::Drums => None,
-            TrackKind::Bass => None,
-            TrackKind::Custom(_) => Some(Self::Harmany),
+            TrackKind::Synth => Self::Keyboard,
+            TrackKind::Piano => Self::Keyboard,
+            TrackKind::Drums => Self::None,
+            TrackKind::Bass => Self::None,
+            TrackKind::Custom(_) => Self::Harmany,
         }
     }
-    pub fn of_entries(track_kind: &TrackKind, entries: &Vec<Arc<ModelEntry>>) -> Option<LaneKind> {
+    pub fn of_entries(track_kind: &TrackKind, entries: &Vec<Arc<ModelEntry>>) -> LaneKind {
         for entry in entries.iter() {
-            if let Some(lane) = Self::of_entry(track_kind, &entry.proto) {
-                return Some(lane);
+            let kind = Self::of_entry(track_kind, &entry.proto);
+            if kind != Self::None {
+                return kind;
             }
         }
-        None
+        Self::None
+    }
+
+    /// Returns `true` if the lane kind is [`None`].
+    ///
+    /// [`None`]: LaneKind::None
+    pub fn is_none(&self) -> bool {
+        matches!(self, Self::None)
+    }
+
+    /// Returns `true` if the lane kind is [`Meta`].
+    ///
+    /// [`Meta`]: LaneKind::Meta
+    pub fn is_meta(&self) -> bool {
+        matches!(self, Self::Meta)
+    }
+
+    /// Returns `true` if the lane kind is [`Chord`].
+    ///
+    /// [`Chord`]: LaneKind::Chord
+    pub fn is_chord(&self) -> bool {
+        matches!(self, Self::Chord)
+    }
+
+    /// Returns `true` if the lane kind is [`Lyrics`].
+    ///
+    /// [`Lyrics`]: LaneKind::Lyrics
+    pub fn is_lyrics(&self) -> bool {
+        matches!(self, Self::Lyrics)
+    }
+
+    /// Returns `true` if the lane kind is [`Melody`].
+    ///
+    /// [`Melody`]: LaneKind::Melody
+    pub fn is_melody(&self) -> bool {
+        matches!(self, Self::Melody)
+    }
+
+    /// Returns `true` if the lane kind is [`Harmany`].
+    ///
+    /// [`Harmany`]: LaneKind::Harmany
+    pub fn is_harmany(&self) -> bool {
+        matches!(self, Self::Harmany)
+    }
+
+    /// Returns `true` if the lane kind is [`Keyboard`].
+    ///
+    /// [`Keyboard`]: LaneKind::Keyboard
+    pub fn is_keyboard(&self) -> bool {
+        matches!(self, Self::Keyboard)
+    }
+
+    /// Returns `true` if the lane kind is [`Strings`].
+    ///
+    /// [`Strings`]: LaneKind::Strings
+    pub fn is_strings(&self) -> bool {
+        matches!(self, Self::Strings)
+    }
+
+    /// Returns `true` if the lane kind is [`Shapes`].
+    ///
+    /// [`Shapes`]: LaneKind::Shapes
+    pub fn is_shapes(&self) -> bool {
+        matches!(self, Self::Shapes)
     }
 }

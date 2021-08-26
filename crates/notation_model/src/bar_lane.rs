@@ -44,7 +44,8 @@ impl BarLane {
         slice: Slice,
     ) -> Option<Arc<Self>> {
         let model_entries = track.get_entries(&slice.begin, &slice.end);
-        if let Some(kind) = LaneKind::of_entries(&track.kind, &model_entries) {
+        let kind = LaneKind::of_entries(&track.kind, &model_entries);
+        if !kind.is_none() {
             Some(Arc::<Self>::new_cyclic(|weak_self| {
                 let props = BarLaneProps {
                     index,

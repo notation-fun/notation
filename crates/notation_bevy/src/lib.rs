@@ -41,13 +41,13 @@ pub mod dev;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::app::notation_assets::{NotationAssets, NotationAssetsStates};
-    #[doc(hidden)]
     pub use crate::app::notation_app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
-    pub use crate::app::notation_app_events::WindowResizedEvent;
+    pub use crate::app::notation_app_events::*;
     #[doc(hidden)]
     pub use crate::app::notation_app_state::{NotationAppState, TabPathes};
+    #[doc(hidden)]
+    pub use crate::app::notation_assets::{NotationAssets, NotationAssetsStates};
     #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
