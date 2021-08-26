@@ -13,11 +13,10 @@ pub struct NotationAppState {
     pub tab_asset: Handle<TabAsset>,
     pub tab: Option<Arc<Tab>>,
     pub parse_error: Option<ParseError>,
-    pub camera_panning: bool,
 }
 
 impl NotationAppState {
-    pub fn new(asset_server: &AssetServer, tab_path: String, camera_panning: bool) -> Self {
+    pub fn new(asset_server: &AssetServer, tab_path: String) -> Self {
         let tab_asset = asset_server.load(tab_path.as_str());
         Self {
             window_width: 1280.0,
@@ -26,7 +25,6 @@ impl NotationAppState {
             tab_asset,
             tab: None,
             parse_error: None,
-            camera_panning,
         }
     }
     pub fn change_tab(&mut self, asset_server: &AssetServer, tab_path: String) {
@@ -41,6 +39,6 @@ impl FromWorld for NotationAppState {
     fn from_world(world: &mut World) -> Self {
         let server = world.get_resource::<AssetServer>().unwrap();
         let tab_pathes = world.get_resource::<TabPathes>().unwrap();
-        Self::new(server, tab_pathes.0[0].clone(), true)
+        Self::new(server, tab_pathes.0[0].clone())
     }
 }

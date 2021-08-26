@@ -1,11 +1,9 @@
-use std::sync::Arc;
-
-use bevy::prelude::*;
 use bevy::app::PluginGroupBuilder;
 use bevy::input::mouse::MouseMotion;
+use bevy::prelude::*;
 use bevy::window::WindowResized;
 
-use bevy_asset_loader::{AssetLoader};
+use bevy_asset_loader::AssetLoader;
 
 use crate::prelude::*;
 
@@ -98,14 +96,16 @@ impl NotationApp {
 
         app.add_startup_system(setup_camera.system());
 
-        app.add_system_set(SystemSet::on_enter(NotationAssetsStates::Loaded)
-            .with_system(setup_window_size.system())
+        app.add_system_set(
+            SystemSet::on_enter(NotationAssetsStates::Loaded)
+                .with_system(setup_window_size.system()),
         );
-        app.add_system_set(SystemSet::on_update(NotationAssetsStates::Loaded)
-            .with_system(on_window_resized.system())
-            .with_system(update_camera.system())
-            .with_system(load_tab.system())
-            .with_system(top_panel::top_panel_ui.system())
+        app.add_system_set(
+            SystemSet::on_update(NotationAssetsStates::Loaded)
+                .with_system(on_window_resized.system())
+                .with_system(handle_inputs.system())
+                .with_system(load_tab.system())
+                .with_system(top_panel::top_panel_ui.system()),
         );
 
         extra(&mut app);
@@ -145,28 +145,35 @@ fn load_tab(
     }
 }
 
-fn update_camera(
+fn handle_inputs(
     _keyboard_input: Res<Input<KeyCode>>,
+    windows: Res<Windows>,
     keyboard_input: Res<Input<KeyCode>>,
     mouse_input: Res<Input<MouseButton>>,
-    settings: Res<NotationSettings>,
-    mut state: ResMut<NotationAppState>,
+    mut mouse_motion_events: EventReader<MouseMotion>,
+    mut settings: ResMut<NotationSettings>,
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvt>,
-    mut mouse_motion_events: EventReader<MouseMotion>,
-    mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
+    mut mouse_clicked: EventWriter<MouseClickedEvent>,
+    mut mouse_dragged: EventWriter<MouseDraggedEvent>,
 ) {
     if keyboard_input.just_released(KeyCode::LControl) {
-        state.camera_panning = !state.camera_panning;
+        settings.mouse_dragged_panning = !settings.mouse_dragged_panning;
     } else if keyboard_input.just_released(KeyCode::Space) {
         super::top_panel::play_or_pause(&mut midi_state, &mut play_control_evts);
     }
-    if state.camera_panning {
-        for event in mouse_motion_events.iter() {
-            if mouse_input.pressed(MouseButton::Left) {
-                settings
-                    .layout
-                    .pan_tab_bars(&mut tab_bars_query, -event.delta.x, -event.delta.y);
+    if mouse_input.just_released(MouseButton::Left) {
+        windows.get_primary()
+            .and_then(|x| x.cursor_position())
+            .map(|cursor_position| {
+                //println!("handle_inputs() -> MouseClickedEvent({:?})", cursor_position);
+                mouse_clicked.send(MouseClickedEvent{cursor_position});
+            });
+    } else {
+        if mouse_input.pressed(MouseButton::Left) {
+            for event in mouse_motion_events.iter() {
+                //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
+                mouse_dragged.send(MouseDraggedEvent{delta: event.delta});
             }
         }
     }
@@ -181,7 +188,7 @@ fn on_window_resized(
     mut window: ResMut<WindowDescriptor>,
     mut evts: EventReader<WindowResized>,
     mut app_state: ResMut<NotationAppState>,
-    mut config_evts: EventWriter<WindowResizedEvent>,
+    mut window_resized_evts: EventWriter<WindowResizedEvent>,
 ) {
     for evt in evts.iter() {
         if evt.width as usize != window.width as usize
@@ -191,7 +198,7 @@ fn on_window_resized(
             window.height = evt.height;
             app_state.window_width = evt.width;
             app_state.window_height = evt.height;
-            config_evts.send(WindowResizedEvent());
+            window_resized_evts.send(WindowResizedEvent());
         }
     }
 }

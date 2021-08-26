@@ -10,7 +10,10 @@ use bevy::prelude::*;
 
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_playing::ChordPlaying;
-use crate::prelude::{BarPlaying, EntryPlaying, LyonShapeOp, NotationAssetsStates, NotationSettings, NotationTheme, TabBars, TabState};
+use crate::prelude::{
+    BarPlaying, EntryPlaying, LyonShapeOp, NotationAssetsStates, NotationSettings, NotationTheme,
+    TabBars, TabState,
+};
 
 use crate::settings::layout_settings::LayoutMode;
 use crate::tab::tab_events::TabResizedEvent;
@@ -23,11 +26,12 @@ pub struct PlayPlugin;
 
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_system_set(SystemSet::on_update(NotationAssetsStates::Loaded)
-            .with_system(on_bar_playing_changed.system())
-            .with_system(on_tab_play_state_changed.system())
-            .with_system(on_play_control_evt.system())
-            .with_system(on_tab_resized.system())
+        app.add_system_set(
+            SystemSet::on_update(NotationAssetsStates::Loaded)
+                .with_system(on_bar_playing_changed.system())
+                .with_system(on_tab_play_state_changed.system())
+                .with_system(on_play_control_evt.system())
+                .with_system(on_tab_resized.system()),
         );
     }
 }

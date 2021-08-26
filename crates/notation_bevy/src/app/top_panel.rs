@@ -89,7 +89,7 @@ pub fn top_panel_ui(
 ) {
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         ui.horizontal(|ui| {
-            ui.checkbox(&mut app_state.camera_panning, "Panning");
+            ui.checkbox(&mut settings.mouse_dragged_panning, "Panning");
             let play_title = if midi_state.play_control.play_state.is_playing() {
                 "Pause"
             } else {

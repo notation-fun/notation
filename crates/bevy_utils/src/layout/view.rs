@@ -43,12 +43,14 @@ where
     }
     pub fn on_layout_changed(query: LayoutChangedQuery<T>, mut evts: EventWriter<Self>) {
         for (entity, view, layout) in query.iter() {
-            println!(
-                "<{}>::on_layout_changed({})",
-                std::any::type_name::<T>(),
-                layout
-            );
-            evts.send(Self::new(entity, view, layout))
+            if layout.size.width > 0.0 && layout.size.height > 0.0 {
+                println!(
+                    "<{}>::on_layout_changed({})",
+                    std::any::type_name::<T>(),
+                    layout
+                );
+                evts.send(Self::new(entity, view, layout))
+            }
         }
     }
     pub fn setup(app: &mut AppBuilder) {
