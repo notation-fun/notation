@@ -1,12 +1,13 @@
 use bevy::prelude::*;
 
+use crate::entry::entry_plugin;
 use crate::lyrics::lyrics_plugin::LyricsPlugin;
-use crate::prelude::{AddEntryEvent, BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin};
+use crate::prelude::{BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin, NotationAssets, NotationSettings, NotationTheme};
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
 use crate::ui::layout::NotationLayout;
 use bevy_utils::prelude::{LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle};
-use notation_model::prelude::{BarLane, BarPosition, LaneKind, TabBar};
+use notation_model::prelude::{BarLane, LaneKind, TabBar};
 
 pub type LaneView = LaneLayoutData;
 
@@ -28,9 +29,11 @@ impl<'a> VBoxCell<NotationLayout<'a>> for LaneView {
 impl LaneView {
     pub fn spawn(
         commands: &mut Commands,
+        assets: &NotationAssets,
+        theme: &NotationTheme,
+        settings: &NotationSettings,
         bar_entity: Entity,
         bar: &TabBar,
-        add_entry_evts: &mut EventWriter<AddEntryEvent>,
         lane_layout: &LaneLayoutData,
     ) {
         if let Some(lane) = &lane_layout.lane {
@@ -38,15 +41,7 @@ impl LaneView {
             let lane_entity = BevyUtil::spawn_child_bundle(commands, bar_entity, lane_bundle);
             Self::setup_lane(commands, lane, lane_entity);
             for entry in lane.entries.iter() {
-                add_entry_evts.send(AddEntryEvent(
-                    lane_entity,
-                    entry.clone(),
-                    BarPosition::new(
-                        bar.bar_units(),
-                        bar.props.bar_ordinal,
-                        entry.props.in_bar_pos,
-                    ),
-                ));
+                entry_plugin::create_entry(commands, assets, theme, settings, lane_entity, entry);
             }
         } else {
             let view_bundle = ViewBundle::from(lane_layout.clone());

@@ -3,9 +3,7 @@ use std::sync::Arc;
 use bevy::prelude::*;
 
 use crate::lane::lane_view::LaneView;
-use crate::prelude::{
-    AddEntryEvent, BarData, BarLayoutData, NotationAppState, NotationSettings, NotationTheme,
-};
+use crate::prelude::{BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings, NotationTheme};
 use crate::strings::pick_note::{PickNoteData, PickNoteShape};
 use crate::strings::single_string::{SingleString, SingleStringData};
 use crate::tab::tab_events::BarViewDoLayoutEvent;
@@ -98,22 +96,25 @@ impl BarView {
     }
     pub fn on_added(
         mut commands: Commands,
+        assets: Res<NotationAssets>,
         theme: Res<NotationTheme>,
+        settings: Res<NotationSettings>,
         query: Query<(Entity, &Arc<BarView>, &Arc<TabBar>, &BarLayoutData), Added<Arc<BarView>>>,
-        mut add_entry_evts: EventWriter<AddEntryEvent>,
     ) {
         for (entity, _view, bar, bar_layout) in query.iter() {
             for lane_layout in bar_layout.lane_layouts.iter() {
                 LaneView::spawn(
                     &mut commands,
+                    &assets,
+                    &theme,
+                    &settings,
                     entity,
                     &bar,
-                    &mut add_entry_evts,
                     lane_layout,
                 );
             }
+            //TODO, create bar separator for the first one in row
             if false {
-                //TODO
                 BarSeparator::create(
                     &mut commands,
                     &theme,

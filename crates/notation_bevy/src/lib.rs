@@ -69,8 +69,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::entry_bundle::EntryBundle;
     #[doc(hidden)]
-    pub use crate::entry::entry_events::AddEntryEvent;
-    #[doc(hidden)]
     pub use crate::entry::entry_playing::EntryPlaying;
     #[doc(hidden)]
     pub use crate::entry::entry_plugin::EntryPlugin;

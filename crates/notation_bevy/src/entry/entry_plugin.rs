@@ -1,19 +1,19 @@
+use std::sync::Arc;
+
 use bevy::prelude::*;
 
 use crate::chord::chord_view::ChordView;
-use crate::prelude::{AddEntryEvent, BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle};
+use crate::prelude::{BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle};
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;
 
 impl Plugin for EntryPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_event::<AddEntryEvent>();
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(crate::tone::tone_systems::on_entry_playing_changed.system())
                 .with_system(crate::word::word_systems::on_entry_playing_changed.system())
-                .with_system(on_add_entry.system())
                 .with_system(ChordView::on_added.system())
                 .with_system(ChordView::on_layout_changed.system())
                 .with_system(ChordView::on_chord_playing_changed.system()),
@@ -21,19 +21,17 @@ impl Plugin for EntryPlugin {
     }
 }
 
-fn on_add_entry(
-    mut evts: EventReader<AddEntryEvent>,
-    mut commands: Commands,
-    assets: Res<NotationAssets>,
-    theme: Res<NotationTheme>,
-    settings: Res<NotationSettings>,
+pub fn create_entry(
+    commands: &mut Commands,
+    assets: &NotationAssets,
+    theme: &NotationTheme,
+    settings: &NotationSettings,
+    entity: Entity,
+    entry: &Arc<LaneEntry>,
 ) {
-    for evt in evts.iter() {
-        let parent = evt.0;
-        let entry_bundle = EntryBundle::from(evt.1.clone());
-        BevyUtil::spawn_child_bundle(&mut commands, parent, entry_bundle);
-        insert_entry_extra(&mut commands, &assets, &theme, &settings, evt.0, &evt.1);
-    }
+    let entry_bundle = EntryBundle::from(entry.clone());
+    let entry_entity = BevyUtil::spawn_child_bundle(commands, entity, entry_bundle);
+    insert_entry_extra(commands, assets, theme, settings, entry_entity, entry);
 }
 
 fn insert_entry_extra(
