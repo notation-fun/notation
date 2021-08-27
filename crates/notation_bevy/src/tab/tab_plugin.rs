@@ -4,6 +4,7 @@ use bevy::prelude::*;
 use bevy_utils::prelude::{LayoutData, LayoutQuery, ViewBundle, ViewQuery, ViewRootQuery};
 use notation_midi::prelude::{JumpToBarEvent, SwitchTabEvent};
 
+use crate::bar::bar_view::BarView;
 use crate::mini::mini_bar::MiniBar;
 use crate::mini::mini_map::MiniMap;
 
@@ -74,6 +75,7 @@ fn on_mouse_clicked(
     state: Res<NotationAppState>,
     _settings: Res<NotationSettings>,
     mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
+    bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
     mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
 ) {
     let mut pos = None;
@@ -86,6 +88,14 @@ fn on_mouse_clicked(
             let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
             if layout.is_inside(offset) {
                 jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
+                return;
+            }
+        }
+        for (bar, layout, global_transform) in bar_query.iter() {
+            let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
+            if layout.is_inside(offset) {
+                jump_to_bar_evts.send(JumpToBarEvent::new(bar.bar_props));
+                return;
             }
         }
     }
