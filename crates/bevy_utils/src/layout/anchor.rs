@@ -87,6 +87,10 @@ impl LayoutAnchor {
     pub fn factor(&self) -> Vec2 {
         Vec2::new(self.h.factor(), self.v.factor())
     }
+    pub const ROOT: Self = Self {
+        v: LayoutVAnchor::Center,
+        h: LayoutHAnchor::Center,
+    };
     pub const CENTER: Self = Self {
         v: LayoutVAnchor::Center,
         h: LayoutHAnchor::Center,

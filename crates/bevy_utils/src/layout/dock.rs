@@ -60,7 +60,7 @@ pub trait DockView<TE: LayoutEnv, TP: DockPanel<TE>, TC: View<TE>>: View<TE> {
         let panel_anchor = LayoutAnchor::from(dock_side);
         panel.set_layout_data(
             layout_query,
-            data.new_child(self.pivot(), panel_anchor, Vec2::ZERO, panel_size),
+            data.new_child(panel_anchor, Vec2::ZERO, panel_size),
         );
         let content_anchor = panel_anchor.opposite();
         let content_size = if dock_side.is_h() {
@@ -70,7 +70,7 @@ pub trait DockView<TE: LayoutEnv, TP: DockPanel<TE>, TC: View<TE>>: View<TE> {
         };
         content.set_layout_data(
             layout_query,
-            data.new_child(self.pivot(), content_anchor, Vec2::ZERO, content_size),
+            data.new_child(content_anchor, Vec2::ZERO, content_size),
         );
     }
 }

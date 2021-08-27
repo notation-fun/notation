@@ -1,9 +1,10 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{LayoutQuery, ViewBundle, ViewQuery, ViewRootQuery};
-use notation_midi::prelude::SwitchTabEvent;
+use bevy_utils::prelude::{LayoutData, LayoutQuery, ViewBundle, ViewQuery, ViewRootQuery};
+use notation_midi::prelude::{JumpToBarEvent, SwitchTabEvent};
 
+use crate::mini::mini_bar::MiniBar;
 use crate::mini::mini_map::MiniMap;
 
 use crate::prelude::{AddTabEvent, BevyUtil, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars, WindowResizedEvent};
@@ -14,9 +15,7 @@ use super::tab_asset::TabAssetLoader;
 use super::tab_bundle::TabBundle;
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
-use super::tab_events::{
-    TabBarsDoLayoutEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent, TabResizedEvent,
-};
+use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent};
 use super::tab_view::TabView;
 
 pub struct TabPlugin;
@@ -27,7 +26,7 @@ impl Plugin for TabPlugin {
         TabChordsDoLayoutEvent::setup(app);
         TabBarsDoLayoutEvent::setup(app);
         app.add_event::<AddTabEvent>();
-        app.add_event::<TabResizedEvent>();
+        app.add_event::<TabBarsResizedEvent>();
         app.add_asset::<TabAsset>();
         app.init_asset_loader::<TabAssetLoader>();
         app.add_system_set(
@@ -74,11 +73,20 @@ fn on_window_resized(
 fn on_mouse_clicked(
     mut evts: EventReader<MouseClickedEvent>,
     _theme: Res<NotationTheme>,
-    _state: Res<NotationAppState>,
+    state: Res<NotationAppState>,
     _settings: Res<NotationSettings>,
+    mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
+    mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
 ) {
     for evt in evts.iter() {
-        println!("tab_plugin::on_mouse_clicked() -> {:?}", evt);
+        let pos = TabView::convert_pos(&state,evt.cursor_position);
+        println!("tab_plugin::on_mouse_clicked() -> {:?} -> {:?}", evt, pos);
+        for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
+            let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
+            if layout.is_inside(offset) {
+                jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
+            }
+        }
     }
 }
 

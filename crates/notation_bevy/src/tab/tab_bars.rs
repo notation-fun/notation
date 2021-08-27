@@ -17,7 +17,7 @@ use crate::prelude::{BarBundle, NotationAppState, NotationSettings, NotationThem
 use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
 
-use super::tab_events::{TabBarsDoLayoutEvent, TabResizedEvent};
+use super::tab_events::{TabBarsDoLayoutEvent};
 
 pub struct TabBars {
     pub tab: Arc<Tab>,
@@ -193,7 +193,6 @@ impl TabBars {
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<BarView>,
-        mut tab_resized_evts: EventWriter<TabResizedEvent>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
@@ -205,7 +204,6 @@ impl TabBars {
                 evt.entity,
                 evt.layout,
             );
-            tab_resized_evts.send(TabResizedEvent(evt.view.tab.clone()));
         }
     }
     pub fn on_layout_changed(

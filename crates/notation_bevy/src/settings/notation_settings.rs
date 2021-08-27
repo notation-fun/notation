@@ -5,7 +5,7 @@ use bevy_inspector_egui::Inspectable;
 
 use super::layout_settings::LayoutSettings;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotationSettings {
     pub layout: LayoutSettings,

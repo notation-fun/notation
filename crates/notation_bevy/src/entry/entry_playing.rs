@@ -45,7 +45,8 @@ impl EntryPlaying {
                         entry_playing.value = PlayingState::Played;
                     }
                 }
-                if entry_playing.value.is_idle()
+                if entry_playing.bar_props.bar_ordinal == playing_bar_ordinal
+                    && entry_playing.value.is_idle()
                     && new_position.is_passed(&entry_playing.bar_position())
                 {
                     if entry_playing.value != PlayingState::Current {

@@ -15,7 +15,7 @@ pub mod wasm;
 pub mod prelude {
     #[doc(hidden)]
     #[doc(hidden)]
-    pub use crate::midi_events::{PlayControlEvt, SwitchTabEvent};
+    pub use crate::midi_events::{PlayControlEvent, JumpToBarEvent, SwitchTabEvent};
     #[doc(hidden)]
     pub use crate::midi_hub::MidiHub;
     #[doc(hidden)]

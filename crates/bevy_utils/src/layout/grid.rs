@@ -334,7 +334,7 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
             let size = self.calc_cell_size(engine, &grid_data, row, col);
             cell.set_layout_data(
                 layout_query,
-                data.new_child(self.pivot(), LayoutAnchor::TOP_LEFT, offset, size),
+                data.new_child(LayoutAnchor::TOP_LEFT, offset, size),
             );
             commands.entity(cell.entity).insert(GridCellData {
                 grid: grid_data.clone(),

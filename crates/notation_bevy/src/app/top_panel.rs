@@ -5,7 +5,7 @@ use bevy::render::camera::OrthographicProjection;
 use bevy_egui::egui::{self, Slider};
 use bevy_egui::EguiContext;
 use float_eq::float_ne;
-use notation_midi::prelude::{MidiState, PlayControlEvt};
+use notation_midi::prelude::{MidiState, PlayControlEvent};
 use notation_model::play::play_control::TickResult;
 use notation_model::prelude::Tab;
 
@@ -31,22 +31,22 @@ pub fn reload_tab(
 pub fn sync_speed_factor(
     settings: &NotationSettings,
     midi_state: &mut MidiState,
-    play_control_evts: &mut EventWriter<PlayControlEvt>,
+    play_control_evts: &mut EventWriter<PlayControlEvent>,
 ) {
     midi_state
         .play_control
         .play_speed
         .set_factor(settings.speed_factor);
-    play_control_evts.send(PlayControlEvt::on_speed_factor(
+    play_control_evts.send(PlayControlEvent::on_speed_factor(
         midi_state.play_control.play_speed.factor(),
     ));
 }
 
 pub fn send_play_state_evt(
     midi_state: &MidiState,
-    play_control_evts: &mut EventWriter<PlayControlEvt>,
+    play_control_evts: &mut EventWriter<PlayControlEvent>,
 ) {
-    play_control_evts.send(PlayControlEvt::on_play_state(
+    play_control_evts.send(PlayControlEvent::on_play_state(
         midi_state.play_control.play_state,
     ));
     let tick_result = TickResult {
@@ -54,7 +54,7 @@ pub fn send_play_state_evt(
         end_passed: false,
         stopped: midi_state.play_control.play_state.is_stopped(),
     };
-    play_control_evts.send(PlayControlEvt::on_tick(
+    play_control_evts.send(PlayControlEvent::on_tick(
         midi_state.play_control.position,
         tick_result,
     ));
@@ -62,7 +62,7 @@ pub fn send_play_state_evt(
 
 pub fn play_or_pause(
     midi_state: &mut MidiState,
-    play_control_evts: &mut EventWriter<PlayControlEvt>,
+    play_control_evts: &mut EventWriter<PlayControlEvent>,
 ) {
     if midi_state.play_control.play_state.is_playing() {
         if midi_state.play_control.pause() {
@@ -85,7 +85,7 @@ pub fn top_panel_ui(
     tab_query: Query<Entity, With<Arc<Tab>>>,
     tab_pathes: Res<TabPathes>,
     mut midi_state: ResMut<MidiState>,
-    mut play_control_evts: EventWriter<PlayControlEvt>,
+    mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
     egui::TopBottomPanel::top("top_panel").show(egui_ctx.ctx(), |ui| {
         ui.horizontal(|ui| {

@@ -7,7 +7,7 @@ use bevy_asset_loader::AssetLoader;
 
 use crate::prelude::*;
 
-use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvt};
+use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent};
 use notation_model::prelude::*;
 
 use super::notation_app_state::{NotationAppState, TabPathes};
@@ -153,7 +153,7 @@ fn handle_inputs(
     mut mouse_motion_events: EventReader<MouseMotion>,
     mut settings: ResMut<NotationSettings>,
     mut midi_state: ResMut<MidiState>,
-    mut play_control_evts: EventWriter<PlayControlEvt>,
+    mut play_control_evts: EventWriter<PlayControlEvent>,
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
     mut mouse_dragged: EventWriter<MouseDraggedEvent>,
 ) {

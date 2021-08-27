@@ -40,7 +40,6 @@ pub trait VBoxView<TE: LayoutEnv, TC: VBoxCell<TE>>: View<TE> {
             cell.set_layout_data(
                 layout_query,
                 data.new_child(
-                    self.pivot(),
                     LayoutAnchor::TOP_LEFT,
                     Vec2::new(0.0, y),
                     cell_size,

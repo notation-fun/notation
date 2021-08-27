@@ -27,7 +27,7 @@ impl Default for LayoutMode {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutSettings {
     pub mode: LayoutMode,
@@ -36,6 +36,7 @@ pub struct LayoutSettings {
     pub strings_lane_order: usize,
     pub lyrics_lane_order: usize,
     pub melody_lane_order: usize,
+    pub focusing_bar_ordinal: usize,
 }
 
 impl Default for LayoutSettings {
@@ -47,6 +48,7 @@ impl Default for LayoutSettings {
             strings_lane_order: 2,
             lyrics_lane_order: 3,
             melody_lane_order: 4,
+            focusing_bar_ordinal: 0,
         }
     }
 }
@@ -160,7 +162,7 @@ impl LayoutSettings {
          */
     }
     pub fn focus_bar(
-        &self,
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         tab_bars_query: &mut Query<(
@@ -172,6 +174,10 @@ impl LayoutSettings {
         )>,
         pos_data: &PosIndicatorData,
     ) {
+        if self.focusing_bar_ordinal == pos_data.bar_props.bar_ordinal {
+            return;
+        }
+        self.focusing_bar_ordinal = pos_data.bar_props.bar_ordinal;
         if let Ok((bars_entity, mut bars_transform, bars, layout, grid_data)) =
             tab_bars_query.single_mut()
         {

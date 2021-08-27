@@ -1,9 +1,15 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
+use bevy_utils::prelude::{LyonShapeOp};
 
 use crate::chord::chord_view::ChordView;
 use crate::prelude::{BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle};
+use crate::strings::pick_note::{PickNoteData, PickNoteShape};
+use crate::strings::single_string::{SingleString, SingleStringData};
+use crate::tab::tab_events::TabBarsResizedEvent;
+use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
+use crate::word::word_text::{WordTextData, WordTextShape};
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;
@@ -16,7 +22,8 @@ impl Plugin for EntryPlugin {
                 .with_system(crate::word::word_systems::on_entry_playing_changed.system())
                 .with_system(ChordView::on_added.system())
                 .with_system(ChordView::on_layout_changed.system())
-                .with_system(ChordView::on_chord_playing_changed.system()),
+                .with_system(ChordView::on_chord_playing_changed.system())
+                .with_system(on_tab_bars_resized.system())
         );
     }
 }
@@ -77,4 +84,50 @@ fn insert_core_entry_extra(
             commands.entity(entity).insert_bundle(ChordBundle::from(*chord));
         }
     };
+}
+
+fn on_tab_bars_resized(
+    mut evts: EventReader<TabBarsResizedEvent>,
+    mut commands: Commands,
+    theme: Res<NotationTheme>,
+    mut tone_note_query: Query<(Entity, &mut ToneNoteData)>,
+    mut pick_note_query: Query<(Entity, &mut PickNoteData)>,
+    mut single_string_query: Query<(Entity, &mut SingleStringData)>,
+    mut word_text_query: Query<(Entity, &mut WordTextData)>,
+) {
+    for evt in evts.iter() {
+        let bars = &evt.0;
+        for (entity, mut data) in tone_note_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size.width;
+                    ToneNoteShape::update(&mut commands, &theme, entity, &data);
+                }
+            }
+        }
+        for (entity, mut data) in pick_note_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size.width;
+                    PickNoteShape::update(&mut commands, &theme, entity, &data);
+                }
+            }
+        }
+        for (entity, mut data) in single_string_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size.width;
+                    SingleString::update(&mut commands, &theme, entity, &data);
+                }
+            }
+        }
+        for (entity, mut data) in word_text_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size.width;
+                    WordTextShape::update(&mut commands, &theme, entity, &data);
+                }
+            }
+        }
+    }
 }

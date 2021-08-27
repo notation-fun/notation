@@ -1,4 +1,4 @@
-use std::marker::PhantomData;
+use std::{any::Any, marker::PhantomData};
 use std::sync::Arc;
 
 use anyhow::{bail, Result};
@@ -133,12 +133,16 @@ pub trait LayoutEnv {
     }
 }
 
-pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
+pub trait View<TE: LayoutEnv>: Any + Send + Sync + ToString + 'static {
     fn is_root(&self) -> bool {
         false
     }
     fn pivot(&self) -> LayoutAnchor {
-        LayoutAnchor::default()
+        if self.is_root() {
+            LayoutAnchor::ROOT
+        } else {
+            LayoutAnchor::default()
+        }
     }
     #[allow(unused_variables)]
     fn calc_size(&self, engine: &TE, constraint: LayoutConstraint) -> LayoutSize {
@@ -148,12 +152,16 @@ pub trait View<TE: LayoutEnv>: Send + Sync + ToString + 'static {
         &self,
         engine: &TE,
         constraint: LayoutConstraint,
-        pivot: LayoutAnchor,
     ) -> LayoutData {
         let size = self.calc_size(engine, constraint);
-        LayoutData::new(0, pivot, LayoutAnchor::default(), Vec2::ZERO, size)
+        let pivot = LayoutAnchor::ROOT;
+        LayoutData::new(0, size, pivot, pivot, Vec2::ZERO)
     }
     fn set_layout_data(&self, layout_query: &mut LayoutQuery, entity: Entity, data: LayoutData) {
+        if self.is_root() {
+            println!("Should NOT call set_layout_data() for root views! {}", data);
+            return;
+        }
         let pivot = self.pivot();
         let need_adjust = pivot != data.pivot;
         let adjusted = if need_adjust {

@@ -33,7 +33,7 @@ impl LaneView {
         theme: &NotationTheme,
         settings: &NotationSettings,
         bar_entity: Entity,
-        bar: &TabBar,
+        _bar: &TabBar,
         lane_layout: &LaneLayoutData,
     ) {
         if let Some(lane) = &lane_layout.lane {

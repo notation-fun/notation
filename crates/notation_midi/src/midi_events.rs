@@ -14,7 +14,17 @@ impl SwitchTabEvent {
 }
 
 #[derive(Debug)]
-pub enum PlayControlEvt {
+pub struct JumpToBarEvent {
+    pub bar_props: TabBarProps,
+}
+impl JumpToBarEvent {
+    pub fn new(bar_props: TabBarProps) -> Self {
+        Self { bar_props }
+    }
+}
+
+#[derive(Debug)]
+pub enum PlayControlEvent {
     OnTick {
         position: Position,
         tick_result: TickResult,
@@ -22,7 +32,7 @@ pub enum PlayControlEvt {
     OnPlayState(PlayState),
     OnSpeedFactor(f32),
 }
-impl PlayControlEvt {
+impl PlayControlEvent {
     pub fn on_tick(position: Position, tick_result: TickResult) -> Self {
         Self::OnTick {
             position,

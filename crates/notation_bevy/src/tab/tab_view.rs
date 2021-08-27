@@ -3,7 +3,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy_utils::prelude::{
-    DockView, LayoutAnchor, LayoutConstraint, LayoutQuery, View, ViewQuery, ViewRootAddedQuery,
+    DockView, LayoutConstraint, LayoutQuery, View, ViewQuery, ViewRootAddedQuery,
 };
 use notation_model::prelude::Tab;
 
@@ -34,6 +34,13 @@ impl<'a> View<NotationLayout<'a>> for TabView {
 impl<'a> DockView<NotationLayout<'a>, MiniMap, TabContent> for TabView {}
 
 impl TabView {
+    pub fn is_root() -> bool {
+        true
+    }
+    pub fn convert_pos(state: &NotationAppState,pos: Vec2) -> Vec2 {
+        Vec2::new(pos.x - state.window_width / 2.0, pos.y - state.window_height / 2.0)
+
+    }
     pub fn do_layout(
         engine: &NotationLayout,
         layout_query: &mut LayoutQuery,
@@ -44,7 +51,7 @@ impl TabView {
     ) {
         let constraint =
             LayoutConstraint::from((engine.state.window_width, engine.state.window_height));
-        let layout = view.calc_root_layout(engine, constraint, LayoutAnchor::CENTER);
+        let layout = view.calc_root_layout(engine, constraint);
         view.do_layout(
             &engine,
             layout_query,

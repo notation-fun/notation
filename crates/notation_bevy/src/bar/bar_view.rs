@@ -4,12 +4,8 @@ use bevy::prelude::*;
 
 use crate::lane::lane_view::LaneView;
 use crate::prelude::{BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings, NotationTheme};
-use crate::strings::pick_note::{PickNoteData, PickNoteShape};
-use crate::strings::single_string::{SingleString, SingleStringData};
-use crate::tab::tab_events::BarViewDoLayoutEvent;
-use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
+use crate::tab::tab_events::{BarViewDoLayoutEvent, TabBarsResizedEvent};
 use crate::ui::layout::NotationLayout;
-use crate::word::word_text::{WordTextData, WordTextShape};
 use bevy_utils::prelude::{GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery};
 use notation_model::prelude::TabBar;
 
@@ -41,12 +37,10 @@ impl BarView {
         cell_query: ViewQuery<LaneView>,
         mut sep_query: Query<(Entity, &mut BarSeparatorData)>,
         mut beat_query: Query<(Entity, &mut BarBeatData)>,
-        mut tone_note_query: Query<(Entity, &mut ToneNoteData)>,
-        mut pick_note_query: Query<(Entity, &mut PickNoteData)>,
-        mut single_string_query: Query<(Entity, &mut SingleStringData)>,
-        mut word_text_query: Query<(Entity, &mut WordTextData)>,
+        mut tab_resized_evts: EventWriter<TabBarsResizedEvent>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
+        let mut bars = Vec::new();
         for evt in evts.iter() {
             evt.view.do_layout(
                 &mut commands,
@@ -56,43 +50,25 @@ impl BarView {
                 evt.entity,
                 evt.layout,
             );
-            for (entity, mut data) in sep_query.iter_mut() {
-                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
-                    data.value.bar_size = evt.layout.size;
+            bars.push((evt.view.clone(), evt.layout.clone()));
+        }
+        for (entity, mut data) in sep_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size;
                     BarSeparator::update(&mut commands, &theme, entity, &data);
                 }
             }
-            for (entity, mut data) in beat_query.iter_mut() {
-                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
-                    data.value.bar_size = evt.layout.size;
+        }
+        for (entity, mut data) in beat_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size;
                     BarBeat::update(&mut commands, &theme, entity, &data);
                 }
             }
-            for (entity, mut data) in tone_note_query.iter_mut() {
-                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
-                    data.value.bar_size = evt.layout.size.width;
-                    ToneNoteShape::update(&mut commands, &theme, entity, &data);
-                }
-            }
-            for (entity, mut data) in pick_note_query.iter_mut() {
-                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
-                    data.value.bar_size = evt.layout.size.width;
-                    PickNoteShape::update(&mut commands, &theme, entity, &data);
-                }
-            }
-            for (entity, mut data) in single_string_query.iter_mut() {
-                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
-                    data.value.bar_size = evt.layout.size.width;
-                    SingleString::update(&mut commands, &theme, entity, &data);
-                }
-            }
-            for (entity, mut data) in word_text_query.iter_mut() {
-                if data.bar_props.bar_ordinal == evt.view.bar_props.bar_ordinal {
-                    data.value.bar_size = evt.layout.size.width;
-                    WordTextShape::update(&mut commands, &theme, entity, &data);
-                }
-            }
         }
+        tab_resized_evts.send(TabBarsResizedEvent(bars));
     }
     pub fn on_added(
         mut commands: Commands,

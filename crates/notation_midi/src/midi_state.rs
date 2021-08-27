@@ -228,6 +228,9 @@ impl MidiState {
         self.play_control = PlayControl::new(&tab);
         self.init_channels(settings, hub);
     }
+    pub fn jump_to_bar(&mut self, bar_props: TabBarProps) {
+        self.play_control.position.set_in_bar(bar_props.bar_ordinal, Units(0.0));
+    }
     pub fn tick(
         &mut self,
         settings: &MidiSettings,

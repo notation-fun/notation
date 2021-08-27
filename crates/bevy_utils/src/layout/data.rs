@@ -48,17 +48,17 @@ impl LayoutConstraint {
 #[derive(Copy, Clone, Debug, Default)]
 pub struct LayoutData {
     pub depth: usize,
+    pub size: LayoutSize,
     pub pivot: LayoutAnchor,
     pub anchor: LayoutAnchor,
     pub offset: Vec2,
-    pub size: LayoutSize,
 }
 impl Display for LayoutData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "<LayoutData>({} {} {} {} {})",
-            self.depth, self.pivot, self.anchor, self.offset, self.size
+            self.depth, self.size, self.pivot, self.anchor, self.offset
         )
     }
 }
@@ -66,41 +66,43 @@ impl Display for LayoutData {
 impl LayoutData {
     pub const ZERO: Self = Self {
         depth: 0,
+        size: LayoutSize::ZERO,
         pivot: LayoutAnchor::CENTER,
         anchor: LayoutAnchor::CENTER,
         offset: Vec2::ZERO,
-        size: LayoutSize::ZERO,
     };
     pub fn new(
         depth: usize,
+        size: LayoutSize,
         pivot: LayoutAnchor,
         anchor: LayoutAnchor,
         offset: Vec2,
-        size: LayoutSize,
     ) -> Self {
         Self {
             depth,
+            size,
             pivot,
             anchor,
             offset,
-            size,
         }
     }
-    pub fn calc_offset(&self, pivot: LayoutAnchor, anchor: LayoutAnchor, offset: Vec2) -> Vec2 {
-        self.size.calc_offset(pivot, anchor) + offset
+    pub fn _calc_offset(size: LayoutSize, pivot: LayoutAnchor, anchor: LayoutAnchor, offset: Vec2) -> Vec2 {
+        size.calc_offset(pivot, anchor) + offset
+    }
+    pub fn calc_offset(&self, anchor: LayoutAnchor, offset: Vec2) -> Vec2 {
+        Self::_calc_offset(self.size, self.pivot, anchor, offset)
     }
     pub fn new_child(
         &self,
-        pivot: LayoutAnchor,
         anchor: LayoutAnchor,
         offset: Vec2,
-        size: LayoutSize,
+        child_size: LayoutSize,
     ) -> Self {
-        let offset = self.size.calc_offset(pivot, anchor) + offset;
-        Self::new(self.depth + 1, anchor, anchor, offset, size)
+        let child_offset = self.calc_offset(anchor, offset);
+        Self::new(self.depth + 1, child_size, anchor, anchor, child_offset)
     }
     pub fn change_pivot(&self, pivot: LayoutAnchor) -> Self {
-        let offset = self.calc_offset(self.pivot, pivot, self.offset);
+        let offset = self.calc_offset(pivot, self.offset);
         Self {
             pivot,
             offset,
@@ -109,6 +111,12 @@ impl LayoutData {
     }
     pub fn transform(&self) -> Transform {
         Transform::from_xyz(self.offset.x, self.offset.y, 1.0)
+    }
+    pub fn is_inside(&self, offset: Vec2) -> bool {
+        let top_left = self.calc_offset(LayoutAnchor::TOP_LEFT, Vec2::ZERO);
+        let bottom_right = self.calc_offset(LayoutAnchor::BOTTOM_RIGHT, Vec2::ZERO);
+        offset.x >= top_left.x && offset.x <= bottom_right.x
+            && offset.y <= top_left.y && offset.y >= bottom_right.y
     }
 }
 
