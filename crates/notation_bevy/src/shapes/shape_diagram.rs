@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme};
+use bevy_utils::prelude::BevyUtil;
 use notation_model::prelude::{HandShape4, HandShape6, LaneEntry};
+use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme};
 
 macro_rules! impl_shape_diagram {
     ($hand_shape:ident, $diagram:ident, $diagram_data:ident, $diagram_value:ident) => {
@@ -44,6 +45,9 @@ macro_rules! impl_shape_diagram {
                 )
             }
             fn get_transform(&self) -> Transform {
+                if self.data.value.bar_size <= 0.0 {
+                    return BevyUtil::offscreen_transform();
+                }
                 let x = self.data.value.bar_size / self.data.bar_props.bar_units.0 * self.data.entry_props.in_bar_pos.0
                     + self.theme.shapes.shape_x;
                 let mut trans =

@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use bevy_utils::prelude::BevyUtil;
 use notation_model::prelude::{LyricWord, PlayingState};
 use std::fmt::Display;
 
@@ -64,6 +65,9 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
+        if self.data.value.bar_size <= 0.0 {
+            return BevyUtil::offscreen_transform();
+        }
         let x = self.data.value.bar_size / self.data.bar_props.bar_units.0
             * self.data.entry_props.in_bar_pos.0;
         let y = 0.0;

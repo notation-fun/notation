@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::LayoutSize;
+use bevy_utils::prelude::{BevyUtil, LayoutSize};
 
 use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 
@@ -49,6 +49,9 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
+        if self.data.value.bar_size.width <= 0.0 {
+            return BevyUtil::offscreen_transform();
+        }
         let x = if self.data.value.is_begin {
             0.0
         } else {

@@ -7,6 +7,7 @@ use crate::chord::chord_view::ChordView;
 use crate::prelude::{BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle};
 use crate::strings::pick_note::{PickNoteData, PickNoteShape};
 use crate::strings::single_string::{SingleString, SingleStringData};
+use crate::shapes::shape_diagram::{ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6};
 use crate::tab::tab_events::TabBarsResizedEvent;
 use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
 use crate::word::word_text::{WordTextData, WordTextShape};
@@ -93,6 +94,8 @@ fn on_tab_bars_resized(
     mut pick_note_query: Query<(Entity, &mut PickNoteData)>,
     mut single_string_query: Query<(Entity, &mut SingleStringData)>,
     mut word_text_query: Query<(Entity, &mut WordTextData)>,
+    mut shape_diagram_6_query: Query<(Entity, &mut ShapeDiagramData6)>,
+    mut shape_diagram_4_query: Query<(Entity, &mut ShapeDiagramData4)>,
 ) {
     for evt in evts.iter() {
         let bars = &evt.0;
@@ -125,6 +128,22 @@ fn on_tab_bars_resized(
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;
                     WordTextShape::update(&mut commands, &theme, entity, &data);
+                }
+            }
+        }
+        for (entity, mut data) in shape_diagram_6_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size.width;
+                    ShapeDiagram6::update(&mut commands, &theme, entity, &data);
+                }
+            }
+        }
+        for (entity, mut data) in shape_diagram_4_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size.width;
+                    ShapeDiagram4::update(&mut commands, &theme, entity, &data);
                 }
             }
         }

@@ -90,6 +90,9 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
+        if self.data.value.width <= 0.0 {
+            return BevyUtil::offscreen_transform();
+        }
         let mut z = self.theme.core.mini_bar_z;
         if self.data.value.playing_state.is_current() {
             z += 2.0;
@@ -157,7 +160,7 @@ impl MiniBar {
                 MiniBarShape::update(&mut commands, &theme, entity, &data);
             }
             for (entity, mut data) in mini_section_separator_query.iter_mut() {
-                data.value.x_offset = -layout.size.width / 2.0;
+                data.value.width = layout.size.width;
                 MiniSectionSeparator::update(&mut commands, &theme, entity, &data);
             }
         }

@@ -3,6 +3,12 @@ use bevy::prelude::*;
 pub struct BevyUtil();
 
 impl BevyUtil {
+    pub fn offscreen_transform() -> Transform {
+        Transform {
+            translation: Vec3::new(-999999.0, -999999.0, -999999.0),
+            ..Default::default()
+        }
+    }
     pub fn spawn_child_bundle<T: Bundle>(
         commands: &mut Commands,
         entity: Entity,

@@ -2,16 +2,18 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use bevy_utils::prelude::BevyUtil;
 
 use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct MiniSectionSeparatorValue {
+    pub width: f32,
     pub x_offset: f32,
 }
 impl MiniSectionSeparatorValue {
     pub fn new(x_offset: f32) -> Self {
-        Self { x_offset }
+        Self { width: 0.0, x_offset }
     }
 }
 impl Display for MiniSectionSeparatorValue {
@@ -52,9 +54,14 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
+        if self.data.value.width <= 0.0 {
+            return BevyUtil::offscreen_transform();
+        }
         let line_width = self.theme.sizes.mini_map.section_separator;
+        let x_offset = -self.data.value.width / 2.0;
+
         Transform::from_xyz(
-            line_width + self.data.value.x_offset,
+            line_width + x_offset,
             0.0,
             self.theme.core.mini_bar_z + 1.0,
         )
