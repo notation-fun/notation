@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::LayoutData;
+use bevy_utils::prelude::{BevyUtil, LayoutData};
 use notation_model::prelude::TabBarProps;
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
@@ -44,6 +44,9 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
+        if self.data.bar_layout.size.width <= 0.0 {
+            return BevyUtil::offscreen_transform();
+        }
         let x = self.data.bar_layout.offset.x;
         let y = self.data.bar_layout.offset.y + self.theme.grid.bar_separator_extra;
         Transform::from_xyz(x, y, self.theme.core.bar_indicator_z)
