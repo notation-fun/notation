@@ -2,10 +2,8 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{
-    GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewAddedQuery,
-};
-use notation_model::prelude::Chord;
+use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle};
+use notation_model::prelude::{Chord, ModelEntry};
 
 use crate::prelude::{ModelEntryData, NotationTheme};
 use crate::ui::layout::NotationLayout;
@@ -60,26 +58,32 @@ impl ChordView {
             }
         }
     }
-    pub fn on_added(
-        mut commands: Commands,
-        theme: Res<NotationTheme>,
-        query: ViewAddedQuery<ChordView>,
-    ) {
-        for (_parent, entity, view) in query.iter() {
-            //TODO: handle initialization in a nicer way.
-            let radius = 0.0;
-            ChordDiagram::spawn(
-                &mut commands,
-                &theme,
-                entity,
-                view.entry_props,
-                view.value,
-                radius,
-            );
-            commands
-                .entity(entity)
-                .insert(ChordPlaying::from((view.entry_props, view.value)));
-        }
+    pub fn spawn(
+        commands: &mut Commands,
+        theme: &NotationTheme,
+        entity: Entity,
+        chord: Chord,
+        entry: &Arc<ModelEntry>,
+    ) -> Entity {
+        let chord_entity = BevyUtil::spawn_child_bundle(
+            commands,
+            entity,
+            ViewBundle::from(ChordView::new(entry, chord)),
+        );
+        //TODO: handle initialization in a nicer way.
+        let radius = 0.0;
+        ChordDiagram::spawn(
+            commands,
+            theme,
+            chord_entity,
+            entry.props,
+            chord,
+            radius,
+        );
+        commands
+            .entity(chord_entity)
+            .insert(ChordPlaying::from((entry.props, chord)));
+        chord_entity
     }
     pub fn on_chord_playing_changed(
         mut commands: Commands,

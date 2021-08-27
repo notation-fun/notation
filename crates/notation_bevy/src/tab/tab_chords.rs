@@ -5,7 +5,7 @@ use bevy::prelude::*;
 
 use bevy_utils::prelude::{
     BevyUtil, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutChangedQuery,
-    LayoutConstraint, LayoutQuery, LayoutSize, View, ViewAddedQuery, ViewBundle, ViewQuery,
+    LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
 use notation_model::prelude::{Chord, ModelEntry, Tab, TrackKind};
 
@@ -66,20 +66,23 @@ impl<'a> View<NotationLayout<'a>> for TabChords {
     }
 }
 impl TabChords {
-    pub fn on_added(
-        mut commands: Commands,
-        _theme: Res<NotationTheme>,
-        query: ViewAddedQuery<TabChords>,
-    ) {
-        for (_parent, entity, view) in query.iter() {
-            for (chord, entry) in view.chords.iter() {
-                BevyUtil::spawn_child_bundle(
-                    &mut commands,
-                    entity,
-                    ViewBundle::from(ChordView::new(entry, *chord)),
-                );
-            }
+    pub fn spawn(
+        commands: &mut Commands,
+        theme: &NotationTheme,
+        entity: Entity,
+        tab: &Arc<Tab>,
+    ) -> Entity {
+        let view_bundle = ViewBundle::from(TabChords::new(tab.clone()));
+        let view = view_bundle.view.clone();
+        let chords_entity = BevyUtil::spawn_child_bundle(
+            commands,
+            entity,
+            view_bundle,
+        );
+        for (chord, entry) in view.chords.iter() {
+            ChordView::spawn(commands, theme, chords_entity, *chord, entry);
         }
+        chords_entity
     }
     pub fn do_layout(
         mut evts: EventReader<TabChordsDoLayoutEvent>,

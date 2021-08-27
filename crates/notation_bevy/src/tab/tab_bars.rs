@@ -4,16 +4,13 @@ use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{
-    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutQuery, LayoutSize, View,
-    ViewAddedQuery, ViewQuery,
-};
+use bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 use notation_model::prelude::{Tab, TabBar};
 
 use crate::bar::bar_layout::BarLayoutData;
 use crate::bar::bar_view::BarView;
 use crate::lane::lane_layout::LaneLayoutData;
-use crate::prelude::{BarBundle, NotationAppState, NotationSettings, NotationTheme, PlayPlugin};
+use crate::prelude::{NotationAssets, NotationAppState, NotationSettings, NotationTheme, PlayPlugin};
 use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
 
@@ -161,29 +158,39 @@ impl TabBars {
 }
 
 impl TabBars {
-    pub fn on_added(
-        mut commands: Commands,
-        theme: Res<NotationTheme>,
-        query: ViewAddedQuery<TabBars>,
-    ) {
-        for (_parent, entity, view) in query.iter() {
-            PlayPlugin::spawn_indicators(&mut commands, &theme, entity, &view.tab);
-            let bar_bundles: Vec<(&BarLayoutData, BarBundle)> = view
-                .tab
-                .bars
-                .iter()
-                .enumerate()
-                .filter_map(|(index, bar)| {
-                    view.bar_layouts.get(index).map(|bar_layout| {
-                        //let transform = theme.grid.calc_bar_transform(&bar_layout);
-                        (bar_layout, BarBundle::new(bar.clone(), bar_layout.clone()))
-                    })
+    pub fn spawn(
+        commands: &mut Commands,
+        assets: &NotationAssets,
+        theme: &NotationTheme,
+        settings: &NotationSettings,
+        entity: Entity,
+        tab: &Arc<Tab>,
+    ) -> Entity {
+        let bar_layouts = TabBars::calc_bar_layouts(&theme, &settings, &tab);
+        let view_bundle = ViewBundle::from(TabBars::new(tab.clone(), Arc::new(bar_layouts)));
+        let view = view_bundle.view.clone();
+        let bars_entity = BevyUtil::spawn_child_bundle(
+            commands,
+            entity,
+            view_bundle,
+        );
+        PlayPlugin::spawn_indicators(commands, theme, bars_entity, &view.tab);
+        let bar_bundles: Vec<(&Arc<TabBar>, &BarLayoutData)> = view
+            .tab
+            .bars
+            .iter()
+            .enumerate()
+            .filter_map(|(index, bar)| {
+                view.bar_layouts.get(index).map(|bar_layout| {
+                    //let transform = theme.grid.calc_bar_transform(&bar_layout);
+                    (bar, bar_layout)
                 })
-                .collect();
-            for (_bar_layout, bar_bundle) in bar_bundles.into_iter() {
-                BevyUtil::spawn_child_bundle(&mut commands, entity, bar_bundle);
-            }
+            })
+            .collect();
+        for (bar, bar_layout) in bar_bundles.into_iter() {
+            BarView::spawn(commands, assets, theme, settings, bars_entity, &bar, bar_layout);
         }
+        bars_entity
     }
     pub fn do_layout(
         mut evts: EventReader<TabBarsDoLayoutEvent>,

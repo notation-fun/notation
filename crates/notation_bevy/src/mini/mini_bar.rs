@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{GridCell, LayoutAnchor, LayoutChangedQuery, View, ViewAddedQuery};
+use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, View, ViewBundle};
 use notation_model::prelude::{PlayingState, Syllable, TabBar};
 
 use crate::prelude::{BarData, BarPlaying, LyonShape, LyonShapeOp, NotationTheme};
@@ -117,29 +117,32 @@ impl<'a> GridCell<NotationLayout<'a>> for MiniBar {
     }
 }
 impl MiniBar {
-    pub fn on_added(
-        mut commands: Commands,
-        theme: Res<NotationTheme>,
-        query: ViewAddedQuery<MiniBar>,
-    ) {
-        for (_parent, entity, view) in query.iter() {
-            let syllable = view
-                .value
-                .get_chord(None)
-                .map(|x| x.root)
-                .unwrap_or(Syllable::Do);
-            let value = MiniBarValue::new(0.0, syllable);
-            let data = MiniBarData::from((view.bar_props, value));
-            let shape_entity = MiniBarShape::create(&mut commands, &theme, entity, data);
-            commands
-                .entity(shape_entity)
-                .insert(BarPlaying::from((view.bar_props, PlayingState::Idle)));
-            if view.bar_props.bar_index == 0 {
-                let section_separator_data =
-                    MiniSectionSeparatorData::new(&view.value, MiniSectionSeparatorValue::new(0.0));
-                MiniSectionSeparator::create(&mut commands, &theme, entity, section_separator_data);
-            }
+    pub fn spawn(
+        commands: &mut Commands,
+        theme: &NotationTheme,
+        entity: Entity,
+        bar: &Arc<TabBar>,
+    ) -> Entity {
+        let bar_entity = BevyUtil::spawn_child_bundle(
+            commands,
+            entity,
+            ViewBundle::from(MiniBar::new(bar, bar.clone())),
+        );
+        let syllable = bar.get_chord(None)
+            .map(|x| x.root)
+            .unwrap_or(Syllable::Do);
+        let value = MiniBarValue::new(0.0, syllable);
+        let data = MiniBarData::new(bar, value);
+        let shape_entity = MiniBarShape::create(commands, theme, bar_entity, data);
+        commands
+            .entity(shape_entity)
+            .insert(BarPlaying::new(bar, PlayingState::Idle));
+        if bar.props.bar_index == 0 {
+            let section_separator_data =
+                MiniSectionSeparatorData::new(bar, MiniSectionSeparatorValue::new(0.0));
+            MiniSectionSeparator::create(commands, theme, bar_entity, section_separator_data);
         }
+        bar_entity
     }
     pub fn on_layout_changed(
         mut commands: Commands,

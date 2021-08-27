@@ -7,7 +7,7 @@ use notation_midi::prelude::{JumpToBarEvent, SwitchTabEvent};
 use crate::mini::mini_bar::MiniBar;
 use crate::mini::mini_map::MiniMap;
 
-use crate::prelude::{AddTabEvent, BevyUtil, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars, WindowResizedEvent};
+use crate::prelude::{AddTabEvent, BevyUtil, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars, WindowResizedEvent};
 use crate::ui::layout::NotationLayout;
 
 use super::tab_asset::TabAssetLoader;
@@ -37,9 +37,7 @@ impl Plugin for TabPlugin {
                 .with_system(on_mouse_dragged.system())
                 .with_system(TabView::on_added.system())
                 .with_system(TabContent::do_layout.system())
-                .with_system(TabChords::on_added.system())
                 .with_system(TabChords::do_layout.system())
-                .with_system(TabBars::on_added.system())
                 .with_system(TabBars::do_layout.system()),
         );
     }
@@ -78,9 +76,12 @@ fn on_mouse_clicked(
     mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
     mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
 ) {
+    let mut pos = None;
     for evt in evts.iter() {
-        let pos = TabView::convert_pos(&state,evt.cursor_position);
-        println!("tab_plugin::on_mouse_clicked() -> {:?} -> {:?}", evt, pos);
+        pos = Some(TabView::convert_pos(&state,evt.cursor_position));
+    }
+    if let Some(pos) = pos {
+        println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
         for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
             let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
             if layout.is_inside(offset) {
@@ -106,6 +107,7 @@ fn on_mouse_dragged(
 
 fn on_add_tab(
     mut commands: Commands,
+    assets: Res<NotationAssets>,
     theme: Res<NotationTheme>,
     settings: Res<NotationSettings>,
     mut evts: EventReader<AddTabEvent>,
@@ -122,17 +124,8 @@ fn on_add_tab(
             tab_entity,
             ViewBundle::from(TabContent::new(tab.clone())),
         );
-        BevyUtil::spawn_child_bundle(
-            &mut commands,
-            content_entity,
-            ViewBundle::from(TabChords::new(tab.clone())),
-        );
-        let bar_layouts = TabBars::calc_bar_layouts(&theme, &settings, &tab);
-        BevyUtil::spawn_child_bundle(
-            &mut commands,
-            content_entity,
-            ViewBundle::from(TabBars::new(tab.clone(), Arc::new(bar_layouts))),
-        );
+        TabChords::spawn(&mut commands, &theme, content_entity, &tab);
+        TabBars::spawn(&mut commands, &assets, &theme, &settings, content_entity, &tab);
         switch_tab_evts.send(SwitchTabEvent::new(evt.0.clone()));
     }
 }

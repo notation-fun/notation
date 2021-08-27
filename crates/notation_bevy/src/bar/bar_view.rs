@@ -3,10 +3,10 @@ use std::sync::Arc;
 use bevy::prelude::*;
 
 use crate::lane::lane_view::LaneView;
-use crate::prelude::{BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::{BarBundle, BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings, NotationTheme};
 use crate::tab::tab_events::{BarViewDoLayoutEvent, TabBarsResizedEvent};
 use crate::ui::layout::NotationLayout;
-use bevy_utils::prelude::{GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery};
+use bevy_utils::prelude::{BevyUtil, GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery};
 use notation_model::prelude::TabBar;
 
 use super::bar_beat::{BarBeat, BarBeatData, BarBeatValue};
@@ -70,46 +70,49 @@ impl BarView {
         }
         tab_resized_evts.send(TabBarsResizedEvent(bars));
     }
-    pub fn on_added(
-        mut commands: Commands,
-        assets: Res<NotationAssets>,
-        theme: Res<NotationTheme>,
-        settings: Res<NotationSettings>,
-        query: Query<(Entity, &Arc<BarView>, &Arc<TabBar>, &BarLayoutData), Added<Arc<BarView>>>,
-    ) {
-        for (entity, _view, bar, bar_layout) in query.iter() {
-            for lane_layout in bar_layout.lane_layouts.iter() {
-                LaneView::spawn(
-                    &mut commands,
-                    &assets,
-                    &theme,
-                    &settings,
-                    entity,
-                    &bar,
-                    lane_layout,
-                );
-            }
-            //TODO, create bar separator for the first one in row
-            if false {
-                BarSeparator::create(
-                    &mut commands,
-                    &theme,
-                    entity,
-                    BarSeparatorData::new(bar, BarSeparatorValue::new(true)),
-                );
-            }
-            BarSeparator::create(
-                &mut commands,
-                &theme,
-                entity,
-                BarSeparatorData::new(bar, BarSeparatorValue::new(false)),
+    pub fn spawn(
+        commands: &mut Commands,
+        assets: &NotationAssets,
+        theme: &NotationTheme,
+        settings: &NotationSettings,
+        entity: Entity,
+        bar: &Arc<TabBar>,
+        bar_layout: &BarLayoutData,
+    ) -> Entity {
+        let bar_bundle = BarBundle::new(bar.clone(), bar_layout.clone());
+        let bar_entity = BevyUtil::spawn_child_bundle(commands, entity, bar_bundle);
+        for lane_layout in bar_layout.lane_layouts.iter() {
+            LaneView::spawn(
+                commands,
+                assets,
+                theme,
+                settings,
+                bar_entity,
+                &bar,
+                lane_layout,
             );
-            let signature = bar.signature();
-            for beat in 0..signature.bar_beats {
-                BarBeatValue::may_new(&theme, bar, &signature, beat)
-                    .map(|value| BarBeatData::new(bar, value))
-                    .map(|data| BarBeat::create(&mut commands, &theme, entity, data));
-            }
         }
+        //TODO, create bar separator for the first one in row
+        if false {
+            BarSeparator::create(
+                commands,
+                theme,
+                bar_entity,
+                BarSeparatorData::new(bar, BarSeparatorValue::new(true)),
+            );
+        }
+        BarSeparator::create(
+            commands,
+            theme,
+            bar_entity,
+            BarSeparatorData::new(bar, BarSeparatorValue::new(false)),
+        );
+        let signature = bar.signature();
+        for beat in 0..signature.bar_beats {
+            BarBeatValue::may_new(theme, bar, &signature, beat)
+                .map(|value| BarBeatData::new(bar, value))
+                .map(|data| BarBeat::create(commands, theme, bar_entity, data));
+        }
+        bar_entity
     }
 }

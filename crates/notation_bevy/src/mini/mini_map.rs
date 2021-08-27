@@ -9,7 +9,7 @@ use crate::prelude::{
 };
 use bevy_utils::prelude::{
     BevyUtil, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutConstraint, LayoutQuery,
-    LayoutSize, View, ViewAddedQuery, ViewBundle, ViewQuery,
+    LayoutSize, View, ViewBundle, ViewQuery,
 };
 
 use super::mini_bar::MiniBar;
@@ -116,30 +116,18 @@ impl MiniMap {
     pub fn spawn(
         commands: &mut Commands,
         theme: &NotationTheme,
-        tab_entity: Entity,
+        entity: Entity,
         tab: &Arc<Tab>,
     ) -> Entity {
         let minimap = MiniMap::new(tab.clone());
         let back_data = MiniMapBackData::default();
         let map_entity =
-            BevyUtil::spawn_child_bundle(commands, tab_entity, ViewBundle::from(minimap));
+            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
         MiniMapBack::create(commands, theme, map_entity, back_data);
-        map_entity
-    }
-    pub fn on_added(
-        mut commands: Commands,
-        _theme: Res<NotationTheme>,
-        query: ViewAddedQuery<MiniMap>,
-    ) {
-        for (_parent, entity, view) in query.iter() {
-            for bar in view.tab.bars.iter() {
-                BevyUtil::spawn_child_bundle(
-                    &mut commands,
-                    entity,
-                    ViewBundle::from(MiniBar::new(bar, bar.clone())),
-                );
-            }
+        for bar in tab.bars.iter() {
+            MiniBar::spawn(commands, theme, map_entity, bar);
         }
+        map_entity
     }
     pub fn do_layout(
         mut evts: EventReader<MiniMapDoLayoutEvent>,

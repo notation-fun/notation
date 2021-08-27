@@ -20,7 +20,6 @@ impl Plugin for EntryPlugin {
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(crate::tone::tone_systems::on_entry_playing_changed.system())
                 .with_system(crate::word::word_systems::on_entry_playing_changed.system())
-                .with_system(ChordView::on_added.system())
                 .with_system(ChordView::on_layout_changed.system())
                 .with_system(ChordView::on_chord_playing_changed.system())
                 .with_system(on_tab_bars_resized.system())

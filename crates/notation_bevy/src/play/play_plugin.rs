@@ -206,7 +206,7 @@ fn on_tick(
 ) {
     tab_state.set_position(*new_position);
     let TickResult {
-        changed,
+        changed: _changed,
         end_passed,
         stopped,
     } = tick_result;

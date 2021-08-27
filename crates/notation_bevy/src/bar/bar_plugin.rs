@@ -12,7 +12,6 @@ impl Plugin for BarPlugin {
         BarViewDoLayoutEvent::setup(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(BarView::on_added.system())
                 .with_system(BarView::do_layout.system()),
         );
     }

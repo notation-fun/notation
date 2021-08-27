@@ -18,9 +18,7 @@ impl Plugin for MiniPlugin {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(on_bar_playing_changed.system())
-                .with_system(MiniMap::on_added.system())
                 .with_system(MiniMap::do_layout.system())
-                .with_system(MiniBar::on_added.system())
                 .with_system(MiniBar::on_layout_changed.system()),
         );
     }
