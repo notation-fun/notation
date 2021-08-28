@@ -1,7 +1,7 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use crate::prelude::{NotationAssets, NotationTheme, NotationSettings};
+use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
 
 use super::hand_bundles::{HandShapeBundle4, HandShapeBundle6};
 
@@ -36,12 +36,16 @@ macro_rules! impl_shapes_plugin {
                 settings: &NotationSettings,
                 entity: Entity,
                 entry: &LaneEntry,
-                fretted_entry: &$fretted_entry
+                fretted_entry: &$fretted_entry,
             ) {
                 match fretted_entry {
                     $fretted_entry::Shape(shape, _) => {
-                        commands.entity(entity).insert_bundle($hand_shape_bundle::from(*shape));
-                        super::hand_systems::$create_hand_shape(commands, assets, theme, settings, entity, entry, shape);
+                        commands
+                            .entity(entity)
+                            .insert_bundle($hand_shape_bundle::from(*shape));
+                        super::hand_systems::$create_hand_shape(
+                            commands, assets, theme, settings, entity, entry, shape,
+                        );
                     }
                     _ => (),
                 }

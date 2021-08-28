@@ -174,8 +174,13 @@ impl LayoutSettings {
         }
         let grid_size = layout.size;
         let content_size = grid_data.content_size;
-        let y = pos_data.bar_layout.offset.y + grid_size.height - content_size.height - theme.grid.margin;
-        (x - layout.offset.x - grid_data.offset.x, y - layout.offset.y)
+        let y = pos_data.bar_layout.offset.y + grid_size.height
+            - content_size.height
+            - theme.grid.margin;
+        (
+            x - layout.offset.x - grid_data.offset.x,
+            y - layout.offset.y,
+        )
     }
     pub fn focus_bar(
         &mut self,
@@ -190,7 +195,9 @@ impl LayoutSettings {
         )>,
         pos_data: &PosIndicatorData,
     ) {
-        if self.mode == LayoutMode::Grid && self.focusing_bar_ordinal == pos_data.bar_props.bar_ordinal {
+        if self.mode == LayoutMode::Grid
+            && self.focusing_bar_ordinal == pos_data.bar_props.bar_ordinal
+        {
             return;
         }
         self.focusing_bar_ordinal = pos_data.bar_props.bar_ordinal;

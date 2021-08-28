@@ -131,9 +131,7 @@ impl MiniBar {
             entity,
             ViewBundle::from(MiniBar::new(bar, bar.clone())),
         );
-        let syllable = bar.get_chord(None)
-            .map(|x| x.root)
-            .unwrap_or(Syllable::Do);
+        let syllable = bar.get_chord(None).map(|x| x.root).unwrap_or(Syllable::Do);
         let value = MiniBarValue::new(0.0, syllable);
         let data = MiniBarData::new(bar, value);
         let shape_entity = MiniBarShape::create(commands, theme, bar_entity, data);

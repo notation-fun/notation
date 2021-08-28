@@ -1,4 +1,5 @@
-use std::{any::Any, marker::PhantomData};
+use std::any::Any;
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use anyhow::{bail, Result};
@@ -153,11 +154,7 @@ pub trait View<TE: LayoutEnv>: Any + Send + Sync + ToString + 'static {
     fn calc_size(&self, engine: &TE, constraint: LayoutConstraint) -> LayoutSize {
         constraint.max
     }
-    fn calc_root_layout(
-        &self,
-        engine: &TE,
-        constraint: LayoutConstraint,
-    ) -> LayoutData {
+    fn calc_root_layout(&self, engine: &TE, constraint: LayoutConstraint) -> LayoutData {
         let size = self.calc_size(engine, constraint);
         let pivot = LayoutAnchor::ROOT;
         LayoutData::new(0, size, pivot, pivot, Vec2::ZERO)

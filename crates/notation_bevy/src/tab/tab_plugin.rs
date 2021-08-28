@@ -1,19 +1,25 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{LayoutData};
-use notation_midi::prelude::{JumpToBarEvent};
+use bevy_utils::prelude::LayoutData;
+use notation_midi::prelude::JumpToBarEvent;
 
 use crate::bar::bar_view::BarView;
 use crate::mini::mini_bar::MiniBar;
 
-use crate::prelude::{AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars};
+use crate::prelude::{
+    AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates,
+    NotationSettings, NotationTheme, TabAsset, TabBars,
+};
 
 use super::tab_asset::TabAssetLoader;
 
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
-use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent, TabViewDoLayoutEvent};
+use super::tab_events::{
+    TabBarsDoLayoutEvent, TabBarsResizedEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent,
+    TabViewDoLayoutEvent,
+};
 use super::tab_view::TabView;
 
 pub struct TabPlugin;
@@ -40,7 +46,6 @@ impl Plugin for TabPlugin {
     }
 }
 
-
 fn on_mouse_clicked(
     mut evts: EventReader<MouseClickedEvent>,
     _theme: Res<NotationTheme>,
@@ -58,14 +63,22 @@ fn on_mouse_clicked(
         if !settings.mouse_dragged_panning {
             println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
             for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
-                let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
+                let offset = pos
+                    - Vec2::new(
+                        global_transform.translation.x,
+                        global_transform.translation.y,
+                    );
                 if layout.is_inside(offset) {
                     jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
                     return;
                 }
             }
             for (bar, layout, global_transform) in bar_query.iter() {
-                let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
+                let offset = pos
+                    - Vec2::new(
+                        global_transform.translation.x,
+                        global_transform.translation.y,
+                    );
                 if layout.is_inside(offset) {
                     jump_to_bar_evts.send(JumpToBarEvent::new(bar.bar_props));
                     return;

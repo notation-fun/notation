@@ -36,11 +36,7 @@ pub trait VBoxView<TE: LayoutEnv, TC: VBoxCell<TE>>: View<TE> {
             let cell_size = cell.view.calc_size(engine, cell_constraint);
             cell.set_layout_data(
                 layout_query,
-                data.new_child(
-                    LayoutAnchor::TOP_LEFT,
-                    Vec2::new(0.0, y),
-                    cell_size,
-                ),
+                data.new_child(LayoutAnchor::TOP_LEFT, Vec2::new(0.0, y), cell_size),
             );
             commands.entity(cell.entity).insert(VBoxCellData { index });
             y -= cell_size.height;

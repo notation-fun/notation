@@ -1,4 +1,6 @@
-use crate::prelude::{JumpToBarEvent, MidiHub, MidiSettings, MidiState, PlayControlEvent, SwitchTabEvent};
+use crate::prelude::{
+    JumpToBarEvent, MidiHub, MidiSettings, MidiState, PlayControlEvent, SwitchTabEvent,
+};
 use bevy::prelude::*;
 use notation_model::prelude::PlayClock;
 
@@ -32,7 +34,14 @@ fn on_switch_tab(
 ) {
     for evt in evts.iter() {
         state.switch_tab(&settings, &mut hub, evt.tab.clone());
-        _do_tick(&settings, &mut state, &mut hub, &mut play_control_evts, true, 0.0);
+        _do_tick(
+            &settings,
+            &mut state,
+            &mut hub,
+            &mut play_control_evts,
+            true,
+            0.0,
+        );
     }
 }
 
@@ -49,7 +58,14 @@ fn on_jump_to_bar(
     }
     if let Some(bar_props) = bar_props {
         state.jump_to_bar(bar_props);
-        _do_tick(&settings, &mut state, &mut hub, &mut play_control_evts, true, 0.0);
+        _do_tick(
+            &settings,
+            &mut state,
+            &mut hub,
+            &mut play_control_evts,
+            true,
+            0.0,
+        );
     }
 }
 
@@ -96,5 +112,12 @@ fn do_tick(
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
     clock.tick();
-    _do_tick(&settings, &mut state, &mut hub, &mut play_control_evts, false, clock.delta_seconds());
+    _do_tick(
+        &settings,
+        &mut state,
+        &mut hub,
+        &mut play_control_evts,
+        false,
+        clock.delta_seconds(),
+    );
 }

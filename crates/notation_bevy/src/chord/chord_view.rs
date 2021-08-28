@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle};
+use bevy_utils::prelude::{
+    BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle,
+};
 use notation_model::prelude::{Chord, ModelEntry};
 
 use crate::prelude::{ModelEntryData, NotationTheme};
@@ -72,14 +74,7 @@ impl ChordView {
         );
         //TODO: handle initialization in a nicer way.
         let radius = 0.0;
-        ChordDiagram::spawn(
-            commands,
-            theme,
-            chord_entity,
-            entry.props,
-            chord,
-            radius,
-        );
+        ChordDiagram::spawn(commands, theme, chord_entity, entry.props, chord, radius);
         commands
             .entity(chord_entity)
             .insert(ChordPlaying::from((entry.props, chord)));

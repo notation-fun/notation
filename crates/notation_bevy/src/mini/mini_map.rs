@@ -3,10 +3,11 @@ use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{
-    NotationAppState, NotationLayout, NotationSettings, NotationTheme,
+use crate::prelude::{NotationAppState, NotationLayout, NotationSettings, NotationTheme};
+use bevy_utils::prelude::{
+    BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
+    LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
-use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 
 use super::mini_bar::MiniBar;
 use super::mini_plugin::MiniMapDoLayoutEvent;
@@ -70,9 +71,13 @@ impl MiniMap {
         tab: &Arc<Tab>,
     ) -> Entity {
         let minimap = MiniMap::new(tab.clone());
-        let map_entity =
-            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
-        ColorBackground::spawn(commands, map_entity, theme.core.mini_map_z, theme.colors.mini_map.back);
+        let map_entity = BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
+        ColorBackground::spawn(
+            commands,
+            map_entity,
+            theme.core.mini_map_z,
+            theme.colors.mini_map.back,
+        );
         for bar in tab.bars.iter() {
             MiniBar::spawn(commands, theme, map_entity, bar);
         }

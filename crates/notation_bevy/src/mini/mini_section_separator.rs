@@ -13,7 +13,10 @@ pub struct MiniSectionSeparatorValue {
 }
 impl MiniSectionSeparatorValue {
     pub fn new(x_offset: f32) -> Self {
-        Self { width: 0.0, x_offset }
+        Self {
+            width: 0.0,
+            x_offset,
+        }
     }
 }
 impl Display for MiniSectionSeparatorValue {
@@ -60,11 +63,7 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
         let line_width = self.theme.sizes.mini_map.section_separator;
         let x_offset = -self.data.value.width / 2.0;
 
-        Transform::from_xyz(
-            line_width + x_offset,
-            0.0,
-            self.theme.core.mini_bar_z + 1.0,
-        )
+        Transform::from_xyz(line_width + x_offset, 0.0, self.theme.core.mini_bar_z + 1.0)
     }
 }
 

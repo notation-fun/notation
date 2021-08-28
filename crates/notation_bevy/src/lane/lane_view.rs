@@ -2,7 +2,10 @@ use bevy::prelude::*;
 
 use crate::entry::entry_plugin;
 use crate::lyrics::lyrics_plugin::LyricsPlugin;
-use crate::prelude::{BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::{
+    BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin, NotationAssets, NotationSettings,
+    NotationTheme,
+};
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
 use crate::ui::layout::NotationLayout;

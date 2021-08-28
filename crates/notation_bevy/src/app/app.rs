@@ -100,13 +100,13 @@ impl NotationApp {
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
-                .with_system(setup_window_size.system())
+                .with_system(setup_window_size.system()),
         );
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(on_window_resized.system())
                 .with_system(handle_inputs.system())
-                .with_system(load_tab.system())
+                .with_system(load_tab.system()),
         );
 
         extra(&mut app);
@@ -152,31 +152,37 @@ fn handle_inputs(
     keyboard_input: Res<Input<KeyCode>>,
     mouse_input: Res<Input<MouseButton>>,
     mut mouse_motion_events: EventReader<MouseMotion>,
+    mut state: ResMut<NotationAppState>,
     mut settings: ResMut<NotationSettings>,
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
     mut mouse_dragged: EventWriter<MouseDraggedEvent>,
+    mut window_resized_evts: EventWriter<WindowResizedEvent>,
 ) {
     if keyboard_input.pressed(KeyCode::LControl) {
         settings.mouse_dragged_panning = true;
     } else if keyboard_input.just_released(KeyCode::LControl) {
         settings.mouse_dragged_panning = false;
+    } else if keyboard_input.just_released(KeyCode::Tab) {
+        state.hide_control = !state.hide_control;
+        window_resized_evts.send(WindowResizedEvent());
     } else if keyboard_input.just_released(KeyCode::Space) {
         crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts);
     }
     if mouse_input.just_released(MouseButton::Left) {
-        windows.get_primary()
+        windows
+            .get_primary()
             .and_then(|x| x.cursor_position())
             .map(|cursor_position| {
                 //println!("handle_inputs() -> MouseClickedEvent({:?})", cursor_position);
-                mouse_clicked.send(MouseClickedEvent{cursor_position});
+                mouse_clicked.send(MouseClickedEvent { cursor_position });
             });
     } else {
         if mouse_input.pressed(MouseButton::Left) {
             for event in mouse_motion_events.iter() {
                 //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
-                mouse_dragged.send(MouseDraggedEvent{delta: event.delta});
+                mouse_dragged.send(MouseDraggedEvent { delta: event.delta });
             }
         }
     }

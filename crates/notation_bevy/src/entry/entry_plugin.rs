@@ -1,13 +1,18 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{LyonShapeOp};
+use bevy_utils::prelude::LyonShapeOp;
 
 use crate::chord::chord_view::ChordView;
-use crate::prelude::{BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle};
+use crate::prelude::{
+    BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates,
+    NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle,
+};
+use crate::shapes::shape_diagram::{
+    ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6,
+};
 use crate::strings::pick_note::{PickNoteData, PickNoteShape};
 use crate::strings::single_string::{SingleString, SingleStringData};
-use crate::shapes::shape_diagram::{ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6};
 use crate::tab::tab_events::TabBarsResizedEvent;
 use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
 use crate::word::word_text::{WordTextData, WordTextShape};
@@ -23,7 +28,7 @@ impl Plugin for EntryPlugin {
                 .with_system(crate::word::word_systems::on_entry_playing_changed.system())
                 .with_system(ChordView::on_layout_changed.system())
                 .with_system(ChordView::on_chord_playing_changed.system())
-                .with_system(on_tab_bars_resized.system())
+                .with_system(on_tab_bars_resized.system()),
         );
     }
 }
@@ -50,15 +55,57 @@ fn insert_entry_extra(
     entry: &LaneEntry,
 ) {
     match entry.model.proto.as_ref() {
-        ProtoEntry::Core(core_entry) => insert_core_entry_extra(commands, assets, theme, settings, entity, entry, core_entry),
-        ProtoEntry::Lyric(lyric_entry) => LyricsPlugin::insert_entry_extra(commands, assets, theme, settings, entity, entry, lyric_entry),
+        ProtoEntry::Core(core_entry) => {
+            insert_core_entry_extra(commands, assets, theme, settings, entity, entry, core_entry)
+        }
+        ProtoEntry::Lyric(lyric_entry) => LyricsPlugin::insert_entry_extra(
+            commands,
+            assets,
+            theme,
+            settings,
+            entity,
+            entry,
+            lyric_entry,
+        ),
         ProtoEntry::Fretted6(fretted_entry) => {
-            ShapesPlugin::insert_entry_extra6(commands, assets, theme, settings, entity, entry, fretted_entry);
-            StringsPlugin::insert_entry_extra6(commands, assets, theme, settings, entity, entry, fretted_entry);
+            ShapesPlugin::insert_entry_extra6(
+                commands,
+                assets,
+                theme,
+                settings,
+                entity,
+                entry,
+                fretted_entry,
+            );
+            StringsPlugin::insert_entry_extra6(
+                commands,
+                assets,
+                theme,
+                settings,
+                entity,
+                entry,
+                fretted_entry,
+            );
         }
         ProtoEntry::Fretted4(fretted_entry) => {
-            ShapesPlugin::insert_entry_extra4(commands, assets, theme, settings, entity, entry, fretted_entry);
-            StringsPlugin::insert_entry_extra4(commands, assets, theme, settings, entity, entry, fretted_entry);
+            ShapesPlugin::insert_entry_extra4(
+                commands,
+                assets,
+                theme,
+                settings,
+                entity,
+                entry,
+                fretted_entry,
+            );
+            StringsPlugin::insert_entry_extra4(
+                commands,
+                assets,
+                theme,
+                settings,
+                entity,
+                entry,
+                fretted_entry,
+            );
         }
         _ => {}
     }
@@ -71,17 +118,23 @@ fn insert_core_entry_extra(
     settings: &NotationSettings,
     entity: Entity,
     entry: &LaneEntry,
-    core_entry: &CoreEntry
+    core_entry: &CoreEntry,
 ) {
     match core_entry {
         CoreEntry::Tie => (),
         CoreEntry::Rest(_) => (),
         CoreEntry::Tone(tone, _) => {
-            commands.entity(entity).insert_bundle(ToneBundle::from(*tone));
-            crate::tone::tone_systems::create_tone_notes(commands, assets, theme, settings, entity, entry, tone);
+            commands
+                .entity(entity)
+                .insert_bundle(ToneBundle::from(*tone));
+            crate::tone::tone_systems::create_tone_notes(
+                commands, assets, theme, settings, entity, entry, tone,
+            );
         }
         CoreEntry::Chord(chord, _) => {
-            commands.entity(entity).insert_bundle(ChordBundle::from(*chord));
+            commands
+                .entity(entity)
+                .insert_bundle(ChordBundle::from(*chord));
         }
     };
 }

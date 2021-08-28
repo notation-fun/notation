@@ -125,13 +125,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tone::tone_mode::ToneMode;
     #[doc(hidden)]
+    pub use crate::ui::guitar::GuitarView;
+    #[doc(hidden)]
     pub use crate::ui::layout::NotationLayout;
     #[doc(hidden)]
+    pub use crate::ui::viewer::TabViewer;
+    #[doc(hidden)]
     pub use crate::ui::NotationUiPlugin;
-    #[doc(hidden)]
-    pub use crate::ui::guitar::{GuitarView};
-    #[doc(hidden)]
-    pub use crate::ui::viewer::{TabViewer};
     #[doc(hidden)]
     pub use crate::viewer::app::NotationViewer;
     #[doc(hidden)]

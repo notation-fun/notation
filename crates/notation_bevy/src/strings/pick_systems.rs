@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_model::prelude::{LaneEntry};
+use notation_model::prelude::LaneEntry;
 
 use crate::prelude::{EntryPlaying, LyonShapeOp, NotationAssets, NotationSettings, NotationTheme};
 use notation_model::prelude::Pick;
@@ -48,10 +48,8 @@ macro_rules! impl_pick_system {
                             fretboard.shape_pick_fret_note(&shape, pick_note)
                         {
                             let syllable = bar.calc_syllable(&note.pitch);
-                            let data = PickNoteData::new(
-                                entry,
-                                PickNoteValue::new(pick_note, syllable),
-                            );
+                            let data =
+                                PickNoteData::new(entry, PickNoteValue::new(pick_note, syllable));
                             let (width, height) = data.calc_width_height(&theme);
                             PickNoteShape::create_with_child(
                                 commands,

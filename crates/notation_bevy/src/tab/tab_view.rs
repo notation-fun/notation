@@ -6,7 +6,9 @@ use bevy_utils::prelude::{BevyUtil, DockView, LayoutQuery, View, ViewBundle, Vie
 use notation_model::prelude::Tab;
 
 use crate::mini::mini_map::MiniMap;
-use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabBars, TabBundle};
+use crate::prelude::{
+    NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabBars, TabBundle,
+};
 use crate::ui::layout::NotationLayout;
 
 use super::tab_chords::TabChords;
@@ -40,11 +42,7 @@ impl TabView {
     ) -> Entity {
         let tab_bundle = TabBundle::new(tab.clone());
         //let tab_view = tab_bundle.view.clone();
-        let tab_entity = BevyUtil::spawn_child_bundle(
-            commands,
-            entity,
-            tab_bundle,
-        );
+        let tab_entity = BevyUtil::spawn_child_bundle(commands, entity, tab_bundle);
         MiniMap::spawn(commands, theme, tab_entity, &tab);
         let content_entity = BevyUtil::spawn_child_bundle(
             commands,

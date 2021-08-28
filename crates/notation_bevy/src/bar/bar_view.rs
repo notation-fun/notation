@@ -3,10 +3,15 @@ use std::sync::Arc;
 use bevy::prelude::*;
 
 use crate::lane::lane_view::LaneView;
-use crate::prelude::{BarBundle, BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::{
+    BarBundle, BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings,
+    NotationTheme,
+};
 use crate::tab::tab_events::{BarViewDoLayoutEvent, TabBarsResizedEvent};
 use crate::ui::layout::NotationLayout;
-use bevy_utils::prelude::{BevyUtil, GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery,
+};
 use notation_model::prelude::TabBar;
 
 use super::bar_beat::{BarBeat, BarBeatData, BarBeatValue};

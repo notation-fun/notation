@@ -52,7 +52,6 @@ impl From<Arc<BarLane>> for ToneMode {
 
 impl From<Option<Arc<BarLane>>> for ToneMode {
     fn from(v: Option<Arc<BarLane>>) -> Self {
-        v.map(|x| Self::from(x.kind))
-            .unwrap_or_default()
+        v.map(|x| Self::from(x.kind)).unwrap_or_default()
     }
 }

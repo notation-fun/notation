@@ -229,7 +229,9 @@ impl MidiState {
         self.init_channels(settings, hub);
     }
     pub fn jump_to_bar(&mut self, bar_props: TabBarProps) {
-        self.play_control.position.set_in_bar(bar_props.bar_ordinal, Units(0.0));
+        self.play_control
+            .position
+            .set_in_bar(bar_props.bar_ordinal, Units(0.0));
         for channel in self.channels.iter_mut() {
             channel.calc_next_index(&self.play_control.position.bar);
         }

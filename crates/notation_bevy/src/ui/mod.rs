@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use bevy_egui::EguiSettings;
 
+pub mod guitar;
 pub mod layout;
 pub mod viewer;
-pub mod guitar;
 
 pub struct NotationUiPlugin;
 

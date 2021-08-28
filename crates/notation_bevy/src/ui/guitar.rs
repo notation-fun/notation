@@ -2,7 +2,10 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, View, ViewBundle};
+use bevy_utils::prelude::{
+    BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery,
+    LayoutConstraint, LayoutSize, View, ViewBundle,
+};
 use notation_model::prelude::{Syllable, Tab};
 
 use crate::prelude::{NotationAssets, NotationTheme};
@@ -15,10 +18,7 @@ pub struct GuitarView {
 }
 impl GuitarView {
     pub fn new(tab: Arc<Tab>, syllable: Syllable) -> Self {
-        Self {
-            tab,
-            syllable,
-        }
+        Self { tab, syllable }
     }
 }
 impl Display for GuitarView {
@@ -56,7 +56,12 @@ impl GuitarView {
             entity,
             ViewBundle::from(GuitarView::new(tab.clone(), Syllable::default())),
         );
-        ColorBackground::spawn(commands, guitar_entity, theme.core.mini_map_z, theme.core.background_color);
+        ColorBackground::spawn(
+            commands,
+            guitar_entity,
+            theme.core.mini_map_z,
+            theme.core.background_color,
+        );
         let sprite_bundle = SpriteBundle {
             sprite: Sprite::new(Vec2::new(100.0, 877.0)),
             transform: BevyUtil::offscreen_transform(),
@@ -83,4 +88,3 @@ impl GuitarView {
         }
     }
 }
-

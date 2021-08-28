@@ -4,17 +4,22 @@ use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutQuery, LayoutSize, View,
+    ViewBundle, ViewQuery,
+};
 use notation_model::prelude::{Tab, TabBar};
 
 use crate::bar::bar_layout::BarLayoutData;
 use crate::bar::bar_view::BarView;
 use crate::lane::lane_layout::LaneLayoutData;
-use crate::prelude::{NotationAssets, NotationAppState, NotationSettings, NotationTheme, PlayPlugin};
+use crate::prelude::{
+    NotationAppState, NotationAssets, NotationSettings, NotationTheme, PlayPlugin,
+};
 use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
 
-use super::tab_events::{TabBarsDoLayoutEvent};
+use super::tab_events::TabBarsDoLayoutEvent;
 
 pub struct TabBars {
     pub tab: Arc<Tab>,
@@ -177,11 +182,7 @@ impl TabBars {
         let bar_layouts = TabBars::calc_bar_layouts(&theme, &settings, &tab);
         let view_bundle = ViewBundle::from(TabBars::new(tab.clone(), Arc::new(bar_layouts)));
         let view = view_bundle.view.clone();
-        let bars_entity = BevyUtil::spawn_child_bundle(
-            commands,
-            entity,
-            view_bundle,
-        );
+        let bars_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
         PlayPlugin::spawn_indicators(commands, theme, bars_entity, &view.tab);
         let bar_bundles: Vec<(&Arc<TabBar>, &BarLayoutData)> = view
             .tab
@@ -196,7 +197,15 @@ impl TabBars {
             })
             .collect();
         for (bar, bar_layout) in bar_bundles.into_iter() {
-            BarView::spawn(commands, assets, theme, settings, bars_entity, &bar, bar_layout);
+            BarView::spawn(
+                commands,
+                assets,
+                theme,
+                settings,
+                bars_entity,
+                &bar,
+                bar_layout,
+            );
         }
         bars_entity
     }

@@ -3,7 +3,9 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::prelude::{BevyUtil, LayoutAnchor, LayoutData, LyonShape, NoThemeLyonShape, SingleBundle};
+use crate::prelude::{
+    BevyUtil, LayoutAnchor, LayoutData, LyonShape, NoThemeLyonShape, SingleBundle,
+};
 
 #[derive(Clone, Debug)]
 pub struct HasColorBackground;
@@ -21,7 +23,11 @@ impl Display for ColorBackground {
 }
 impl ColorBackground {
     fn new(z: f32, color: Color) -> Self {
-        Self { z, color, layout: LayoutData::ZERO }
+        Self {
+            z,
+            color,
+            layout: LayoutData::ZERO,
+        }
     }
 }
 
@@ -68,13 +74,12 @@ impl ColorBackground {
             }
         }
     }
-    pub fn spawn(
-        commands: &mut Commands,
-        entity: Entity,
-        z: f32,
-        color: Color,
-    ) -> Entity {
+    pub fn spawn(commands: &mut Commands, entity: Entity, z: f32, color: Color) -> Entity {
         commands.entity(entity).insert(HasColorBackground);
-        BevyUtil::spawn_child_bundle(commands, entity, SingleBundle::<ColorBackground>::from(ColorBackground::new(z, color)))
+        BevyUtil::spawn_child_bundle(
+            commands,
+            entity,
+            SingleBundle::<ColorBackground>::from(ColorBackground::new(z, color)),
+        )
     }
 }

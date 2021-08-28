@@ -4,12 +4,12 @@ use bevy::prelude::*;
 pub struct WindowResizedEvent();
 
 #[derive(Clone, Debug)]
-pub struct MouseClickedEvent{
+pub struct MouseClickedEvent {
     pub cursor_position: Vec2,
 }
 
 #[derive(Clone, Debug)]
-pub struct MouseDraggedEvent{
+pub struct MouseDraggedEvent {
     pub delta: Vec2,
 }
 

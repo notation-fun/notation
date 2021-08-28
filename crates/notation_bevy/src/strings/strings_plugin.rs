@@ -6,8 +6,8 @@ use std::sync::Arc;
 use super::pick_bundle::PickBundle;
 
 use super::strings_grid::{StringsGrid4, StringsGrid6};
-use crate::prelude::{NotationAssetsStates, NotationTheme, NotationAssets, NotationSettings};
-use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6, TrackKind, LaneEntry};
+use crate::prelude::{NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme};
+use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6, LaneEntry, TrackKind};
 
 pub struct StringsPlugin;
 
@@ -17,7 +17,7 @@ impl Plugin for StringsPlugin {
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(on_add_fretted_grid6.system())
                 .with_system(on_add_fretted_grid4.system())
-                .with_system(super::pick_systems::on_entry_playing_changed.system())
+                .with_system(super::pick_systems::on_entry_playing_changed.system()),
         );
     }
 }
@@ -57,12 +57,16 @@ macro_rules! impl_strings_plugin {
                 settings: &NotationSettings,
                 entity: Entity,
                 entry: &LaneEntry,
-                fretted_entry: &$fretted_entry
+                fretted_entry: &$fretted_entry,
             ) {
                 match fretted_entry {
                     $fretted_entry::Pick(pick, _duration) => {
-                        commands.entity(entity).insert_bundle(PickBundle::from(*pick));
-                        super::pick_systems::$create_pick_notes(commands, assets, theme, settings, entity, entry, pick);
+                        commands
+                            .entity(entity)
+                            .insert_bundle(PickBundle::from(*pick));
+                        super::pick_systems::$create_pick_notes(
+                            commands, assets, theme, settings, entity, entry, pick,
+                        );
                     }
                     _ => (),
                 }

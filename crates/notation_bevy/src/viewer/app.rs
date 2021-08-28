@@ -5,9 +5,15 @@ use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy_utils::prelude::{DockView, LayoutConstraint, LayoutQuery, View, ViewBundle, ViewQuery, ViewRootAddedQuery, ViewRootQuery};
+use bevy_utils::prelude::{
+    DockView, LayoutConstraint, LayoutQuery, View, ViewBundle, ViewQuery, ViewRootAddedQuery,
+    ViewRootQuery,
+};
 
-use crate::prelude::{AddTabEvent, NotationApp, NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, WindowResizedEvent};
+use crate::prelude::{
+    AddTabEvent, NotationApp, NotationAppState, NotationAssets, NotationAssetsStates,
+    NotationSettings, NotationTheme, WindowResizedEvent,
+};
 use crate::ui::layout::NotationLayout;
 use crate::ui::viewer::TabViewer;
 
@@ -55,8 +61,24 @@ impl NotationViewer {
             let viewer_bundle = ViewBundle::from(NotationViewer::new(tab.clone()));
             state.viewer_uuid = viewer_bundle.view.uuid.clone();
             let entity = commands.spawn_bundle(viewer_bundle).id();
-            ControlView::spawn(&mut commands, &mut materials, &assets, &theme, &settings, entity, &tab);
-            TabViewer::spawn(&mut commands, &mut materials, &assets, &theme, &settings, entity, &tab);
+            ControlView::spawn(
+                &mut commands,
+                &mut materials,
+                &assets,
+                &theme,
+                &settings,
+                entity,
+                &tab,
+            );
+            TabViewer::spawn(
+                &mut commands,
+                &mut materials,
+                &assets,
+                &theme,
+                &settings,
+                entity,
+                &tab,
+            );
             switch_tab_evts.send(SwitchTabEvent::new(tab));
         }
     }
@@ -72,7 +94,7 @@ impl NotationViewer {
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         let constraint =
-        LayoutConstraint::from((engine.state.window_width, engine.state.window_height));
+            LayoutConstraint::from((engine.state.window_width, engine.state.window_height));
         let layout = view.calc_root_layout(&engine, constraint);
         view.do_layout(
             &engine,
@@ -99,7 +121,16 @@ impl NotationViewer {
         }
         if resized {
             for (entity, view) in view_query.iter() {
-                Self::do_root_layout(&theme, &state, &settings, &mut layout_query, &panel_query, &content_query, entity, view);
+                Self::do_root_layout(
+                    &theme,
+                    &state,
+                    &settings,
+                    &mut layout_query,
+                    &panel_query,
+                    &content_query,
+                    entity,
+                    view,
+                );
             }
         }
     }
@@ -113,7 +144,16 @@ impl NotationViewer {
         content_query: ViewQuery<TabViewer>,
     ) {
         for (entity, view) in view_query.iter() {
-            Self::do_root_layout(&theme, &state, &settings, &mut layout_query, &panel_query, &content_query, entity, view);
+            Self::do_root_layout(
+                &theme,
+                &state,
+                &settings,
+                &mut layout_query,
+                &panel_query,
+                &content_query,
+                entity,
+                view,
+            );
         }
     }
     pub fn run(tab_pathes: Vec<String>) {
@@ -123,9 +163,8 @@ impl NotationViewer {
                     .with_system(ControlView::control_ui.system())
                     .with_system(Self::on_add_tab.system())
                     .with_system(Self::on_window_resized.system())
-                    .with_system(Self::on_added.system())
+                    .with_system(Self::on_added.system()),
             );
         })
     }
 }
-

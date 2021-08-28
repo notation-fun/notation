@@ -155,7 +155,10 @@ fn on_tab_play_state_changed(
     mut query: Query<(Entity, &TabState), Added<TabPlayStateChanged>>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
-    mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying), With<EntryPlaying>>,
+    mut entry_playing_query: Query<
+        (Entity, &Arc<LaneEntry>, &mut EntryPlaying),
+        With<EntryPlaying>,
+    >,
     mut tab_bars_query: Query<(
         Entity,
         &mut Transform,
@@ -190,7 +193,10 @@ fn on_tick(
     settings: &mut NotationSettings,
     pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     bar_playing_query: &mut Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
-    entry_playing_query: &mut Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying), With<EntryPlaying>>,
+    entry_playing_query: &mut Query<
+        (Entity, &Arc<LaneEntry>, &mut EntryPlaying),
+        With<EntryPlaying>,
+    >,
     chord_playing_query: &mut Query<(Entity, &mut ChordPlaying), With<ChordPlaying>>,
     tab_bars_query: &mut Query<(
         Entity,
@@ -237,7 +243,10 @@ fn on_play_control_evt(
     mut tab_state_query: Query<(Entity, &mut TabState)>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
-    mut entry_playing_query: Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying), With<EntryPlaying>>,
+    mut entry_playing_query: Query<
+        (Entity, &Arc<LaneEntry>, &mut EntryPlaying),
+        With<EntryPlaying>,
+    >,
     mut chord_playing_query: Query<(Entity, &mut ChordPlaying), With<ChordPlaying>>,
     mut tab_bars_query: Query<(
         Entity,

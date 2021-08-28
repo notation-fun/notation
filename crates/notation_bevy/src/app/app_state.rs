@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 use crate::prelude::*;
-use bevy::{prelude::*, utils::Uuid};
+use bevy::prelude::*;
+use bevy::utils::Uuid;
 use notation_model::prelude::*;
 
 pub struct TabPathes(pub Vec<String>);
@@ -12,6 +13,7 @@ pub struct NotationAppState {
     pub tab_path: String,
     pub tab_asset: Handle<TabAsset>,
     pub tab: Option<Arc<Tab>>,
+    pub hide_control: bool,
     pub viewer_uuid: Uuid,
     pub parse_error: Option<ParseError>,
 }
@@ -25,6 +27,7 @@ impl NotationAppState {
             tab_path,
             tab_asset,
             tab: None,
+            hide_control: false,
             viewer_uuid: Uuid::new_v4(),
             parse_error: None,
         }
@@ -36,8 +39,10 @@ impl NotationAppState {
         self.parse_error = None;
     }
     pub fn convert_pos(&self, pos: Vec2) -> Vec2 {
-        Vec2::new(pos.x - self.window_width / 2.0, pos.y - self.window_height / 2.0)
-
+        Vec2::new(
+            pos.x - self.window_width / 2.0,
+            pos.y - self.window_height / 2.0,
+        )
     }
 }
 

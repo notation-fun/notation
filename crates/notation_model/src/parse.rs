@@ -1,7 +1,7 @@
 use fehler::throws;
-use uuid::Uuid;
 use std::collections::HashMap;
 use std::convert::TryFrom;
+use uuid::Uuid;
 
 use std::sync::{Arc, Weak};
 use thiserror::Error;

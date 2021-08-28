@@ -1,8 +1,8 @@
 pub mod bundle;
 pub mod layout;
-pub mod view;
 pub mod lyon;
 pub mod util;
+pub mod view;
 
 //#[cfg(feature = "dev")]
 pub mod dev;
@@ -30,7 +30,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp, NoThemeLyonShape};
     #[doc(hidden)]
-    pub use crate::view::color_background::ColorBackground;
-    #[doc(hidden)]
     pub use crate::util::BevyUtil;
+    #[doc(hidden)]
+    pub use crate::view::color_background::ColorBackground;
 }

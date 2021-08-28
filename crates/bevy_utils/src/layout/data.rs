@@ -86,18 +86,18 @@ impl LayoutData {
             offset,
         }
     }
-    pub fn _calc_offset(size: LayoutSize, pivot: LayoutAnchor, anchor: LayoutAnchor, offset: Vec2) -> Vec2 {
+    pub fn _calc_offset(
+        size: LayoutSize,
+        pivot: LayoutAnchor,
+        anchor: LayoutAnchor,
+        offset: Vec2,
+    ) -> Vec2 {
         size.calc_offset(pivot, anchor) + offset
     }
     pub fn calc_offset(&self, anchor: LayoutAnchor, offset: Vec2) -> Vec2 {
         Self::_calc_offset(self.size, self.pivot, anchor, offset)
     }
-    pub fn new_child(
-        &self,
-        anchor: LayoutAnchor,
-        offset: Vec2,
-        child_size: LayoutSize,
-    ) -> Self {
+    pub fn new_child(&self, anchor: LayoutAnchor, offset: Vec2, child_size: LayoutSize) -> Self {
         let child_offset = self.calc_offset(anchor, offset);
         Self::new(self.depth + 1, child_size, anchor, anchor, child_offset)
     }
@@ -115,8 +115,10 @@ impl LayoutData {
     pub fn is_inside(&self, offset: Vec2) -> bool {
         let top_left = self.calc_offset(LayoutAnchor::TOP_LEFT, Vec2::ZERO);
         let bottom_right = self.calc_offset(LayoutAnchor::BOTTOM_RIGHT, Vec2::ZERO);
-        offset.x >= top_left.x && offset.x <= bottom_right.x
-            && offset.y <= top_left.y && offset.y >= bottom_right.y
+        offset.x >= top_left.x
+            && offset.x <= bottom_right.x
+            && offset.y <= top_left.y
+            && offset.y >= bottom_right.y
     }
 }
 

@@ -3,7 +3,10 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
+    LayoutChangedQuery, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
+};
 use notation_model::prelude::{Chord, ModelEntry, Tab, TrackKind};
 
 use crate::chord::chord_view::ChordView;
@@ -74,12 +77,13 @@ impl TabChords {
     ) -> Entity {
         let view_bundle = ViewBundle::from(TabChords::new(tab.clone()));
         let view = view_bundle.view.clone();
-        let chords_entity = BevyUtil::spawn_child_bundle(
+        let chords_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
+        ColorBackground::spawn(
             commands,
-            entity,
-            view_bundle,
+            chords_entity,
+            theme.core.mini_map_z,
+            theme.colors.chord.background,
         );
-        ColorBackground::spawn(commands, chords_entity, theme.core.mini_map_z, theme.colors.chord.background);
         for (chord, entry) in view.chords.iter() {
             ChordView::spawn(commands, theme, chords_entity, *chord, entry);
         }
