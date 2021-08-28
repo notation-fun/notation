@@ -30,7 +30,11 @@ impl TabBars {
         Self { tab, bar_layouts }
     }
 }
-impl<'a> View<NotationLayout<'a>> for TabBars {}
+impl<'a> View<NotationLayout<'a>> for TabBars {
+    fn log_layout_changed(&self) -> bool {
+        true
+    }
+}
 
 impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
     fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
@@ -56,7 +60,11 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 .get(0)
                 .map(|x| x.height())
                 .unwrap_or(grid_size.height);
-            let size = LayoutSize::new(cell_width, height);
+            let size = if cols >= 2 {
+                LayoutSize::new(cell_width, height)
+            } else {
+                LayoutSize::new(cell_width * 2.0 / 3.0, height)
+            };
             let grid_data = GridData::new_fixed(
                 1,
                 self.tab.bars.len(),

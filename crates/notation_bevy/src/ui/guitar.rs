@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, View, ViewBundle};
+use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, View, ViewBundle};
 use notation_model::prelude::{Syllable, Tab};
 
 use crate::prelude::{NotationAssets, NotationTheme};
@@ -47,7 +47,7 @@ impl GuitarView {
         commands: &mut Commands,
         materials: &mut ResMut<Assets<ColorMaterial>>,
         assets: &NotationAssets,
-        _theme: &NotationTheme,
+        theme: &NotationTheme,
         entity: Entity,
         tab: &Arc<Tab>,
     ) -> Entity {
@@ -56,6 +56,7 @@ impl GuitarView {
             entity,
             ViewBundle::from(GuitarView::new(tab.clone(), Syllable::default())),
         );
+        ColorBackground::spawn(commands, guitar_entity, theme.core.mini_map_z, theme.core.background_color);
         let sprite_bundle = SpriteBundle {
             sprite: Sprite::new(Vec2::new(100.0, 877.0)),
             transform: BevyUtil::offscreen_transform(),
@@ -67,7 +68,7 @@ impl GuitarView {
     }
     pub fn on_layout_changed(
         // mut commands: Commands,
-        // theme: Res<NotationTheme>,
+        theme: Res<NotationTheme>,
         query: LayoutChangedQuery<GuitarView>,
         mut sprite_query: Query<(&Parent, &mut Transform), With<Sprite>>,
     ) {
@@ -75,7 +76,7 @@ impl GuitarView {
             for (parent, mut transform) in sprite_query.iter_mut() {
                 if parent.0 == entity {
                     let scale = layout.size.width / 100.0;
-                    transform.translation = Vec3::ZERO;
+                    transform.translation = Vec3::new(0.0, 0.0, theme.core.mini_bar_z);
                     transform.scale = Vec3::new(scale, scale, 1.0);
                 }
             }

@@ -49,7 +49,7 @@ impl<'a> LyonShape<shapes::Circle> for ShapeFingerShape<'a> {
         let x = shapes.shape_finger_offset_x - shapes.shape_string_space * self.data.string as f32;
         let y = shapes.shape_finger_offset_y
             - shapes.shape_fret_space * self.data.fret.unwrap_or(0) as f32;
-        Transform::from_xyz(x, y, self.theme.strings.pick_z)
+        Transform::from_xyz(x, y, self.theme.shapes.shape_text_z)
     }
 }
 

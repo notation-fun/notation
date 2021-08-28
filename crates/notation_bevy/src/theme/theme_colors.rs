@@ -135,12 +135,14 @@ impl Default for BarColors {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ChordColors {
+    pub background: Color,
     pub diagram_outline: PlayingColors,
     pub dot: IntervalColors,
 }
 impl Default for ChordColors {
     fn default() -> Self {
         Self {
+            background: color_of_hex("FFF9F2CC"),
             diagram_outline: PlayingColors::default(),
             dot: IntervalColors::default(),
         }

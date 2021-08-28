@@ -1,4 +1,5 @@
 use fehler::throws;
+use uuid::Uuid;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 
@@ -31,11 +32,12 @@ impl Tab {
             sections.push(Section::try_new(index, section, &tracks).map(Arc::new)?);
         }
         let form = Form::try_from((v.form, &sections))?;
-        Self::new_arc(meta, tracks, sections, form)
+        Self::new_arc(v.uuid, meta, tracks, sections, form)
     }
 }
 impl Tab {
     pub fn new_arc(
+        uuid: Uuid,
         meta: Arc<TabMeta>,
         tracks: Vec<Arc<Track>>,
         sections: Vec<Arc<Section>>,
@@ -44,6 +46,7 @@ impl Tab {
         Arc::<Tab>::new_cyclic(|weak_self| {
             let bars = Self::new_tab_bars(weak_self, &meta, &form);
             Self {
+                uuid,
                 meta,
                 tracks,
                 sections,

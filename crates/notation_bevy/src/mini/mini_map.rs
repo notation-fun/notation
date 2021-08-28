@@ -1,16 +1,12 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
 use crate::prelude::{
-    LyonShape, LyonShapeOp, NotationAppState, NotationLayout, NotationSettings, NotationTheme,
+    NotationAppState, NotationLayout, NotationSettings, NotationTheme,
 };
-use bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutConstraint, LayoutQuery,
-    LayoutSize, View, ViewBundle, ViewQuery,
-};
+use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 
 use super::mini_bar::MiniBar;
 use super::mini_plugin::MiniMapDoLayoutEvent;
@@ -65,52 +61,6 @@ impl<'a> GridView<NotationLayout<'a>, MiniBar> for MiniMap {
         self.calc_grid_data(&engine, grid_size)
     }
 }
-#[derive(Clone, Debug, Default)]
-pub struct MiniMapBackData {
-    pub width: f32,
-    pub height: f32,
-}
-impl MiniMapBackData {
-    pub fn new(width: f32, height: f32) -> Self {
-        Self { width, height }
-    }
-}
-
-pub struct MiniMapBack<'a> {
-    theme: &'a NotationTheme,
-    data: MiniMapBackData,
-}
-
-impl<'a> LyonShape<shapes::Rectangle> for MiniMapBack<'a> {
-    fn get_name(&self) -> String {
-        format!("{:?}", self.data)
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        shapes::Rectangle {
-            width: self.data.width,
-            height: self.data.height,
-            origin: shapes::RectangleOrigin::TopLeft,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let color = self.theme.colors.mini_map.back;
-        ShapeColors::new(color)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-    fn get_transform(&self) -> Transform {
-        Transform::from_xyz(0.0, 0.0, self.theme.core.mini_map_z)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, MiniMapBackData, shapes::Rectangle, MiniMapBack<'a>>
-    for MiniMapBack<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: MiniMapBackData) -> MiniMapBack<'a> {
-        MiniMapBack::<'a> { theme, data }
-    }
-}
 
 impl MiniMap {
     pub fn spawn(
@@ -120,10 +70,9 @@ impl MiniMap {
         tab: &Arc<Tab>,
     ) -> Entity {
         let minimap = MiniMap::new(tab.clone());
-        let back_data = MiniMapBackData::default();
         let map_entity =
             BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
-        MiniMapBack::create(commands, theme, map_entity, back_data);
+        ColorBackground::spawn(commands, map_entity, theme.core.mini_map_z, theme.colors.mini_map.back);
         for bar in tab.bars.iter() {
             MiniBar::spawn(commands, theme, map_entity, bar);
         }
@@ -137,14 +86,9 @@ impl MiniMap {
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<MiniBar>,
-        mut mini_map_back_query: Query<(Entity, &mut MiniMapBackData)>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
-            if let Ok((back_entity, mut back_data)) = mini_map_back_query.single_mut() {
-                *back_data = MiniMapBackData::new(evt.layout.size.width, evt.layout.size.height);
-                MiniMapBack::update(&mut commands, &theme, back_entity, &back_data);
-            }
             evt.view.do_layout(
                 &mut commands,
                 &engine,

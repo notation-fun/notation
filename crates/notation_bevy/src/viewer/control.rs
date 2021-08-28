@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy::render::camera::OrthographicProjection;
+use bevy::utils::Uuid;
 use bevy_egui::egui::{self, Slider};
 use bevy_egui::EguiContext;
 use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, LayoutAnchor, LayoutConstraint, LayoutSize, View, ViewBundle};
@@ -11,10 +11,12 @@ use notation_midi::prelude::{MidiState, PlayControlEvent};
 use notation_model::play::play_control::TickResult;
 use notation_model::prelude::Tab;
 
+use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
-use crate::ui::viewer::TabViewer;
 
 use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabPathes};
+
+use super::app::NotationViewer;
 
 #[derive(Clone, Debug)]
 pub struct ControlView {
@@ -63,17 +65,16 @@ impl ControlView {
     }
     pub fn reload_tab(
         commands: &mut Commands,
-        app_state: &mut NotationAppState,
-        viewer_query: &Query<Entity, With<Arc<TabViewer>>>,
-        get_cam: &mut Query<(&mut Transform, &mut OrthographicProjection)>,
+        state: &mut NotationAppState,
+        viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
     ) {
-        for viewer in viewer_query.iter() {
-            commands.entity(viewer).despawn_recursive();
+        for (entity, viewer) in viewer_query.iter() {
+            if viewer.uuid == state.viewer_uuid {
+                commands.entity(entity).despawn_recursive();
+            }
         }
-        app_state.tab = None;
-        let (mut cam, _) = get_cam.single_mut().unwrap();
-        let trans = cam.translation;
-        *cam = Transform::from_xyz(0.0, 0.0, trans.z);
+        state.tab = None;
+        state.viewer_uuid = Uuid::new_v4();
     }
 
     pub fn sync_speed_factor(
@@ -127,10 +128,9 @@ impl ControlView {
         mut commands: Commands,
         egui_ctx: Res<EguiContext>,
         asset_server: Res<AssetServer>,
-        mut app_state: ResMut<NotationAppState>,
+        mut state: ResMut<NotationAppState>,
         mut settings: ResMut<NotationSettings>,
-        mut get_cam: Query<(&mut Transform, &mut OrthographicProjection)>,
-        viewer_query: Query<Entity, With<Arc<TabViewer>>>,
+        viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
         tab_pathes: Res<TabPathes>,
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
@@ -164,24 +164,37 @@ impl ControlView {
                 let always_show_fret = settings.always_show_fret;
                 ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
                 if always_show_fret != settings.always_show_fret {
-                    Self::reload_tab(&mut commands, &mut app_state, &viewer_query, &mut get_cam);
+                    Self::reload_tab(&mut commands, &mut state, &viewer_query);
+                }
+                let mode_text = if settings.layout.mode == LayoutMode::Grid {
+                    "Line Mode"
+                } else {
+                    "Grid Mode"
+                };
+                if ui.button(mode_text).clicked() {
+                    if settings.layout.mode == LayoutMode::Grid {
+                        settings.layout.mode = LayoutMode::Line;
+                    } else {
+                        settings.layout.mode = LayoutMode::Grid;
+                    }
+                    Self::reload_tab(&mut commands, &mut state, &viewer_query);
                 }
                 if ui.button("Reload Tab").clicked() {
-                    Self::reload_tab(&mut commands, &mut app_state, &viewer_query, &mut get_cam);
+                    Self::reload_tab(&mut commands, &mut state, &viewer_query);
                 }
                 if tab_pathes.0.len() > 1 {
                     egui::ComboBox::from_label("")
-                        .selected_text(app_state.tab_path.clone())
+                        .selected_text(state.tab_path.clone())
                         .show_ui(ui, |ui| {
                             for path in tab_pathes.0.iter() {
                                 if ui
-                                    .selectable_label(*path == app_state.tab_path, path)
+                                    .selectable_label(*path == state.tab_path, path)
                                     .clicked()
                                 {
-                                    for tab in viewer_query.iter() {
-                                        commands.entity(tab).despawn_recursive();
+                                    for (entity, _viewer) in viewer_query.iter() {
+                                        commands.entity(entity).despawn_recursive();
                                     }
-                                    app_state.change_tab(&asset_server, path.clone());
+                                    state.change_tab(&asset_server, path.clone());
                                 }
                             }
                         });

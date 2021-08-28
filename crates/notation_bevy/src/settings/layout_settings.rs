@@ -127,39 +127,55 @@ impl LayoutSettings {
         &self,
         theme: &NotationTheme,
         _bars: &TabBars,
-        _layout: &LayoutData,
-        grid_data: &GridData,
-        pos_data: &PosIndicatorData,
-    ) -> f32 {
-        let (row, col) = grid_data.calc_row_col(pos_data.bar_position.bar_ordinal - 1);
-        let y = if row == 0 {
-            pos_data.bar_layout.offset.y
-        } else {
-            grid_data.calc_cell_offset(row - 1, col).y
-        };
-        y + theme.grid.margin + theme.grid.header_height
-    }
-    fn calc_line_focus_x(
-        &self,
-        _theme: &NotationTheme,
-        _bars: &TabBars,
         layout: &LayoutData,
         grid_data: &GridData,
         pos_data: &PosIndicatorData,
     ) -> f32 {
-        if pos_data.bar_position.bar_ordinal == 1 {
-            -grid_data.offset.x - layout.offset.x
-        } else {
-            let size = grid_data.calc_cell_size(0, pos_data.bar_position.bar_ordinal - 1);
-            pos_data.offset_x() - size.width - layout.offset.x - grid_data.offset.x
+        let (row, col) = grid_data.calc_row_col(pos_data.bar_position.bar_ordinal - 1);
+        let mut y = pos_data.bar_layout.offset.y;
+        if row > 0 {
+            let grid_size = layout.size;
+            let content_size = grid_data.content_size;
+            let last_row_height = grid_data.calc_cell_size(row - 1, col).height;
+            if last_row_height + pos_data.bar_layout.size.height <= grid_size.height / 2.0 {
+                y = grid_data.calc_cell_offset(row - 1, col).y;
+            }
+            let min_y = grid_size.height - content_size.height - theme.grid.margin * 2.0;
+            if y < min_y {
+                y = min_y;
+            }
         }
-        /*
-        Units(if bar_layout.data.col > 0 {
-            bar_layout.data.col as f32 - 1.0 + pos.bar.in_bar_pos.0 / pos.bar.bar_units.0
+        y - layout.offset.y - grid_data.offset.y + theme.grid.margin
+    }
+    fn calc_line_focus_xy(
+        &self,
+        theme: &NotationTheme,
+        _bars: &TabBars,
+        layout: &LayoutData,
+        grid_data: &GridData,
+        pos_data: &PosIndicatorData,
+    ) -> (f32, f32) {
+        let grid_size = layout.size;
+        let bar_ordinal = pos_data.bar_position.bar_ordinal;
+        let mut x = layout.offset.x + grid_data.offset.x;
+        if bar_ordinal == 1 {
+            if pos_data.bar_layout.size.width > grid_size.width / 3.0 {
+                if pos_data.offset_x() > pos_data.bar_layout.size.width / 2.0 {
+                    x = pos_data.offset_x() - pos_data.bar_layout.size.width / 2.0;
+                }
+            }
         } else {
-            bar_layout.data.col as f32
-        })
-         */
+            let last_cell_width = grid_data.calc_cell_size(0, bar_ordinal - 2).width;
+            if last_cell_width + pos_data.bar_layout.size.width <= grid_size.width * 2.0 / 3.0 {
+                x = pos_data.offset_x() - last_cell_width;
+            } else {
+                x = pos_data.offset_x() - last_cell_width / 2.0;
+            }
+        }
+        let grid_size = layout.size;
+        let content_size = grid_data.content_size;
+        let y = pos_data.bar_layout.offset.y + grid_size.height - content_size.height - theme.grid.margin;
+        (x - layout.offset.x - grid_data.offset.x, y - layout.offset.y)
     }
     pub fn focus_bar(
         &mut self,
@@ -174,7 +190,7 @@ impl LayoutSettings {
         )>,
         pos_data: &PosIndicatorData,
     ) {
-        if self.focusing_bar_ordinal == pos_data.bar_props.bar_ordinal {
+        if self.mode == LayoutMode::Grid && self.focusing_bar_ordinal == pos_data.bar_props.bar_ordinal {
             return;
         }
         self.focusing_bar_ordinal = pos_data.bar_props.bar_ordinal;
@@ -193,8 +209,8 @@ impl LayoutSettings {
                     );
                 }
                 LayoutMode::Line => {
-                    let x = self.calc_line_focus_x(theme, bars, layout, grid_data, pos_data);
-                    self.set_transform_xy(&mut bars_transform, Some(-x), None);
+                    let (x, y) = self.calc_line_focus_xy(theme, bars, layout, grid_data, pos_data);
+                    self.set_transform_xy(&mut bars_transform, Some(-x), Some(-y));
                 }
             }
         } else {

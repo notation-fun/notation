@@ -1,5 +1,6 @@
 pub mod bundle;
 pub mod layout;
+pub mod view;
 pub mod lyon;
 pub mod util;
 
@@ -27,7 +28,9 @@ pub mod prelude {
         View, ViewAddedQuery, ViewEntity, ViewQuery, ViewRootAddedQuery, ViewRootQuery,
     };
     #[doc(hidden)]
-    pub use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp};
+    pub use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp, NoThemeLyonShape};
+    #[doc(hidden)]
+    pub use crate::view::color_background::ColorBackground;
     #[doc(hidden)]
     pub use crate::util::BevyUtil;
 }

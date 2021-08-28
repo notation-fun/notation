@@ -75,7 +75,7 @@ impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
         }
     }
     fn get_transform(&self) -> Transform {
-        Transform::from_xyz(0.0, 0.0, 2.0)
+        Transform::from_xyz(0.0, 0.0, self.theme.core.mini_bar_z)
     }
 }
 

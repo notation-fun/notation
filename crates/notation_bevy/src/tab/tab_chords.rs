@@ -3,10 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutChangedQuery,
-    LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
-};
+use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 use notation_model::prelude::{Chord, ModelEntry, Tab, TrackKind};
 
 use crate::chord::chord_view::ChordView;
@@ -36,12 +33,15 @@ impl TabChords {
 impl<'a> GridView<NotationLayout<'a>, ChordView> for TabChords {
     fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
         let sizes = engine.theme.sizes.chord;
-        let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
+        let (rows, mut cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
             grid_size.width,
             sizes.chord_size_range,
             0.0,
             self.chords.len(),
         );
+        if rows == 1 && cols > self.chords.len() {
+            cols = self.chords.len();
+        }
         let size = LayoutSize::new(cell_width, cell_width);
         GridData::new_fixed(
             rows,
@@ -55,7 +55,7 @@ impl<'a> GridView<NotationLayout<'a>, ChordView> for TabChords {
 }
 impl<'a> DockPanel<NotationLayout<'a>> for TabChords {
     fn dock_side(&self) -> DockSide {
-        DockSide::Bottom
+        DockSide::Top
     }
 }
 impl<'a> View<NotationLayout<'a>> for TabChords {
@@ -79,6 +79,7 @@ impl TabChords {
             entity,
             view_bundle,
         );
+        ColorBackground::spawn(commands, chords_entity, theme.core.mini_map_z, theme.colors.chord.background);
         for (chord, entry) in view.chords.iter() {
             ChordView::spawn(commands, theme, chords_entity, *chord, entry);
         }

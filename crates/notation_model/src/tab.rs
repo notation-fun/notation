@@ -2,6 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use notation_proto::prelude::{BarPosition, Note, SyllableNote, TrackKind};
+use uuid::Uuid;
 
 use crate::prelude::{
     Form, Pitch, Section, Signature, Syllable, TabBar, TabMeta, Track, Unit, Units,
@@ -9,6 +10,7 @@ use crate::prelude::{
 
 #[derive(Debug)]
 pub struct Tab {
+    pub uuid: Uuid,
     pub meta: Arc<TabMeta>,
     pub tracks: Vec<Arc<Track>>,
     pub sections: Vec<Arc<Section>>,

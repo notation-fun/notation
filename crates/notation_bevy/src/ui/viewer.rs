@@ -3,7 +3,7 @@ use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy_utils::prelude::{BevyUtil, DoLayoutEvent, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{BevyUtil, ColorBackground, DoLayoutEvent, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
 
 use crate::prelude::{NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme};
 use crate::tab::tab_view::TabView;
@@ -33,6 +33,7 @@ pub struct TabViewerPlugin;
 
 impl Plugin for TabViewerPlugin {
     fn build(&self, app: &mut AppBuilder) {
+        ColorBackground::setup(app);
         TabViewerDoLayoutEvent::setup(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)

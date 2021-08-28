@@ -2912,6 +2912,7 @@ dependencies = [
  "instant",
  "notation_proto",
  "thiserror",
+ "uuid",
 ]
 
 [[package]]
@@ -2922,6 +2923,7 @@ dependencies = [
  "notation_fretted",
  "notation_guitar",
  "serde",
+ "uuid",
 ]
 
 [[package]]

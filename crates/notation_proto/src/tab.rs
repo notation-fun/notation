@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 use std::fmt::Display;
 
@@ -57,6 +58,7 @@ impl Default for TabMeta {
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Tab {
+    pub uuid: Uuid,
     pub meta: TabMeta,
     pub tracks: Vec<Track>,
     pub sections: Vec<Section>,
@@ -76,7 +78,9 @@ impl Display for Tab {
 }
 impl Tab {
     pub fn new(meta: TabMeta, tracks: Vec<Track>, sections: Vec<Section>, form: Form) -> Self {
+        let uuid = Uuid::new_v4();
         Self {
+            uuid,
             meta,
             tracks,
             sections,

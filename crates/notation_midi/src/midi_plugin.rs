@@ -26,11 +26,13 @@ impl Plugin for MidiPlugin {
 fn on_switch_tab(
     mut evts: EventReader<SwitchTabEvent>,
     settings: Res<MidiSettings>,
-    mut hub: NonSendMut<MidiHub>,
     mut state: ResMut<MidiState>,
+    mut hub: NonSendMut<MidiHub>,
+    mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
     for evt in evts.iter() {
         state.switch_tab(&settings, &mut hub, evt.tab.clone());
+        _do_tick(&settings, &mut state, &mut hub, &mut play_control_evts, true, 0.0);
     }
 }
 

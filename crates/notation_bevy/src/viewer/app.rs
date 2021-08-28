@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::utils::Uuid;
 use notation_midi::prelude::SwitchTabEvent;
 use notation_model::prelude::Tab;
 use std::fmt::Display;
@@ -13,6 +14,7 @@ use crate::ui::viewer::TabViewer;
 use super::control::ControlView;
 
 pub struct NotationViewer {
+    pub uuid: Uuid,
     pub tab: Arc<Tab>,
 }
 
@@ -23,7 +25,8 @@ impl Display for NotationViewer {
 }
 impl NotationViewer {
     pub fn new(tab: Arc<Tab>) -> Self {
-        Self { tab }
+        let uuid = Uuid::new_v4();
+        Self { tab, uuid }
     }
 }
 impl<'a> View<NotationLayout<'a>> for NotationViewer {
@@ -40,6 +43,7 @@ impl NotationViewer {
         mut materials: ResMut<Assets<ColorMaterial>>,
         assets: Res<NotationAssets>,
         theme: Res<NotationTheme>,
+        mut state: ResMut<NotationAppState>,
         settings: Res<NotationSettings>,
         mut switch_tab_evts: EventWriter<SwitchTabEvent>,
     ) {
@@ -49,6 +53,7 @@ impl NotationViewer {
         }
         if let Some(tab) = tab {
             let viewer_bundle = ViewBundle::from(NotationViewer::new(tab.clone()));
+            state.viewer_uuid = viewer_bundle.view.uuid.clone();
             let entity = commands.spawn_bundle(viewer_bundle).id();
             ControlView::spawn(&mut commands, &mut materials, &assets, &theme, &settings, entity, &tab);
             TabViewer::spawn(&mut commands, &mut materials, &assets, &theme, &settings, entity, &tab);

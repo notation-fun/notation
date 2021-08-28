@@ -44,11 +44,13 @@ where
     pub fn on_layout_changed(query: LayoutChangedQuery<T>, mut evts: EventWriter<Self>) {
         for (entity, view, layout) in query.iter() {
             if layout.size.width > 0.0 && layout.size.height > 0.0 {
-                println!(
-                    "<{}>::on_layout_changed({})",
-                    std::any::type_name::<T>(),
-                    layout
-                );
+                if view.log_layout_changed() {
+                    println!(
+                        "<{}>::on_layout_changed({:#?})",
+                        std::any::type_name::<T>(),
+                        layout
+                    );
+                }
                 evts.send(Self::new(entity, view, layout))
             }
         }
@@ -135,6 +137,9 @@ pub trait LayoutEnv {
 
 pub trait View<TE: LayoutEnv>: Any + Send + Sync + ToString + 'static {
     fn is_root(&self) -> bool {
+        false
+    }
+    fn log_layout_changed(&self) -> bool {
         false
     }
     fn pivot(&self) -> LayoutAnchor {
