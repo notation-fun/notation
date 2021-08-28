@@ -2,6 +2,8 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
+use crate::prelude::BevyUtil;
+
 #[derive(Bundle, Debug)]
 pub struct SingleBundle<T: Send + Sync + 'static> {
     pub name: Name,
@@ -12,9 +14,8 @@ pub struct SingleBundle<T: Send + Sync + 'static> {
 
 impl<T: Send + Sync + 'static> From<(String, T, Transform)> for SingleBundle<T> {
     fn from(v: (String, T, Transform)) -> Self {
-        let name = v.0.as_str().into();
         Self {
-            name,
+            name: BevyUtil::calc_name(v.0),
             value: v.1,
             transform: v.2,
             global_cransform: GlobalTransform::default(),

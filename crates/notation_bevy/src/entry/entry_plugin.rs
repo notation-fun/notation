@@ -90,12 +90,12 @@ fn on_tab_bars_resized(
     mut evts: EventReader<TabBarsResizedEvent>,
     mut commands: Commands,
     theme: Res<NotationTheme>,
-    mut tone_note_query: Query<(Entity, &mut ToneNoteData)>,
-    mut pick_note_query: Query<(Entity, &mut PickNoteData)>,
-    mut single_string_query: Query<(Entity, &mut SingleStringData)>,
-    mut word_text_query: Query<(Entity, &mut WordTextData)>,
-    mut shape_diagram_6_query: Query<(Entity, &mut ShapeDiagramData6)>,
-    mut shape_diagram_4_query: Query<(Entity, &mut ShapeDiagramData4)>,
+    mut tone_note_query: Query<(Entity, &mut ToneNoteData), With<ToneNoteData>>,
+    mut pick_note_query: Query<(Entity, &mut PickNoteData), With<PickNoteData>>,
+    mut single_string_query: Query<(Entity, &mut SingleStringData), With<SingleStringData>>,
+    mut word_text_query: Query<(Entity, &mut WordTextData), With<WordTextData>>,
+    mut shape_diagram_6_query: Query<(Entity, &mut ShapeDiagramData6), With<ShapeDiagramData6>>,
+    mut shape_diagram_4_query: Query<(Entity, &mut ShapeDiagramData4), With<ShapeDiagramData4>>,
 ) {
     for evt in evts.iter() {
         let bars = &evt.0;

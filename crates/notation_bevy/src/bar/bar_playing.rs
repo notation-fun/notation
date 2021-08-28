@@ -8,7 +8,7 @@ pub type BarPlaying = BarData<PlayingState>;
 
 impl BarPlaying {
     pub fn update(
-        query: &mut Query<(Entity, &mut BarPlaying)>,
+        query: &mut Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
         tab_state: &TabState,
         playing_bar_ordinal: usize,
     ) {

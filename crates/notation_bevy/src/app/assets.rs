@@ -7,6 +7,10 @@ pub struct NotationAssets {
     pub en_font: Handle<Font>,
     #[asset(path = "fonts/NotoSansSC-Medium.otf")]
     pub cn_font: Handle<Font>,
+    //#[asset(path = "gltf/guitar.gltf#Scene0")]
+    //pub guitar: Handle<Scene>,
+    #[asset(path = "png/fretboard.png")]
+    pub fretboard: Handle<Texture>,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]

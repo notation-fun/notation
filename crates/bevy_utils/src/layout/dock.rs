@@ -44,9 +44,6 @@ pub trait DockView<TE: LayoutEnv, TP: DockPanel<TE>, TC: View<TE>>: View<TE> {
         entity: Entity,
         data: LayoutData,
     ) {
-        if self.is_root() {
-            self.set_layout_data(layout_query, entity, data);
-        }
         let panel = engine.get_child(panel_query, entity);
         let content = engine.get_child(content_query, entity);
         if panel.is_none() || content.is_none() {

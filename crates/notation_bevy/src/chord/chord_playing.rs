@@ -23,7 +23,7 @@ impl From<(ModelEntryProps, Chord)> for ChordPlaying {
 
 impl ChordPlaying {
     pub fn update(
-        query: &mut Query<(Entity, &mut ChordPlaying)>,
+        query: &mut Query<(Entity, &mut ChordPlaying), With<ChordPlaying>>,
         tab_state: &TabState,
         new_position: &Position,
     ) {

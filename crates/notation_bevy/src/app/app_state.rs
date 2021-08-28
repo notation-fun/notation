@@ -33,6 +33,10 @@ impl NotationAppState {
         self.tab = None;
         self.parse_error = None;
     }
+    pub fn convert_pos(&self, pos: Vec2) -> Vec2 {
+        Vec2::new(pos.x - self.window_width / 2.0, pos.y - self.window_height / 2.0)
+
+    }
 }
 
 impl FromWorld for NotationAppState {

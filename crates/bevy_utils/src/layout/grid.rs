@@ -314,9 +314,6 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
         entity: Entity,
         data: LayoutData,
     ) {
-        if self.is_root() {
-            self.set_layout_data(layout_query, entity, data);
-        }
         let grid_data = Arc::new(self.calc_grid_data(engine, data.size));
         let mut cells = engine.get_children(cell_query, entity);
         if self.sort_cells() {

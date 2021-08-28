@@ -41,13 +41,13 @@ pub mod dev;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::app::notation_app::{NotationApp, NotationPlugins};
+    pub use crate::app::app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
-    pub use crate::app::notation_app_events::*;
+    pub use crate::app::app_events::*;
     #[doc(hidden)]
-    pub use crate::app::notation_app_state::{NotationAppState, TabPathes};
+    pub use crate::app::app_state::{NotationAppState, TabPathes};
     #[doc(hidden)]
-    pub use crate::app::notation_assets::{NotationAssets, NotationAssetsStates};
+    pub use crate::app::assets::{NotationAssets, NotationAssetsStates};
     #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
@@ -129,7 +129,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::ui::NotationUiPlugin;
     #[doc(hidden)]
-    pub use crate::viewer::run_notation_viewer;
+    pub use crate::ui::guitar::{GuitarView};
+    #[doc(hidden)]
+    pub use crate::ui::viewer::{TabViewer};
+    #[doc(hidden)]
+    pub use crate::viewer::app::NotationViewer;
     #[doc(hidden)]
     pub use bevy_utils::prelude::*;
 }

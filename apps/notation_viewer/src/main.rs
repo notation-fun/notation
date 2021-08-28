@@ -13,5 +13,5 @@ fn main() {
         "beginner/1_right_hand.ron".to_owned(),
         "test.ron".to_owned(),
     ];
-    notation_bevy::prelude::run_notation_viewer(tabs);
+    notation_bevy::prelude::NotationViewer::run(tabs);
 }

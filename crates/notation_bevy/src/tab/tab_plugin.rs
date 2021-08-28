@@ -1,28 +1,26 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{LayoutData, LayoutQuery, ViewBundle, ViewQuery, ViewRootQuery};
-use notation_midi::prelude::{JumpToBarEvent, SwitchTabEvent};
+use bevy_utils::prelude::{LayoutData};
+use notation_midi::prelude::{JumpToBarEvent};
 
 use crate::bar::bar_view::BarView;
 use crate::mini::mini_bar::MiniBar;
-use crate::mini::mini_map::MiniMap;
 
-use crate::prelude::{AddTabEvent, BevyUtil, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars, WindowResizedEvent};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::{AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars};
 
 use super::tab_asset::TabAssetLoader;
 
-use super::tab_bundle::TabBundle;
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
-use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent};
+use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent, TabViewDoLayoutEvent};
 use super::tab_view::TabView;
 
 pub struct TabPlugin;
 
 impl Plugin for TabPlugin {
     fn build(&self, app: &mut AppBuilder) {
+        TabViewDoLayoutEvent::setup(app);
         TabContentDoLayoutEvent::setup(app);
         TabChordsDoLayoutEvent::setup(app);
         TabBarsDoLayoutEvent::setup(app);
@@ -32,11 +30,9 @@ impl Plugin for TabPlugin {
         app.init_asset_loader::<TabAssetLoader>();
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(on_add_tab.system())
-                .with_system(on_window_resized.system())
                 .with_system(on_mouse_clicked.system())
                 .with_system(on_mouse_dragged.system())
-                .with_system(TabView::on_added.system())
+                .with_system(TabView::do_layout.system())
                 .with_system(TabContent::do_layout.system())
                 .with_system(TabChords::do_layout.system())
                 .with_system(TabBars::do_layout.system()),
@@ -44,58 +40,36 @@ impl Plugin for TabPlugin {
     }
 }
 
-fn on_window_resized(
-    mut evts: EventReader<WindowResizedEvent>,
-    theme: Res<NotationTheme>,
-    state: Res<NotationAppState>,
-    settings: Res<NotationSettings>,
-    view_query: ViewRootQuery<TabView>,
-    mut layout_query: LayoutQuery,
-    mini_map_query: ViewQuery<MiniMap>,
-    content_query: ViewQuery<TabContent>,
-) {
-    for _evt in evts.iter() {
-        let engine = NotationLayout::new(&theme, &state, &settings);
-        for (entity, view) in view_query.iter() {
-            TabView::do_layout(
-                &engine,
-                &mut layout_query,
-                &mini_map_query,
-                &content_query,
-                entity,
-                view,
-            );
-        }
-    }
-}
 
 fn on_mouse_clicked(
     mut evts: EventReader<MouseClickedEvent>,
     _theme: Res<NotationTheme>,
     state: Res<NotationAppState>,
-    _settings: Res<NotationSettings>,
+    settings: Res<NotationSettings>,
     mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
     bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
     mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
 ) {
     let mut pos = None;
     for evt in evts.iter() {
-        pos = Some(TabView::convert_pos(&state,evt.cursor_position));
+        pos = Some(state.convert_pos(evt.cursor_position));
     }
     if let Some(pos) = pos {
-        println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
-        for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
-            let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
-            if layout.is_inside(offset) {
-                jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
-                return;
+        if !settings.mouse_dragged_panning {
+            println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
+            for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
+                let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
+                if layout.is_inside(offset) {
+                    jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
+                    return;
+                }
             }
-        }
-        for (bar, layout, global_transform) in bar_query.iter() {
-            let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
-            if layout.is_inside(offset) {
-                jump_to_bar_evts.send(JumpToBarEvent::new(bar.bar_props));
-                return;
+            for (bar, layout, global_transform) in bar_query.iter() {
+                let offset = pos - Vec2::new(global_transform.translation.x, global_transform.translation.y);
+                if layout.is_inside(offset) {
+                    jump_to_bar_evts.send(JumpToBarEvent::new(bar.bar_props));
+                    return;
+                }
             }
         }
     }
@@ -112,30 +86,5 @@ fn on_mouse_dragged(
                 .layout
                 .pan_tab_bars(&mut tab_bars_query, -evt.delta.x, -evt.delta.y);
         }
-    }
-}
-
-fn on_add_tab(
-    mut commands: Commands,
-    assets: Res<NotationAssets>,
-    theme: Res<NotationTheme>,
-    settings: Res<NotationSettings>,
-    mut evts: EventReader<AddTabEvent>,
-    mut switch_tab_evts: EventWriter<SwitchTabEvent>,
-) {
-    for evt in evts.iter() {
-        let tab = evt.0.clone();
-        let tab_bundle = TabBundle::new(tab.clone());
-        //let tab_view = tab_bundle.view.clone();
-        let tab_entity = commands.spawn_bundle(tab_bundle).id();
-        MiniMap::spawn(&mut commands, &theme, tab_entity, &tab);
-        let content_entity = BevyUtil::spawn_child_bundle(
-            &mut commands,
-            tab_entity,
-            ViewBundle::from(TabContent::new(tab.clone())),
-        );
-        TabChords::spawn(&mut commands, &theme, content_entity, &tab);
-        TabBars::spawn(&mut commands, &assets, &theme, &settings, content_entity, &tab);
-        switch_tab_evts.send(SwitchTabEvent::new(evt.0.clone()));
     }
 }

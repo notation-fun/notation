@@ -10,7 +10,7 @@ pub type EntryPlaying = EntryData<PlayingState>;
 
 impl EntryPlaying {
     pub fn update(
-        query: &mut Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
+        query: &mut Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying), With<EntryPlaying>>,
         tab_state: &TabState,
     ) {
         for (_entity, _entry, mut entry_playing) in query.iter_mut() {
@@ -28,7 +28,7 @@ impl EntryPlaying {
         }
     }
     pub fn update_with_pos(
-        query: &mut Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying)>,
+        query: &mut Query<(Entity, &Arc<LaneEntry>, &mut EntryPlaying), With<EntryPlaying>>,
         tab_state: &TabState,
         new_position: &Position,
         end_passed: bool,

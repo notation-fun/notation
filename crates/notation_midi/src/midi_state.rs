@@ -65,7 +65,7 @@ impl MidiChannel {
             false
         }
     }
-    fn calc_next_index(&mut self, position: &BarPosition) {
+    pub fn calc_next_index(&mut self, position: &BarPosition) {
         for (index, value) in self.messages.iter().enumerate() {
             if Units::from(value.bar_position()) >= Units::from(*position) {
                 self.next_index = index;
@@ -230,6 +230,9 @@ impl MidiState {
     }
     pub fn jump_to_bar(&mut self, bar_props: TabBarProps) {
         self.play_control.position.set_in_bar(bar_props.bar_ordinal, Units(0.0));
+        for channel in self.channels.iter_mut() {
+            channel.calc_next_index(&self.play_control.position.bar);
+        }
     }
     pub fn tick(
         &mut self,

@@ -82,7 +82,7 @@ impl<'a> PosIndicator<'a> {
     pub fn update_pos(
         commands: &mut Commands,
         theme: &'a NotationTheme,
-        pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData)>,
+        pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
         pos: Position,
     ) -> Option<PosIndicatorData> {
         if let Ok((entity, mut data)) = pos_indicator_query.single_mut() {

@@ -9,6 +9,13 @@ impl BevyUtil {
             ..Default::default()
         }
     }
+    pub fn calc_name(name: String) -> Name {
+        if name.len() <= 32 {
+            name.as_str().into()
+        } else {
+            name.as_str()[..32].into()
+        }
+    }
     pub fn spawn_child_bundle<T: Bundle>(
         commands: &mut Commands,
         entity: Entity,

@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use crate::prelude::LayoutData;
+use crate::prelude::{BevyUtil, LayoutData};
 
 #[derive(Bundle, Debug)]
 pub struct ViewBundle<T: Send + Sync + 'static> {
@@ -15,9 +15,8 @@ pub struct ViewBundle<T: Send + Sync + 'static> {
 
 impl<T: Send + Sync + 'static> From<(String, T, Transform)> for ViewBundle<T> {
     fn from(v: (String, T, Transform)) -> Self {
-        let name = v.0.as_str().into();
         Self {
-            name,
+            name: BevyUtil::calc_name(v.0),
             view: Arc::new(v.1),
             layout: LayoutData::default(),
             transform: v.2,

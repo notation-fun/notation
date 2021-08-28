@@ -25,9 +25,6 @@ pub trait VBoxView<TE: LayoutEnv, TC: VBoxCell<TE>>: View<TE> {
         entity: Entity,
         data: LayoutData,
     ) {
-        if self.is_root() {
-            self.set_layout_data(layout_query, entity, data);
-        }
         let mut cells = engine.get_children(cell_query, entity);
         if self.sort_cells() {
             cells.sort_by(|a, b| a.view.order().cmp(&b.view.order()));

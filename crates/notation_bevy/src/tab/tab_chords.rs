@@ -36,8 +36,8 @@ impl TabChords {
 impl<'a> GridView<NotationLayout<'a>, ChordView> for TabChords {
     fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
         let sizes = engine.theme.sizes.chord;
-        let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_height(
-            grid_size.height,
+        let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
+            grid_size.width,
             sizes.chord_size_range,
             0.0,
             self.chords.len(),
@@ -55,14 +55,14 @@ impl<'a> GridView<NotationLayout<'a>, ChordView> for TabChords {
 }
 impl<'a> DockPanel<NotationLayout<'a>> for TabChords {
     fn dock_side(&self) -> DockSide {
-        DockSide::Left
+        DockSide::Bottom
     }
 }
 impl<'a> View<NotationLayout<'a>> for TabChords {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
         let grid_data = self.calc_grid_data(engine, constraint.max);
-        let width = grid_data.content_size().width;
-        LayoutSize::new(width, constraint.max.height)
+        let height = grid_data.content_size().height;
+        LayoutSize::new(constraint.max.width, height)
     }
 }
 impl TabChords {

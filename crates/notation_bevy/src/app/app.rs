@@ -6,12 +6,12 @@ use bevy::window::WindowResized;
 use bevy_asset_loader::AssetLoader;
 
 use crate::prelude::*;
+use crate::ui::viewer::TabViewerPlugin;
 
 use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent};
 use notation_model::prelude::*;
 
-use super::notation_app_state::{NotationAppState, TabPathes};
-use super::top_panel;
+use super::app_state::{NotationAppState, TabPathes};
 
 pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
@@ -25,10 +25,12 @@ impl PluginGroup for NotationPlugins {
         group.add(MiniPlugin);
         group.add(TabPlugin);
         group.add(PlayPlugin);
+        group.add(TabViewerPlugin);
         //crates plugins
         group.add(MidiPlugin);
         //external plugins
         group.add(bevy_prototype_lyon::prelude::ShapePlugin);
+        //group.add(bevy_svg::prelude::SvgPlugin);
     }
 }
 
@@ -42,7 +44,7 @@ impl NotationApp {
             .build(&mut app);
         app.add_state(NotationAssetsStates::Loading);
         insert_window_descriptor(&mut app, String::from(title));
-        super::notation_app_events::add_notation_app_events(&mut app);
+        super::app_events::add_notation_app_events(&mut app);
 
         app.insert_resource(Msaa { samples: 1 });
         app.add_plugins(DefaultPlugins);
@@ -98,14 +100,13 @@ impl NotationApp {
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
-                .with_system(setup_window_size.system()),
+                .with_system(setup_window_size.system())
         );
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(on_window_resized.system())
                 .with_system(handle_inputs.system())
                 .with_system(load_tab.system())
-                .with_system(top_panel::top_panel_ui.system()),
         );
 
         extra(&mut app);
@@ -157,10 +158,12 @@ fn handle_inputs(
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
     mut mouse_dragged: EventWriter<MouseDraggedEvent>,
 ) {
-    if keyboard_input.just_released(KeyCode::LControl) {
-        settings.mouse_dragged_panning = !settings.mouse_dragged_panning;
+    if keyboard_input.pressed(KeyCode::LControl) {
+        settings.mouse_dragged_panning = true;
+    } else if keyboard_input.just_released(KeyCode::LControl) {
+        settings.mouse_dragged_panning = false;
     } else if keyboard_input.just_released(KeyCode::Space) {
-        super::top_panel::play_or_pause(&mut midi_state, &mut play_control_evts);
+        crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts);
     }
     if mouse_input.just_released(MouseButton::Left) {
         windows.get_primary()
