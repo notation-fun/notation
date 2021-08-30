@@ -4,10 +4,7 @@ use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{
-    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutQuery, LayoutSize, View,
-    ViewBundle, ViewQuery,
-};
+use bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 use notation_model::prelude::{Tab, TabBar};
 
 use crate::bar::bar_layout::BarLayoutData;
@@ -19,7 +16,7 @@ use crate::prelude::{
 use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
 
-use super::tab_events::TabBarsDoLayoutEvent;
+use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent};
 
 pub struct TabBars {
     pub tab: Arc<Tab>,
@@ -155,7 +152,7 @@ impl TabBars {
                 ..lane_layout.clone()
             }));
         }
-        BarLayoutData::new(lane_layouts)
+        BarLayoutData::new(bar.props, lane_layouts)
     }
     pub fn calc_bar_layouts(
         theme: &NotationTheme,
@@ -209,6 +206,21 @@ impl TabBars {
         }
         bars_entity
     }
+    pub fn on_resized_pre(
+        mut evts: EventReader<TabBarsResizedPreEvent>,
+        cell_query: Query<(&Parent, &Arc<BarView>, &LayoutData)>,
+        mut tab_resized_evts: EventWriter<TabBarsResizedEvent>,
+    ) {
+        for evt in evts.iter() {
+            let mut bars = Vec::new();
+            for (parent, bar_view, layout) in cell_query.iter() {
+                if parent.0 == evt.0 {
+                    bars.push((bar_view.clone(), layout.clone()));
+                }
+            }
+            tab_resized_evts.send(TabBarsResizedEvent(Arc::new(bars)));
+        }
+    }
     pub fn do_layout(
         mut evts: EventReader<TabBarsDoLayoutEvent>,
         mut commands: Commands,
@@ -217,6 +229,7 @@ impl TabBars {
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<BarView>,
+        mut tab_resized_evts: EventWriter<TabBarsResizedPreEvent>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
@@ -228,6 +241,7 @@ impl TabBars {
                 evt.entity,
                 evt.layout,
             );
+            tab_resized_evts.send(TabBarsResizedPreEvent(evt.entity));
         }
     }
     pub fn on_layout_changed(

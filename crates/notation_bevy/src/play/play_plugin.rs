@@ -97,21 +97,38 @@ fn on_tab_resized(
         &Arc<GridData>,
     )>,
 ) {
-    for _evt in evts.iter() {
-        for (_entity, playing, _view, layout) in query.iter_mut() {
+    let mut bars = None;
+    for evt in evts.iter() {
+        bars = Some(&evt.0);
+    }
+    if let Some(_bars) = bars {
+        let mut first_playing_layout = None;
+        let mut current_playing_layout = None;
+        for (_entity, playing, view, layout) in query.iter_mut() {
+            if view.bar_props.bar_ordinal == 1 {
+                first_playing_layout = Some((playing, layout.clone()));
+            }
             if playing.value == PlayingState::Current {
-                update_indicators(
-                    &mut commands,
-                    &theme,
-                    &mut settings,
-                    &mut bar_indicator_query,
-                    &mut pos_indicator_query,
-                    &mut tab_bars_query,
-                    playing.bar_props,
-                    layout.clone(),
-                );
+                current_playing_layout = Some((playing, layout.clone()));
                 break;
             }
+        }
+        let playing_layout = if current_playing_layout.is_none() {
+            first_playing_layout
+        } else {
+            current_playing_layout
+        };
+        if let Some((playing, layout)) = playing_layout {
+            update_indicators(
+                &mut commands,
+                &theme,
+                &mut settings,
+                &mut bar_indicator_query,
+                &mut pos_indicator_query,
+                &mut tab_bars_query,
+                playing.bar_props,
+                layout.clone(),
+            );
         }
     }
 }

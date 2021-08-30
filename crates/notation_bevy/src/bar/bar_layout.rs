@@ -1,10 +1,13 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
+use notation_model::prelude::TabBarProps;
+
 use crate::prelude::LaneLayoutData;
 
 #[derive(Clone, Debug)]
 pub struct BarLayoutData {
+    pub bar_props: TabBarProps,
     pub lane_layouts: Vec<Arc<LaneLayoutData>>,
 }
 impl Display for BarLayoutData {
@@ -13,8 +16,9 @@ impl Display for BarLayoutData {
     }
 }
 impl BarLayoutData {
-    pub fn new(lane_layouts: Vec<Arc<LaneLayoutData>>) -> Self {
+    pub fn new(bar_props: TabBarProps, lane_layouts: Vec<Arc<LaneLayoutData>>) -> Self {
         Self {
+            bar_props,
             lane_layouts: lane_layouts,
         }
     }

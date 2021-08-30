@@ -48,7 +48,7 @@ impl Default for LayoutSettings {
             strings_lane_order: 2,
             lyrics_lane_order: 3,
             melody_lane_order: 4,
-            focusing_bar_ordinal: 0,
+            focusing_bar_ordinal: usize::MAX,
         }
     }
 }
@@ -200,10 +200,10 @@ impl LayoutSettings {
         {
             return;
         }
-        self.focusing_bar_ordinal = pos_data.bar_props.bar_ordinal;
         if let Ok((bars_entity, mut bars_transform, bars, layout, grid_data)) =
             tab_bars_query.single_mut()
         {
+            self.focusing_bar_ordinal = pos_data.bar_props.bar_ordinal;
             match self.mode {
                 LayoutMode::Grid => {
                     let y = self.calc_grid_focus_y(theme, bars, layout, grid_data, pos_data);

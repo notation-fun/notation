@@ -7,7 +7,7 @@ use crate::prelude::{
     BarBundle, BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings,
     NotationTheme,
 };
-use crate::tab::tab_events::{BarViewDoLayoutEvent, TabBarsResizedEvent};
+use crate::tab::tab_events::{BarViewDoLayoutEvent};
 use crate::ui::layout::NotationLayout;
 use bevy_utils::prelude::{
     BevyUtil, GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery,
@@ -42,7 +42,6 @@ impl BarView {
         cell_query: ViewQuery<LaneView>,
         mut sep_query: Query<(Entity, &mut BarSeparatorData)>,
         mut beat_query: Query<(Entity, &mut BarBeatData)>,
-        mut tab_resized_evts: EventWriter<TabBarsResizedEvent>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);
         let mut bars = Vec::new();
@@ -73,7 +72,6 @@ impl BarView {
                 }
             }
         }
-        tab_resized_evts.send(TabBarsResizedEvent(bars));
     }
     pub fn spawn(
         commands: &mut Commands,
