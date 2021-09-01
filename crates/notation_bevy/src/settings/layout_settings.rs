@@ -195,6 +195,9 @@ impl LayoutSettings {
         )>,
         pos_data: &PosIndicatorData,
     ) {
+        if pos_data.bar_position.bar_ordinal == 0 {
+            return;
+        }
         if self.mode == LayoutMode::Grid
             && self.focusing_bar_ordinal == pos_data.bar_props.bar_ordinal
         {

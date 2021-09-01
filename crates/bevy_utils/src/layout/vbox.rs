@@ -5,7 +5,9 @@ use crate::prelude::{
 };
 
 pub trait VBoxCell<TE: LayoutEnv>: View<TE> {
-    fn order(&self) -> usize;
+    fn order(&self) -> usize {
+        0
+    }
 }
 
 #[derive(Clone, Debug)]

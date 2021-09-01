@@ -280,7 +280,9 @@ impl GridData {
 }
 
 pub trait GridCell<TE: LayoutEnv>: View<TE> {
-    fn order(&self) -> usize;
+    fn order(&self) -> usize {
+        0
+    }
 }
 
 pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
@@ -321,7 +323,7 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
         }
         commands.entity(entity).insert(grid_data.clone());
         println!(
-            "<GridView<{}>>::do_layout({:?})",
+            "<GridView<{}>>::do_layout({:#?})",
             std::any::type_name::<TC>(),
             grid_data
         );

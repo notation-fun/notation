@@ -23,6 +23,7 @@ pub struct StringsTheme {
     pub fret_text_x: f32,
     pub fret_text_y: f32,
     pub fret_text_z: f32,
+    pub hit_string_seconds: f64,
 }
 
 impl Default for StringsTheme {
@@ -40,6 +41,7 @@ impl Default for StringsTheme {
             fret_text_x: 4.0,
             fret_text_y: 4.0,
             fret_text_z: 1.0,
+            hit_string_seconds: 0.5,
         }
     }
 }

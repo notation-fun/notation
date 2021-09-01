@@ -176,11 +176,19 @@ impl Default for LyricsColors {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsColors {
     pub outline: PlayingColors,
+    pub hit: Color,
+    pub string: PlayingColors,
 }
 impl Default for StringsColors {
     fn default() -> Self {
         Self {
             outline: PlayingColors::default(),
+            hit: color_of_hex("FFBF1B"),
+            string: PlayingColors::new(
+                color_of_hex("D3B59C"),
+                color_of_hex("ECBB52"),
+                color_of_hex("D3B59C"),
+            )
         }
     }
 }

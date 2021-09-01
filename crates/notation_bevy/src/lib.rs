@@ -23,6 +23,7 @@ pub mod lyrics;
 pub mod melody;
 pub mod shapes;
 pub mod strings;
+pub mod guitar;
 
 pub mod data;
 pub mod settings;
@@ -97,6 +98,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::strings::strings_plugin::StringsPlugin;
     #[doc(hidden)]
+    pub use crate::guitar::guitar_view::GuitarView;
+    #[doc(hidden)]
     pub use crate::tab::tab_asset::TabAsset;
     #[doc(hidden)]
     pub use crate::tab::tab_bars::TabBars;
@@ -124,8 +127,6 @@ pub mod prelude {
     pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]
     pub use crate::tone::tone_mode::ToneMode;
-    #[doc(hidden)]
-    pub use crate::ui::guitar::GuitarView;
     #[doc(hidden)]
     pub use crate::ui::layout::NotationLayout;
     #[doc(hidden)]

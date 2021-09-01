@@ -23,11 +23,7 @@ impl<'a> View<NotationLayout<'a>> for ChordView {
         LayoutAnchor::CENTER
     }
 }
-impl<'a> GridCell<NotationLayout<'a>> for ChordView {
-    fn order(&self) -> usize {
-        0
-    }
-}
+impl<'a> GridCell<NotationLayout<'a>> for ChordView {}
 
 impl ChordView {
     pub fn on_layout_changed(

@@ -7,13 +7,9 @@ use bevy_utils::prelude::{
     BevyUtil, ColorBackground, DoLayoutEvent, DockView, LayoutQuery, View, ViewBundle, ViewQuery,
 };
 
-use crate::prelude::{
-    NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme,
-};
+use crate::prelude::{GuitarView, NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme};
 use crate::tab::tab_view::TabView;
 use crate::ui::layout::NotationLayout;
-
-use super::guitar::GuitarView;
 
 pub struct TabViewer {
     pub tab: Arc<Tab>,
@@ -42,7 +38,8 @@ impl Plugin for TabViewerPlugin {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(GuitarView::on_layout_changed.system())
-                .with_system(TabViewer::do_layout.system()),
+                .with_system(GuitarView::update_string_state.system())
+                .with_system(TabViewer::do_layout.system())
         );
     }
 }

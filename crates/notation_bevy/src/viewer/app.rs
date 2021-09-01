@@ -109,7 +109,7 @@ impl NotationViewer {
         mut evts: EventReader<WindowResizedEvent>,
         theme: Res<NotationTheme>,
         state: Res<NotationAppState>,
-        settings: Res<NotationSettings>,
+        mut settings: ResMut<NotationSettings>,
         view_query: ViewRootQuery<NotationViewer>,
         mut layout_query: LayoutQuery,
         panel_query: ViewQuery<ControlView>,
@@ -120,6 +120,7 @@ impl NotationViewer {
             resized = true;
         }
         if resized {
+            settings.layout.focusing_bar_ordinal = usize::MAX;
             for (entity, view) in view_query.iter() {
                 Self::do_root_layout(
                     &theme,
