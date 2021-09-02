@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, LyonShapeOp, View, ViewBundle};
-use notation_model::prelude::{LaneEntry, Pick, PlayingState, Syllable, Tab};
+use notation_model::prelude::{HandShape6, LaneEntry, Pick, Syllable, Tab};
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme};
-use crate::strings::pick_note::PickNoteData;
 use crate::ui::layout::NotationLayout;
 
+use super::fret_finger::{FretFinger, FretFingerData};
 use super::guitar_string::{GuitarString, GuitarStringData};
 
 #[derive(Clone, Debug)]
@@ -37,8 +37,8 @@ impl<'a> View<NotationLayout<'a>> for GuitarView {
     fn pivot(&self) -> LayoutAnchor {
         LayoutAnchor::CENTER
     }
-    fn calc_size(&self, _engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        let width = constraint.max.height / 877.0 * 100.0;
+    fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
+        let width = constraint.max.height / engine.theme.guitar.image_size.1 * engine.theme.guitar.image_size.0;
         LayoutSize::new(width, constraint.max.height)
     }
 }
@@ -77,6 +77,31 @@ impl GuitarView {
                 GuitarStringData::new(string as u8),
             );
         }
+        for index in 0..=6 {
+            FretFinger::create(
+                commands,
+                theme,
+                guitar_entity,
+                FretFingerData::new((index + 1) as u8, None, None),
+            );
+        }
+        /* For checking frets and strings position.
+        let mut string = 1;
+        let mut fret = 0;
+        for _index in 0..=22 {
+            FretFinger::create(
+                commands,
+                theme,
+                guitar_entity,
+                FretFingerData::new(string as u8, Some(fret as u8), None),
+            );
+            string = string + 1;
+            if string > 6 {
+                string = 1;
+            }
+            fret = fret + 1;
+        }
+        */
         guitar_entity
     }
     pub fn on_layout_changed(
@@ -85,6 +110,7 @@ impl GuitarView {
         query: LayoutChangedQuery<GuitarView>,
         mut sprite_query: Query<(&Parent, &mut Transform), With<Sprite>>,
         mut string_query: Query<(&Parent, Entity, &mut GuitarStringData), With<GuitarStringData>>,
+        mut finger_query: Query<(&Parent, Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
         for (entity, _view, layout) in query.iter() {
             for (parent, mut transform) in sprite_query.iter_mut() {
@@ -100,6 +126,12 @@ impl GuitarView {
                     GuitarString::update(&mut commands, &theme, string_entity, &string_data);
                 }
             }
+            for (parent, finger_entity, mut finger_data) in finger_query.iter_mut() {
+                if parent.0 == entity {
+                    finger_data.guitar_size = layout.size;
+                    FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
+                }
+            }
         }
     }
     pub fn update_string_state(
@@ -112,7 +144,7 @@ impl GuitarView {
         let mut current_notes = Vec::new();
         let mut string_states = [None; 6];
         let mut hit_strings = [false; 6];
-        for (entry, pick, playing) in query.iter() {
+        for (_entry, pick, playing) in query.iter() {
             for pick_note in pick.get_notes() {
                 if playing.value.is_current() {
                     current_notes.push(pick_note);
@@ -131,6 +163,26 @@ impl GuitarView {
                     string_data.state = state;
                 }
                 GuitarString::update(&mut commands, &theme, string_entity, &string_data);
+            }
+        }
+    }
+    pub fn update_hand_shape6(
+        mut commands: Commands,
+        theme: Res<NotationTheme>,
+        query: Query<(&Arc<LaneEntry>, &HandShape6, &EntryPlaying), Changed<EntryPlaying>>,
+        mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
+    ) {
+        let mut current_shape = None;
+        for (_entry, shape, playing) in query.iter() {
+            if playing.value.is_current() {
+                current_shape = Some(shape);
+            }
+        }
+        if let Some(shape) = current_shape {
+            println!("GuitarView::update_hand_shape6(): {}", shape);
+            for (finger_entity, mut finger_data) in finger_query.iter_mut() {
+                finger_data.fret = shape.string_fret(finger_data.string);
+                FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
             }
         }
     }

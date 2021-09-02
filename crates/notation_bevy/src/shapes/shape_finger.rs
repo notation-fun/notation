@@ -39,7 +39,12 @@ impl<'a> LyonShape<shapes::Circle> for ShapeFingerShape<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.shapes.shape_finger_color)
+        let color = if self.data.fret.is_none() {
+            self.theme.shapes.shape_finger_mute_color
+        } else {
+            self.theme.shapes.shape_finger_color
+        };
+        ShapeColors::new(color)
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Fill(FillOptions::default())

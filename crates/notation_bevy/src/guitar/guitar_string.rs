@@ -70,7 +70,7 @@ impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
         if self.data.guitar_size.width <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        let x = -1.0 * (self.data.string as f32 - 3.5) * self.data.guitar_size.width * self.theme.guitar.string_x_factor;
+        let x = self.theme.guitar.calc_string_x(self.data.string, self.data.guitar_size.width);
         Transform::from_xyz(x, 0.0, self.theme.core.mini_bar_z + 1.0)
     }
 }
