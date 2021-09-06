@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{BevyUtil, LayoutSize};
-use notation_model::prelude::PlayingState;
+use notation_model::prelude::{Duration, PlaySpeed, PlayingState, Units};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
@@ -11,7 +11,9 @@ pub struct GuitarStringData {
     pub guitar_size: LayoutSize,
     pub state: PlayingState,
     pub hit: bool,
-    pub hit_second: f64,
+    pub hit_duration: Duration,
+    pub hit_seconds: f32,
+    pub hit_expired_seconds: f64,
 }
 
 impl GuitarStringData {
@@ -21,18 +23,28 @@ impl GuitarStringData {
             guitar_size: LayoutSize::ZERO,
             state: PlayingState::Idle,
             hit: false,
-            hit_second: 0.0,
+            hit_duration: Duration::Zero,
+            hit_seconds: 0.0,
+            hit_expired_seconds: 0.0,
         }
     }
-    pub fn set_hit(&mut self, hit: bool, time: &Time, hit_string_seconds: f64) {
-        if self.hit && !hit {
-            if (time.seconds_since_startup() - self.hit_second) > hit_string_seconds {
-                self.hit = false;
-                self.hit_second = time.seconds_since_startup();
-            }
-        } else {
-            self.hit = hit;
+    fn calc_hit_seconds(hit_duration: Duration, hit_string_seconds_range: (f32, f32), play_speed: PlaySpeed) -> f32 {
+        let seconds = play_speed.calc_seconds(Units::from(hit_duration));
+        BevyUtil::in_range(seconds * 0.5, hit_string_seconds_range)
+    }
+    pub fn set_hit(&mut self, hit: bool, hit_duration: Duration, time: &Time, hit_string_seconds_range: (f32, f32), play_speed: PlaySpeed) {
+        if self.hit && !hit
+            && time.seconds_since_startup() < self.hit_expired_seconds {
+            return;
         }
+        self.hit = hit;
+        self.hit_duration = hit_duration;
+        self.hit_seconds = if hit {
+            Self::calc_hit_seconds(hit_duration, hit_string_seconds_range, play_speed)
+        } else {
+            0.0
+        };
+        self.hit_expired_seconds = time.seconds_since_startup() + self.hit_seconds as f64;
     }
 }
 

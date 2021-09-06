@@ -183,10 +183,10 @@ impl Default for StringsColors {
     fn default() -> Self {
         Self {
             outline: PlayingColors::default(),
-            hit: color_of_hex("FFBF1B"),
+            hit: color_of_hex("FF00FF"),
             string: PlayingColors::new(
                 color_of_hex("D3B59C"),
-                color_of_hex("ECBB52"),
+                color_of_hex("FFFFFF"),
                 color_of_hex("D3B59C"),
             )
         }

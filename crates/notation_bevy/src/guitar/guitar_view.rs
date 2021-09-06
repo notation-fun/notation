@@ -3,7 +3,8 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, LyonShapeOp, View, ViewBundle};
-use notation_model::prelude::{HandShape6, LaneEntry, Pick, Syllable, Tab};
+use notation_midi::prelude::MidiState;
+use notation_model::prelude::{Duration, Entry, HandShape6, LaneEntry, Pick, Syllable, Tab};
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme};
 use crate::ui::layout::NotationLayout;
@@ -136,6 +137,7 @@ impl GuitarView {
     }
     pub fn update_string_state(
         mut commands: Commands,
+        midi_state: Res<MidiState>,
         time: Res<Time>,
         theme: Res<NotationTheme>,
         query: Query<(&Arc<LaneEntry>, &Pick, &EntryPlaying), Changed<EntryPlaying>>,
@@ -143,22 +145,22 @@ impl GuitarView {
     ) {
         let mut current_notes = Vec::new();
         let mut string_states = [None; 6];
-        let mut hit_strings = [false; 6];
-        for (_entry, pick, playing) in query.iter() {
+        let mut hit_strings = [(false, Duration::Zero); 6];
+        for (entry, pick, playing) in query.iter() {
             for pick_note in pick.get_notes() {
                 if playing.value.is_current() {
                     current_notes.push(pick_note);
                 }
                 if pick_note.string >= 1 && pick_note.string <= 6 {
                     string_states[(pick_note.string - 1) as usize] = Some(playing.value);
-                    hit_strings[(pick_note.string - 1) as usize] = playing.value.is_current();
+                    hit_strings[(pick_note.string - 1) as usize] = (playing.value.is_current(), entry.duration());
                 }
             }
         }
         for (string_entity, mut string_data) in string_query.iter_mut() {
             if string_data.string >= 1 && string_data.string <= 6 {
-                let hit = hit_strings[(string_data.string - 1) as usize];
-                string_data.set_hit(hit, &time, theme.strings.hit_string_seconds);
+                let (hit, hit_duration) = hit_strings[(string_data.string - 1) as usize];
+                string_data.set_hit(hit, hit_duration, &time, theme.strings.hit_string_seconds_range, midi_state.play_control.play_speed);
                 if let Some(state) = string_states[(string_data.string - 1) as usize] {
                     string_data.state = state;
                 }
