@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use crate::prelude::{BarLane, BarLaneProps, ModelEntry, Tab, TabBar, TabBarProps};
+use crate::prelude::{BarLane, BarLaneProps, ModelEntry, Tab, TabBar, TabBarProps, Track};
 use notation_proto::prelude::{BarPosition, Duration, Entry, ProtoEntry, TrackKind, Units};
 
 #[derive(Copy, Clone, Debug, Default)]
@@ -68,6 +68,9 @@ impl LaneEntry {
 impl LaneEntry {
     pub fn lane(&self) -> Option<Arc<BarLane>> {
         self.lane.upgrade().map(|x| x.clone())
+    }
+    pub fn track(&self) -> Option<Arc<Track>> {
+        self.lane().map(|x| x.track.clone())
     }
     pub fn bar(&self) -> Option<Arc<TabBar>> {
         self.lane().and_then(|x| x.bar())

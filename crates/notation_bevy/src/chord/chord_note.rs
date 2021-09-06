@@ -3,6 +3,7 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
+use bevy_utils::prelude::BevyUtil;
 use notation_model::prelude::{Interval, Syllable};
 
 use crate::prelude::{LyonShape, LyonShapeOp, ModelEntryData, NotationTheme};
@@ -13,6 +14,17 @@ pub trait ChordNoteExtra: Send + Sync + Clone {
     fn offset(&self, theme: &NotationTheme) -> Vec2;
     fn radius(&self, theme: &NotationTheme) -> f32;
     fn set_diagram_radius(&mut self, diagram_radius: f32);
+    #[allow(unused_variables)]
+    fn get_color(&self, theme: &NotationTheme, color: Color) -> Color {
+        color
+    }
+    #[allow(unused_variables)]
+    fn get_z(&self, theme: &NotationTheme) -> f32 {
+        1.0
+    }
+    fn show_dots(&self) -> bool {
+        true
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -54,7 +66,7 @@ pub struct ChordNote<'a, T: ChordNoteExtra + 'static> {
 
 impl<'a, T: ChordNoteExtra + 'static> LyonShape<shapes::Circle> for ChordNote<'a, T> {
     fn get_name(&self) -> String {
-        format!("{}", self.data)
+        BevyUtil::cap_str(self.data.to_string(), 32)
     }
     fn get_shape(&self) -> shapes::Circle {
         shapes::Circle {
@@ -67,14 +79,14 @@ impl<'a, T: ChordNoteExtra + 'static> LyonShape<shapes::Circle> for ChordNote<'a
             .theme
             .colors
             .of_syllable(self.data.value.calc_syllable());
-        ShapeColors::new(color)
+        ShapeColors::new(self.data.value.extra.get_color(self.theme, color))
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
         let offset = self.data.value.extra.offset(self.theme);
-        Transform::from_xyz(offset.x, offset.y, 1.0)
+        Transform::from_xyz(offset.x, offset.y, self.data.value.extra.get_z(self.theme))
     }
 }
 
@@ -113,14 +125,32 @@ impl<'a, T: ChordNoteExtra + 'static> ChordNote<'a, T> {
         entity: Entity,
         data: ChordNoteData<T>,
     ) -> Entity {
-        let quality = data.value.interval.into();
-        let dot_count = data.value.interval.dot_count();
-        let note_radius = data.value.extra.radius(theme);
-        let note_entity = ChordNote::create(commands, theme, entity, data);
-        for index in 0..dot_count {
-            let dot_data = IntervalDotData::new(quality, dot_count, index, note_radius);
-            IntervalDot::create(commands, theme, note_entity, dot_data);
-        }
+        let note_entity = ChordNote::create(commands, theme, entity, data.clone());
+        Self::respawn_dots(commands, theme, None, note_entity, &data);
         note_entity
+    }
+    pub fn respawn_dots(
+        commands: &mut Commands,
+        theme: &NotationTheme,
+        dot_query: Option<&Query<&Children>>,
+        note_entity: Entity,
+        data: &ChordNoteData<T>,
+    ) {
+        if let Some(dot_query) = dot_query {
+            for children in dot_query.get(note_entity) {
+                for child in children.iter() {
+                    commands.entity(*child).despawn();
+                }
+            }
+        }
+        if data.value.extra.show_dots() {
+            let quality = data.value.interval.into();
+            let dot_count = data.value.interval.dot_count();
+            let note_radius = data.value.extra.radius(theme);
+            for index in 0..dot_count {
+                let dot_data = IntervalDotData::new(quality, dot_count, index, note_radius);
+                IntervalDot::create(commands, theme, note_entity, dot_data);
+            }
+        }
     }
 }

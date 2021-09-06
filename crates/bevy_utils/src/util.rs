@@ -3,10 +3,20 @@ use bevy::prelude::*;
 pub struct BevyUtil();
 
 impl BevyUtil {
+    pub fn offscreen_offset() -> Vec2 {
+        Vec2::new(-999999.0, -999999.0)
+    }
     pub fn offscreen_transform() -> Transform {
         Transform {
             translation: Vec3::new(-999999.0, -999999.0, -999999.0),
             ..Default::default()
+        }
+    }
+    pub fn cap_str(name: String, max: usize) -> String {
+        if name.len() <= max {
+            name.as_str().into()
+        } else {
+            name.as_str()[..max].into()
         }
     }
     pub fn calc_name(name: String) -> Name {

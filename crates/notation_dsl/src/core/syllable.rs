@@ -41,11 +41,11 @@ impl SyllableDsl {
     fn parse_flat(input: ParseStream) -> Self {
         input.parse::<Token![%]>()?;
         SyllableDsl::new(match input.parse::<LitInt>()?.base10_parse::<u8>()? {
-            1 => Syllable::Di,
-            2 => Syllable::Ri,
-            4 => Syllable::Fi,
-            5 => Syllable::Si,
-            6 => Syllable::Li,
+            2 => Syllable::Ra,
+            3 => Syllable::Me,
+            5 => Syllable::Se,
+            6 => Syllable::Le,
+            7 => Syllable::Te,
             _ => throw!(Error::new(input.span(), "Invalid Syllable")),
         })
     }

@@ -4,7 +4,7 @@ use std::hash::Hash;
 use serde::{Deserialize, Serialize};
 
 use crate::interval::Interval;
-use crate::prelude::{Intervals, Syllable};
+use crate::prelude::{Intervals, Semitones, Syllable};
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
 pub struct Chord {
@@ -28,6 +28,22 @@ impl Chord {
             intervals,
             base,
         }
+    }
+    pub fn calc_interval(&self, syllable: Syllable) -> Option<Interval> {
+        if Semitones::from(self.root) == Semitones::from(syllable) {
+            return Some(Interval::Unison);
+        }
+        for interval in self.intervals.get_intervals().iter() {
+            if interval.is_matched(self.root, syllable) {
+                return Some(interval.clone());
+            }
+        }
+        if let Some(base) = self.base {
+            if base.is_matched(self.root, syllable) {
+                return Some(base);
+            }
+        }
+        None
     }
 }
 impl Hash for Chord {

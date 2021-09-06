@@ -33,7 +33,8 @@ macro_rules! impl_hand_shape {
         impl Display for $type {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(f, "[")?;
-                for fret in self.frets {
+                for index in 0..self.frets.len() {
+                    let fret = self.frets[self.frets.len() - 1 - index];
                     match fret {
                         Some(fret) => write!(f, "{}", fret)?,
                         None => write!(f, "x")?,

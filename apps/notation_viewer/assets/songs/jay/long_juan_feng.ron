@@ -1,5 +1,5 @@
 (
-    uuid: "963190d0-465d-4751-b5c9-a5dd3e8bb7e3",
+    uuid: "e7effd92-2cd5-4833-8537-57bda9d24035",
     meta: (
         key: Natural(A),
         scale: Major,
@@ -109,7 +109,7 @@
                 Mark("b6"),// [15]
                 Core(Chord(
                     (
-                        root: Li,
+                        root: Le,
                         intervals: Tetrad(
                             Minor3nd,
                             Diminished5th,

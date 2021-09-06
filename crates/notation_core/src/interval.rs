@@ -130,7 +130,11 @@ impl From<Semitones> for Interval {
         if v.0 == 0 {
             return Self::Unison;
         }
-        match v.0.abs() % 12 {
+        let mut s = v.0;
+        while s < 0 {
+             s += 12;
+        }
+        match s % 12 {
             0 => Self::Perfect8ve,
             1 => Self::Minor2nd,
             2 => Self::Major2nd,
@@ -147,7 +151,18 @@ impl From<Semitones> for Interval {
         }
     }
 }
+
+impl From<(Syllable, Syllable)> for Interval {
+    fn from(v: (Syllable, Syllable)) -> Self {
+        (Semitones::from(v.1) - Semitones::from(v.0)).into()
+    }
+}
+
+
 impl Interval {
+    pub fn is_matched(&self, root: Syllable, syllable: Syllable) -> bool {
+        Semitones::from(Interval::from((root, syllable))) == Semitones::from(*self)
+    }
     pub fn dot_count(&self) -> usize {
         match self {
             Interval::Unison => 1,
