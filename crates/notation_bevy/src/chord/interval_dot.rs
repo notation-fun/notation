@@ -84,16 +84,50 @@ impl<'a> LyonShape<shapes::Circle> for IntervalDot<'a> {
         )
     }
     fn get_shape(&self) -> shapes::Circle {
+        let radius = if self.data.total == 1 {
+            self.data.note_radius * self.theme.sizes.chord.interval_dot_big_radius_factor
+        } else {
+            self.data.note_radius * self.theme.sizes.chord.interval_dot_radius_factor
+        };
         shapes::Circle {
-            radius: self.data.note_radius * self.theme.sizes.chord.interval_dot_radius_factor,
+            radius,
             center: Vec2::ZERO,
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.colors.chord.dot.of_quality(&self.data.quality))
+        let color = self.theme.colors.chord.dot.of_quality(&self.data.quality);
+        let outline = self
+            .theme
+            .sizes
+            .chord
+            .interval_dot_outline;
+        if outline > 0.0 {
+            ShapeColors::outlined(
+                color,
+                self.theme
+                    .colors
+                    .chord
+                    .dot_outline
+                    .of_quality(&self.data.quality),
+            )
+        } else {
+            ShapeColors::new(color)
+        }
     }
     fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
+        let outline = self
+            .theme
+            .sizes
+            .chord
+            .interval_dot_outline;
+        if outline > 0.0 {
+            DrawMode::Outlined {
+                fill_options: FillOptions::default(),
+                outline_options: StrokeOptions::default().with_line_width(outline),
+            }
+        } else {
+            DrawMode::Fill(FillOptions::default())
+        }
     }
     fn get_transform(&self) -> Transform {
         let offset = self.data.offset(self.theme);

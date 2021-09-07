@@ -43,7 +43,9 @@ impl<'a> View<NotationLayout<'a>> for GuitarView {
         LayoutSize::new(width, constraint.max.height)
     }
 }
+
 impl GuitarView {
+    pub const CHECKING_FRETS: bool = false;
     pub fn spawn(
         commands: &mut Commands,
         materials: &mut ResMut<Assets<ColorMaterial>>,
@@ -78,30 +80,35 @@ impl GuitarView {
                 GuitarStringData::new(string as u8),
             );
         }
-        for index in 1..=6 {
-            let finger_data = FretFingerData::new_data(
-                ModelEntryProps { index: 0, tied_units: Units(0.0) },
-                Syllable::Do, Interval::Unison,
-                index as u8, None, None);
-            FretFinger::spawn(commands, theme, guitar_entity, finger_data);
-        }
-        /* For checking frets and strings position.
-        let mut string = 1;
-        let mut fret = 0;
-        for _index in 0..=22 {
-            FretFinger::create(
-                commands,
-                theme,
-                guitar_entity,
-                FretFingerData::new(string as u8, Some(fret as u8), None),
-            );
-            string = string + 1;
-            if string > 6 {
-                string = 1;
+        if Self::CHECKING_FRETS {
+            let mut string = 1;
+            let mut fret = 0;
+            for _index in 0..=22 {
+                let finger_data = FretFingerData::new_data(
+                    ModelEntryProps { index: 0, tied_units: Units(0.0) },
+                    Syllable::Do, Interval::Unison,
+                    string as u8, Some(fret as u8), None);
+                FretFinger::spawn(
+                    commands,
+                    theme,
+                    guitar_entity,
+                    finger_data,
+                );
+                string = string + 1;
+                if string > 6 {
+                    string = 1;
+                }
+                fret = fret + 1;
             }
-            fret = fret + 1;
+        } else {
+            for index in 1..=6 {
+                let finger_data = FretFingerData::new_data(
+                    ModelEntryProps { index: 0, tied_units: Units(0.0) },
+                    Syllable::Do, Interval::Unison,
+                    index as u8, None, None);
+                FretFinger::spawn(commands, theme, guitar_entity, finger_data);
+            }
         }
-        */
         guitar_entity
     }
     pub fn on_layout_changed(
@@ -174,6 +181,9 @@ impl GuitarView {
         dot_query: Query<&Children>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
+        if Self::CHECKING_FRETS {
+            return;
+        }
         let mut current_shape = None;
         for (entry, shape, playing) in query.iter() {
             if playing.value.is_current() {

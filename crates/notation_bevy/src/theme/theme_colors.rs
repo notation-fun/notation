@@ -138,6 +138,7 @@ pub struct ChordColors {
     pub background: Color,
     pub diagram_outline: PlayingColors,
     pub dot: IntervalColors,
+    pub dot_outline: IntervalColors,
 }
 impl Default for ChordColors {
     fn default() -> Self {
@@ -145,7 +146,14 @@ impl Default for ChordColors {
             background: color_of_hex("FFF9F2CC"),
             diagram_outline: PlayingColors::default(),
             dot: IntervalColors::default(),
-        }
+            dot_outline: IntervalColors {
+                perfect: color_of_hex("000000"),
+                major: color_of_hex("000000"),
+                minor: color_of_hex("FFFFFF"),
+                augmented: color_of_hex("FF00FF"),
+                diminishd: color_of_hex("FFFFFF"),
+                tritone: color_of_hex("FF00FF"),}
+            }
     }
 }
 
