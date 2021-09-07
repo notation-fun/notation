@@ -10,6 +10,7 @@ use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::fret_finger::{FretFinger, FretFingerData};
+use super::guitar_capo::{GuitarCapo, GuitarCapoData};
 use super::guitar_string::{GuitarString, GuitarStringData};
 
 #[derive(Clone, Debug)]
@@ -80,6 +81,12 @@ impl GuitarView {
                 GuitarStringData::new(string as u8),
             );
         }
+        GuitarCapo::create(
+            commands,
+            theme,
+            guitar_entity,
+            GuitarCapoData::new(0),
+        );
         if Self::CHECKING_FRETS {
             let mut string = 1;
             let mut fret = 0;
@@ -117,6 +124,7 @@ impl GuitarView {
         query: LayoutChangedQuery<GuitarView>,
         mut sprite_query: Query<(&Parent, &mut Transform), With<Sprite>>,
         mut string_query: Query<(&Parent, Entity, &mut GuitarStringData), With<GuitarStringData>>,
+        mut capo_query: Query<(&Parent, Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
         mut finger_query: Query<(&Parent, Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
         for (entity, _view, layout) in query.iter() {
@@ -131,6 +139,12 @@ impl GuitarView {
                 if parent.0 == entity {
                     string_data.guitar_size = layout.size;
                     GuitarString::update(&mut commands, &theme, string_entity, &string_data);
+                }
+            }
+            for (parent, capo_entity, mut capo_data) in capo_query.iter_mut() {
+                if parent.0 == entity {
+                    capo_data.guitar_size = layout.size;
+                    GuitarCapo::update(&mut commands, &theme, capo_entity, &capo_data);
                 }
             }
             for (parent, finger_entity, mut finger_data) in finger_query.iter_mut() {
@@ -180,6 +194,7 @@ impl GuitarView {
         query: Query<(&Arc<LaneEntry>, &HandShape6, &EntryPlaying), Changed<EntryPlaying>>,
         dot_query: Query<&Children>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
+        mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
     ) {
         if Self::CHECKING_FRETS {
             return;
@@ -199,6 +214,14 @@ impl GuitarView {
                 finger_data.update(shape, fretboard, chord, meta.clone());
                 FretFinger::respawn_dots(&mut commands, &theme, Some(&dot_query), finger_entity, &finger_data);
                 FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
+            }
+            if let Some(fretboard) = fretboard {
+                for (capo_entity, mut capo_data) in capo_query.iter_mut() {
+                    if fretboard.capo != capo_data.capo {
+                        capo_data.capo = fretboard.capo;
+                        GuitarCapo::update(&mut commands, &theme, capo_entity, &capo_data);
+                    }
+                }
             }
         }
     }

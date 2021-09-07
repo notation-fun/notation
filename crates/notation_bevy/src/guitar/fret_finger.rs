@@ -117,7 +117,7 @@ impl ChordNoteExtra for FretFingerExtra {
         }
     }
     fn get_z(&self, theme: &NotationTheme) -> f32 {
-        theme.core.mini_bar_z + 2.0
+        theme.core.mini_bar_z + 3.0
     }
     fn show_dots(&self) -> bool {
         self.in_chord

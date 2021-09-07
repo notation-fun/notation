@@ -13,8 +13,9 @@ pub struct GuitarTheme {
     pub image_size: (f32, f32),
     pub string_x_factor: f32,
     pub string_y_factor: f32,
-    pub fret_finger_radius: f32,
     pub fret_y_factors: [f32; 23],
+    pub capo_width_factor: f32,
+    pub capo_height_factor: f32,
 }
 
 impl Default for GuitarTheme {
@@ -24,7 +25,6 @@ impl Default for GuitarTheme {
             image_size: (100.0, 750.0),
             string_x_factor: 0.115,
             string_y_factor: 0.467,
-            fret_finger_radius: 4.0,
             fret_y_factors: [
                 //0
                 0.475, 0.425, 0.368, 0.315, 0.264,
@@ -37,6 +37,8 @@ impl Default for GuitarTheme {
                 //20
                 -0.248, -0.267, -0.286,
             ],
+            capo_width_factor: 0.78,
+            capo_height_factor: 0.015,
         }
     }
 }

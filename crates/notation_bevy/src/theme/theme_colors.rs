@@ -151,7 +151,7 @@ impl Default for ChordColors {
                 major: color_of_hex("000000"),
                 minor: color_of_hex("FFFFFF"),
                 augmented: color_of_hex("FF00FF"),
-                diminishd: color_of_hex("FFFFFF"),
+                diminishd: color_of_hex("333333"),
                 tritone: color_of_hex("FF00FF"),}
             }
     }
@@ -186,6 +186,7 @@ pub struct StringsColors {
     pub outline: PlayingColors,
     pub hit: Color,
     pub string: PlayingColors,
+    pub capo: Color,
 }
 impl Default for StringsColors {
     fn default() -> Self {
@@ -196,7 +197,8 @@ impl Default for StringsColors {
                 color_of_hex("D3B59C"),
                 color_of_hex("FFFFFF"),
                 color_of_hex("D3B59C"),
-            )
+            ),
+            capo: color_of_hex("222222"),
         }
     }
 }
