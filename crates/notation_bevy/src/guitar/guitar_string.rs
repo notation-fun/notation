@@ -28,13 +28,23 @@ impl GuitarStringData {
             hit_expired_seconds: 0.0,
         }
     }
-    fn calc_hit_seconds(hit_duration: Duration, hit_string_seconds_range: (f32, f32), play_speed: PlaySpeed) -> f32 {
+    fn calc_hit_seconds(
+        hit_duration: Duration,
+        hit_string_seconds_range: (f32, f32),
+        play_speed: PlaySpeed,
+    ) -> f32 {
         let seconds = play_speed.calc_seconds(Units::from(hit_duration));
         BevyUtil::in_range(seconds * 0.5, hit_string_seconds_range)
     }
-    pub fn set_hit(&mut self, hit: bool, hit_duration: Duration, time: &Time, hit_string_seconds_range: (f32, f32), play_speed: PlaySpeed) {
-        if self.hit && !hit
-            && time.seconds_since_startup() < self.hit_expired_seconds {
+    pub fn set_hit(
+        &mut self,
+        hit: bool,
+        hit_duration: Duration,
+        time: &Time,
+        hit_string_seconds_range: (f32, f32),
+        play_speed: PlaySpeed,
+    ) {
+        if self.hit && !hit && time.seconds_since_startup() < self.hit_expired_seconds {
             return;
         }
         self.hit = hit;
@@ -55,15 +65,15 @@ pub struct GuitarString<'a> {
 
 impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
     fn get_name(&self) -> String {
-        format!(
-            "<GuitarString>({})",
-            self.data.string
-        )
+        format!("<GuitarString>({})", self.data.string)
     }
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
-            Vec2::new(0.0, self.data.guitar_size.height * self.theme.guitar.string_y_factor),
-            Vec2::new(0.0, -self.data.guitar_size.height / 2.0)
+            Vec2::new(
+                0.0,
+                self.data.guitar_size.height * self.theme.guitar.string_y_factor,
+            ),
+            Vec2::new(0.0, -self.data.guitar_size.height / 2.0),
         )
     }
     fn get_colors(&self) -> ShapeColors {
@@ -82,7 +92,10 @@ impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
         if self.data.guitar_size.width <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        let x = self.theme.guitar.calc_string_x(self.data.string, self.data.guitar_size.width);
+        let x = self
+            .theme
+            .guitar
+            .calc_string_x(self.data.string, self.data.guitar_size.width);
         Transform::from_xyz(x, 0.0, self.theme.core.mini_bar_z + 1.0)
     }
 }

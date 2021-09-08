@@ -2,9 +2,14 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, LyonShapeOp, View, ViewBundle};
+use bevy_utils::prelude::{
+    BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery,
+    LayoutConstraint, LayoutSize, LyonShapeOp, View, ViewBundle,
+};
 use notation_midi::prelude::MidiState;
-use notation_model::prelude::{Duration, Entry, HandShape6, Interval, LaneEntry, ModelEntryProps, Pick, Syllable, Tab, Units};
+use notation_model::prelude::{
+    Duration, Entry, HandShape6, Interval, LaneEntry, ModelEntryProps, Pick, Syllable, Tab, Units,
+};
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme};
 use crate::ui::layout::NotationLayout;
@@ -40,7 +45,8 @@ impl<'a> View<NotationLayout<'a>> for GuitarView {
         LayoutAnchor::CENTER
     }
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        let width = constraint.max.height / engine.theme.guitar.image_size.1 * engine.theme.guitar.image_size.0;
+        let width = constraint.max.height / engine.theme.guitar.image_size.1
+            * engine.theme.guitar.image_size.0;
         LayoutSize::new(width, constraint.max.height)
     }
 }
@@ -67,7 +73,10 @@ impl GuitarView {
             theme.core.background_color,
         );
         let sprite_bundle = SpriteBundle {
-            sprite: Sprite::new(Vec2::new(theme.guitar.image_size.0, theme.guitar.image_size.1)),
+            sprite: Sprite::new(Vec2::new(
+                theme.guitar.image_size.0,
+                theme.guitar.image_size.1,
+            )),
             transform: BevyUtil::offscreen_transform(),
             material: materials.add(assets.fretboard.clone().into()),
             ..Default::default()
@@ -81,26 +90,23 @@ impl GuitarView {
                 GuitarStringData::new(string as u8),
             );
         }
-        GuitarCapo::create(
-            commands,
-            theme,
-            guitar_entity,
-            GuitarCapoData::new(0),
-        );
+        GuitarCapo::create(commands, theme, guitar_entity, GuitarCapoData::new(0));
         if Self::CHECKING_FRETS {
             let mut string = 1;
             let mut fret = 0;
             for _index in 0..=22 {
                 let finger_data = FretFingerData::new_data(
-                    ModelEntryProps { index: 0, tied_units: Units(0.0) },
-                    Syllable::Do, Interval::Unison,
-                    string as u8, Some(fret as u8), None);
-                FretFinger::spawn(
-                    commands,
-                    theme,
-                    guitar_entity,
-                    finger_data,
+                    ModelEntryProps {
+                        index: 0,
+                        tied_units: Units(0.0),
+                    },
+                    Syllable::Do,
+                    Interval::Unison,
+                    string as u8,
+                    Some(fret as u8),
+                    None,
                 );
+                FretFinger::spawn(commands, theme, guitar_entity, finger_data);
                 string = string + 1;
                 if string > 6 {
                     string = 1;
@@ -110,9 +116,16 @@ impl GuitarView {
         } else {
             for index in 1..=6 {
                 let finger_data = FretFingerData::new_data(
-                    ModelEntryProps { index: 0, tied_units: Units(0.0) },
-                    Syllable::Do, Interval::Unison,
-                    index as u8, None, None);
+                    ModelEntryProps {
+                        index: 0,
+                        tied_units: Units(0.0),
+                    },
+                    Syllable::Do,
+                    Interval::Unison,
+                    index as u8,
+                    None,
+                    None,
+                );
                 FretFinger::spawn(commands, theme, guitar_entity, finger_data);
             }
         }
@@ -173,14 +186,21 @@ impl GuitarView {
                 }
                 if pick_note.string >= 1 && pick_note.string <= 6 {
                     string_states[(pick_note.string - 1) as usize] = Some(playing.value);
-                    hit_strings[(pick_note.string - 1) as usize] = (playing.value.is_current(), entry.duration());
+                    hit_strings[(pick_note.string - 1) as usize] =
+                        (playing.value.is_current(), entry.duration());
                 }
             }
         }
         for (string_entity, mut string_data) in string_query.iter_mut() {
             if string_data.string >= 1 && string_data.string <= 6 {
                 let (hit, hit_duration) = hit_strings[(string_data.string - 1) as usize];
-                string_data.set_hit(hit, hit_duration, &time, theme.strings.hit_string_seconds_range, midi_state.play_control.play_speed);
+                string_data.set_hit(
+                    hit,
+                    hit_duration,
+                    &time,
+                    theme.strings.hit_string_seconds_range,
+                    midi_state.play_control.play_speed,
+                );
                 if let Some(state) = string_states[(string_data.string - 1) as usize] {
                     string_data.state = state;
                 }
@@ -212,7 +232,13 @@ impl GuitarView {
             //println!("GuitarView::update_hand_shape6(): {}, {:#?}, {:#?}", shape, fretboard, chord);
             for (finger_entity, mut finger_data) in finger_query.iter_mut() {
                 finger_data.update(shape, fretboard, chord, meta.clone());
-                FretFinger::respawn_dots(&mut commands, &theme, Some(&dot_query), finger_entity, &finger_data);
+                FretFinger::respawn_dots(
+                    &mut commands,
+                    &theme,
+                    Some(&dot_query),
+                    finger_entity,
+                    &finger_data,
+                );
                 FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
             }
             if let Some(fretboard) = fretboard {

@@ -26,10 +26,7 @@ pub struct GuitarCapo<'a> {
 
 impl<'a> LyonShape<shapes::Rectangle> for GuitarCapo<'a> {
     fn get_name(&self) -> String {
-        format!(
-            "<GuitarCapo>({:?})",
-            self.data.capo
-        )
+        format!("<GuitarCapo>({:?})", self.data.capo)
     }
     fn get_shape(&self) -> shapes::Rectangle {
         let width = self.data.guitar_size.width * self.theme.guitar.capo_width_factor;
@@ -52,7 +49,13 @@ impl<'a> LyonShape<shapes::Rectangle> for GuitarCapo<'a> {
             return BevyUtil::offscreen_transform();
         }
         let height = self.data.guitar_size.height * self.theme.guitar.capo_height_factor;
-        let y = self.theme.guitar.calc_fret_y(self.data.capo, self.data.guitar_size.height) + height * 0.5;
+        let finger_radius = self.theme.guitar.string_x_factor * self.data.guitar_size.width / 2.0;
+        let y = self
+            .theme
+            .guitar
+            .calc_fret_y(self.data.capo, self.data.guitar_size.height)
+            + height * 0.5
+            - finger_radius;
         Transform::from_xyz(0.0, y, self.theme.core.mini_bar_z + 2.0)
     }
 }

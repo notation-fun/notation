@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+use bevy_utils::prelude::BevyUtil;
 use notation_model::prelude::LaneEntry;
 
 use crate::prelude::{EntryPlaying, LyonShapeOp, NotationAssets, NotationSettings, NotationTheme};
@@ -11,14 +12,20 @@ pub fn on_entry_playing_changed(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
-    mut note_query: Query<(Entity, &mut PickNoteData)>,
+    mut note_query: Query<(Entity, &mut PickNoteData, &Children)>,
+    mut font_query: Query<&mut Text>,
 ) {
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
-            if let Ok((entity, mut data)) = note_query.get_mut(*child) {
+            if let Ok((entity, mut data, note_children)) = note_query.get_mut(*child) {
                 //println!("{:?} -> {:?} -> {:?}", name, data, playing)
                 data.value.playing_state = playing.value;
                 PickNoteShape::update(&mut commands, &theme, entity, &data);
+                for child in note_children.iter() {
+                    if let Ok(mut text) = font_query.get_mut(*child) {
+                        BevyUtil::set_text_color(&mut text, data.calc_fret_color(&theme));
+                    }
+                }
             }
         }
     }
@@ -50,24 +57,12 @@ macro_rules! impl_pick_system {
                             let syllable = bar.calc_syllable(&note.pitch);
                             let data =
                                 PickNoteData::new(entry, PickNoteValue::new(pick_note, syllable));
-                            let (width, height) = data.calc_width_height(&theme);
-                            PickNoteShape::create_with_child(
-                                commands,
-                                theme,
-                                entity,
-                                data,
-                                |child_commands| {
-                                    if settings.always_show_fret || pick_note.fret.is_some() {
-                                        theme.strings.insert_fret_text(
-                                            child_commands,
-                                            &assets,
-                                            fret,
-                                            width,
-                                            height,
-                                        );
-                                    }
-                                },
-                            );
+                            let note_entity = PickNoteShape::create(commands, theme, entity, data);
+                            if settings.always_show_fret || pick_note.fret.is_some() {
+                                theme
+                                    .strings
+                                    .spawn_fret_text(commands, note_entity, &assets, fret);
+                            }
                         }
                     }
                 }

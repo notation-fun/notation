@@ -43,6 +43,20 @@ impl PickNoteData {
         }
         (width, height)
     }
+    pub fn calc_outline_color(&self, theme: &NotationTheme) -> Color {
+        theme
+            .colors
+            .strings
+            .outline
+            .of_state(&self.value.playing_state)
+    }
+    pub fn calc_fret_color(&self, theme: &NotationTheme) -> Color {
+        theme
+            .colors
+            .strings
+            .fret
+            .of_state(&self.value.playing_state)
+    }
 }
 pub struct PickNoteShape<'a> {
     theme: &'a NotationTheme,
@@ -67,17 +81,13 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
         shapes::Rectangle {
             width,
             height,
-            origin: shapes::RectangleOrigin::Center,
+            origin: shapes::RectangleOrigin::TopLeft,
         }
     }
     fn get_colors(&self) -> ShapeColors {
         ShapeColors::outlined(
             self.theme.colors.of_syllable(self.data.value.syllable),
-            self.theme
-                .colors
-                .strings
-                .outline
-                .of_state(&self.data.value.playing_state),
+            self.data.calc_outline_color(self.theme),
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
@@ -102,8 +112,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
             * self.theme.strings.string_space
             * (self.data.value.pick_note.string as f32 - 0.5)
             - self.theme.strings.note_height / 2.0;
-        let (width, height) = self.calc_width_height();
-        Transform::from_xyz(x + width / 2.0, y + height / 2.0, self.theme.strings.pick_z)
+        Transform::from_xyz(x, y, self.theme.strings.pick_z)
     }
 }
 

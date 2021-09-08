@@ -1,5 +1,5 @@
-use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
+use bevy_utils::prelude::BevyUtil;
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::NotationAssets;
@@ -36,26 +36,26 @@ impl Default for LyricsTheme {
 }
 
 impl LyricsTheme {
-    pub fn insert_word_text(
+    pub fn spawn_word_text(
         &self,
-        entity_commands: &mut EntityCommands,
+        commands: &mut Commands,
+        entity: Entity,
         assets: &NotationAssets,
         text: &str,
     ) {
-        let font = assets.cn_font.clone();
-        let style = TextStyle {
-            font,
-            font_size: self.word_font_size,
-            color: self.word_font_color,
-        };
-        let alignment = TextAlignment {
-            vertical: VerticalAlign::Center,
-            horizontal: HorizontalAlign::Right,
-        };
-        entity_commands.insert_bundle(Text2dBundle {
-            text: Text::with_section(text, style, alignment),
-            transform: Transform::from_xyz(self.text_x, self.text_y, self.text_z),
-            ..Default::default()
-        });
+        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
+        BevyUtil::spawn_text(
+            commands,
+            entity,
+            text,
+            assets.cn_font.clone(),
+            self.word_font_size,
+            self.word_font_color,
+            HorizontalAlign::Right,
+            VerticalAlign::Center,
+            self.text_x,
+            self.text_y,
+            self.text_z,
+        );
     }
 }

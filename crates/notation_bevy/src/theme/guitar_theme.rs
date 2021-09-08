@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use notation_model::prelude::{GUITAR_STRING_NUM};
+use notation_model::prelude::GUITAR_STRING_NUM;
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
@@ -27,18 +27,14 @@ impl Default for GuitarTheme {
             string_y_factor: 0.467,
             fret_y_factors: [
                 //0
-                0.475, 0.425, 0.368, 0.315, 0.264,
-                //5
-                0.217, 0.172, 0.129, 0.089, 0.051,
-                //10
-                0.016, -0.018, -0.051, -0.080, -0.108,
-                //15
-                -0.135, -0.161, -0.184, -0.206, -0.227,
-                //20
+                0.475, 0.425, 0.368, 0.315, 0.264, //5
+                0.217, 0.172, 0.129, 0.089, 0.051, //10
+                0.016, -0.018, -0.051, -0.080, -0.108, //15
+                -0.135, -0.161, -0.184, -0.206, -0.227, //20
                 -0.248, -0.267, -0.286,
             ],
             capo_width_factor: 0.78,
-            capo_height_factor: 0.015,
+            capo_height_factor: 0.02,
         }
     }
 }

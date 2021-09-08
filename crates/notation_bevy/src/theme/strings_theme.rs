@@ -1,6 +1,6 @@
+use bevy_utils::prelude::BevyUtil;
 use serde::{Deserialize, Serialize};
 
-use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
 #[cfg(feature = "inspector")]
@@ -38,8 +38,8 @@ impl Default for StringsTheme {
             note_outline_color: Color::hex("AAAAAA").unwrap(),
             fret_font_size: 18.0,
             fret_font_color: Color::hex("000000").unwrap(),
-            fret_text_x: 4.0,
-            fret_text_y: 4.0,
+            fret_text_x: 2.0,
+            fret_text_y: -2.0,
             fret_text_z: 1.0,
             hit_string_seconds_range: (0.05, 0.15),
         }
@@ -47,32 +47,29 @@ impl Default for StringsTheme {
 }
 
 impl StringsTheme {
-    pub fn insert_fret_text(
+    pub fn spawn_fret_text(
         &self,
-        entity_commands: &mut EntityCommands,
+        commands: &mut Commands,
+        entity: Entity,
         assets: &NotationAssets,
         fret: u8,
-        note_width: f32,
-        note_height: f32,
     ) {
-        let font = assets.en_font.clone();
-        let style = TextStyle {
-            font,
-            font_size: self.fret_font_size,
-            color: self.fret_font_color,
-        };
-        let alignment = TextAlignment {
-            vertical: VerticalAlign::Center,
-            horizontal: HorizontalAlign::Right,
-        };
-        entity_commands.insert_bundle(Text2dBundle {
-            text: Text::with_section(format!("{}", fret).as_str(), style, alignment),
-            transform: Transform::from_xyz(
-                self.fret_text_x - note_width / 2.0,
-                self.fret_text_y - note_height / 2.0,
-                self.fret_text_z,
-            ),
-            ..Default::default()
-        });
+        let text = format!("{}", fret);
+        let x = self.fret_text_x;
+        let y = self.fret_text_y;
+        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
+        BevyUtil::spawn_text(
+            commands,
+            entity,
+            text.as_str(),
+            assets.en_font.clone(),
+            self.fret_font_size,
+            self.fret_font_color,
+            HorizontalAlign::Right,
+            VerticalAlign::Center,
+            x,
+            y,
+            self.fret_text_z,
+        );
     }
 }

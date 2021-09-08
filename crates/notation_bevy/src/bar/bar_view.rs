@@ -7,7 +7,7 @@ use crate::prelude::{
     BarBundle, BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings,
     NotationTheme,
 };
-use crate::tab::tab_events::{BarViewDoLayoutEvent};
+use crate::tab::tab_events::BarViewDoLayoutEvent;
 use crate::ui::layout::NotationLayout;
 use bevy_utils::prelude::{
     BevyUtil, GridCell, LayoutQuery, LyonShapeOp, VBoxView, View, ViewQuery,

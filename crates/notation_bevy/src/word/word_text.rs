@@ -36,6 +36,12 @@ pub struct WordTextShape<'a> {
     data: WordTextData,
 }
 
+impl WordTextData {
+    pub fn calc_text_color(&self, theme: &NotationTheme) -> Color {
+        theme.colors.lyrics.line.of_state(&self.value.playing_state)
+    }
+}
+
 impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
     fn get_name(&self) -> String {
         format!("{}:{}", self.data.bar_props.bar_ordinal, self.data.value)
@@ -47,13 +53,7 @@ impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
         shapes::Line(Vec2::ZERO, Vec2::new(width, 0.0))
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(
-            self.theme
-                .colors
-                .lyrics
-                .line
-                .of_state(&self.data.value.playing_state),
-        )
+        ShapeColors::new(self.data.calc_text_color(self.theme))
     }
     fn get_draw_mode(&self) -> DrawMode {
         let line_width = self

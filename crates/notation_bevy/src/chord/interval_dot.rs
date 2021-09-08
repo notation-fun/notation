@@ -96,11 +96,7 @@ impl<'a> LyonShape<shapes::Circle> for IntervalDot<'a> {
     }
     fn get_colors(&self) -> ShapeColors {
         let color = self.theme.colors.chord.dot.of_quality(&self.data.quality);
-        let outline = self
-            .theme
-            .sizes
-            .chord
-            .interval_dot_outline;
+        let outline = self.theme.sizes.chord.interval_dot_outline;
         if outline > 0.0 {
             ShapeColors::outlined(
                 color,
@@ -115,11 +111,7 @@ impl<'a> LyonShape<shapes::Circle> for IntervalDot<'a> {
         }
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let outline = self
-            .theme
-            .sizes
-            .chord
-            .interval_dot_outline;
+        let outline = self.theme.sizes.chord.interval_dot_outline;
         if outline > 0.0 {
             DrawMode::Outlined {
                 fill_options: FillOptions::default(),

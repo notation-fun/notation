@@ -4,7 +4,10 @@ use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery,
+    LayoutSize, View, ViewBundle, ViewQuery,
+};
 use notation_model::prelude::{Tab, TabBar};
 
 use crate::bar::bar_layout::BarLayoutData;

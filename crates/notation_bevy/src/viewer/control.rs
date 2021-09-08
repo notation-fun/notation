@@ -16,7 +16,10 @@ use notation_model::prelude::Tab;
 use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabPathes, WindowResizedEvent};
+use crate::prelude::{
+    NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabPathes,
+    WindowResizedEvent,
+};
 
 use super::app::NotationViewer;
 

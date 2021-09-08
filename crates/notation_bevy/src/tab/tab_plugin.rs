@@ -16,7 +16,10 @@ use super::tab_asset::TabAssetLoader;
 
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
-use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent, TabViewDoLayoutEvent};
+use super::tab_events::{
+    TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent, TabChordsDoLayoutEvent,
+    TabContentDoLayoutEvent, TabViewDoLayoutEvent,
+};
 use super::tab_view::TabView;
 
 pub struct TabPlugin;
@@ -40,7 +43,7 @@ impl Plugin for TabPlugin {
                 .with_system(TabContent::do_layout.system())
                 .with_system(TabChords::do_layout.system())
                 .with_system(TabBars::on_resized_pre.system())
-                .with_system(TabBars::do_layout.system())
+                .with_system(TabBars::do_layout.system()),
         );
     }
 }

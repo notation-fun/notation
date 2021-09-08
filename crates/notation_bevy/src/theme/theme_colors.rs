@@ -152,8 +152,9 @@ impl Default for ChordColors {
                 minor: color_of_hex("FFFFFF"),
                 augmented: color_of_hex("FF00FF"),
                 diminishd: color_of_hex("333333"),
-                tritone: color_of_hex("FF00FF"),}
-            }
+                tritone: color_of_hex("FF00FF"),
+            },
+        }
     }
 }
 
@@ -186,6 +187,7 @@ pub struct StringsColors {
     pub outline: PlayingColors,
     pub hit: Color,
     pub string: PlayingColors,
+    pub fret: PlayingColors,
     pub capo: Color,
 }
 impl Default for StringsColors {
@@ -197,6 +199,11 @@ impl Default for StringsColors {
                 color_of_hex("D3B59C"),
                 color_of_hex("FFFFFF"),
                 color_of_hex("D3B59C"),
+            ),
+            fret: PlayingColors::new(
+                color_of_hex("000000"),
+                color_of_hex("FF00FF"),
+                color_of_hex("555555"),
             ),
             capo: color_of_hex("222222"),
         }

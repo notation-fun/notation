@@ -2,9 +2,12 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_utils::prelude::{BevyUtil, LayoutSize};
-use notation_model::prelude::{Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Syllable, TabMeta};
+use notation_model::prelude::{
+    Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Syllable, TabMeta,
+};
 
-use crate::{chord::chord_note::{ChordNote, ChordNoteData, ChordNoteExtra, ChordNoteValue}, prelude::{NotationTheme}};
+use crate::chord::chord_note::{ChordNote, ChordNoteData, ChordNoteExtra, ChordNoteValue};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct FretFingerExtra {
@@ -51,7 +54,8 @@ impl FretFingerData {
             ChordNoteValue::<FretFingerExtra>::new(root, interval, extra),
         ))
     }
-    pub fn update(&mut self,
+    pub fn update(
+        &mut self,
         shape: &HandShape6,
         fretboard: Option<Fretboard6>,
         chord: Option<Chord>,
@@ -75,21 +79,38 @@ impl FretFingerData {
                         self.value.extra.in_chord = true;
                     } else {
                         self.value.interval = Interval::from((chord.root, syllable_note.syllable));
-                        println!("FretFingerData.update(): not in chord: {}, {} - {}: {} -> {} -> {} {}", shape, self.value.extra.string, chord, note, syllable_note, self.value.extra.in_chord, self.value.interval);
+                        println!(
+                            "FretFingerData.update(): not in chord: {}, {} - {}: {} -> {} -> {} {}",
+                            shape,
+                            self.value.extra.string,
+                            chord,
+                            note,
+                            syllable_note,
+                            self.value.extra.in_chord,
+                            self.value.interval
+                        );
                     }
                 }
             } else {
                 if let (Some(note), Some(meta)) = (note, meta) {
                     let syllable_note = meta.calc_syllable_note(&note);
                     self.value.root = syllable_note.syllable;
-                    println!("FretFingerData.update(): chord not found: {}, {}", shape, self.value.extra.string);
+                    println!(
+                        "FretFingerData.update(): chord not found: {}, {}",
+                        shape, self.value.extra.string
+                    );
                 } else {
-                    println!("FretFingerData.update(): chord and meta not found: {}, {}", shape, self.value.extra.string);
+                    println!(
+                        "FretFingerData.update(): chord and meta not found: {}, {}",
+                        shape, self.value.extra.string
+                    );
                 }
             }
         } else {
-            println!("FretFingerData.update(): fretboard not found: {}, {}", shape, self.value.extra.string);
-
+            println!(
+                "FretFingerData.update(): fretboard not found: {}, {}",
+                shape, self.value.extra.string
+            );
         }
     }
 }
@@ -104,9 +125,13 @@ impl ChordNoteExtra for FretFingerExtra {
         if self.should_hide(0) || self.guitar_size.width <= 0.0 {
             return BevyUtil::offscreen_offset();
         }
-        let x = theme.guitar.calc_string_x(self.string, self.guitar_size.width);
+        let x = theme
+            .guitar
+            .calc_string_x(self.string, self.guitar_size.width);
         let fret = self.fret.unwrap_or(0);
-        let y = theme.guitar.calc_fret_y(fret + self.capo, self.guitar_size.height);
+        let y = theme
+            .guitar
+            .calc_fret_y(fret + self.capo, self.guitar_size.height);
         Vec2::new(x, y)
     }
     fn get_color(&self, theme: &NotationTheme, color: Color) -> Color {

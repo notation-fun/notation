@@ -132,7 +132,7 @@ impl From<Semitones> for Interval {
         }
         let mut s = v.0;
         while s < 0 {
-             s += 12;
+            s += 12;
         }
         match s % 12 {
             0 => Self::Perfect8ve,
@@ -157,7 +157,6 @@ impl From<(Syllable, Syllable)> for Interval {
         (Semitones::from(v.1) - Semitones::from(v.0)).into()
     }
 }
-
 
 impl Interval {
     pub fn is_matched(&self, root: Syllable, syllable: Syllable) -> bool {

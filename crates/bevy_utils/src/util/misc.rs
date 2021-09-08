@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-pub struct BevyUtil();
+use super::BevyUtil;
 
 impl BevyUtil {
     pub fn offscreen_offset() -> Vec2 {
