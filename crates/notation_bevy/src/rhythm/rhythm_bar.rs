@@ -153,6 +153,7 @@ impl<'a> RhythmBar<'a> {
             let bar_props = current_bar.unwrap().props;
             for (bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
                 if bar_data.value.chord != current_chord {
+                    bar_data.bar_props = bar_props;
                     bar_data.value.chord = current_chord;
                     RhythmBar::update(&mut commands, &theme, bar_entity, &bar_data);
                 }
@@ -165,10 +166,12 @@ impl<'a> RhythmBar<'a> {
             }
             let in_bar_pos = current_position.unwrap().bar.in_bar_pos;
             for (beat_entity, mut beat_data) in beat_query.iter_mut() {
+                beat_data.bar_props = bar_props;
                 beat_data.value.in_bar_pos = in_bar_pos;
                 RhythmBeat::update(&mut commands, &theme, beat_entity, &beat_data);
             }
             for (indicator_entity, mut indicator_data) in indicator_query.iter_mut() {
+                indicator_data.bar_props = bar_props;
                 indicator_data.value.in_bar_pos = in_bar_pos;
                 RhythmIndicator::update(&mut commands, &theme, indicator_entity, &indicator_data);
             }

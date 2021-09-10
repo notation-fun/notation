@@ -52,6 +52,13 @@ impl<'a> LyonShape<shapes::SvgPathShape> for RhythmIndicator<'a> {
         self.data.shape(self.theme)
     }
     fn get_colors(&self) -> ShapeColors {
+        /*
+        ShapeColors::new(
+            self.theme
+                .colors
+                .of_section(self.data.bar_props.section_index),
+        )
+         */
         ShapeColors::new(
             self.theme
                 .colors
