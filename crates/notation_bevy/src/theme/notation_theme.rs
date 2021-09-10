@@ -9,6 +9,7 @@ use super::shapes_theme::ShapesTheme;
 use super::strings_theme::StringsTheme;
 use super::theme_colors::ThemeColors;
 use super::theme_sizes::ThemeSizes;
+use super::theme_texts::ThemeTexts;
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
@@ -20,6 +21,7 @@ pub struct NotationTheme {
     pub grid: GridTheme,
     pub sizes: ThemeSizes,
     pub colors: ThemeColors,
+    pub texts: ThemeTexts,
     pub melody: MelodyTheme,
     pub lyrics: LyricsTheme,
     pub shapes: ShapesTheme,

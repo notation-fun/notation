@@ -11,6 +11,7 @@ use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct FretFingerExtra {
+    pub visible: bool,
     pub string: u8,
     pub fret: Option<u8>,
     pub finger: Option<Finger>,
@@ -25,6 +26,7 @@ pub type FretFinger<'a> = ChordNote<'a, FretFingerExtra>;
 impl FretFingerExtra {
     pub fn new(string: u8, fret: Option<u8>, finger: Option<Finger>) -> Self {
         Self {
+            visible: false,
             string,
             fret,
             finger,
@@ -32,10 +34,6 @@ impl FretFingerExtra {
             in_chord: false,
             guitar_size: LayoutSize::ZERO,
         }
-    }
-    pub fn should_hide(&self, _default_fret: u8) -> bool {
-        false
-        //self.fret.is_some() && self.fret.unwrap() == default_fret
     }
 }
 
@@ -61,6 +59,7 @@ impl FretFingerData {
         chord: Option<Chord>,
         meta: Option<Arc<TabMeta>>,
     ) {
+        self.value.extra.visible = false;
         self.value.extra.capo = 0;
         self.value.root = Syllable::Fi;
         self.value.interval = Interval::Tritone;
@@ -71,6 +70,7 @@ impl FretFingerData {
             self.value.extra.capo = fretboard.capo;
             let note = fretboard.shape_note(shape, self.value.extra.string);
             if let (Some(chord), Some(meta)) = (chord, meta.clone()) {
+                self.value.extra.visible = true;
                 if let Some(note) = note {
                     self.value.root = chord.root;
                     let syllable_note = meta.calc_syllable_note(&note);
@@ -93,6 +93,7 @@ impl FretFingerData {
                 }
             } else {
                 if let (Some(note), Some(meta)) = (note, meta) {
+                    self.value.extra.visible = true;
                     let syllable_note = meta.calc_syllable_note(&note);
                     self.value.root = syllable_note.syllable;
                     println!(
@@ -122,7 +123,7 @@ impl ChordNoteExtra for FretFingerExtra {
     }
     fn offset(&self, theme: &NotationTheme) -> Vec2 {
         //TODO: calc with fretboard information for muted fret
-        if self.should_hide(0) || self.guitar_size.width <= 0.0 {
+        if !self.visible || self.guitar_size.width <= 0.0 {
             return BevyUtil::offscreen_offset();
         }
         let x = theme

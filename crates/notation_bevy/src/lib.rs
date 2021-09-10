@@ -24,6 +24,7 @@ pub mod lyrics;
 pub mod melody;
 pub mod shapes;
 pub mod strings;
+pub mod rhythm;
 
 pub mod data;
 pub mod settings;

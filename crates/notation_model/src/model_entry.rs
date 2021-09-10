@@ -1,9 +1,7 @@
 use std::sync::{Arc, Weak};
 
 use crate::prelude::Track;
-use notation_proto::prelude::{
-    Duration, Entry, FrettedEntry4, FrettedEntry6, ProtoEntry, TrackKind, Units,
-};
+use notation_proto::prelude::{Duration, Entry, EntryPassMode, FrettedEntry4, FrettedEntry6, ProtoEntry, TrackKind, Units};
 
 #[derive(Copy, Clone, Debug)]
 pub struct ModelEntryProps {
@@ -44,6 +42,9 @@ impl Entry for ModelEntry {
     }
     fn tied_units(&self) -> Units {
         self.props.tied_units
+    }
+    fn pass_mode(&self) -> EntryPassMode {
+        self.proto.pass_mode()
     }
 }
 impl ModelEntry {

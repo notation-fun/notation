@@ -92,11 +92,11 @@ fn _do_tick(
     state: &mut MidiState,
     hub: &mut MidiHub,
     play_control_evts: &mut EventWriter<PlayControlEvent>,
-    send_unchanged: bool,
+    jumped: bool,
     delta_seconds: f32,
 ) {
-    let tick_result = state.tick(settings, hub, delta_seconds);
-    if send_unchanged || tick_result.changed {
+    let tick_result = state.tick(settings, hub, jumped, delta_seconds);
+    if jumped || tick_result.changed {
         play_control_evts.send(PlayControlEvent::on_tick(
             state.play_control.position,
             tick_result,

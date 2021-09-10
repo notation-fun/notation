@@ -3,7 +3,7 @@ use std::fmt::Display;
 
 use super::prelude::{Fretboard4, Fretboard6, HandShape4, HandShape6};
 use crate::prelude::{Pick, Strum};
-use notation_core::prelude::{Duration, Entry};
+use notation_core::prelude::{Duration, Entry, EntryPassMode};
 
 macro_rules! impl_entry {
     ($type:ident, $strings:literal, $hand_shape:ident, $fretboard:ident) => {
@@ -32,6 +32,14 @@ macro_rules! impl_entry {
                     $type::Strum(_, duration) => *duration,
                     $type::Shape(_, duration) => *duration,
                     $type::Fretboard(_) => Duration::Zero,
+                }
+            }
+            pub fn pass_mode(&self) -> EntryPassMode {
+                match self {
+                    $type::Pick(_, _duration) => EntryPassMode::Delayed,
+                    $type::Strum(_, _duration) => EntryPassMode::Delayed,
+                    $type::Shape(_, _duration) => EntryPassMode::Immediate,
+                    $type::Fretboard(_) => EntryPassMode::Immediate,
                 }
             }
         }
@@ -92,6 +100,9 @@ macro_rules! impl_entry {
         impl Entry for $type {
             fn duration(&self) -> Duration {
                 self.duration()
+            }
+            fn pass_mode(&self) -> EntryPassMode {
+                self.pass_mode()
             }
         }
 

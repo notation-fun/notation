@@ -58,13 +58,15 @@ pub struct TickResult {
     pub changed: bool,
     pub end_passed: bool,
     pub stopped: bool,
+    pub jumped: bool,
 }
 impl TickResult {
-    pub fn new(changed: bool, end_passed: bool, stopped: bool) -> Self {
+    pub fn new(changed: bool, end_passed: bool, stopped: bool, jumped: bool) -> Self {
         Self {
             changed,
             end_passed,
             stopped,
+            jumped,
         }
     }
 }
@@ -116,7 +118,7 @@ impl PlayControl {
             true
         }
     }
-    pub fn tick(&mut self, delta_seconds: f32) -> TickResult {
+    pub fn tick(&mut self, jumped: bool, delta_seconds: f32) -> TickResult {
         if self.play_state.is_playing() {
             let delta_units = self.play_speed.calc_units(delta_seconds);
             self.position.tick(delta_units);
@@ -136,9 +138,9 @@ impl PlayControl {
             } else {
                 false
             };
-            TickResult::new(true, end_passed, stopped)
+            TickResult::new(true, end_passed, stopped, jumped)
         } else {
-            TickResult::new(false, false, false)
+            TickResult::new(false, false, false, jumped)
         }
     }
     pub fn is_bar_in_range(&self, bar_ordinal: usize) -> bool {

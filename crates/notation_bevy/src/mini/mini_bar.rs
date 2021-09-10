@@ -6,7 +6,7 @@ use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, View, ViewBundle};
 use notation_model::prelude::{PlayingState, Syllable, TabBar};
 
-use crate::prelude::{BarData, BarPlaying, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{BarData, BarPlaying, LyonShape, LyonShapeOp, NotationAssets, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::mini_section_separator::{
@@ -18,11 +18,11 @@ pub type MiniBar = BarData<Arc<TabBar>>;
 #[derive(Clone, Debug)]
 pub struct MiniBarValue {
     pub width: f32,
-    pub syllable: Syllable,
+    pub syllable: Option<Syllable>,
     pub playing_state: PlayingState,
 }
 impl MiniBarValue {
-    pub fn new(width: f32, syllable: Syllable) -> Self {
+    pub fn new(width: f32, syllable: Option<Syllable>) -> Self {
         Self {
             width,
             syllable,
@@ -68,7 +68,7 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        let fill = self.theme.colors.of_syllable(self.data.value.syllable);
+        let fill = self.theme.colors.of_option_syllable(self.data.value.syllable);
         let outline = self
             .theme
             .colors
@@ -122,6 +122,7 @@ impl<'a> GridCell<NotationLayout<'a>> for MiniBar {
 impl MiniBar {
     pub fn spawn(
         commands: &mut Commands,
+        assets: &NotationAssets,
         theme: &NotationTheme,
         entity: Entity,
         bar: &Arc<TabBar>,
@@ -131,7 +132,7 @@ impl MiniBar {
             entity,
             ViewBundle::from(MiniBar::new(bar, bar.clone())),
         );
-        let syllable = bar.get_chord(None).map(|x| x.root).unwrap_or(Syllable::Do);
+        let syllable = bar.get_chord(None).map(|x| x.root);
         let value = MiniBarValue::new(0.0, syllable);
         let data = MiniBarData::new(bar, value);
         let shape_entity = MiniBarShape::create(commands, theme, bar_entity, data);
@@ -142,6 +143,7 @@ impl MiniBar {
             let section_separator_data =
                 MiniSectionSeparatorData::new(bar, MiniSectionSeparatorValue::new(0.0));
             MiniSectionSeparator::create(commands, theme, bar_entity, section_separator_data);
+            theme.texts.mini_map.spawn_bar_text(commands, shape_entity, assets, bar.props.bar_ordinal.to_string().as_str());
         }
         bar_entity
     }

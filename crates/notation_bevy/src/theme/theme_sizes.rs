@@ -38,6 +38,7 @@ pub struct ThemeSizes {
     pub lyrics: LyricsSizes,
     pub strings: StringsSizes,
     pub mini_map: MiniMapSizes,
+    pub tab_control: TabControlSizes,
     pub layout: LayoutSizes,
 }
 
@@ -59,6 +60,7 @@ impl Default for BarSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ChordSizes {
+    pub max_chord_rows: usize,
     pub chord_size_range: (f32, f32),
     pub diagram_factor: f32,
     pub diagram_outline: PlayingSize,
@@ -77,7 +79,8 @@ pub struct ChordSizes {
 impl Default for ChordSizes {
     fn default() -> Self {
         Self {
-            chord_size_range: (32.0, 80.0),
+            max_chord_rows: 2,
+            chord_size_range: (48.0, 80.0),
             diagram_factor: 0.45,
             diagram_outline: PlayingSize::new(0.5, 2.0, 1.0),
             diagram_interval_radius_factor: 0.33,
@@ -134,6 +137,31 @@ impl Default for StringsSizes {
         Self {
             note_height: 6.0,
             note_outline: PlayingSize::new(0.5, 1.0, 1.0),
+        }
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct TabControlSizes {
+    pub control_width: f32,
+    pub control_height: f32,
+    pub dock_top_width: f32,
+    pub rhythm_bar_radius_factor: f32,
+    pub rhythm_bar_radius_extra: f32,
+    pub rhythm_beat_radius_factor: f32,
+    pub rhythm_beat_offset_factor: f32,
+}
+impl Default for TabControlSizes {
+    fn default() -> Self {
+        Self {
+            control_width: 160.0,
+            control_height: 80.0,
+            dock_top_width: 320.0,
+            rhythm_bar_radius_factor: 0.45,
+            rhythm_bar_radius_extra: 2.0,
+            rhythm_beat_radius_factor: 0.15,
+            rhythm_beat_offset_factor: 0.8,
         }
     }
 }

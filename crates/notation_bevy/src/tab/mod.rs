@@ -3,6 +3,8 @@ pub mod tab_bars;
 pub mod tab_bundle;
 pub mod tab_chords;
 pub mod tab_content;
+pub mod tab_control;
+pub mod tab_header;
 pub mod tab_events;
 pub mod tab_plugin;
 pub mod tab_state;

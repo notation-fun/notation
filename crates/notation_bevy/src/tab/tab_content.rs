@@ -8,8 +8,8 @@ use notation_model::prelude::Tab;
 use crate::prelude::{NotationAppState, NotationSettings, NotationTheme, TabBars};
 use crate::ui::layout::NotationLayout;
 
-use super::tab_chords::TabChords;
 use super::tab_events::TabContentDoLayoutEvent;
+use super::tab_header::TabHeader;
 
 pub struct TabContent {
     pub tab: Arc<Tab>,
@@ -25,7 +25,7 @@ impl TabContent {
     }
 }
 impl<'a> View<NotationLayout<'a>> for TabContent {}
-impl<'a> DockView<NotationLayout<'a>, TabChords, TabBars> for TabContent {}
+impl<'a> DockView<NotationLayout<'a>, TabHeader, TabBars> for TabContent {}
 
 impl TabContent {
     pub fn do_layout(
@@ -34,7 +34,7 @@ impl TabContent {
         state: Res<NotationAppState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
-        panel_query: ViewQuery<TabChords>,
+        panel_query: ViewQuery<TabHeader>,
         content_query: ViewQuery<TabBars>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);

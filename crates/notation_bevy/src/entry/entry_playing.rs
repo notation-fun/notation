@@ -32,6 +32,7 @@ impl EntryPlaying {
         tab_state: &TabState,
         new_position: &Position,
         end_passed: bool,
+        jumped: bool,
     ) {
         let playing_bar_ordinal = new_position.bar.bar_ordinal;
         for (_entity, entry, mut entry_playing) in query.iter_mut() {
@@ -39,7 +40,7 @@ impl EntryPlaying {
             if tab_state.is_bar_in_range(bar_ordinal) {
                 if entry_playing.value.is_current()
                     && new_position
-                        .is_passed_with(&entry_playing.bar_position(), entry.tied_units())
+                        .is_passed_with(entry.pass_mode(), &entry_playing.bar_position(), entry.tied_units())
                 {
                     if entry_playing.value != PlayingState::Played {
                         entry_playing.value = PlayingState::Played;
@@ -47,13 +48,13 @@ impl EntryPlaying {
                 }
                 if entry_playing.bar_props.bar_ordinal == playing_bar_ordinal
                     && entry_playing.value.is_idle()
-                    && new_position.is_passed(&entry_playing.bar_position())
+                    && new_position.is_passed(entry.pass_mode(), &entry_playing.bar_position())
                 {
                     if entry_playing.value != PlayingState::Current {
                         entry_playing.value = PlayingState::Current;
                     }
                 }
-                if end_passed {
+                if end_passed || jumped {
                     if entry_playing.value.is_played() || bar_ordinal > playing_bar_ordinal {
                         if entry_playing.value != PlayingState::Idle {
                             entry_playing.value = PlayingState::Idle;

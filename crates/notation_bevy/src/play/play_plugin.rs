@@ -232,6 +232,7 @@ fn on_tick(
         changed: _changed,
         end_passed,
         stopped,
+        jumped,
     } = tick_result;
     if *stopped {
         tab_state.set_play_state(commands, state_entity, PlayState::Stopped);
@@ -248,7 +249,7 @@ fn on_tick(
         let playing_bar_ordinal = new_position.bar.bar_ordinal;
         BarPlaying::update(bar_playing_query, tab_state, playing_bar_ordinal);
         ChordPlaying::update(chord_playing_query, tab_state, new_position);
-        EntryPlaying::update_with_pos(entry_playing_query, tab_state, new_position, *end_passed);
+        EntryPlaying::update_with_pos(entry_playing_query, tab_state, new_position, *end_passed, *jumped);
     }
 }
 

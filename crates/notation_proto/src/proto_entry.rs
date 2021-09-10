@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use notation_core::prelude::{CoreEntry, Duration, Entry, MetaEntry};
+use notation_core::prelude::{CoreEntry, Duration, Entry, EntryPassMode, MetaEntry};
 use notation_fretted::prelude::{FrettedEntry4, FrettedEntry6};
 
 use crate::prelude::LyricEntry;
@@ -40,6 +40,17 @@ impl ProtoEntry {
             ProtoEntry::Fretted6(entry) => entry.duration(),
             ProtoEntry::Fretted4(entry) => entry.duration(),
             ProtoEntry::Extra(_, _) => Duration::Zero,
+        }
+    }
+    pub fn pass_mode(&self) -> EntryPassMode {
+        match self {
+            ProtoEntry::Mark(_) => EntryPassMode::Immediate,
+            ProtoEntry::Meta(entry) => entry.pass_mode(),
+            ProtoEntry::Core(entry) => entry.pass_mode(),
+            ProtoEntry::Lyric(entry) => entry.pass_mode(),
+            ProtoEntry::Fretted6(entry) => entry.pass_mode(),
+            ProtoEntry::Fretted4(entry) => entry.pass_mode(),
+            ProtoEntry::Extra(_, _) => EntryPassMode::Immediate,
         }
     }
     /// Returns `true` if the proto_entry is [`Mark`].
@@ -145,6 +156,9 @@ impl ProtoEntry {
 impl Entry for ProtoEntry {
     fn duration(&self) -> Duration {
         self.duration()
+    }
+    fn pass_mode(&self) -> EntryPassMode {
+        self.pass_mode()
     }
 }
 

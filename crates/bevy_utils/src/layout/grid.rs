@@ -322,11 +322,13 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
             cells.sort_by(|a, b| a.view.order().cmp(&b.view.order()));
         }
         commands.entity(entity).insert(grid_data.clone());
+        /*
         println!(
             "<GridView<{}>>::do_layout({:#?})",
             std::any::type_name::<TC>(),
             grid_data
         );
+         */
         for (index, cell) in cells.iter().enumerate() {
             let (row, col) = self.calc_row_col(engine, &grid_data, index);
             let offset = self.calc_cell_offset(engine, &grid_data, row, col);

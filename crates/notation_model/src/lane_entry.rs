@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
 use crate::prelude::{BarLane, BarLaneProps, ModelEntry, Tab, TabBar, TabBarProps, Track};
-use notation_proto::prelude::{BarPosition, Duration, Entry, ProtoEntry, TrackKind, Units};
+use notation_proto::prelude::{BarPosition, Duration, Entry, EntryPassMode, ProtoEntry, TrackKind, Units};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct LaneEntryProps {
@@ -51,6 +51,9 @@ impl Entry for LaneEntry {
     }
     fn tied_units(&self) -> Units {
         self.model.tied_units()
+    }
+    fn pass_mode(&self) -> EntryPassMode {
+        self.model.pass_mode()
     }
 }
 impl LaneEntry {

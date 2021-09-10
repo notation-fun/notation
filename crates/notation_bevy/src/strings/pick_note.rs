@@ -110,7 +110,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
             * self.data.entry_props.in_bar_pos.0;
         let y = -1.0
             * self.theme.strings.string_space
-            * (self.data.value.pick_note.string as f32 - 0.5)
+            * (self.data.value.pick_note.string as f32 - 1.0)
             - self.theme.strings.note_height / 2.0;
         Transform::from_xyz(x, y, self.theme.strings.pick_z)
     }

@@ -40,4 +40,10 @@ impl BevyUtil {
             section.style.color = color;
         }
     }
+    pub fn set_text_value(text: &mut Text, v: String) {
+        for section in text.sections.iter_mut() {
+            section.value = v;
+            return;
+        }
+    }
 }

@@ -11,9 +11,9 @@ use crate::prelude::{
 };
 use crate::ui::layout::NotationLayout;
 
-use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
 use super::tab_events::TabViewDoLayoutEvent;
+use super::tab_header::TabHeader;
 
 pub struct TabView {
     pub tab: Arc<Tab>,
@@ -43,13 +43,13 @@ impl TabView {
         let tab_bundle = TabBundle::new(tab.clone());
         //let tab_view = tab_bundle.view.clone();
         let tab_entity = BevyUtil::spawn_child_bundle(commands, entity, tab_bundle);
-        MiniMap::spawn(commands, theme, tab_entity, &tab);
+        MiniMap::spawn(commands, assets, theme, tab_entity, &tab);
         let content_entity = BevyUtil::spawn_child_bundle(
             commands,
             tab_entity,
             ViewBundle::from(TabContent::new(tab.clone())),
         );
-        TabChords::spawn(commands, theme, content_entity, &tab);
+        TabHeader::spawn(commands, assets, theme, content_entity, &tab);
         TabBars::spawn(commands, assets, theme, &settings, content_entity, &tab);
         tab_entity
     }

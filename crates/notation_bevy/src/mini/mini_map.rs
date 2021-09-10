@@ -3,7 +3,7 @@ use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{NotationAppState, NotationLayout, NotationSettings, NotationTheme};
+use crate::prelude::{NotationAppState, NotationAssets, NotationLayout, NotationSettings, NotationTheme};
 use bevy_utils::prelude::{
     BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
@@ -45,7 +45,7 @@ impl MiniMap {
     }
 }
 impl<'a> DockPanel<NotationLayout<'a>> for MiniMap {
-    fn dock_side(&self) -> DockSide {
+    fn dock_side(&self, _engine: &NotationLayout<'a>, _size: LayoutSize) -> DockSide {
         DockSide::Bottom
     }
 }
@@ -66,6 +66,7 @@ impl<'a> GridView<NotationLayout<'a>, MiniBar> for MiniMap {
 impl MiniMap {
     pub fn spawn(
         commands: &mut Commands,
+        assets: &NotationAssets,
         theme: &NotationTheme,
         entity: Entity,
         tab: &Arc<Tab>,
@@ -79,7 +80,7 @@ impl MiniMap {
             theme.colors.mini_map.back,
         );
         for bar in tab.bars.iter() {
-            MiniBar::spawn(commands, theme, map_entity, bar);
+            MiniBar::spawn(commands, assets, theme, map_entity, bar);
         }
         map_entity
     }

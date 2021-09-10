@@ -10,6 +10,7 @@ pub fn new_tab() -> Tab {
                 $duration = _1
                 "1" Chord ( 1: 3 5 )
                 "1/4" Chord ( 1: 3 5 /4 )
+                "1/5" Chord ( 1: 3 5 /5 )
                 "1_9" Chord ( 1: 3 5 9 )
                 "2-" Chord ( 2: 3- 5 7- )
                 "3-" Chord ( 3: 3- 5 7- )
@@ -28,6 +29,8 @@ pub fn new_tab() -> Tab {
                 "G" Shape ( 3 2 0 0 0 3 )
                 "Em7" Shape ( 0 2 0 0 0 0 )
                 "G/C" Shape ( 0 3 0 0 0 0 )
+                "G/D" Shape ( _ 0 0 0 0 0 )
+                "Gadd9" Shape ( 3 2 0 2 0 _ )
                 "Am7" Shape ( 0 0 2 0 1 0 )
                 "D" Shape ( 0 0 0 2 3 2 )
                 "Cmaj7" Shape ( 0 3 2 0 0 0 )
@@ -162,8 +165,8 @@ pub fn new_tab() -> Tab {
                     chord [ "1/4" 1 ]
                     guitar [ "G/C" 1 ; "i:3" | ]
                 } {
-                    chord [ "1" 1 ]
-                    guitar [ "G" 1 ; "i:4" | ]
+                    chord [ "1/5" 1 ]
+                    guitar [ "G/D" 1 ; "i:4" | ]
                 }
             ]}
             {verse Verse [
@@ -252,8 +255,8 @@ pub fn new_tab() -> Tab {
                     lyrics [ "b:3" | ]
                     vocal [ "b" | ]
                 } {
-                    chord [ "5" 1 ]
-                    guitar [ "G" 1 ; "i:4" | ]
+                    chord [ "1/5" 1 ]
+                    guitar [ "G/D" 1 ; "i:4" | ]
                     lyrics [ "b:4" | ]
                     vocal [ "b" | ]
                 }
@@ -276,7 +279,7 @@ pub fn new_tab() -> Tab {
                     vocal [ "o:3" | ]
                 } {
                     chord [ "1_9" 1 ]
-                    guitar [ "G" 1 ; "o:4" | ]
+                    guitar [ "Gadd9" 1 ; "o:4" | ]
                     lyrics [ "0:4" | ]
                     vocal [ "o:4" | ]
                 }

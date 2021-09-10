@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::prelude::{Chord, Duration, Entry, Tone};
+use crate::prelude::{Chord, Duration, Entry, EntryPassMode, Tone};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum CoreEntry {
@@ -30,11 +30,21 @@ impl CoreEntry {
             CoreEntry::Chord(_, duration) => *duration,
         }
     }
+    pub fn pass_mode(&self) -> EntryPassMode {
+        if self.is_tone() {
+            EntryPassMode::Delayed
+        } else {
+            EntryPassMode::Immediate
+        }
+    }
 }
 
 impl Entry for CoreEntry {
     fn duration(&self) -> Duration {
         self.duration()
+    }
+    fn pass_mode(&self) -> EntryPassMode {
+        self.pass_mode()
     }
 }
 

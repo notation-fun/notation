@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use notation_core::prelude::EntryPassMode;
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::{Duration, Entry};
@@ -42,11 +43,17 @@ impl LyricEntry {
             Self::Word(_, duration) => *duration,
         }
     }
+    pub fn pass_mode(&self) -> EntryPassMode {
+        EntryPassMode::Delayed
+    }
 }
 
 impl Entry for LyricEntry {
     fn duration(&self) -> Duration {
         self.duration()
+    }
+    fn pass_mode(&self) -> EntryPassMode {
+        self.pass_mode()
     }
 }
 

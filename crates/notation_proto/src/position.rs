@@ -1,5 +1,6 @@
 use std::fmt::Display;
 
+use notation_core::prelude::EntryPassMode;
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::Units;
@@ -112,12 +113,20 @@ impl Position {
         self.bar.bar_ordinal = bar_ordinal;
         self.bar.in_bar_pos = in_bar_pos;
     }
-    pub fn is_passed(&self, pos: &BarPosition) -> bool {
-        let in_tab_pos = self.cal_bar_pos(pos.bar_ordinal) + pos.in_bar_pos;
-        in_tab_pos.0 <= self.tab.in_tab_pos.0
+    pub fn _is_passed(&self, pass_mode: EntryPassMode, in_tab_pos: Units) -> bool {
+        match pass_mode {
+            EntryPassMode::Immediate =>
+                in_tab_pos.0 <= self.tab.in_tab_pos.0,
+            EntryPassMode::Delayed =>
+                in_tab_pos.0 < self.tab.in_tab_pos.0,
+        }
     }
-    pub fn is_passed_with(&self, pos: &BarPosition, units: Units) -> bool {
+    pub fn is_passed(&self, pass_mode: EntryPassMode, pos: &BarPosition) -> bool {
+        let in_tab_pos = self.cal_bar_pos(pos.bar_ordinal) + pos.in_bar_pos;
+        self._is_passed(pass_mode, in_tab_pos)
+    }
+    pub fn is_passed_with(&self, pass_mode: EntryPassMode, pos: &BarPosition, units: Units) -> bool {
         let in_tab_pos = self.cal_bar_pos(pos.bar_ordinal) + pos.in_bar_pos + units;
-        in_tab_pos.0 <= self.tab.in_tab_pos.0
+        self._is_passed(pass_mode, in_tab_pos)
     }
 }

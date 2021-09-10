@@ -12,13 +12,15 @@ pub fn on_entry_playing_changed(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
-    mut note_query: Query<(Entity, &mut PickNoteData, &Children)>,
+    mut note_query: QuerySet<(
+        Query<(Entity, &mut PickNoteData, &Children)>,
+        Query<(Entity, &mut PickNoteData)>,
+    )>,
     mut font_query: Query<&mut Text>,
 ) {
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
-            if let Ok((entity, mut data, note_children)) = note_query.get_mut(*child) {
-                //println!("{:?} -> {:?} -> {:?}", name, data, playing)
+            if let Ok((entity, mut data, note_children)) = note_query.q0_mut().get_mut(*child) {
                 data.value.playing_state = playing.value;
                 PickNoteShape::update(&mut commands, &theme, entity, &data);
                 for child in note_children.iter() {
@@ -26,6 +28,9 @@ pub fn on_entry_playing_changed(
                         BevyUtil::set_text_color(&mut text, data.calc_fret_color(&theme));
                     }
                 }
+            } else if let Ok((entity, mut data)) = note_query.q1_mut().get_mut(*child) {
+                data.value.playing_state = playing.value;
+                PickNoteShape::update(&mut commands, &theme, entity, &data);
             }
         }
     }

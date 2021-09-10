@@ -1,4 +1,4 @@
-use notation_model::prelude::{IntervalQuality, Octave, PlayingState, Semitones, Syllable};
+use notation_model::prelude::{Chord, IntervalQuality, Octave, PlayingState, Semitones, Signature, Syllable};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -87,14 +87,22 @@ pub struct ThemeColors {
     pub lyrics: LyricsColors,
     pub section: SectionColors,
     pub strings: StringsColors,
+    pub rhythm: RhythmColors,
     pub mini_map: MiniMapColors,
+}
+
+impl ThemeColors {
+    pub fn color_of_hex(hex: &str) -> Color {
+        color_of_hex(hex)
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct SyllableColors {
-    pub syllables: [Color; 12],
     pub outline: PlayingColors,
+    pub syllables: [Color; 12],
+    pub no_syllable: Color,
 }
 //https://meyerweb.com/eric/tools/color-blend/
 impl Default for SyllableColors {
@@ -115,6 +123,7 @@ impl Default for SyllableColors {
                 color_of_hex("5F785A"), // Li, Te
                 color_of_hex("7C87E8"), // Ti
             ],
+            no_syllable: color_of_hex("888888"),
         }
     }
 }
@@ -202,10 +211,10 @@ impl Default for StringsColors {
             ),
             fret: PlayingColors::new(
                 color_of_hex("000000"),
-                color_of_hex("FF00FF"),
+                color_of_hex("000000"),
                 color_of_hex("555555"),
             ),
-            capo: color_of_hex("222222"),
+            capo: color_of_hex("333333"),
         }
     }
 }
@@ -226,6 +235,50 @@ impl Default for SectionColors {
                 color_of_hex("44CCCC"),
                 color_of_hex("CC44CC"),
             ],
+        }
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct RhythmColors {
+    pub beats: [Color; 3],
+}
+impl Default for RhythmColors {
+    fn default() -> Self {
+        Self {
+            beats: [
+                color_of_hex("444444"),
+                color_of_hex("222222"),
+                color_of_hex("333333"),
+            ],
+        }
+    }
+}
+
+impl RhythmColors {
+    pub fn get_beat_color(&self, signature: &Signature, beat: u8) -> Color {
+        if beat == 0 {
+            return self.beats[0];
+        }
+        if signature.bar_beats % 4 == 0 {
+            match beat % 4 {
+                1 => self.beats[1],
+                2 => self.beats[2],
+                3 => self.beats[1],
+                _ => self.beats[0],
+            }
+        } else if signature.bar_beats % 3 == 0 {
+            match beat % 3 {
+                1 => self.beats[1],
+                2 => self.beats[2],
+                _ => self.beats[0],
+            }
+        } else {
+            match beat % 2 {
+                1 => self.beats[1],
+                _ => self.beats[0],
+            }
         }
     }
 }
@@ -257,6 +310,20 @@ impl SyllableColors {
     pub fn of_syllable_octave(&self, v: Syllable, _o: Octave) -> Color {
         self.of_semitones(Semitones::from(v))
     }
+    pub fn of_option_syllable(&self, v: Option<Syllable>) -> Color {
+        if let Some(syllable) = v {
+            self.of_syllable(syllable)
+        } else {
+            self.no_syllable
+        }
+    }
+    pub fn of_option_chord(&self, v: Option<Chord>) -> Color {
+        if let Some(chord) = v {
+            self.of_syllable(chord.root)
+        } else {
+            self.no_syllable
+        }
+    }
 }
 
 impl SectionColors {
@@ -268,6 +335,12 @@ impl SectionColors {
 impl ThemeColors {
     pub fn of_syllable(&self, v: Syllable) -> Color {
         self.syllables.of_syllable(v)
+    }
+    pub fn of_option_syllable(&self, v: Option<Syllable>) -> Color {
+        self.syllables.of_option_syllable(v)
+    }
+    pub fn of_option_chord(&self, v: Option<Chord>) -> Color {
+        self.syllables.of_option_chord(v)
     }
     pub fn of_section(&self, v: usize) -> Color {
         self.section.of_section(v)

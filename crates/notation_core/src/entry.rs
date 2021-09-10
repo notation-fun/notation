@@ -1,5 +1,10 @@
 use crate::prelude::{Duration, Units};
 
+pub enum EntryPassMode {
+    Immediate,
+    Delayed,
+}
+
 pub trait Entry {
     fn duration(&self) -> Duration {
         Duration::Zero
@@ -12,5 +17,8 @@ pub trait Entry {
     }
     fn tied_units(&self) -> Units {
         self.duration().into()
+    }
+    fn pass_mode(&self) -> EntryPassMode {
+        EntryPassMode::Immediate
     }
 }

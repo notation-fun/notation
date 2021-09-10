@@ -5,7 +5,7 @@ use bevy::window::WindowResized;
 
 use bevy_asset_loader::AssetLoader;
 
-use crate::prelude::*;
+use crate::{prelude::*, viewer::control::ControlView};
 use crate::ui::viewer::TabViewerPlugin;
 
 use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent};
@@ -166,9 +166,13 @@ fn handle_inputs(
         settings.mouse_dragged_panning = false;
     } else if keyboard_input.just_released(KeyCode::Tab) {
         state.hide_control = !state.hide_control;
-        window_resized_evts.send(WindowResizedEvent());
+        if !ControlView::HUD_MODE {
+            window_resized_evts.send(WindowResizedEvent());
+        }
     } else if keyboard_input.just_released(KeyCode::Space) {
         crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts);
+    } else if keyboard_input.just_released(KeyCode::Return) {
+        crate::viewer::control::ControlView::play_or_stop(&mut midi_state, &mut play_control_evts);
     }
     if mouse_input.just_released(MouseButton::Left) {
         windows

@@ -34,13 +34,15 @@ pub fn on_entry_playing_changed(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
-    mut text_query: Query<(Entity, &mut WordTextData, &Children)>,
+    mut text_query: QuerySet<(
+        Query<(Entity, &mut WordTextData, &Children)>,
+        Query<(Entity, &mut WordTextData)>,
+    )>,
     mut font_query: Query<&mut Text>,
 ) {
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
-            if let Ok((entity, mut data, text_children)) = text_query.get_mut(*child) {
-                //println!("{:?} -> {:?} -> {:?}", name, data, playing)
+            if let Ok((entity, mut data, text_children)) = text_query.q0_mut().get_mut(*child) {
                 data.value.playing_state = playing.value;
                 WordTextShape::update(&mut commands, &theme, entity, &data);
                 for child in text_children.iter() {
@@ -48,6 +50,9 @@ pub fn on_entry_playing_changed(
                         BevyUtil::set_text_color(&mut text, data.calc_text_color(&theme));
                     }
                 }
+            } else if let Ok((entity, mut data)) = text_query.q1_mut().get_mut(*child) {
+                data.value.playing_state = playing.value;
+                WordTextShape::update(&mut commands, &theme, entity, &data);
             }
         }
     }

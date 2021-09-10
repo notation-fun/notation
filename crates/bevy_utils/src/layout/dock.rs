@@ -31,7 +31,7 @@ impl DockSide {
 }
 
 pub trait DockPanel<TE: LayoutEnv>: View<TE> {
-    fn dock_side(&self) -> DockSide;
+    fn dock_side(&self, engine: &TE, size: LayoutSize) -> DockSide;
 }
 
 pub trait DockView<TE: LayoutEnv, TP: DockPanel<TE>, TC: View<TE>>: View<TE> {
@@ -53,7 +53,7 @@ pub trait DockView<TE: LayoutEnv, TP: DockPanel<TE>, TC: View<TE>>: View<TE> {
         let content = content.unwrap();
         let panel_constraint = LayoutConstraint::from(data);
         let panel_size = panel.view.calc_size(engine, panel_constraint);
-        let dock_side = panel.view.dock_side();
+        let dock_side = panel.view.dock_side(engine, data.size);
         let panel_anchor = LayoutAnchor::from(dock_side);
         panel.set_layout_data(
             layout_query,

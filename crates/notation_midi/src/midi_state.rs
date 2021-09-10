@@ -96,7 +96,7 @@ impl MidiChannel {
         loop {
             if let Some(next) = self.messages.get(self.next_index) {
                 if play_control.is_bar_in_range(next.entry.bar_props().bar_ordinal)
-                    && play_control.position.is_passed(&next.bar_position())
+                    && play_control.position.is_passed(next.entry.pass_mode(), &next.bar_position())
                 {
                     self.next_index += 1;
                     count += 1;
@@ -240,10 +240,11 @@ impl MidiState {
         &mut self,
         settings: &MidiSettings,
         hub: &mut MidiHub,
+        jumped: bool,
         delta_seconds: f32,
     ) -> TickResult {
         let old_position = self.play_control.position;
-        let tick_result = self.play_control.tick(delta_seconds);
+        let tick_result = self.play_control.tick(jumped, delta_seconds);
         if tick_result.changed {
             for channel in self.channels.iter_mut() {
                 channel.send_passed_msgs(

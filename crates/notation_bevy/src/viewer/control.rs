@@ -39,7 +39,7 @@ impl ControlView {
 }
 
 impl<'a> DockPanel<NotationLayout<'a>> for ControlView {
-    fn dock_side(&self) -> DockSide {
+    fn dock_side(&self, _engine: &NotationLayout<'a>, _size: LayoutSize) -> DockSide {
         DockSide::Right
     }
 }
@@ -49,7 +49,7 @@ impl<'a> View<NotationLayout<'a>> for ControlView {
         LayoutAnchor::CENTER
     }
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        if engine.state.hide_control {
+        if Self::HUD_MODE || engine.state.hide_control {
             LayoutSize::ZERO
         } else {
             LayoutSize::new(Self::WIDTH, constraint.max.height)
@@ -58,7 +58,8 @@ impl<'a> View<NotationLayout<'a>> for ControlView {
 }
 
 impl ControlView {
-    pub const WIDTH: f32 = 150.0;
+    pub const HUD_MODE: bool = true;
+    pub const WIDTH: f32 = 200.0;
     pub fn spawn(
         commands: &mut Commands,
         _materials: &mut ResMut<Assets<ColorMaterial>>,
@@ -111,6 +112,7 @@ impl ControlView {
             changed: true,
             end_passed: false,
             stopped: midi_state.play_control.play_state.is_stopped(),
+            jumped: false,
         };
         play_control_evts.send(PlayControlEvent::on_tick(
             midi_state.play_control.position,
@@ -124,6 +126,21 @@ impl ControlView {
     ) {
         if midi_state.play_control.play_state.is_playing() {
             if midi_state.play_control.pause() {
+                Self::send_play_state_evt(midi_state, play_control_evts);
+            }
+        } else {
+            if midi_state.play_control.play() {
+                Self::send_play_state_evt(midi_state, play_control_evts);
+            }
+        }
+    }
+
+    pub fn play_or_stop(
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        if midi_state.play_control.play_state.is_playing() {
+            if midi_state.play_control.stop() {
                 Self::send_play_state_evt(midi_state, play_control_evts);
             }
         } else {

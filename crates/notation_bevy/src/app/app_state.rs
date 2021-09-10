@@ -27,7 +27,7 @@ impl NotationAppState {
             tab_path,
             tab_asset,
             tab: None,
-            hide_control: false,
+            hide_control: true,
             viewer_uuid: Uuid::new_v4(),
             parse_error: None,
         }

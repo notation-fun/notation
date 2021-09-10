@@ -11,6 +11,7 @@ use bevy_utils::prelude::{DoLayoutEvent, LayoutData};
 
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
+use super::tab_header::TabHeader;
 use super::tab_view::TabView;
 
 #[derive(Debug)]
@@ -20,6 +21,7 @@ pub struct TabBarsResizedEvent(pub Arc<Vec<(Arc<BarView>, LayoutData)>>);
 
 pub type TabViewDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabView>;
 pub type TabContentDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabContent>;
+pub type TabHeaderDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabHeader>;
 pub type TabChordsDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabChords>;
 pub type TabBarsDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabBars>;
 pub type BarViewDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, BarView>;

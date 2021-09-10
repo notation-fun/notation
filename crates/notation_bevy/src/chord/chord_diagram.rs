@@ -146,7 +146,7 @@ impl<'a> ChordDiagram<'a> {
         entry_props: ModelEntryProps,
         chord: Chord,
         radius: f32,
-    ) {
+    ) -> Entity {
         let chord_value = ChordDiagramValue {
             chord,
             radius,
@@ -173,5 +173,6 @@ impl<'a> ChordDiagram<'a> {
             let base_data = ChordBaseData::new_data(entry_props, chord.root, base.clone(), radius);
             ChordBase::spawn(commands, theme, diagram_entity, base_data);
         }
+        diagram_entity
     }
 }

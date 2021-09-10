@@ -35,7 +35,7 @@ impl Display for GuitarView {
 }
 
 impl<'a> DockPanel<NotationLayout<'a>> for GuitarView {
-    fn dock_side(&self) -> DockSide {
+    fn dock_side(&self, _engine: &NotationLayout<'a>, _size: LayoutSize) -> DockSide {
         DockSide::Left
     }
 }
