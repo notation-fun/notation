@@ -151,6 +151,10 @@ pub struct TabControlSizes {
     pub rhythm_bar_radius_extra: f32,
     pub rhythm_beat_radius_factor: f32,
     pub rhythm_beat_offset_factor: f32,
+    pub rhythm_beat_max_scale: f32,
+    pub rhythm_indicator_radius_factor: f32,
+    pub rhythm_indicator_width_factor: f32,
+    pub rhythm_indicator_line_width: f32,
 }
 impl Default for TabControlSizes {
     fn default() -> Self {
@@ -160,8 +164,12 @@ impl Default for TabControlSizes {
             dock_top_width: 320.0,
             rhythm_bar_radius_factor: 0.45,
             rhythm_bar_radius_extra: 2.0,
-            rhythm_beat_radius_factor: 0.15,
-            rhythm_beat_offset_factor: 0.8,
+            rhythm_beat_radius_factor: 0.10,
+            rhythm_beat_offset_factor: 0.75,
+            rhythm_beat_max_scale: 2.5,
+            rhythm_indicator_radius_factor: 1.05,
+            rhythm_indicator_width_factor: 0.2,
+            rhythm_indicator_line_width: 2.0,
         }
     }
 }

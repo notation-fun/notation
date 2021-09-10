@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutChangedQuery, LayoutConstraint, LayoutSize, View, ViewBundle};
 use notation_model::prelude::Tab;
 
-use crate::{prelude::{NotationAssets, NotationTheme}, rhythm::{rhythm_bar::{RhythmBar, RhythmBarData}, rhythm_beat::RhythmBeatData}, ui::layout::NotationLayout};
+use crate::{prelude::{NotationAssets, NotationTheme}, rhythm::{rhythm_bar::{RhythmBar, RhythmBarData}, rhythm_beat::RhythmBeatData, rhythm_indicator::RhythmIndicatorData}, ui::layout::NotationLayout};
 
 pub struct TabControl {
     pub tab: Arc<Tab>,
@@ -75,6 +75,7 @@ impl TabControl {
         query: LayoutChangedQuery<TabControl>,
         mut bar_query: Query<(&Parent, Entity, &mut RhythmBarData, &Children), With<RhythmBarData>>,
         mut beat_query: Query<(Entity, &mut RhythmBeatData)>,
+        mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
     ) {
         for (entity, _view, layout) in query.iter() {
             if layout.size.width <= 0.0 || layout.size.height <= 0.0 {
@@ -90,7 +91,7 @@ impl TabControl {
                         layout.size.height
                     };
                     let radius = height * theme.sizes.tab_control.rhythm_bar_radius_factor + theme.sizes.tab_control.rhythm_bar_radius_extra;
-                    RhythmBar::update_size(&mut commands, &theme, &mut beat_query, bar_entity, &mut bar_data, bar_children, radius, Vec2::new(height / 2.0, - layout.size.height / 2.0))
+                    RhythmBar::update_size(&mut commands, &theme, &mut beat_query, &mut indicator_query, bar_entity, &mut bar_data, bar_children, radius, Vec2::new(height / 2.0, - layout.size.height / 2.0))
                 }
             }
         }

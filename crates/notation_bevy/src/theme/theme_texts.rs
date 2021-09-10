@@ -49,7 +49,7 @@ impl RhythmTexts {
             self.bar_font_color,
             HorizontalAlign::Center,
             VerticalAlign::Center,
-            0.0, self.bar_y, 1.0,
+            0.0, self.bar_y, 3.0,
         );
     }
 }

@@ -45,7 +45,7 @@ impl Plugin for TabPlugin {
                 .with_system(TabContent::do_layout.system())
                 .with_system(TabHeader::do_layout.system())
                 .with_system(TabControl::on_layout_changed.system())
-                .with_system(RhythmBar::update_chord.system())
+                .with_system(RhythmBar::update_rhythm.system())
                 .with_system(TabChords::do_layout.system())
                 .with_system(TabBars::on_resized_pre.system())
                 .with_system(TabBars::do_layout.system()),

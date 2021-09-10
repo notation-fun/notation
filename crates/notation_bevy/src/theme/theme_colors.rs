@@ -243,6 +243,7 @@ impl Default for SectionColors {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct RhythmColors {
     pub beats: [Color; 3],
+    pub indicator: Color,
 }
 impl Default for RhythmColors {
     fn default() -> Self {
@@ -252,6 +253,7 @@ impl Default for RhythmColors {
                 color_of_hex("222222"),
                 color_of_hex("333333"),
             ],
+            indicator: color_of_hex("555555"),
         }
     }
 }
