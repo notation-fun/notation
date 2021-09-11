@@ -1,13 +1,14 @@
 use std::sync::Arc;
+use std::fmt::Display;
 
 use bevy::prelude::*;
 
 use bevy_utils::prelude::{
     BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle,
 };
-use notation_model::prelude::{Chord, ModelEntry};
+use notation_model::prelude::{Chord, ModelEntry, Position, Tab, TabBar};
 
-use crate::prelude::{ModelEntryData, NotationTheme};
+use crate::prelude::{NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::chord_base::ChordBaseData;
@@ -16,7 +17,50 @@ use super::chord_interval::ChordIntervalData;
 use super::chord_playing::ChordPlaying;
 use super::interval_dot::IntervalDotData;
 
-pub type ChordView = ModelEntryData<Chord>;
+pub struct ChordView {
+    pub entry: Arc<ModelEntry>,
+    pub chord: Chord,
+}
+
+impl Display for ChordView {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<ChordView>({})", self.chord)
+    }
+}
+
+impl ChordView {
+    pub fn search_in_bars(&self, tab: &Arc<Tab>, begin_bar_ordinal: usize, end_bar_ordinal: usize) -> Option<Arc<TabBar>> {
+        for bar_ordinal in begin_bar_ordinal..=end_bar_ordinal {
+            if let Some(bar) = tab.get_bar_of_ordinal(bar_ordinal) {
+                if let Some(chord) = bar.get_chord(None) {
+                    if chord == self.chord {
+                        return Some(bar);
+                    }
+                }
+            }
+        }
+        None
+    }
+    pub fn search_next(&self, pass_end: bool, position: Option<Position>) -> Option<Arc<TabBar>> {
+        if let Some(tab) = self.entry.tab() {
+            let last_bar_ordinal = tab.bars.len() + 1;
+            match position {
+                Some(pos) => {
+                    let bar_ordinal = pos.bar.bar_ordinal;
+                    if let Some(entry) = self.search_in_bars(&tab, bar_ordinal + 1, last_bar_ordinal) {
+                        return Some(entry);
+                    } else if pass_end {
+                        return self.search_in_bars(&tab, 1, bar_ordinal);
+                    }
+                },
+                None => {
+                    return self.search_in_bars(&tab, 1, last_bar_ordinal);
+                },
+            }
+        }
+        None
+    }
+}
 
 impl<'a> View<NotationLayout<'a>> for ChordView {
     fn pivot(&self) -> LayoutAnchor {
@@ -66,7 +110,7 @@ impl ChordView {
         let chord_entity = BevyUtil::spawn_child_bundle(
             commands,
             entity,
-            ViewBundle::from(ChordView::new(entry, chord)),
+            ViewBundle::from(ChordView{entry: entry.clone(), chord}),
         );
         //TODO: handle initialization in a nicer way.
         let radius = 0.0;

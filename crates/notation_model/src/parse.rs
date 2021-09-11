@@ -1,7 +1,5 @@
 use fehler::throws;
 use std::collections::HashMap;
-use std::convert::TryFrom;
-use uuid::Uuid;
 
 use std::sync::{Arc, Weak};
 use thiserror::Error;
@@ -19,31 +17,25 @@ pub enum ParseError {
 
 impl Tab {
     #[throws(ParseError)]
-    pub fn try_parse_arc(v: notation_proto::prelude::Tab) -> Arc<Self> {
-        let meta = Arc::new(v.meta);
-        let tracks = v
-            .tracks
-            .into_iter()
-            .enumerate()
-            .map(|(index, track)| Track::new_arc(index, track))
-            .collect();
-        let mut sections = Vec::new();
-        for (index, section) in v.sections.into_iter().enumerate() {
-            sections.push(Section::try_new(index, section, &tracks).map(Arc::new)?);
-        }
-        let form = Form::try_from((v.form, &sections))?;
-        Self::new_arc(v.uuid, meta, tracks, sections, form)
-    }
-}
-impl Tab {
-    pub fn new_arc(
-        uuid: Uuid,
-        meta: Arc<TabMeta>,
-        tracks: Vec<Arc<Track>>,
-        sections: Vec<Arc<Section>>,
-        form: Form,
-    ) -> Arc<Self> {
+    pub fn try_parse_arc(proto: notation_proto::prelude::Tab) -> Arc<Self> {
         Arc::<Tab>::new_cyclic(|weak_self| {
+            let uuid = proto.uuid;
+            let meta = Arc::new(proto.meta);
+            let tracks = proto
+                .tracks
+                .into_iter()
+                .enumerate()
+                .map(|(index, track)| Track::new_arc(weak_self.clone(), index, track))
+                .collect();
+            let mut sections = Vec::new();
+            for (index, section) in proto.sections.into_iter().enumerate() {
+                let section_id = section.id.clone();
+                match Section::try_new(weak_self.clone(), index, section, &tracks).map(Arc::new) {
+                    Ok(section) => sections.push(section),
+                    Err(err) => println!("Tab::try_parse_arc(), bad setion: {} {} -> {}", index, section_id, err),
+                }
+            }
+            let form = Form::from((proto.form, &sections));
             let bars = Self::new_tab_bars(weak_self, &meta, &form);
             Self {
                 uuid,

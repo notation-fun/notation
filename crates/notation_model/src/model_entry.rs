@@ -1,6 +1,6 @@
 use std::sync::{Arc, Weak};
 
-use crate::prelude::Track;
+use crate::prelude::{Tab, Track};
 use notation_proto::prelude::{Duration, Entry, EntryPassMode, FrettedEntry4, FrettedEntry6, ProtoEntry, TrackKind, Units};
 
 #[derive(Copy, Clone, Debug)]
@@ -48,6 +48,12 @@ impl Entry for ModelEntry {
     }
 }
 impl ModelEntry {
+    pub fn track(&self) -> Option<Arc<Track>> {
+        self.track.upgrade().map(|x| x.clone())
+    }
+    pub fn tab(&self) -> Option<Arc<Tab>> {
+        self.track().and_then(|x| x.tab())
+    }
     pub fn as_fretted6(&self) -> Option<&FrettedEntry6> {
         self.proto.as_fretted6()
     }

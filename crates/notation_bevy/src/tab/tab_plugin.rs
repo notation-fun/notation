@@ -5,12 +5,10 @@ use bevy_utils::prelude::LayoutData;
 use notation_midi::prelude::JumpToBarEvent;
 
 use crate::bar::bar_view::BarView;
+use crate::chord::chord_view::ChordView;
 use crate::mini::mini_bar::MiniBar;
 
-use crate::prelude::{
-    AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates,
-    NotationSettings, NotationTheme, TabAsset, TabBars,
-};
+use crate::prelude::{AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars, TabState};
 use crate::rhythm::rhythm_bar::RhythmBar;
 use crate::viewer::control::ControlView;
 
@@ -56,41 +54,58 @@ impl Plugin for TabPlugin {
 fn on_mouse_clicked(
     mut evts: EventReader<MouseClickedEvent>,
     _theme: Res<NotationTheme>,
-    mut state: ResMut<NotationAppState>,
+    mut app_state: ResMut<NotationAppState>,
     settings: Res<NotationSettings>,
+    tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
+    control_query: Query<(&Arc<TabControl>, &LayoutData, &GlobalTransform)>,
+    chord_query: Query<(&Arc<ChordView>, &LayoutData, &GlobalTransform)>,
     bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
     mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
 ) {
     let mut pos = None;
     for evt in evts.iter() {
-        pos = Some(state.convert_pos(evt.cursor_position));
+        pos = Some(app_state.convert_pos(evt.cursor_position));
     }
     if let Some(pos) = pos {
-        if !state.hide_control {
-            if state.window_width / 2.0 - pos.x > ControlView::WIDTH {
-                state.hide_control = true;
+        if !app_state.hide_control {
+            if app_state.window_width / 2.0 - pos.x > ControlView::WIDTH {
+                app_state.hide_control = true;
             }
         } else if !settings.mouse_dragged_panning {
             println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
             for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
-                let offset = pos
-                    - Vec2::new(
-                        global_transform.translation.x,
-                        global_transform.translation.y,
-                    );
-                if layout.is_inside(offset) {
+                if layout.is_pos_inside(pos, global_transform) {
                     jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
                     return;
                 }
             }
+            for (_control, layout, global_transform) in control_query.iter() {
+                if layout.is_pos_inside(pos, global_transform) {
+                    if app_state.hide_control {
+                        app_state.hide_control = false;
+                    }
+                    return;
+                }
+            }
+            for (chord, layout, global_transform) in chord_query.iter() {
+                if layout.is_pos_inside(pos, global_transform) {
+                    let mut position = None;
+                    for (_entity, tab_state) in tab_state_query.iter() {
+                        if let Some(tab) = chord.entry.tab() {
+                            if tab.uuid == tab_state.tab.uuid {
+                                position = Some(tab_state.play_control.position);
+                            }
+                        }
+                    }
+                    if let Some(next_bar) = chord.search_next(true, position) {
+                        jump_to_bar_evts.send(JumpToBarEvent::new(next_bar.props));
+                    }
+                    return;
+                }
+            }
             for (bar, layout, global_transform) in bar_query.iter() {
-                let offset = pos
-                    - Vec2::new(
-                        global_transform.translation.x,
-                        global_transform.translation.y,
-                    );
-                if layout.is_inside(offset) {
+                if layout.is_pos_inside(pos, global_transform) {
                     jump_to_bar_evts.send(JumpToBarEvent::new(bar.bar_props));
                     return;
                 }

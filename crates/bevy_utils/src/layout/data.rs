@@ -120,6 +120,14 @@ impl LayoutData {
             && offset.y <= top_left.y
             && offset.y >= bottom_right.y
     }
+    pub fn is_pos_inside(&self, pos: Vec2, global_transform: &GlobalTransform) -> bool {
+        let offset = pos
+            - Vec2::new(
+                global_transform.translation.x,
+                global_transform.translation.y,
+            );
+        self.is_inside(offset)
+    }
 }
 
 impl From<LayoutData> for shapes::RectangleOrigin {

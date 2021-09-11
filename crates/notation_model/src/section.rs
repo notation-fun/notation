@@ -1,12 +1,13 @@
 use fehler::throws;
-use std::convert::TryFrom;
+use std::sync::Weak;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{Bar, ParseError, SectionKind, Track};
+use crate::prelude::{Bar, ParseError, SectionKind, Tab, Track};
 
 #[derive(Debug)]
 pub struct Section {
+    pub tab: Weak<Tab>,
     pub index: usize,
     pub kind: SectionKind,
     pub id: String,
@@ -25,8 +26,9 @@ impl Display for Section {
     }
 }
 impl Section {
-    pub fn new(index: usize, kind: SectionKind, id: String, bars: Vec<Arc<Bar>>) -> Self {
+    pub fn new(tab: Weak<Tab>, index: usize, kind: SectionKind, id: String, bars: Vec<Arc<Bar>>) -> Self {
         Self {
+            tab,
             id,
             kind,
             bars,
@@ -44,19 +46,16 @@ impl Display for Form {
         write!(f, "<Form>(S:{})", self.sections.len())
     }
 }
-impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
-    type Error = ParseError;
-
-    #[throws(Self::Error)]
-    fn try_from(v: (notation_proto::prelude::Form, &Vec<Arc<Section>>)) -> Self {
+impl From<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
+    fn from(v: (notation_proto::prelude::Form, &Vec<Arc<Section>>)) -> Self {
         let mut sections = Vec::new();
-        for section in v.0.sections {
-            sections.push(
-                v.1.iter()
-                    .find(|x| x.id == section)
-                    .cloned()
-                    .ok_or(ParseError::SectionNotFound(section))?,
-            );
+        for section_id in v.0.sections {
+            match v.1.iter()
+                    .find(|x| x.id == section_id)
+                    .cloned() {
+                Some(section) => sections.push(section),
+                None => println!("Form::from(), bad setion: {}", section_id),
+            }
         }
         Self { sections }
     }
@@ -65,6 +64,7 @@ impl TryFrom<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
 impl Section {
     #[throws(ParseError)]
     pub fn try_new(
+        tab: Weak<Tab>,
         index: usize,
         proto: notation_proto::prelude::Section,
         tracks: &Vec<Arc<Track>>,
@@ -73,6 +73,6 @@ impl Section {
         for (bar_index, bar) in proto.bars.into_iter().enumerate() {
             bars.push(Bar::try_new(bar_index, bar, tracks).map(Arc::new)?);
         }
-        Self::new(index, proto.kind, proto.id, bars)
+        Self::new(tab, index, proto.kind, proto.id, bars)
     }
 }

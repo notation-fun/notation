@@ -1,10 +1,10 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Weak};
 use std::fmt::Display;
 use std::sync::Arc;
 
 use notation_proto::prelude::Chord;
 
-use crate::prelude::{Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, TrackKind};
+use crate::prelude::{Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, Tab, TrackKind};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct TrackProps {
@@ -13,6 +13,7 @@ pub struct TrackProps {
 
 #[derive(Debug)]
 pub struct Track {
+    pub tab: Weak<Tab>,
     pub id: String,
     pub kind: TrackKind,
     pub entries: Vec<Arc<ModelEntry>>,
@@ -30,23 +31,27 @@ impl Display for Track {
     }
 }
 impl Track {
-    pub fn new(index: usize, id: String, kind: TrackKind, entries: Vec<Arc<ModelEntry>>) -> Self {
+    pub fn new(tab: Weak<Tab>, index: usize, id: String, kind: TrackKind, entries: Vec<Arc<ModelEntry>>) -> Self {
         let props = TrackProps { index };
         Self {
+            tab,
             id,
             kind,
             entries,
             props,
         }
     }
-    pub fn new_arc(index: usize, v: notation_proto::prelude::Track) -> Arc<Self> {
+    pub fn new_arc(tab: Weak<Tab>, index: usize, v: notation_proto::prelude::Track) -> Arc<Self> {
         Arc::<Self>::new_cyclic(|weak_self| {
             let entries = ModelEntry::new_entries(v.entries, weak_self);
-            Self::new(index, v.id, v.kind, entries)
+            Self::new(tab, index, v.id, v.kind, entries)
         })
     }
 }
 impl Track {
+    pub fn tab(&self) -> Option<Arc<Tab>> {
+        self.tab.upgrade().map(|x| x.clone())
+    }
     pub fn index_of_mark(&self, begin: usize, mark: &String) -> Option<usize> {
         for i in begin..self.entries.len() {
             let entry = self.entries.get(i);
