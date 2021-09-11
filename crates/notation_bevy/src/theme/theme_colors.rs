@@ -34,9 +34,9 @@ impl PlayingColors {
 impl Default for PlayingColors {
     fn default() -> Self {
         Self::new(
-            color_of_hex("FFFFFF"),
-            color_of_hex("FF00FF"),
-            color_of_hex("555555"),
+            hex_linear("FFFFFF88"),
+            hex_linear("000000CC"),
+            hex_linear("00000066"),
         )
     }
 }
@@ -66,18 +66,19 @@ impl IntervalColors {
 impl Default for IntervalColors {
     fn default() -> Self {
         Self {
-            perfect: color_of_hex("FFFFFF"),
-            major: color_of_hex("FFFFFF"),
-            minor: color_of_hex("333333"),
-            augmented: color_of_hex("FF00FFAA"),
-            diminishd: color_of_hex("33333333"),
-            tritone: color_of_hex("FF00FFAA"),
+            perfect: hex_linear("FFFFFF"),
+            major: hex_linear("FFFFFF"),
+            minor: hex_linear("666666"),
+            augmented: hex_linear("FF00FFAA"),
+            diminishd: hex_linear("66666644"),
+            tritone: hex_linear("FF00FFAA"),
         }
     }
 }
 
-pub fn color_of_hex(hex: &str) -> Color {
-    Color::hex(hex).unwrap()
+pub fn hex_linear(hex: &str) -> Color {
+    let color = Color::hex(hex).unwrap();
+    color.as_rgba_linear()
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
@@ -94,8 +95,8 @@ pub struct ThemeColors {
 }
 
 impl ThemeColors {
-    pub fn color_of_hex(hex: &str) -> Color {
-        color_of_hex(hex)
+    pub fn hex_linear(hex: &str) -> Color {
+        hex_linear(hex)
     }
 }
 
@@ -112,20 +113,20 @@ impl Default for SyllableColors {
         Self {
             outline: PlayingColors::default(),
             syllables: [
-                color_of_hex("E94F4F"), // Do
-                color_of_hex("99572C"), // Di, Ra
-                color_of_hex("FFEB34"), // Re
-                color_of_hex("558C7F"), // Ri, Me
-                color_of_hex("59D7FF"), // Mi
-                color_of_hex("C31F6E"), // Fa
-                color_of_hex("992D42"), // Fi, Se
-                color_of_hex("FF8F28"), // So
-                color_of_hex("A17C2B"), // Si, Le
-                color_of_hex("A3DC5B"), // La
-                color_of_hex("5F785A"), // Li, Te
-                color_of_hex("7C87E8"), // Ti
+                hex_linear("EF7071"), // Do
+                hex_linear("99572C"), // Di, Ra
+                hex_linear("EECB16"), // Re
+                hex_linear("558C7F"), // Ri, Me
+                hex_linear("94D8FF"), // Mi
+                hex_linear("F65EBA"), // Fa
+                hex_linear("992D42"), // Fi, Se
+                hex_linear("F4A963"), // So
+                hex_linear("A17C2B"), // Si, Le
+                hex_linear("A3DC5B"), // La
+                hex_linear("5F785A"), // Li, Te
+                hex_linear("8E99FF"), // Ti
             ],
-            no_syllable: color_of_hex("888888"),
+            no_syllable: hex_linear("888888"),
         }
     }
 }
@@ -138,7 +139,7 @@ pub struct BarColors {
 impl Default for BarColors {
     fn default() -> Self {
         Self {
-            bar_indicator: color_of_hex("FF00FF"),
+            bar_indicator: hex_linear("000000AA"),
         }
     }
 }
@@ -154,16 +155,16 @@ pub struct ChordColors {
 impl Default for ChordColors {
     fn default() -> Self {
         Self {
-            background: color_of_hex("FFF9F2CC"),
+            background: hex_linear("00000055"),
             diagram_outline: PlayingColors::default(),
             dot: IntervalColors::default(),
             dot_outline: IntervalColors {
-                perfect: color_of_hex("000000"),
-                major: color_of_hex("000000"),
-                minor: color_of_hex("FFFFFF"),
-                augmented: color_of_hex("FF00FF"),
-                diminishd: color_of_hex("333333"),
-                tritone: color_of_hex("FF00FF"),
+                perfect: hex_linear("000000"),
+                major: hex_linear("000000"),
+                minor: hex_linear("FFFFFF"),
+                augmented: hex_linear("FF00FF"),
+                diminishd: hex_linear("333333"),
+                tritone: hex_linear("FF00FF"),
             },
         }
     }
@@ -179,14 +180,14 @@ impl Default for LyricsColors {
     fn default() -> Self {
         Self {
             line: PlayingColors::new(
-                color_of_hex("000000"),
-                color_of_hex("FF00FF"),
-                color_of_hex("555555"),
+                hex_linear("A68A73"),
+                hex_linear("804718"),
+                hex_linear("795641"),
             ),
             text: PlayingColors::new(
-                color_of_hex("000000"),
-                color_of_hex("FF00FF"),
-                color_of_hex("555555"),
+                hex_linear("A68A73"),
+                hex_linear("804718"),
+                hex_linear("795641"),
             ),
         }
     }
@@ -206,19 +207,19 @@ impl Default for StringsColors {
     fn default() -> Self {
         Self {
             outline: PlayingColors::default(),
-            hit: color_of_hex("FFFFFF"),
-            muted: color_of_hex("333333"),
+            hit: hex_linear("FFFFFF"),
+            muted: hex_linear("333333"),
             string: PlayingColors::new(
-                color_of_hex("D3B59C"),
-                color_of_hex("FFFFFF"),
-                color_of_hex("D3B59C"),
+                hex_linear("D3B59C"),
+                hex_linear("FFFFFF"),
+                hex_linear("D3B59C"),
             ),
             fret: PlayingColors::new(
-                color_of_hex("000000"),
-                color_of_hex("000000"),
-                color_of_hex("555555"),
+                hex_linear("000000"),
+                hex_linear("000000"),
+                hex_linear("555555"),
             ),
-            capo: color_of_hex("333333"),
+            capo: hex_linear("333333"),
         }
     }
 }
@@ -226,18 +227,27 @@ impl Default for StringsColors {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct SectionColors {
-    pub sections: [Color; 6],
+    pub sections: [Color; 12],
 }
 impl Default for SectionColors {
     fn default() -> Self {
+        let saturation = 1.0;
+        let lightness = 0.5;
+        let alpha = 0.8;
         Self {
             sections: [
-                color_of_hex("CC4444"),
-                color_of_hex("44CC44"),
-                color_of_hex("4444CC"),
-                color_of_hex("CCCC44"),
-                color_of_hex("44CCCC"),
-                color_of_hex("CC44CC"),
+                Color::hsla(0.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(1.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(2.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(3.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(4.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(5.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(6.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(7.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(8.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(9.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(10.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(11.0 * 30.0, saturation, lightness, alpha),
             ],
         }
     }
@@ -253,11 +263,11 @@ impl Default for RhythmColors {
     fn default() -> Self {
         Self {
             beats: [
-                color_of_hex("444444"),
-                color_of_hex("222222"),
-                color_of_hex("333333"),
+                hex_linear("00000077"),
+                hex_linear("00000099"),
+                hex_linear("00000088"),
             ],
-            indicator: color_of_hex("555555"),
+            indicator: hex_linear("00000077"),
         }
     }
 }
@@ -298,8 +308,7 @@ pub struct MiniMapColors {
 impl Default for MiniMapColors {
     fn default() -> Self {
         Self {
-            //back: color_of_hex("FFF9F2"),
-            back: color_of_hex("333333"),
+            back: hex_linear("AAAAAA"),
             bar_outline: PlayingColors::default(),
         }
     }

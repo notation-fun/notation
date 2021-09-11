@@ -7,7 +7,8 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 
 pub fn color_of_hex(hex: &str) -> Color {
-    Color::hex(hex).unwrap()
+    let color = Color::hex(hex).unwrap();
+    color.as_rgba_linear()
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]

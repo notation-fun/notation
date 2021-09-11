@@ -98,7 +98,7 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         }
         let mut z = self.theme.core.mini_bar_z;
         if self.data.value.playing_state.is_current() {
-            z += 2.0;
+            z += 1.0;
         }
         Transform::from_xyz(0.0, 0.0, z)
     }

@@ -40,6 +40,9 @@ impl WordTextData {
     pub fn calc_text_color(&self, theme: &NotationTheme) -> Color {
         theme.colors.lyrics.line.of_state(&self.value.playing_state)
     }
+    pub fn calc_text_font_size(&self, theme: &NotationTheme) -> f32 {
+        theme.lyrics.word_font_size.of_state(&self.value.playing_state)
+    }
 }
 
 impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {

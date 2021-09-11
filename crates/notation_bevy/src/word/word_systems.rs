@@ -47,7 +47,7 @@ pub fn on_entry_playing_changed(
                 WordTextShape::update(&mut commands, &theme, entity, &data);
                 for child in text_children.iter() {
                     if let Ok(mut text) = font_query.get_mut(*child) {
-                        BevyUtil::set_text_color(&mut text, data.calc_text_color(&theme));
+                        BevyUtil::set_text_size_color(&mut text, data.calc_text_font_size(&theme), data.calc_text_color(&theme));
                     }
                 }
             } else if let Ok((entity, mut data)) = text_query.q1_mut().get_mut(*child) {

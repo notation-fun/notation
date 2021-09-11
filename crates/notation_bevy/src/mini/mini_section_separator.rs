@@ -63,7 +63,7 @@ impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
         let line_width = self.theme.sizes.mini_map.section_separator;
         let x_offset = -self.data.value.width / 2.0;
 
-        Transform::from_xyz(line_width + x_offset, 0.0, self.theme.core.mini_bar_z + 1.0)
+        Transform::from_xyz(line_width + x_offset, 0.0, self.theme.core.mini_bar_z + 2.0)
     }
 }
 

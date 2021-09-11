@@ -7,6 +7,8 @@ use notation_model::prelude::Signature;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
+use crate::prelude::ThemeColors;
+
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct CoreTheme {
@@ -27,15 +29,15 @@ pub struct CoreTheme {
 impl Default for CoreTheme {
     fn default() -> Self {
         Self {
-            background_color: Color::hex("FFF9F2").unwrap(),
-            bar_separator_color: Color::hex("D3B59C").unwrap(),
+            background_color: ThemeColors::hex_linear("FFF9F2"),
+            bar_separator_color: ThemeColors::hex_linear("D3B59C"),
             bar_separator_z: 2.0,
             beat_color0: None,
-            beat_color1: Some(Color::hex("00000010").unwrap()),
+            beat_color1: Some(ThemeColors::hex_linear("00000010")),
             beat_color2: None,
             beat_z: 0.0,
             bar_indicator_z: 19.0,
-            pos_indicator_color: Color::hex("00FF00").unwrap(),
+            pos_indicator_color: ThemeColors::hex_linear("00000077"),
             pos_indicator_z: 20.0,
             mini_map_z: 22.0,
             mini_bar_z: 24.0,

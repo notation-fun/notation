@@ -40,20 +40,20 @@ pub struct ToneNoteShape<'a> {
 }
 
 impl<'a> ToneNoteShape<'a> {
-    fn calc_width_height(&self) -> (f32, f32) {
-        let outline = self
-            .theme
+    fn calc_outline(&self) -> f32 {
+        self.theme
             .sizes
             .melody
             .note_outline
-            .of_state(&self.data.value.playing_state);
-        let mut width = self.data.value.bar_size / self.data.bar_props.bar_units.0
+            .of_state(&self.data.value.playing_state)
+    }
+    fn calc_width_height(&self) -> (f32, f32) {
+        let outline = self.calc_outline();
+        let width = self.data.value.bar_size / self.data.bar_props.bar_units.0
             * self.data.entry_props.tied_units.0;
         let mut height = self.theme.melody.note_height;
         if self.data.value.playing_state.is_current() {
             height += outline;
-        } else {
-            width -= outline * 2.0;
         }
         (width, height)
     }
@@ -71,7 +71,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         shapes::Rectangle {
             width,
             height,
-            origin: shapes::RectangleOrigin::Center,
+            origin: shapes::RectangleOrigin::TopLeft,
         }
     }
     fn get_colors(&self) -> ShapeColors {
@@ -85,12 +85,7 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let outline = self
-            .theme
-            .sizes
-            .melody
-            .note_outline
-            .of_state(&self.data.value.playing_state);
+        let outline = self.calc_outline();
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
             outline_options: StrokeOptions::default().with_line_width(outline),
@@ -109,8 +104,13 @@ impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
         } else {
             0.0
         };
-        let (width, height) = self.calc_width_height();
-        Transform::from_xyz(x + width / 2.0, y + height / 2.0, self.theme.strings.pick_z)
+        let (_width, height) = self.calc_width_height();
+        let extra_z = if self.data.value.playing_state.is_current() {
+            1.0
+        } else {
+            0.0
+        };
+        Transform::from_xyz(x, y + height / 2.0, self.theme.strings.pick_z + extra_z)
     }
 }
 

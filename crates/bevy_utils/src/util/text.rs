@@ -35,8 +35,19 @@ impl BevyUtil {
         commands.entity(entity).push_children(&[text_entity]);
         text_entity
     }
+    pub fn set_text_size(text: &mut Text, font_size: f32) {
+        for section in text.sections.iter_mut() {
+            section.style.font_size = font_size;
+        }
+    }
     pub fn set_text_color(text: &mut Text, color: Color) {
         for section in text.sections.iter_mut() {
+            section.style.color = color;
+        }
+    }
+    pub fn set_text_size_color(text: &mut Text, font_size: f32, color: Color) {
+        for section in text.sections.iter_mut() {
+            section.style.font_size = font_size;
             section.style.color = color;
         }
     }

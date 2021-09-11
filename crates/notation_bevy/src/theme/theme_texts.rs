@@ -26,7 +26,7 @@ impl Default for RhythmTexts {
     fn default() -> Self {
         Self {
             bar_font_size: 40.0,
-            bar_font_color: ThemeColors::color_of_hex("FFFFFF"),
+            bar_font_color: ThemeColors::hex_linear("FFFFFF"),
             bar_y: 2.0,
         }
     }
@@ -66,7 +66,7 @@ impl Default for MiniMapTexts {
     fn default() -> Self {
         Self {
             bar_font_size: 16.0,
-            bar_font_color: ThemeColors::color_of_hex("FFFFFF"),
+            bar_font_color: ThemeColors::hex_linear("FFFFFF"),
         }
     }
 }

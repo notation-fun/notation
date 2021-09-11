@@ -136,7 +136,7 @@ impl Default for StringsSizes {
     fn default() -> Self {
         Self {
             note_height: 6.0,
-            note_outline: PlayingSize::new(0.5, 1.0, 1.0),
+            note_outline: PlayingSize::new(0.5, 1.0, 0.5),
         }
     }
 }

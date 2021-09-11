@@ -27,19 +27,20 @@ impl PickNoteValue {
 }
 
 impl PickNoteData {
-    pub fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
-        let outline = theme
+    pub fn calc_outline(&self, theme: &NotationTheme) -> f32 {
+        theme
             .sizes
             .strings
             .note_outline
-            .of_state(&self.value.playing_state);
-        let mut width =
+            .of_state(&self.value.playing_state)
+    }
+    pub fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
+        let outline = self.calc_outline(theme);
+        let width =
             self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
         let mut height = theme.sizes.strings.note_height;
         if self.value.playing_state.is_current() {
             height += outline;
-        } else {
-            width -= outline * 2.0;
         }
         (width, height)
     }
@@ -91,12 +92,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let outline = self
-            .theme
-            .sizes
-            .strings
-            .note_outline
-            .of_state(&self.data.value.playing_state);
+        let outline = self.data.calc_outline(self.theme);
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
             outline_options: StrokeOptions::default().with_line_width(outline),
@@ -110,9 +106,14 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
             * self.data.entry_props.in_bar_pos.0;
         let y = -1.0
             * self.theme.strings.string_space
-            * (self.data.value.pick_note.string as f32 - 1.0)
-            - self.theme.strings.note_height / 2.0;
-        Transform::from_xyz(x, y, self.theme.strings.pick_z)
+            * (self.data.value.pick_note.string as f32 - 1.0);
+        let (_width, height) = self.calc_width_height();
+        let extra_z = if self.data.value.playing_state.is_current() {
+            1.0
+        } else {
+            0.0
+        };
+        Transform::from_xyz(x, y + height / 2.0, self.theme.strings.pick_z + extra_z)
     }
 }
 

@@ -37,25 +37,32 @@ pub struct PosIndicator<'a> {
     pub data: PosIndicatorData,
 }
 
-impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
+impl<'a> LyonShape<shapes::Rectangle> for PosIndicator<'a> {
     fn get_name(&self) -> String {
         "Current Pos".to_string()
     }
-    fn get_shape(&self) -> shapes::Line {
-        shapes::Line(
-            Vec2::ZERO,
-            Vec2::new(
-                0.0,
-                -self.data.bar_layout.size.height - self.theme.grid.bar_separator_extra * 2.0,
-            ),
-        )
+    fn get_shape(&self) -> shapes::Rectangle {
+        let width = self.theme.grid.pos_indicator_size;
+        let height = self.data.bar_layout.size.height + self.theme.grid.bar_separator_extra * 2.0;
+        shapes::Rectangle {
+            width,
+            height,
+            origin: shapes::RectangleOrigin::TopLeft,
+        }
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.core.pos_indicator_color)
+        ShapeColors::outlined(
+            self.theme
+                    .colors
+                    .of_section(self.data.bar_props.section_index),
+            self.theme.core.pos_indicator_color,
+        )
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.grid.pos_indicator_size;
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
+        DrawMode::Outlined {
+            fill_options: FillOptions::default(),
+            outline_options: StrokeOptions::default().with_line_width(self.theme.grid.pos_indicator_outline),
+        }
     }
     fn get_transform(&self) -> Transform {
         if self.data.bar_layout.size.width <= 0.0 {
@@ -70,7 +77,7 @@ impl<'a> LyonShape<shapes::Line> for PosIndicator<'a> {
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, PosIndicatorData, shapes::Line, PosIndicator<'a>>
+impl<'a> LyonShapeOp<'a, NotationTheme, PosIndicatorData, shapes::Rectangle, PosIndicator<'a>>
     for PosIndicator<'a>
 {
     fn new_shape(theme: &'a NotationTheme, data: PosIndicatorData) -> PosIndicator<'a> {

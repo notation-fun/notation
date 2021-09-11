@@ -17,6 +17,7 @@ pub struct GridTheme {
     pub bar_separator_extra: f32,
     pub bar_beat_extra: f32,
     pub pos_indicator_size: f32,
+    pub pos_indicator_outline: f32,
     pub pos_indicator_extra: f32,
 }
 
@@ -32,6 +33,7 @@ impl Default for GridTheme {
             bar_separator_extra: 8.0,
             bar_beat_extra: 0.0,
             pos_indicator_size: 2.0,
+            pos_indicator_outline: 0.5,
             pos_indicator_extra: 8.0,
         }
     }
