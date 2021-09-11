@@ -83,12 +83,14 @@ impl GuitarView {
         };
         BevyUtil::spawn_child_bundle(commands, guitar_entity, sprite_bundle);
         for string in 1..=6 {
-            GuitarString::create(
-                commands,
-                theme,
-                guitar_entity,
-                GuitarStringData::new(string as u8),
-            );
+            for upper in [true, false] {
+                GuitarString::create(
+                    commands,
+                    theme,
+                    guitar_entity,
+                    GuitarStringData::new(string as u8, upper),
+                );
+            }
         }
         GuitarCapo::create(commands, theme, guitar_entity, GuitarCapoData::new(0));
         if Self::CHECKING_FRETS {
@@ -214,6 +216,7 @@ impl GuitarView {
         query: Query<(&Arc<LaneEntry>, &HandShape6, &EntryPlaying), Changed<EntryPlaying>>,
         dot_query: Query<&Children>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
+        mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
     ) {
         if Self::CHECKING_FRETS {
@@ -240,6 +243,10 @@ impl GuitarView {
                     &finger_data,
                 );
                 FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
+            }
+            for (string_entity, mut string_data) in string_query.iter_mut() {
+                string_data.update(shape, fretboard);
+                GuitarString::update(&mut commands, &theme, string_entity, &string_data);
             }
             if let Some(fretboard) = fretboard {
                 for (capo_entity, mut capo_data) in capo_query.iter_mut() {

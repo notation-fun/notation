@@ -1,31 +1,37 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{BevyUtil, LayoutSize};
-use notation_model::prelude::{Duration, PlaySpeed, PlayingState, Units};
+use notation_model::prelude::{Duration, Fretboard6, HandShape6, PlaySpeed, PlayingState, Units};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct GuitarStringData {
     pub string: u8,
-    pub guitar_size: LayoutSize,
+    pub upper: bool,
+    pub fret: Option<u8>,
+    pub capo: u8,
     pub state: PlayingState,
     pub hit: bool,
     pub hit_duration: Duration,
     pub hit_seconds: f32,
     pub hit_expired_seconds: f64,
+    pub guitar_size: LayoutSize,
 }
 
 impl GuitarStringData {
-    pub fn new(string: u8) -> Self {
+    pub fn new(string: u8, upper: bool) -> Self {
         Self {
-            string: string,
-            guitar_size: LayoutSize::ZERO,
+            string,
+            upper,
+            fret: None,
+            capo: 0,
             state: PlayingState::Idle,
             hit: false,
             hit_duration: Duration::Zero,
             hit_seconds: 0.0,
             hit_expired_seconds: 0.0,
+            guitar_size: LayoutSize::ZERO,
         }
     }
     fn calc_hit_seconds(
@@ -56,6 +62,18 @@ impl GuitarStringData {
         };
         self.hit_expired_seconds = time.seconds_since_startup() + self.hit_seconds as f64;
     }
+    pub fn update(
+        &mut self,
+        shape: &HandShape6,
+        fretboard: Option<Fretboard6>,
+    ) {
+        self.fret = shape.string_fret(self.string);
+        if let Some(fretboard) = fretboard {
+            self.capo = fretboard.capo;
+        } else {
+            self.capo = 0;
+        }
+    }
 }
 
 pub struct GuitarString<'a> {
@@ -68,16 +86,24 @@ impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
         format!("<GuitarString>({})", self.data.string)
     }
     fn get_shape(&self) -> shapes::Line {
+        let fret = self.data.fret.unwrap_or(0);
+        let fret_y = self.theme
+            .guitar
+            .calc_fret_y(fret + self.data.capo, self.data.guitar_size.height);
+        let end_y = if self.data.upper {
+            self.data.guitar_size.height * self.theme.guitar.string_y_factor
+        } else {
+            -self.data.guitar_size.height / 2.0
+        };
         shapes::Line(
-            Vec2::new(
-                0.0,
-                self.data.guitar_size.height * self.theme.guitar.string_y_factor,
-            ),
-            Vec2::new(0.0, -self.data.guitar_size.height / 2.0),
+            Vec2::new(0.0, fret_y),
+            Vec2::new(0.0, end_y),
         )
     }
     fn get_colors(&self) -> ShapeColors {
-        let color = if self.data.hit {
+        let color = if self.data.upper {
+            self.theme.colors.strings.string.of_state(&PlayingState::Idle)
+        } else if self.data.hit {
             self.theme.colors.strings.hit
         } else {
             self.theme.colors.strings.string.of_state(&self.data.state)
