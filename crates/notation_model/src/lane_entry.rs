@@ -124,6 +124,9 @@ impl LaneEntry {
     pub fn track_kind(&self) -> TrackKind {
         self.model.track_kind()
     }
+    pub fn track_index(&self) -> Option<usize> {
+        self.model.track_index()
+    }
     pub fn get_lane_entry<T, F: Fn(&LaneEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         if let Some(lane) = self.lane.upgrade() {
             lane.get_entry(predicate)

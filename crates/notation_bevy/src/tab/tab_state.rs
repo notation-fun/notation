@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
+use bevy::{prelude::*, utils::Uuid};
 
 use notation_model::prelude::{PlayControl, PlayState, Position, Tab};
 
@@ -50,5 +50,16 @@ impl TabState {
     }
     pub fn is_bar_in_range(&self, bar_ordinal: usize) -> bool {
         self.play_control.is_bar_in_range(bar_ordinal)
+    }
+    pub fn get_position(
+        tab_state_query: &Query<(Entity, &TabState), With<TabState>>,
+        uuid: Option<Uuid>,
+    ) -> Option<Position> {
+        for (_entity, tab_state) in tab_state_query.iter() {
+            if uuid.is_none() || tab_state.tab.uuid == uuid.unwrap() {
+                return Some(tab_state.play_control.position);
+            }
+        }
+        None
     }
 }

@@ -161,6 +161,14 @@ impl Pick {
             Self::Hexa(p1, p2, p3, p4, p5, p6) => vec![p1, p2, p3, p4, p5, p6],
         }
     }
+    pub fn get_pick_note(&self, string: u8) -> Option<PickNote> {
+        for note in self.get_notes().iter() {
+            if note.string == string {
+                return Some(note.clone())
+            }
+        }
+        None
+    }
 }
 
 impl From<Pick> for Vec<PickNote> {

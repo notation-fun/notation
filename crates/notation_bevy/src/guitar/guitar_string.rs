@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{BevyUtil, LayoutSize};
-use notation_model::prelude::{Duration, Fretboard6, HandShape6, PlaySpeed, PlayingState, Units};
+use notation_model::prelude::{Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, Units};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
@@ -10,6 +10,7 @@ pub struct GuitarStringData {
     pub string: u8,
     pub upper: bool,
     pub fret: Option<u8>,
+    pub pick_fret: Option<u8>,
     pub capo: u8,
     pub state: PlayingState,
     pub hit: bool,
@@ -25,6 +26,7 @@ impl GuitarStringData {
             string,
             upper,
             fret: None,
+            pick_fret: None,
             capo: 0,
             state: PlayingState::Idle,
             hit: false,
@@ -62,11 +64,21 @@ impl GuitarStringData {
         };
         self.hit_expired_seconds = time.seconds_since_startup() + self.hit_seconds as f64;
     }
+    pub fn update_pick(
+        &mut self,
+        pick: Pick,
+    ) {
+        let pick_note = pick.get_pick_note(self.string);
+        self.pick_fret = pick_note.and_then(|x| x.fret);
+    }
     pub fn update(
         &mut self,
         shape: &HandShape6,
         fretboard: Option<Fretboard6>,
+        pick: Option<Pick>,
     ) {
+        let pick_note = pick.and_then(|x| x.get_pick_note(self.string));
+        self.pick_fret = pick_note.and_then(|x| x.fret);
         self.fret = shape.string_fret(self.string);
         if let Some(fretboard) = fretboard {
             self.capo = fretboard.capo;
@@ -86,7 +98,7 @@ impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
         format!("<GuitarString>({})", self.data.string)
     }
     fn get_shape(&self) -> shapes::Line {
-        let fret = self.data.fret.unwrap_or(0);
+        let fret = self.data.pick_fret.unwrap_or(self.data.fret.unwrap_or(0));
         let fret_y = self.theme
             .guitar
             .calc_fret_y(fret + self.data.capo, self.data.guitar_size.height);

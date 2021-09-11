@@ -8,7 +8,7 @@ use bevy_utils::prelude::{
 };
 use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
-    Duration, Entry, HandShape6, Interval, LaneEntry, ModelEntryProps, Pick, Syllable, Tab, Units,
+    Duration, Entry, HandShape6, Interval, LaneEntry, ModelEntryProps, Pick, Syllable, Tab, Units, LaneKind,
 };
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme};
@@ -105,6 +105,7 @@ impl GuitarView {
                     Syllable::Do,
                     Interval::Unison,
                     string as u8,
+                    false,
                     Some(fret as u8),
                     None,
                 );
@@ -117,18 +118,21 @@ impl GuitarView {
             }
         } else {
             for index in 1..=6 {
-                let finger_data = FretFingerData::new_data(
-                    ModelEntryProps {
-                        index: 0,
-                        tied_units: Units(0.0),
-                    },
-                    Syllable::Do,
-                    Interval::Unison,
-                    index as u8,
-                    None,
-                    None,
-                );
-                FretFinger::spawn(commands, theme, guitar_entity, finger_data);
+                for pick in [true, false] {
+                    let finger_data = FretFingerData::new_data(
+                        ModelEntryProps {
+                            index: 0,
+                            tied_units: Units(0.0),
+                        },
+                        Syllable::Do,
+                        Interval::Unison,
+                        index as u8,
+                        pick,
+                        None,
+                        None,
+                    );
+                    FretFinger::spawn(commands, theme, guitar_entity, finger_data);
+                }
             }
         }
         guitar_entity
@@ -177,15 +181,17 @@ impl GuitarView {
         theme: Res<NotationTheme>,
         query: Query<(&Arc<LaneEntry>, &Pick, &EntryPlaying), Changed<EntryPlaying>>,
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
+        mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
+        dot_query: Query<&Children>,
     ) {
-        let mut current_notes = Vec::new();
+        let mut current_entry_pick = None;
         let mut string_states = [None; 6];
         let mut hit_strings = [(false, Duration::Zero); 6];
         for (entry, pick, playing) in query.iter() {
+            if playing.value.is_current() {
+                current_entry_pick = Some((entry, pick));
+            }
             for pick_note in pick.get_notes() {
-                if playing.value.is_current() {
-                    current_notes.push(pick_note);
-                }
                 if pick_note.string >= 1 && pick_note.string <= 6 {
                     string_states[(pick_note.string - 1) as usize] = Some(playing.value);
                     hit_strings[(pick_note.string - 1) as usize] =
@@ -206,7 +212,28 @@ impl GuitarView {
                 if let Some(state) = string_states[(string_data.string - 1) as usize] {
                     string_data.state = state;
                 }
+                if let Some((_, pick)) = current_entry_pick {
+                    string_data.update_pick(*pick);
+                }
                 GuitarString::update(&mut commands, &theme, string_entity, &string_data);
+            }
+        }
+        if let Some((entry, pick)) = current_entry_pick {
+            let fretboard = entry.track().and_then(|x| x.get_fretboard6());
+            let chord = entry.bar().and_then(|x| x.get_chord_of_entry(&entry));
+            let meta = entry.bar().map(|x| x.tab_meta());
+            for (finger_entity, mut finger_data) in finger_query.iter_mut() {
+                if finger_data.value.extra.pick {
+                    finger_data.update_pick(fretboard, chord, *pick, meta.clone());
+                    FretFinger::respawn_dots(
+                        &mut commands,
+                        &theme,
+                        Some(&dot_query),
+                        finger_entity,
+                        &finger_data,
+                    );
+                    FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
+                }
             }
         }
     }
@@ -214,10 +241,10 @@ impl GuitarView {
         mut commands: Commands,
         theme: Res<NotationTheme>,
         query: Query<(&Arc<LaneEntry>, &HandShape6, &EntryPlaying), Changed<EntryPlaying>>,
-        dot_query: Query<&Children>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
+        dot_query: Query<&Children>,
     ) {
         if Self::CHECKING_FRETS {
             return;
@@ -231,10 +258,16 @@ impl GuitarView {
         if let Some((entry, shape)) = current_shape {
             let fretboard = entry.track().and_then(|x| x.get_fretboard6());
             let chord = entry.bar().and_then(|x| x.get_chord_of_entry(&entry));
+            let pick = entry.bar()
+                .and_then(|x| {
+                    x.get_entry_in_other_lane(LaneKind::Strings, entry.track_index(), Some(entry.in_bar_pos()), &|x: &LaneEntry|{
+                        x.proto().as_fretted6().and_then(|y| y.as_pick()).map(|z|z.to_owned())
+                    })
+            });
             let meta = entry.bar().map(|x| x.tab_meta());
             //println!("GuitarView::update_hand_shape6(): {}, {:#?}, {:#?}", shape, fretboard, chord);
             for (finger_entity, mut finger_data) in finger_query.iter_mut() {
-                finger_data.update(shape, fretboard, chord, meta.clone());
+                finger_data.update(shape, fretboard, chord, pick, meta.clone());
                 FretFinger::respawn_dots(
                     &mut commands,
                     &theme,
@@ -245,7 +278,7 @@ impl GuitarView {
                 FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
             }
             for (string_entity, mut string_data) in string_query.iter_mut() {
-                string_data.update(shape, fretboard);
+                string_data.update(shape, fretboard, pick);
                 GuitarString::update(&mut commands, &theme, string_entity, &string_data);
             }
             if let Some(fretboard) = fretboard {

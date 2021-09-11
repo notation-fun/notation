@@ -90,14 +90,7 @@ fn on_mouse_clicked(
             }
             for (chord, layout, global_transform) in chord_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
-                    let mut position = None;
-                    for (_entity, tab_state) in tab_state_query.iter() {
-                        if let Some(tab) = chord.entry.tab() {
-                            if tab.uuid == tab_state.tab.uuid {
-                                position = Some(tab_state.play_control.position);
-                            }
-                        }
-                    }
+                    let position = TabState::get_position(&tab_state_query, chord.entry.tab().map(|x| x.uuid));
                     if let Some(next_bar) = chord.search_next(true, position) {
                         jump_to_bar_evts.send(JumpToBarEvent::new(next_bar.props));
                     }
