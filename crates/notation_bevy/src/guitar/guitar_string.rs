@@ -36,6 +36,9 @@ impl GuitarStringData {
             guitar_size: LayoutSize::ZERO,
         }
     }
+    fn is_muted(&self) -> bool {
+        self.pick_fret.is_none() && self.fret.is_none()
+    }
     fn calc_hit_seconds(
         hit_duration: Duration,
         hit_string_seconds_range: (f32, f32),
@@ -115,6 +118,8 @@ impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
     fn get_colors(&self) -> ShapeColors {
         let color = if self.data.upper {
             self.theme.colors.strings.string.of_state(&PlayingState::Idle)
+        } else if self.data.is_muted() {
+            self.theme.colors.strings.muted
         } else if self.data.hit {
             self.theme.colors.strings.hit
         } else {

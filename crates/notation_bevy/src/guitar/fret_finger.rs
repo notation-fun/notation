@@ -85,6 +85,10 @@ impl FretFingerData {
             } else if let Some(meta) = meta {
                 self.set_note(&meta, &note);
             }
+        } else if !self.value.extra.pick {
+            //Muted
+            self.value.extra.visible = true;
+            self.value.extra.in_chord = false;
         }
     }
     pub fn update_pick(

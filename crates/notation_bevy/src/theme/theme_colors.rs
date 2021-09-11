@@ -195,6 +195,7 @@ impl Default for LyricsColors {
 pub struct StringsColors {
     pub outline: PlayingColors,
     pub hit: Color,
+    pub muted: Color,
     pub string: PlayingColors,
     pub fret: PlayingColors,
     pub capo: Color,
@@ -204,6 +205,7 @@ impl Default for StringsColors {
         Self {
             outline: PlayingColors::default(),
             hit: color_of_hex("FF00FF"),
+            muted: color_of_hex("333333"),
             string: PlayingColors::new(
                 color_of_hex("D3B59C"),
                 color_of_hex("FFFFFF"),
