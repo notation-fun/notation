@@ -1,4 +1,5 @@
-use std::{f32::consts::PI, fmt::Display};
+use std::f32::consts::PI;
+use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
@@ -28,10 +29,15 @@ impl RhythmIndicatorData {
     pub fn shape(&self, theme: &NotationTheme) -> shapes::SvgPathShape {
         let width = self.value.bar_radius * theme.sizes.tab_control.rhythm_indicator_width_factor;
         let radius = self.value.bar_radius * theme.sizes.tab_control.rhythm_indicator_radius_factor;
-        let path = format!("M {} {} L {} {} L {} {} Z",
-            radius, 0.0,
-            radius + width / 2.0, radius,
-            radius - width / 2.0, radius);
+        let path = format!(
+            "M {} {} L {} {} L {} {} Z",
+            radius,
+            0.0,
+            radius + width / 2.0,
+            radius,
+            radius - width / 2.0,
+            radius
+        );
         shapes::SvgPathShape {
             svg_doc_size_in_px: Vec2::new(radius * 2.0, radius * 2.0),
             svg_path_string: path,
@@ -59,11 +65,7 @@ impl<'a> LyonShape<shapes::SvgPathShape> for RhythmIndicator<'a> {
                 .of_section(self.data.bar_props.section_index),
         )
          */
-        ShapeColors::new(
-            self.theme
-                .colors
-                .rhythm.indicator,
-        )
+        ShapeColors::new(self.theme.colors.rhythm.indicator)
     }
     fn get_draw_mode(&self) -> DrawMode {
         let line_width = self.theme.sizes.tab_control.rhythm_indicator_line_width;
@@ -85,10 +87,7 @@ impl<'a>
     LyonShapeOp<'a, NotationTheme, RhythmIndicatorData, shapes::SvgPathShape, RhythmIndicator<'a>>
     for RhythmIndicator<'a>
 {
-    fn new_shape(
-        theme: &'a NotationTheme,
-        data: RhythmIndicatorData,
-    ) -> RhythmIndicator<'a> {
+    fn new_shape(theme: &'a NotationTheme, data: RhythmIndicatorData) -> RhythmIndicator<'a> {
         RhythmIndicator::<'a> { theme, data }
     }
 }

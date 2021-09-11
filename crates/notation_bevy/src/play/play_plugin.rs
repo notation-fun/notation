@@ -249,7 +249,13 @@ fn on_tick(
         let playing_bar_ordinal = new_position.bar.bar_ordinal;
         BarPlaying::update(bar_playing_query, tab_state, playing_bar_ordinal);
         ChordPlaying::update(chord_playing_query, tab_state, new_position);
-        EntryPlaying::update_with_pos(entry_playing_query, tab_state, new_position, *end_passed, *jumped);
+        EntryPlaying::update_with_pos(
+            entry_playing_query,
+            tab_state,
+            new_position,
+            *end_passed,
+            *jumped,
+        );
     }
 }
 

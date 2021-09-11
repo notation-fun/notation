@@ -68,7 +68,10 @@ impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
         }
     }
     fn get_colors(&self) -> ShapeColors {
-        let fill = self.theme.colors.of_option_syllable(self.data.value.syllable);
+        let fill = self
+            .theme
+            .colors
+            .of_option_syllable(self.data.value.syllable);
         let outline = self
             .theme
             .colors
@@ -143,7 +146,12 @@ impl MiniBar {
             let section_separator_data =
                 MiniSectionSeparatorData::new(bar, MiniSectionSeparatorValue::new(0.0));
             MiniSectionSeparator::create(commands, theme, bar_entity, section_separator_data);
-            theme.texts.mini_map.spawn_bar_text(commands, shape_entity, assets, bar.props.bar_ordinal.to_string().as_str());
+            theme.texts.mini_map.spawn_bar_text(
+                commands,
+                shape_entity,
+                assets,
+                bar.props.bar_ordinal.to_string().as_str(),
+            );
         }
         bar_entity
     }

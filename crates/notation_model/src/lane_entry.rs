@@ -2,7 +2,9 @@ use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
 use crate::prelude::{BarLane, BarLaneProps, ModelEntry, Tab, TabBar, TabBarProps, Track};
-use notation_proto::prelude::{BarPosition, Duration, Entry, EntryPassMode, ProtoEntry, TrackKind, Units};
+use notation_proto::prelude::{
+    BarPosition, Duration, Entry, EntryPassMode, ProtoEntry, TrackKind, Units,
+};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct LaneEntryProps {

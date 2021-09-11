@@ -26,7 +26,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::duration::{Duration, Unit, Units};
     #[doc(hidden)]
-    pub use crate::entry::{EntryPassMode, Entry};
+    pub use crate::entry::{Entry, EntryPassMode};
     #[doc(hidden)]
     pub use crate::interval::{Interval, IntervalQuality};
     #[doc(hidden)]

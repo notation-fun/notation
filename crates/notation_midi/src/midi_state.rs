@@ -96,7 +96,9 @@ impl MidiChannel {
         loop {
             if let Some(next) = self.messages.get(self.next_index) {
                 if play_control.is_bar_in_range(next.entry.bar_props().bar_ordinal)
-                    && play_control.position.is_passed(next.entry.pass_mode(), &next.bar_position())
+                    && play_control
+                        .position
+                        .is_passed(next.entry.pass_mode(), &next.bar_position())
                 {
                     self.next_index += 1;
                     count += 1;

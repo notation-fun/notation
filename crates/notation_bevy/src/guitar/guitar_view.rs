@@ -8,7 +8,8 @@ use bevy_utils::prelude::{
 };
 use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
-    Duration, Entry, HandShape6, Interval, LaneEntry, ModelEntryProps, Pick, Syllable, Tab, Units, LaneKind,
+    Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
+    Tab, Units,
 };
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme};
@@ -199,6 +200,10 @@ impl GuitarView {
                 }
             }
         }
+        let fretboard = current_entry_pick
+            .and_then(|(entry, _)| entry.track().and_then(|x| x.get_fretboard6()));
+        let meta = current_entry_pick.and_then(|(entry, _)| entry.bar().map(|x| x.tab_meta()));
+
         for (string_entity, mut string_data) in string_query.iter_mut() {
             if string_data.string >= 1 && string_data.string <= 6 {
                 let (hit, hit_duration) = hit_strings[(string_data.string - 1) as usize];
@@ -213,15 +218,13 @@ impl GuitarView {
                     string_data.state = state;
                 }
                 if let Some((_, pick)) = current_entry_pick {
-                    string_data.update_pick(*pick);
+                    string_data.update_pick(fretboard, *pick, meta.clone());
                 }
                 GuitarString::update(&mut commands, &theme, string_entity, &string_data);
             }
         }
         if let Some((entry, pick)) = current_entry_pick {
-            let fretboard = entry.track().and_then(|x| x.get_fretboard6());
             let chord = entry.bar().and_then(|x| x.get_chord_of_entry(&entry));
-            let meta = entry.bar().map(|x| x.tab_meta());
             for (finger_entity, mut finger_data) in finger_query.iter_mut() {
                 if finger_data.value.extra.pick {
                     finger_data.update_pick(fretboard, chord, *pick, meta.clone());
@@ -258,11 +261,18 @@ impl GuitarView {
         if let Some((entry, shape)) = current_shape {
             let fretboard = entry.track().and_then(|x| x.get_fretboard6());
             let chord = entry.bar().and_then(|x| x.get_chord_of_entry(&entry));
-            let pick = entry.bar()
-                .and_then(|x| {
-                    x.get_entry_in_other_lane(LaneKind::Strings, entry.track_index(), Some(entry.in_bar_pos()), &|x: &LaneEntry|{
-                        x.proto().as_fretted6().and_then(|y| y.as_pick()).map(|z|z.to_owned())
-                    })
+            let pick = entry.bar().and_then(|x| {
+                x.get_entry_in_other_lane(
+                    LaneKind::Strings,
+                    entry.track_index(),
+                    Some(entry.in_bar_pos()),
+                    &|x: &LaneEntry| {
+                        x.proto()
+                            .as_fretted6()
+                            .and_then(|y| y.as_pick())
+                            .map(|z| z.to_owned())
+                    },
+                )
             });
             let meta = entry.bar().map(|x| x.tab_meta());
             //println!("GuitarView::update_hand_shape6(): {}, {:#?}, {:#?}", shape, fretboard, chord);
@@ -278,7 +288,7 @@ impl GuitarView {
                 FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
             }
             for (string_entity, mut string_data) in string_query.iter_mut() {
-                string_data.update(shape, fretboard, pick);
+                string_data.update(shape, fretboard, pick, meta.clone());
                 GuitarString::update(&mut commands, &theme, string_entity, &string_data);
             }
             if let Some(fretboard) = fretboard {

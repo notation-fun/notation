@@ -8,7 +8,10 @@ use crate::bar::bar_view::BarView;
 use crate::chord::chord_view::ChordView;
 use crate::mini::mini_bar::MiniBar;
 
-use crate::prelude::{AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates, NotationSettings, NotationTheme, TabAsset, TabBars, TabState};
+use crate::prelude::{
+    AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates,
+    NotationSettings, NotationTheme, TabAsset, TabBars, TabState,
+};
 use crate::rhythm::rhythm_bar::RhythmBar;
 use crate::viewer::control::ControlView;
 
@@ -17,7 +20,10 @@ use super::tab_asset::TabAssetLoader;
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
 use super::tab_control::TabControl;
-use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent, TabHeaderDoLayoutEvent, TabViewDoLayoutEvent};
+use super::tab_events::{
+    TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent, TabChordsDoLayoutEvent,
+    TabContentDoLayoutEvent, TabHeaderDoLayoutEvent, TabViewDoLayoutEvent,
+};
 use super::tab_header::TabHeader;
 use super::tab_view::TabView;
 
@@ -90,7 +96,8 @@ fn on_mouse_clicked(
             }
             for (chord, layout, global_transform) in chord_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
-                    let position = TabState::get_position(&tab_state_query, chord.entry.tab().map(|x| x.uuid));
+                    let position =
+                        TabState::get_position(&tab_state_query, chord.entry.tab().map(|x| x.uuid));
                     if let Some(next_bar) = chord.search_next(true, position) {
                         jump_to_bar_evts.send(JumpToBarEvent::new(next_bar.props));
                     }

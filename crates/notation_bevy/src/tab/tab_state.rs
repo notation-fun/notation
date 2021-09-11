@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
-use bevy::{prelude::*, utils::Uuid};
+use bevy::prelude::*;
+use bevy::utils::Uuid;
 
 use notation_model::prelude::{PlayControl, PlayState, Position, Tab};
 

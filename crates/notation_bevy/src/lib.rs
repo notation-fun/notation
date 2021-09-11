@@ -22,9 +22,9 @@ pub mod tab;
 pub mod guitar;
 pub mod lyrics;
 pub mod melody;
+pub mod rhythm;
 pub mod shapes;
 pub mod strings;
-pub mod rhythm;
 
 pub mod data;
 pub mod settings;

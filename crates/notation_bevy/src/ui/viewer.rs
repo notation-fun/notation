@@ -43,7 +43,7 @@ impl Plugin for TabViewerPlugin {
                 .with_system(GuitarView::on_layout_changed.system())
                 .with_system(GuitarView::update_string_state.system())
                 .with_system(GuitarView::update_hand_shape6.system())
-                .with_system(TabViewer::do_layout.system())
+                .with_system(TabViewer::do_layout.system()),
         );
     }
 }

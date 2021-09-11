@@ -4,8 +4,8 @@ use std::sync::Arc;
 use bevy::prelude::*;
 
 use bevy_utils::prelude::{
-    BevyUtil, ColorBackground, GridData, GridView, LayoutAnchor,
-    LayoutChangedQuery, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
+    BevyUtil, ColorBackground, GridData, GridView, LayoutAnchor, LayoutChangedQuery,
+    LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
 use notation_model::prelude::{Chord, ModelEntry, Tab};
 
@@ -28,7 +28,11 @@ impl TabChords {
     pub fn new(tab: Arc<Tab>, chords: Vec<(Chord, Arc<ModelEntry>)>) -> Self {
         Self { tab, chords }
     }
-    pub fn calc_grid_data<'a>(engine: &NotationLayout<'a>, grid_size: LayoutSize, chords: usize) -> GridData {
+    pub fn calc_grid_data<'a>(
+        engine: &NotationLayout<'a>,
+        grid_size: LayoutSize,
+        chords: usize,
+    ) -> GridData {
         let sizes = engine.theme.sizes.chord;
         let (mut rows, mut cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
             grid_size.width,

@@ -2,10 +2,17 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutChangedQuery, LayoutConstraint, LayoutSize, View, ViewBundle};
+use bevy_utils::prelude::{
+    BevyUtil, ColorBackground, DockPanel, DockSide, LayoutChangedQuery, LayoutConstraint,
+    LayoutSize, View, ViewBundle,
+};
 use notation_model::prelude::Tab;
 
-use crate::{prelude::{NotationAssets, NotationTheme}, rhythm::{rhythm_bar::{RhythmBar, RhythmBarData}, rhythm_beat::RhythmBeatData, rhythm_indicator::RhythmIndicatorData}, ui::layout::NotationLayout};
+use crate::prelude::{NotationAssets, NotationTheme};
+use crate::rhythm::rhythm_bar::{RhythmBar, RhythmBarData};
+use crate::rhythm::rhythm_beat::RhythmBeatData;
+use crate::rhythm::rhythm_indicator::RhythmIndicatorData;
+use crate::ui::layout::NotationLayout;
 
 pub struct TabControl {
     pub tab: Arc<Tab>,
@@ -21,7 +28,8 @@ impl TabControl {
     }
     pub fn calc_height(engine: &NotationLayout, constraint: LayoutConstraint) -> f32 {
         if constraint.max.width < engine.theme.sizes.tab_control.control_width {
-            engine.theme.sizes.tab_control.control_height * constraint.max.width / engine.theme.sizes.tab_control.control_width
+            engine.theme.sizes.tab_control.control_height * constraint.max.width
+                / engine.theme.sizes.tab_control.control_width
         } else {
             engine.theme.sizes.tab_control.control_height
         }
@@ -57,16 +65,28 @@ impl TabControl {
         tab: &Arc<Tab>,
     ) -> Entity {
         let control = TabControl::new(tab.clone());
-        let control_entity = BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(control));
+        let control_entity =
+            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(control));
         ColorBackground::spawn(
             commands,
             control_entity,
             theme.core.mini_map_z,
             theme.colors.chord.background,
         );
-        let bar_props = tab.get_bar_of_ordinal(1).map(|x| x.props).unwrap_or_default();
+        let bar_props = tab
+            .get_bar_of_ordinal(1)
+            .map(|x| x.props)
+            .unwrap_or_default();
         let chord = tab.get_bar_of_ordinal(1).and_then(|x| x.get_chord(None));
-        RhythmBar::spawn(commands, assets, theme, control_entity, bar_props, tab.signature(), chord);
+        RhythmBar::spawn(
+            commands,
+            assets,
+            theme,
+            control_entity,
+            bar_props,
+            tab.signature(),
+            chord,
+        );
         control_entity
     }
     pub fn on_layout_changed(
@@ -83,15 +103,27 @@ impl TabControl {
             }
             for (parent, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
                 if parent.0 == entity {
-                    let ratio = theme.sizes.tab_control.control_width / theme.sizes.tab_control.control_height;
+                    let ratio = theme.sizes.tab_control.control_width
+                        / theme.sizes.tab_control.control_height;
                     let tall_mode = layout.size.width / layout.size.height < ratio;
                     let height = if tall_mode {
                         layout.size.width / ratio
                     } else {
                         layout.size.height
                     };
-                    let radius = height * theme.sizes.tab_control.rhythm_bar_radius_factor + theme.sizes.tab_control.rhythm_bar_radius_extra;
-                    RhythmBar::update_size(&mut commands, &theme, &mut beat_query, &mut indicator_query, bar_entity, &mut bar_data, bar_children, radius, Vec2::new(height / 2.0, - layout.size.height / 2.0))
+                    let radius = height * theme.sizes.tab_control.rhythm_bar_radius_factor
+                        + theme.sizes.tab_control.rhythm_bar_radius_extra;
+                    RhythmBar::update_size(
+                        &mut commands,
+                        &theme,
+                        &mut beat_query,
+                        &mut indicator_query,
+                        bar_entity,
+                        &mut bar_data,
+                        bar_children,
+                        radius,
+                        Vec2::new(height / 2.0, -layout.size.height / 2.0),
+                    )
                 }
             }
         }

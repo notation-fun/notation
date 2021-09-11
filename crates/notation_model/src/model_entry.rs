@@ -1,7 +1,9 @@
 use std::sync::{Arc, Weak};
 
 use crate::prelude::{Tab, Track};
-use notation_proto::prelude::{Duration, Entry, EntryPassMode, FrettedEntry4, FrettedEntry6, ProtoEntry, TrackKind, Units};
+use notation_proto::prelude::{
+    Duration, Entry, EntryPassMode, FrettedEntry4, FrettedEntry6, ProtoEntry, TrackKind, Units,
+};
 
 #[derive(Copy, Clone, Debug)]
 pub struct ModelEntryProps {

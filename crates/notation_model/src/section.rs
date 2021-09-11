@@ -1,7 +1,6 @@
 use fehler::throws;
-use std::sync::Weak;
 use std::fmt::Display;
-use std::sync::Arc;
+use std::sync::{Arc, Weak};
 
 use crate::prelude::{Bar, ParseError, SectionKind, Tab, Track};
 
@@ -26,7 +25,13 @@ impl Display for Section {
     }
 }
 impl Section {
-    pub fn new(tab: Weak<Tab>, index: usize, kind: SectionKind, id: String, bars: Vec<Arc<Bar>>) -> Self {
+    pub fn new(
+        tab: Weak<Tab>,
+        index: usize,
+        kind: SectionKind,
+        id: String,
+        bars: Vec<Arc<Bar>>,
+    ) -> Self {
         Self {
             tab,
             id,
@@ -50,9 +55,7 @@ impl From<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
     fn from(v: (notation_proto::prelude::Form, &Vec<Arc<Section>>)) -> Self {
         let mut sections = Vec::new();
         for section_id in v.0.sections {
-            match v.1.iter()
-                    .find(|x| x.id == section_id)
-                    .cloned() {
+            match v.1.iter().find(|x| x.id == section_id).cloned() {
                 Some(section) => sections.push(section),
                 None => println!("Form::from(), bad setion: {}", section_id),
             }

@@ -6,9 +6,10 @@ use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::BevyUtil;
 use notation_model::prelude::{Chord, Signature, TabBarProps};
 
-use crate::{prelude::{BarData, LyonShape, LyonShapeOp, NotationAssets, NotationTheme, TabState}};
+use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationAssets, NotationTheme, TabState};
 
-use super::{rhythm_beat::{RhythmBeat, RhythmBeatData}, rhythm_indicator::{RhythmIndicator, RhythmIndicatorData}};
+use super::rhythm_beat::{RhythmBeat, RhythmBeatData};
+use super::rhythm_indicator::{RhythmIndicator, RhythmIndicatorData};
 
 #[derive(Clone, Debug)]
 pub struct RhythmBarValue {
@@ -52,7 +53,11 @@ impl<'a> LyonShape<shapes::Circle> for RhythmBar<'a> {
         if self.data.value.radius <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        Transform::from_xyz(self.data.value.offset.x, self.data.value.offset.y, self.theme.core.mini_bar_z)
+        Transform::from_xyz(
+            self.data.value.offset.x,
+            self.data.value.offset.y,
+            self.theme.core.mini_bar_z,
+        )
     }
 }
 
@@ -80,17 +85,11 @@ impl<'a> RhythmBar<'a> {
         data.value.offset = offset;
         RhythmBar::update(commands, theme, entity, data);
         for child in children.iter() {
-            if let Ok((beat_entity, mut beat_data)) =
-                beat_query.get_mut(*child)
+            if let Ok((beat_entity, mut beat_data)) = beat_query.get_mut(*child) {
+                RhythmBeat::update_size(commands, theme, beat_entity, &mut beat_data, radius);
+            } else if let Ok((indicator_entity, mut indicator_data)) =
+                indicator_query.get_mut(*child)
             {
-                RhythmBeat::update_size(
-                    commands,
-                    theme,
-                    beat_entity,
-                    &mut beat_data,
-                    radius,
-                );
-            } else if let Ok((indicator_entity, mut indicator_data)) = indicator_query.get_mut(*child) {
                 RhythmIndicator::update_size(
                     commands,
                     theme,
@@ -126,13 +125,16 @@ impl<'a> RhythmBar<'a> {
             RhythmBeat::spawn(commands, theme, bar_entity, bar_props, signature, index);
         }
         RhythmIndicator::spawn(commands, theme, bar_entity, bar_props, signature);
-        theme.texts.rhythm.spawn_bar_text(commands, bar_entity, assets, "0");
+        theme
+            .texts
+            .rhythm
+            .spawn_bar_text(commands, bar_entity, assets, "0");
         bar_entity
     }
     pub fn update_rhythm(
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        mut query: Query<(Entity, &TabState), Changed<TabState>,>,
+        mut query: Query<(Entity, &TabState), Changed<TabState>>,
         mut bar_query: Query<(Entity, &mut RhythmBarData, &Children)>,
         mut beat_query: Query<(Entity, &mut RhythmBeatData)>,
         mut font_query: Query<&mut Text>,
@@ -178,4 +180,3 @@ impl<'a> RhythmBar<'a> {
         }
     }
 }
-

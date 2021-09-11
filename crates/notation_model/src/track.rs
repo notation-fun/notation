@@ -1,6 +1,6 @@
-use std::{collections::HashMap, sync::Weak};
+use std::collections::HashMap;
 use std::fmt::Display;
-use std::sync::Arc;
+use std::sync::{Arc, Weak};
 
 use notation_proto::prelude::Chord;
 
@@ -31,7 +31,13 @@ impl Display for Track {
     }
 }
 impl Track {
-    pub fn new(tab: Weak<Tab>, index: usize, id: String, kind: TrackKind, entries: Vec<Arc<ModelEntry>>) -> Self {
+    pub fn new(
+        tab: Weak<Tab>,
+        index: usize,
+        id: String,
+        kind: TrackKind,
+        entries: Vec<Arc<ModelEntry>>,
+    ) -> Self {
         let props = TrackProps { index };
         Self {
             tab,

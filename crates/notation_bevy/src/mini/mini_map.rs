@@ -3,7 +3,9 @@ use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationLayout, NotationSettings, NotationTheme};
+use crate::prelude::{
+    NotationAppState, NotationAssets, NotationLayout, NotationSettings, NotationTheme,
+};
 use bevy_utils::prelude::{
     BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,

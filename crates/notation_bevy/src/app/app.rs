@@ -5,8 +5,9 @@ use bevy::window::WindowResized;
 
 use bevy_asset_loader::AssetLoader;
 
-use crate::{prelude::*, viewer::control::ControlView};
+use crate::prelude::*;
 use crate::ui::viewer::TabViewerPlugin;
+use crate::viewer::control::ControlView;
 
 use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent};
 use notation_model::prelude::*;

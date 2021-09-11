@@ -1,7 +1,11 @@
+use std::sync::Arc;
+
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{BevyUtil, LayoutSize};
-use notation_model::prelude::{Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, Units};
+use notation_model::prelude::{
+    Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, SyllableNote, TabMeta, Units,
+};
 
 use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
 
@@ -12,6 +16,7 @@ pub struct GuitarStringData {
     pub fret: Option<u8>,
     pub pick_fret: Option<u8>,
     pub capo: u8,
+    pub note: Option<SyllableNote>,
     pub state: PlayingState,
     pub hit: bool,
     pub hit_duration: Duration,
@@ -28,6 +33,7 @@ impl GuitarStringData {
             fret: None,
             pick_fret: None,
             capo: 0,
+            note: None,
             state: PlayingState::Idle,
             hit: false,
             hit_duration: Duration::Zero,
@@ -38,6 +44,24 @@ impl GuitarStringData {
     }
     fn is_muted(&self) -> bool {
         self.pick_fret.is_none() && self.fret.is_none()
+    }
+    fn fret(&self) -> u8 {
+        self.pick_fret.unwrap_or(self.fret.unwrap_or(0))
+    }
+    fn width(&self, theme: &NotationTheme) -> f32 {
+        let width = theme.guitar.get_string_width(self.string);
+        if !self.upper && self.state.is_current() {
+            width + theme.guitar.current_extra_width
+        } else {
+            width
+        }
+    }
+    fn outline(&self, theme: &NotationTheme) -> f32 {
+        if !self.upper && self.hit {
+            theme.guitar.hit_outline
+        } else {
+            0.0
+        }
     }
     fn calc_hit_seconds(
         hit_duration: Duration,
@@ -67,18 +91,30 @@ impl GuitarStringData {
         };
         self.hit_expired_seconds = time.seconds_since_startup() + self.hit_seconds as f64;
     }
+    fn set_note(&mut self, fretboard: Option<Fretboard6>, meta: Option<Arc<TabMeta>>) {
+        self.note = None;
+        if let Some(fretboard) = fretboard {
+            if let Some(note) = fretboard.fretted_note(self.string, self.fret()) {
+                self.note = meta.map(|x| x.calc_syllable_note(&note));
+            }
+        }
+    }
     pub fn update_pick(
         &mut self,
+        fretboard: Option<Fretboard6>,
         pick: Pick,
+        meta: Option<Arc<TabMeta>>,
     ) {
         let pick_note = pick.get_pick_note(self.string);
         self.pick_fret = pick_note.and_then(|x| x.fret);
+        self.set_note(fretboard, meta);
     }
     pub fn update(
         &mut self,
         shape: &HandShape6,
         fretboard: Option<Fretboard6>,
         pick: Option<Pick>,
+        meta: Option<Arc<TabMeta>>,
     ) {
         let pick_note = pick.and_then(|x| x.get_pick_note(self.string));
         self.pick_fret = pick_note.and_then(|x| x.fret);
@@ -88,6 +124,7 @@ impl GuitarStringData {
         } else {
             self.capo = 0;
         }
+        self.set_note(fretboard, meta);
     }
 }
 
@@ -96,40 +133,62 @@ pub struct GuitarString<'a> {
     data: GuitarStringData,
 }
 
-impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
+impl<'a> LyonShape<shapes::Rectangle> for GuitarString<'a> {
     fn get_name(&self) -> String {
         format!("<GuitarString>({})", self.data.string)
     }
-    fn get_shape(&self) -> shapes::Line {
-        let fret = self.data.pick_fret.unwrap_or(self.data.fret.unwrap_or(0));
-        let fret_y = self.theme
-            .guitar
-            .calc_fret_y(fret + self.data.capo, self.data.guitar_size.height);
+    fn get_shape(&self) -> shapes::Rectangle {
+        let fret_y = self.theme.guitar.calc_fret_y(
+            self.data.fret() + self.data.capo,
+            self.data.guitar_size.height,
+        );
         let end_y = if self.data.upper {
             self.data.guitar_size.height * self.theme.guitar.string_y_factor
         } else {
-            -self.data.guitar_size.height / 2.0
+            -self.data.guitar_size.height / 2.0 - 10.0
         };
-        shapes::Line(
-            Vec2::new(0.0, fret_y),
-            Vec2::new(0.0, end_y),
-        )
+        let width = self.data.width(self.theme);
+        let height = (end_y - fret_y).abs();
+        let origin = if end_y > fret_y {
+            shapes::RectangleOrigin::BottomLeft
+        } else {
+            shapes::RectangleOrigin::TopLeft
+        };
+        shapes::Rectangle {
+            width,
+            height,
+            origin,
+        }
     }
     fn get_colors(&self) -> ShapeColors {
         let color = if self.data.upper {
-            self.theme.colors.strings.string.of_state(&PlayingState::Idle)
+            self.theme
+                .colors
+                .strings
+                .string
+                .of_state(&PlayingState::Idle)
         } else if self.data.is_muted() {
             self.theme.colors.strings.muted
-        } else if self.data.hit {
-            self.theme.colors.strings.hit
+        } else if self.data.state.is_current() && self.data.note.is_some() {
+            self.theme
+                .colors
+                .of_syllable(self.data.note.unwrap().syllable)
         } else {
             self.theme.colors.strings.string.of_state(&self.data.state)
         };
-        ShapeColors::new(color)
+        let outline_color = if self.data.hit {
+            self.theme.colors.strings.hit
+        } else {
+            color
+        };
+        ShapeColors::outlined(color, outline_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.guitar.get_string_width(self.data.string);
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
+        let outline = self.data.outline(self.theme);
+        DrawMode::Outlined {
+            fill_options: FillOptions::default(),
+            outline_options: StrokeOptions::default().with_line_width(outline),
+        }
     }
     fn get_transform(&self) -> Transform {
         if self.data.guitar_size.width <= 0.0 {
@@ -139,11 +198,16 @@ impl<'a> LyonShape<shapes::Line> for GuitarString<'a> {
             .theme
             .guitar
             .calc_string_x(self.data.string, self.data.guitar_size.width);
-        Transform::from_xyz(x, 0.0, self.theme.core.mini_bar_z + 1.0)
+        let width = self.data.width(self.theme);
+        let fret_y = self.theme.guitar.calc_fret_y(
+            self.data.fret() + self.data.capo,
+            self.data.guitar_size.height,
+        );
+        Transform::from_xyz(x - width / 2.0, fret_y, self.theme.core.mini_bar_z + 1.0)
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, GuitarStringData, shapes::Line, GuitarString<'a>>
+impl<'a> LyonShapeOp<'a, NotationTheme, GuitarStringData, shapes::Rectangle, GuitarString<'a>>
     for GuitarString<'a>
 {
     fn new_shape(theme: &'a NotationTheme, data: GuitarStringData) -> GuitarString<'a> {

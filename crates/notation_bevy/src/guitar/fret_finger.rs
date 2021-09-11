@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_utils::prelude::{BevyUtil, LayoutSize};
-use notation_model::prelude::{Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Note, Pick, Syllable, TabMeta};
+use notation_model::prelude::{
+    Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Note, Pick, Syllable, TabMeta,
+};
 
 use crate::chord::chord_note::{ChordNote, ChordNoteData, ChordNoteExtra, ChordNoteValue};
 use crate::prelude::NotationTheme;
@@ -78,7 +80,12 @@ impl FretFingerData {
         let syllable_note = meta.calc_syllable_note(&note);
         self.value.root = syllable_note.syllable;
     }
-    fn set_chord_meta_note(&mut self, chord: Option<Chord>, meta: Option<Arc<TabMeta>>, note: Option<Note>) {
+    fn set_chord_meta_note(
+        &mut self,
+        chord: Option<Chord>,
+        meta: Option<Arc<TabMeta>>,
+        note: Option<Note>,
+    ) {
         if let Some(note) = note {
             if let (Some(chord), Some(meta)) = (chord, meta.clone()) {
                 self.set_chord_note(&chord, &meta, &note);
@@ -107,8 +114,9 @@ impl FretFingerData {
         if let Some(fretboard) = fretboard {
             self.value.extra.capo = fretboard.capo;
             let note = pick_note.and_then(|x| {
-                    x.fret.and_then(|f| fretboard.fretted_note(self.value.extra.string, f))
-                });
+                x.fret
+                    .and_then(|f| fretboard.fretted_note(self.value.extra.string, f))
+            });
             self.set_chord_meta_note(chord, meta, note);
         }
     }
@@ -130,9 +138,7 @@ impl FretFingerData {
         if let Some(fretboard) = fretboard {
             self.value.extra.capo = fretboard.capo;
             let note = if self.value.extra.pick {
-                pick_note.and_then(|x| {
-                    x.fret.and_then(|_| fretboard.shape_pick_note(shape, x))
-                })
+                pick_note.and_then(|x| x.fret.and_then(|_| fretboard.shape_pick_note(shape, x)))
             } else {
                 fretboard.shape_note(shape, self.value.extra.string)
             };

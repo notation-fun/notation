@@ -32,7 +32,10 @@ impl Tab {
                 let section_id = section.id.clone();
                 match Section::try_new(weak_self.clone(), index, section, &tracks).map(Arc::new) {
                     Ok(section) => sections.push(section),
-                    Err(err) => println!("Tab::try_parse_arc(), bad setion: {} {} -> {}", index, section_id, err),
+                    Err(err) => println!(
+                        "Tab::try_parse_arc(), bad setion: {} {} -> {}",
+                        index, section_id, err
+                    ),
                 }
             }
             let form = Form::from((proto.form, &sections));

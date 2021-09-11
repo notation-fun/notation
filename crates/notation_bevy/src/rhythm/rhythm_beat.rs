@@ -1,4 +1,5 @@
-use std::{f32::consts::PI, fmt::Display};
+use std::f32::consts::PI;
+use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
@@ -66,7 +67,9 @@ impl<'a> LyonShape<shapes::Circle> for RhythmBeat<'a> {
         format!("{}", self.data)
     }
     fn get_shape(&self) -> shapes::Circle {
-        let radius = self.data.value.bar_radius * self.theme.sizes.tab_control.rhythm_beat_radius_factor * self.data.scale(self.theme);
+        let radius = self.data.value.bar_radius
+            * self.theme.sizes.tab_control.rhythm_beat_radius_factor
+            * self.data.scale(self.theme);
         shapes::Circle {
             center: Vec2::ZERO,
             radius,
@@ -75,7 +78,8 @@ impl<'a> LyonShape<shapes::Circle> for RhythmBeat<'a> {
     fn get_colors(&self) -> ShapeColors {
         let color = self
             .theme
-            .colors.rhythm
+            .colors
+            .rhythm
             .get_beat_color(&self.data.value.signature, self.data.value.index);
         ShapeColors::new(color)
     }
@@ -132,4 +136,3 @@ impl<'a> RhythmBeat<'a> {
         beat_entity
     }
 }
-

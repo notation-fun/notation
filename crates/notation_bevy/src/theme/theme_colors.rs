@@ -1,4 +1,6 @@
-use notation_model::prelude::{Chord, IntervalQuality, Octave, PlayingState, Semitones, Signature, Syllable};
+use notation_model::prelude::{
+    Chord, IntervalQuality, Octave, PlayingState, Semitones, Signature, Syllable,
+};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -204,7 +206,7 @@ impl Default for StringsColors {
     fn default() -> Self {
         Self {
             outline: PlayingColors::default(),
-            hit: color_of_hex("FF00FF"),
+            hit: color_of_hex("FFFFFF"),
             muted: color_of_hex("333333"),
             string: PlayingColors::new(
                 color_of_hex("D3B59C"),

@@ -39,8 +39,11 @@ impl EntryPlaying {
             let bar_ordinal = entry_playing.bar_props.bar_ordinal;
             if tab_state.is_bar_in_range(bar_ordinal) {
                 if entry_playing.value.is_current()
-                    && new_position
-                        .is_passed_with(entry.pass_mode(), &entry_playing.bar_position(), entry.tied_units())
+                    && new_position.is_passed_with(
+                        entry.pass_mode(),
+                        &entry_playing.bar_position(),
+                        entry.tied_units(),
+                    )
                 {
                     if entry_playing.value != PlayingState::Played {
                         entry_playing.value = PlayingState::Played;

@@ -10,6 +10,8 @@ use bevy_inspector_egui::Inspectable;
 pub struct GuitarTheme {
     #[serde(with = "serde_arrays")]
     pub string_widthes: [f32; GUITAR_STRING_NUM],
+    pub current_extra_width: f32,
+    pub hit_outline: f32,
     pub image_size: (f32, f32),
     pub string_x_factor: f32,
     pub string_y_factor: f32,
@@ -22,6 +24,8 @@ impl Default for GuitarTheme {
     fn default() -> Self {
         Self {
             string_widthes: [1.0, 1.2, 1.4, 2.0, 2.2, 2.4],
+            current_extra_width: 0.5,
+            hit_outline: 0.5,
             image_size: (100.0, 750.0),
             string_x_factor: 0.115,
             string_y_factor: 0.467,

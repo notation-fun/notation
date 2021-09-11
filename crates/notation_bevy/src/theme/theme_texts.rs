@@ -49,7 +49,9 @@ impl RhythmTexts {
             self.bar_font_color,
             HorizontalAlign::Center,
             VerticalAlign::Center,
-            0.0, self.bar_y, 3.0,
+            0.0,
+            self.bar_y,
+            3.0,
         );
     }
 }
@@ -86,7 +88,9 @@ impl MiniMapTexts {
             self.bar_font_color,
             HorizontalAlign::Center,
             VerticalAlign::Center,
-            0.0, 0.0, 1.0,
+            0.0,
+            0.0,
+            1.0,
         );
     }
 }

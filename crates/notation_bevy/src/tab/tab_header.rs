@@ -2,7 +2,10 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, DockView, LayoutChangedQuery, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use bevy_utils::prelude::{
+    BevyUtil, DockPanel, DockSide, DockView, LayoutChangedQuery, LayoutConstraint, LayoutQuery,
+    LayoutSize, View, ViewBundle, ViewQuery,
+};
 use notation_model::prelude::{Chord, ModelEntry, Tab, TrackKind};
 
 use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
@@ -10,7 +13,7 @@ use crate::ui::layout::NotationLayout;
 
 use super::tab_chords::TabChords;
 use super::tab_control::TabControl;
-use super::tab_events::{TabHeaderDoLayoutEvent};
+use super::tab_events::TabHeaderDoLayoutEvent;
 
 pub struct TabHeader {
     pub tab: Arc<Tab>,
@@ -39,7 +42,8 @@ impl<'a> View<NotationLayout<'a>> for TabHeader {
             LayoutSize::new(constraint.max.width, height + control_height)
         } else {
             let control_width = engine.theme.sizes.tab_control.control_width;
-            let grid_size = LayoutSize::new(constraint.max.width - control_width, constraint.max.height);
+            let grid_size =
+                LayoutSize::new(constraint.max.width - control_width, constraint.max.height);
             let grid_data = TabChords::calc_grid_data(engine, grid_size, self.chords.len());
             let height = grid_data.content_size().height;
             LayoutSize::new(constraint.max.width, height)
