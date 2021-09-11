@@ -162,6 +162,17 @@ impl TabBar {
         }
         None
     }
+    pub fn get_chords(&self) -> Vec<Chord> {
+        let mut chords = Vec::new();
+        if let Some(lane) = self.get_lane_of_kind(LaneKind::Chord, None) {
+            for entry in lane.entries.iter() {
+                if let Some(chord) = entry.proto().as_core().and_then(|x| x.as_chord()) {
+                    chords.push(chord.clone());
+                }
+            }
+        }
+        chords
+    }
     pub fn get_chord(&self, in_bar_pos: Option<Units>) -> Option<Chord> {
         self.get_entry_in_other_lane(LaneKind::Chord, None, in_bar_pos, &|x: &LaneEntry| {
             x.proto()

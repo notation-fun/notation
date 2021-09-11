@@ -32,10 +32,9 @@ impl ChordView {
     pub fn search_in_bars(&self, tab: &Arc<Tab>, begin_bar_ordinal: usize, end_bar_ordinal: usize) -> Option<Arc<TabBar>> {
         for bar_ordinal in begin_bar_ordinal..=end_bar_ordinal {
             if let Some(bar) = tab.get_bar_of_ordinal(bar_ordinal) {
-                if let Some(chord) = bar.get_chord(None) {
-                    if chord == self.chord {
-                        return Some(bar);
-                    }
+                let chords = bar.get_chords();
+                if chords.contains(&self.chord) {
+                    return Some(bar);
                 }
             }
         }
