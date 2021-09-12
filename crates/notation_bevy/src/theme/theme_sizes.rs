@@ -45,14 +45,24 @@ pub struct ThemeSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct BarSizes {
-    pub row_margin: f32,
     pub beat_size_range: (f32, f32),
+    pub bar_separator_extra: f32,
+    pub bar_separator_size: f32,
+    pub bar_beat_extra: f32,
+    pub pos_indicator_size: f32,
+    pub pos_indicator_outline: f32,
+    pub pos_indicator_extra: f32,
 }
 impl Default for BarSizes {
     fn default() -> Self {
         Self {
-            row_margin: 8.0,
             beat_size_range: (64.0, 256.0),
+            bar_separator_extra: 3.0,
+            bar_separator_size: 3.0,
+            bar_beat_extra: 0.0,
+            pos_indicator_size: 2.0,
+            pos_indicator_outline: 0.5,
+            pos_indicator_extra: 8.0,
         }
     }
 }
@@ -129,13 +139,15 @@ impl Default for LyricsSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsSizes {
+    pub string_space: f32,
     pub note_height: f32,
     pub note_outline: PlayingSize,
 }
 impl Default for StringsSizes {
     fn default() -> Self {
         Self {
-            note_height: 6.0,
+            string_space: 10.0,
+            note_height: 4.0,
             note_outline: PlayingSize::new(0.5, 1.0, 0.5),
         }
     }
@@ -204,6 +216,7 @@ impl MiniMapSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutSizes {
+    pub margin: f32,
     pub bar_margin: f32,
     pub lane_margin: f32,
     pub shapes_height: f32,
@@ -215,10 +228,11 @@ pub struct LayoutSizes {
 impl Default for LayoutSizes {
     fn default() -> Self {
         Self {
-            bar_margin: 32.0,
-            lane_margin: 4.0,
+            margin: 20.0,
+            bar_margin: 12.0,
+            lane_margin: 2.0,
             shapes_height: 46.0,
-            strings_height: 80.0,
+            strings_height: 60.0,
             lyrics_height: 20.0,
             melody_height: 36.0,
         }

@@ -140,12 +140,12 @@ impl LayoutSettings {
             if last_row_height + pos_data.bar_layout.size.height <= grid_size.height / 2.0 {
                 y = grid_data.calc_cell_offset(row - 1, col).y;
             }
-            let min_y = grid_size.height - content_size.height - theme.grid.margin * 2.0;
+            let min_y = grid_size.height - content_size.height - theme.sizes.layout.margin * 2.0;
             if y < min_y {
                 y = min_y;
             }
         }
-        y - layout.offset.y - grid_data.offset.y + theme.grid.margin
+        y - layout.offset.y - grid_data.offset.y + theme.sizes.layout.margin
     }
     fn calc_line_focus_xy(
         &self,
@@ -176,7 +176,7 @@ impl LayoutSettings {
         let content_size = grid_data.content_size;
         let y = pos_data.bar_layout.offset.y + grid_size.height
             - content_size.height
-            - theme.grid.margin;
+            - theme.sizes.layout.margin;
         (
             x - layout.offset.x - grid_data.offset.x,
             y - layout.offset.y,

@@ -35,12 +35,12 @@ impl PickNoteData {
             .of_state(&self.value.playing_state)
     }
     pub fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
-        let outline = self.calc_outline(theme);
         let width =
             self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
         let mut height = theme.sizes.strings.note_height;
         if self.value.playing_state.is_current() {
-            height += outline;
+            let outline = self.calc_outline(theme);
+            height += outline * 2.0;
         }
         (width, height)
     }
@@ -105,7 +105,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PickNoteShape<'a> {
         let x = self.data.value.bar_size / self.data.bar_props.bar_units.0
             * self.data.entry_props.in_bar_pos.0;
         let y = -1.0
-            * self.theme.strings.string_space
+            * self.theme.sizes.strings.string_space
             * (self.data.value.pick_note.string as f32 - 1.0);
         let (_width, height) = self.calc_width_height();
         let extra_z = if self.data.value.playing_state.is_current() {

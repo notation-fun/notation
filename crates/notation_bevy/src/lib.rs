@@ -115,8 +115,6 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::theme::core_theme::CoreTheme;
     #[doc(hidden)]
-    pub use crate::theme::grid_theme::GridTheme;
-    #[doc(hidden)]
     pub use crate::theme::guitar_theme::GuitarTheme;
     #[doc(hidden)]
     pub use crate::theme::notation_theme::NotationTheme;

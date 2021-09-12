@@ -34,7 +34,7 @@ impl<'a> LyonShape<shapes::Line> for SingleString<'a> {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
-        let y = -1.0 * (self.data.value.string as f32 - 0.5) * self.theme.strings.string_space;
+        let y = -1.0 * (self.data.value.string as f32 - 1.0) * self.theme.sizes.strings.string_space;
         Transform::from_xyz(0.0, y, self.theme.strings.string_z)
     }
 }

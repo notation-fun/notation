@@ -42,8 +42,8 @@ impl<'a> LyonShape<shapes::Rectangle> for PosIndicator<'a> {
         "Current Pos".to_string()
     }
     fn get_shape(&self) -> shapes::Rectangle {
-        let width = self.theme.grid.pos_indicator_size;
-        let height = self.data.bar_layout.size.height + self.theme.grid.bar_separator_extra * 2.0;
+        let width = self.theme.sizes.bar.pos_indicator_size;
+        let height = self.data.bar_layout.size.height + self.theme.sizes.bar.bar_separator_extra * 2.0;
         shapes::Rectangle {
             width,
             height,
@@ -55,13 +55,13 @@ impl<'a> LyonShape<shapes::Rectangle> for PosIndicator<'a> {
             self.theme
                     .colors
                     .of_section(self.data.bar_props.section_index),
-            self.theme.core.pos_indicator_color,
+            self.theme.colors.bar.pos_indicator_color,
         )
     }
     fn get_draw_mode(&self) -> DrawMode {
         DrawMode::Outlined {
             fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(self.theme.grid.pos_indicator_outline),
+            outline_options: StrokeOptions::default().with_line_width(self.theme.sizes.bar.pos_indicator_outline),
         }
     }
     fn get_transform(&self) -> Transform {
@@ -71,7 +71,7 @@ impl<'a> LyonShape<shapes::Rectangle> for PosIndicator<'a> {
         let y = self.data.bar_layout.offset.y;
         Transform::from_xyz(
             self.data.offset_x(),
-            y + self.theme.grid.bar_separator_extra,
+            y + self.theme.sizes.bar.bar_separator_extra,
             self.theme.core.pos_indicator_z,
         )
     }

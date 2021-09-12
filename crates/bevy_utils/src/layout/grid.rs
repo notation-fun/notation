@@ -188,8 +188,10 @@ impl GridData {
         total: usize,
     ) -> (usize, f32) {
         let content_size = side_size - margin * 2.0;
-        if total == 0 || content_size <= cell_size_range.0 {
+        if total == 0 {
             return (0, 0.0);
+        } else if content_size <= cell_size_range.0 {
+            return (1, side_size);
         }
         let cell_size_with_margin =
             BevyUtil::in_range_with_margin(content_size / total as f32, cell_size_range, margin);

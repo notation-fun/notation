@@ -34,18 +34,18 @@ impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
     }
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(
-            Vec2::new(0.0, self.theme.grid.bar_separator_extra),
+            Vec2::new(0.0, self.theme.sizes.bar.bar_separator_extra),
             Vec2::new(
                 0.0,
-                -self.data.value.bar_size.height - self.theme.grid.bar_separator_extra,
+                -self.data.value.bar_size.height - self.theme.sizes.bar.bar_separator_extra,
             ),
         )
     }
     fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.core.bar_separator_color)
+        ShapeColors::new(self.theme.colors.bar.bar_separator_color)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.grid.bar_separator_size;
+        let line_width = self.theme.sizes.bar.bar_separator_size;
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {

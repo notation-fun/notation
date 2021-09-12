@@ -135,11 +135,47 @@ impl Default for SyllableColors {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct BarColors {
     pub bar_indicator: Color,
+    pub bar_separator_color: Color,
+    pub beat_color0: Option<Color>,
+    pub beat_color1: Option<Color>,
+    pub beat_color2: Option<Color>,
+    pub pos_indicator_color: Color,
 }
 impl Default for BarColors {
     fn default() -> Self {
         Self {
             bar_indicator: hex_linear("000000AA"),
+            bar_separator_color: ThemeColors::hex_linear("D3B59C"),
+            beat_color0: None,
+            beat_color1: Some(ThemeColors::hex_linear("00000010")),
+            beat_color2: None,
+            pos_indicator_color: ThemeColors::hex_linear("00000077"),
+        }
+    }
+}
+impl BarColors {
+    pub fn get_beat_color(&self, signature: &Signature, beat: u8) -> Option<Color> {
+        if beat == 0 {
+            return self.beat_color0;
+        }
+        if signature.bar_beats % 4 == 0 {
+            match beat % 4 {
+                1 => self.beat_color1,
+                2 => self.beat_color2,
+                3 => self.beat_color1,
+                _ => self.beat_color0,
+            }
+        } else if signature.bar_beats % 3 == 0 {
+            match beat % 3 {
+                1 => self.beat_color1,
+                2 => self.beat_color2,
+                _ => self.beat_color0,
+            }
+        } else {
+            match beat % 2 {
+                1 => self.beat_color1,
+                _ => self.beat_color0,
+            }
         }
     }
 }

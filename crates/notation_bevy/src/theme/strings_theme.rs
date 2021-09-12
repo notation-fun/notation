@@ -12,12 +12,8 @@ use crate::prelude::NotationAssets;
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsTheme {
     pub string_color: Color,
-    pub string_space: f32,
     pub string_z: f32,
     pub pick_z: f32,
-    pub note_height: f32,
-    pub note_outline: f32,
-    pub note_outline_color: Color,
     pub fret_font_size: f32,
     pub fret_font_color: Color,
     pub fret_text_x: f32,
@@ -30,12 +26,8 @@ impl Default for StringsTheme {
     fn default() -> Self {
         Self {
             string_color: Color::hex("D3B59C").unwrap(),
-            string_space: 12.0,
             string_z: 1.0,
             pick_z: 10.0,
-            note_height: 6.0,
-            note_outline: 1.0,
-            note_outline_color: Color::hex("AAAAAA").unwrap(),
             fret_font_size: 18.0,
             fret_font_color: Color::hex("000000").unwrap(),
             fret_text_x: 2.0,

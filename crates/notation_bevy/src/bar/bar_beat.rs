@@ -36,7 +36,7 @@ impl BarBeatValue {
         beat: u8,
     ) -> Option<Self> {
         theme
-            .core
+            .colors.bar
             .get_beat_color(signature, beat)
             .map(|_color| Self::new(tab_bar, signature, beat))
     }
@@ -59,7 +59,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.data.value.bar_size.width / self.data.value.bar_beats as f32,
-            height: (self.data.value.bar_size.height + self.theme.grid.bar_beat_extra * 2.0),
+            height: (self.data.value.bar_size.height + self.theme.sizes.bar.bar_beat_extra * 2.0),
             origin: shapes::RectangleOrigin::TopLeft,
         }
     }
@@ -67,7 +67,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
         let signature = self.data.value.signature;
         let color = self
             .theme
-            .core
+            .colors.bar
             .get_beat_color(&signature, self.data.value.beat);
         ShapeColors::new(color.unwrap_or(self.theme.core.background_color))
     }
@@ -77,7 +77,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
     fn get_transform(&self) -> Transform {
         let x = self.data.value.bar_size.width / self.data.value.bar_beats as f32
             * self.data.value.beat as f32;
-        Transform::from_xyz(x, self.theme.grid.bar_beat_extra, self.theme.core.beat_z)
+        Transform::from_xyz(x, self.theme.sizes.bar.bar_beat_extra, self.theme.core.beat_z)
     }
 }
 

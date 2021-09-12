@@ -46,14 +46,15 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
         if self.tab.bars.len() == 0 {
             return GridData::ZERO;
         }
-        let sizes = engine.theme.sizes.bar;
+        let bar_margin = engine.theme.sizes.layout.bar_margin;
+        let bar_sizes = engine.theme.sizes.bar;
         let bar_beats = self.tab.bar_beats() as f32;
         let bar_width_range = (
-            sizes.beat_size_range.0 * bar_beats,
-            sizes.beat_size_range.1 * bar_beats,
+            bar_sizes.beat_size_range.0 * bar_beats,
+            bar_sizes.beat_size_range.1 * bar_beats,
         );
         let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
-            grid_size.width - sizes.row_margin * 2.0,
+            grid_size.width - bar_margin * 2.0,
             bar_width_range,
             0.0,
             self.tab.bars.len(),
@@ -79,7 +80,7 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 grid_size,
             );
             GridData {
-                offset: grid_data.offset + Vec2::new(sizes.row_margin, 0.0),
+                offset: grid_data.offset + Vec2::new(bar_margin, 0.0),
                 ..grid_data
             }
         } else {
@@ -191,7 +192,7 @@ impl TabBars {
             .enumerate()
             .filter_map(|(index, bar)| {
                 view.bar_layouts.get(index).map(|bar_layout| {
-                    //let transform = theme.grid.calc_bar_transform(&bar_layout);
+                    //let transform = theme.sizes.bar.calc_bar_transform(&bar_layout);
                     (bar, bar_layout)
                 })
             })

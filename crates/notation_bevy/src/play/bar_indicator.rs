@@ -32,7 +32,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.data.bar_layout.size.width,
-            height: self.data.bar_layout.size.height + self.theme.grid.bar_separator_extra * 2.0,
+            height: self.data.bar_layout.size.height + self.theme.sizes.bar.bar_separator_extra * 2.0,
             origin: shapes::RectangleOrigin::TopLeft,
         }
     }
@@ -40,7 +40,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
         ShapeColors::new(self.theme.colors.bar.bar_indicator)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.grid.pos_indicator_size;
+        let line_width = self.theme.sizes.bar.pos_indicator_size;
         DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
     }
     fn get_transform(&self) -> Transform {
@@ -48,7 +48,7 @@ impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
             return BevyUtil::offscreen_transform();
         }
         let x = self.data.bar_layout.offset.x;
-        let y = self.data.bar_layout.offset.y + self.theme.grid.bar_separator_extra;
+        let y = self.data.bar_layout.offset.y + self.theme.sizes.bar.bar_separator_extra;
         Transform::from_xyz(x, y, self.theme.core.bar_indicator_z)
     }
 }
