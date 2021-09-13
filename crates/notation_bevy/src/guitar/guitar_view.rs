@@ -226,15 +226,17 @@ impl GuitarView {
         if let Some((entry, pick)) = current_entry_pick {
             let chord = entry.bar().and_then(|x| x.get_chord_of_entry(&entry));
             for (finger_entity, mut finger_data) in finger_query.iter_mut() {
-                if finger_data.value.extra.pick {
-                    finger_data.update_pick(fretboard, chord, *pick, meta.clone());
-                    FretFinger::respawn_dots(
-                        &mut commands,
-                        &theme,
-                        Some(&dot_query),
-                        finger_entity,
-                        &finger_data,
-                    );
+                let changed = finger_data.update_pick(fretboard, chord, *pick, meta.clone());
+                if changed {
+                    if finger_data.value.extra.pick {
+                        FretFinger::respawn_dots(
+                            &mut commands,
+                            &theme,
+                            Some(&dot_query),
+                            finger_entity,
+                            &finger_data,
+                        );
+                    }
                     FretFinger::update(&mut commands, &theme, finger_entity, &finger_data);
                 }
             }

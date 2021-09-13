@@ -104,20 +104,27 @@ impl FretFingerData {
         chord: Option<Chord>,
         pick: Pick,
         meta: Option<Arc<TabMeta>>,
-    ) {
-        if !self.value.extra.pick {
-            return;
-        }
-        self.reset();
+    ) -> bool {
+        let visible = self.value.extra.visible;
         let pick_note = pick.get_pick_note(self.value.extra.string);
-        self.value.extra.fret = pick_note.and_then(|x| x.fret);
-        if let Some(fretboard) = fretboard {
-            self.value.extra.capo = fretboard.capo;
-            let note = pick_note.and_then(|x| {
-                x.fret
-                    .and_then(|f| fretboard.fretted_note(self.value.extra.string, f))
-            });
-            self.set_chord_meta_note(chord, meta, note);
+        if self.value.extra.pick {
+            self.reset();
+            self.value.extra.fret = pick_note.and_then(|x| x.fret);
+            if let Some(fretboard) = fretboard {
+                self.value.extra.capo = fretboard.capo;
+                let note = pick_note.and_then(|x| {
+                    x.fret
+                        .and_then(|f| fretboard.fretted_note(self.value.extra.string, f))
+                });
+                self.set_chord_meta_note(chord, meta, note);
+                true
+            } else {
+                visible != self.value.extra.visible
+            }
+        } else {
+            let pick_fret = pick_note.and_then(|x| x.fret);
+            self.value.extra.visible = pick_fret.is_none() || self.value.extra.fret.is_none() || pick_fret.unwrap() > self.value.extra.fret.unwrap();
+            visible != self.value.extra.visible
         }
     }
     pub fn update(

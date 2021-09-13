@@ -29,6 +29,10 @@ pub fn get_tab_list<'a>() -> Vec<TabInfo<'a>> {
             "songs:jay:long_juan_feng",
             songs::jay::long_juan_feng::new_tab,
         ),
+        TabInfo::new(
+            "songs:misc:stand_by_me",
+            songs::misc::stand_by_me::new_tab,
+        ),
     ]
 }
 
