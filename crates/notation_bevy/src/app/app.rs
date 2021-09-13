@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use bevy::app::PluginGroupBuilder;
 use bevy::input::mouse::MouseMotion;
 use bevy::prelude::*;
@@ -64,7 +66,7 @@ impl NotationApp {
         console_error_panic_hook::set_once();
 
         #[cfg(target_arch = "wasm32")]
-        app.add_plugin(crate::ext::bevy_web_fullscreen::FullViewportPlugin);
+        app.add_plugin(crate::wasm::bevy_web_fullscreen::FullViewportPlugin);
 
         app.add_plugin(bevy_egui::EguiPlugin);
         app.add_plugin(NotationUiPlugin);
@@ -101,13 +103,13 @@ impl NotationApp {
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
-                .with_system(setup_window_size.system()),
+                .with_system(setup_window_size.system())
         );
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(on_window_resized.system())
                 .with_system(handle_inputs.system())
-                .with_system(load_tab.system()),
+                .with_system(load_tab.system())
         );
 
         extra(&mut app);
@@ -131,7 +133,7 @@ fn load_tab(
     assets: ResMut<Assets<TabAsset>>,
     mut evts: EventWriter<AddTabEvent>,
 ) {
-    if state.tab.is_none() && state.parse_error.is_none() {
+    if state.window_width > 0.0 && state.window_height > 0.0 && state.tab.is_none() && state.parse_error.is_none() {
         if let Some(asset) = assets.get(&state.tab_asset) {
             match Tab::try_parse_arc(asset.tab.clone()) {
                 Ok(tab) => {
@@ -148,7 +150,7 @@ fn load_tab(
 }
 
 fn handle_inputs(
-    _keyboard_input: Res<Input<KeyCode>>,
+    mut commands: Commands,
     windows: Res<Windows>,
     keyboard_input: Res<Input<KeyCode>>,
     mouse_input: Res<Input<MouseButton>>,
@@ -160,6 +162,7 @@ fn handle_inputs(
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
     mut mouse_dragged: EventWriter<MouseDraggedEvent>,
     mut window_resized_evts: EventWriter<WindowResizedEvent>,
+    viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
 ) {
     if keyboard_input.pressed(KeyCode::LControl) {
         settings.mouse_dragged_panning = true;
@@ -174,8 +177,9 @@ fn handle_inputs(
         crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Return) {
         crate::viewer::control::ControlView::play_or_stop(&mut midi_state, &mut play_control_evts);
-    }
-    if mouse_input.just_released(MouseButton::Left) {
+    } else if keyboard_input.just_released(KeyCode::Backslash) {
+        crate::viewer::control::ControlView::toggle_layout_mode(&mut commands, &mut state, &mut settings, &viewer_query);
+    } else if mouse_input.just_released(MouseButton::Left) {
         windows
             .get_primary()
             .and_then(|x| x.cursor_position())
@@ -193,9 +197,19 @@ fn handle_inputs(
     }
 }
 
-fn setup_window_size(window: Res<WindowDescriptor>, mut app_state: ResMut<NotationAppState>) {
-    app_state.window_width = window.width;
-    app_state.window_height = window.height;
+fn setup_window_size(
+    window: Res<WindowDescriptor>,
+    mut app_state: ResMut<NotationAppState>,
+) {
+    #[cfg(target_arch = "wasm32")]
+    let (width, height) = crate::wasm::bevy_web_fullscreen::get_viewport_size();
+
+    #[cfg(not(target_arch = "wasm32"))]
+    let (width, height) = (window.width, window.height);
+
+    println!("setup_window_size(): {} {} ", width, height);
+    app_state.window_width = width;
+    app_state.window_height = height;
 }
 
 fn on_window_resized(
@@ -208,6 +222,7 @@ fn on_window_resized(
         if evt.width as usize != window.width as usize
             || evt.height as usize != window.height as usize
         {
+            println!("on_window_resized(): {} {} -> {} {} ", window.width, window.height, evt.width, evt.height);
             window.width = evt.width;
             window.height = evt.height;
             app_state.window_width = evt.width;

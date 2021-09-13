@@ -31,9 +31,11 @@ pub mod settings;
 pub mod theme;
 
 pub mod app;
-pub mod ext;
 pub mod ui;
 pub mod viewer;
+
+#[cfg(target_arch = "wasm32")]
+pub mod wasm;
 
 #[cfg(feature = "inspector")]
 pub mod inspector;

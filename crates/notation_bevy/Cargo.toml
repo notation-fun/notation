@@ -71,7 +71,7 @@ console_error_panic_hook = "0.1"
 gloo-events = "0.1.1"
 futures = "0.3"
 web-sys = { version = "0.3.45", features = [
-    "Element", "Document", "Window", "Location",
+    "Element", "Document", "Window", "Location", "console",
     #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
     "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",
 ]}

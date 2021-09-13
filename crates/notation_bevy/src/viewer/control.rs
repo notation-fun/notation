@@ -150,6 +150,20 @@ impl ControlView {
         }
     }
 
+    pub fn toggle_layout_mode(
+        commands: &mut Commands,
+        state: &mut ResMut<NotationAppState>,
+        settings: &mut ResMut<NotationSettings>,
+        viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
+    ) {
+        if settings.layout.mode == LayoutMode::Grid {
+            settings.layout.mode = LayoutMode::Line;
+        } else {
+            settings.layout.mode = LayoutMode::Grid;
+        }
+        Self::reload_tab(commands, state, viewer_query);
+    }
+
     pub fn control_ui(
         mut commands: Commands,
         egui_ctx: Res<EguiContext>,
@@ -210,12 +224,7 @@ impl ControlView {
                         "Grid Mode"
                     };
                     if ui.button(mode_text).clicked() {
-                        if settings.layout.mode == LayoutMode::Grid {
-                            settings.layout.mode = LayoutMode::Line;
-                        } else {
-                            settings.layout.mode = LayoutMode::Grid;
-                        }
-                        Self::reload_tab(&mut commands, &mut state, &viewer_query);
+                        Self::toggle_layout_mode(&mut commands, &mut state, &mut settings, &viewer_query);
                     }
                     if ui.button("Reload Tab").clicked() {
                         Self::reload_tab(&mut commands, &mut state, &viewer_query);

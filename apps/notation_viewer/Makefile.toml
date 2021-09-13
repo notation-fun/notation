@@ -57,12 +57,12 @@ command = "cargo"
 [tasks.release-to-amateurguitar-www]
 script_runner = "@shell"
 script = ["""
-cp ./target/wasm.js ../../../../amateurguitar/www/static/notation/
-cp ./target/wasm_bg.wasm ../../../../amateurguitar/www/static/notation/
-cp ./assets/fonts/* ../../../../amateurguitar/www/static/notation/assets/fonts/
-cp ./assets/png/* ../../../../amateurguitar/www/static/notation/assets/png/
-cp ./assets/beginner/* ../../../../amateurguitar/www/static/notation/assets/beginner/
-cp ./assets/songs/jay/* ../../../../amateurguitar/www/static/notation/assets/songs/jay/
-cp ./assets/songs/pu_shu/* ../../../../amateurguitar/www/static/notation/assets/songs/pu_shu/
+cp ./target/wasm.js ../../../../amateurguitar/www/themes/juice/static/notation/
+cp ./target/wasm_bg.wasm ../../../../amateurguitar/themes/juice/www/static/notation/
+cp ./assets/fonts/* ../../../../amateurguitar/www/themes/juice/static/notation/assets/fonts/
+cp ./assets/png/* ../../../../amateurguitar/www/themes/juice/static/notation/assets/png/
+cp ./assets/beginner/* ../../../../amateurguitar/www/themes/juice/static/notation/assets/beginner/
+cp ./assets/songs/jay/* ../../../../amateurguitar/www/themes/juice/static/notation/assets/songs/jay/
+cp ./assets/songs/pu_shu/* ../../../../amateurguitar/www/themes/juice/static/notation/assets/songs/pu_shu/
 """]
 dependencies = ["build-web"]

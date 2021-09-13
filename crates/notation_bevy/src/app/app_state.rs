@@ -22,8 +22,8 @@ impl NotationAppState {
     pub fn new(asset_server: &AssetServer, tab_path: String) -> Self {
         let tab_asset = asset_server.load(tab_path.as_str());
         Self {
-            window_width: 1280.0,
-            window_height: 720.0,
+            window_width: 0.0,
+            window_height: 0.0,
             tab_path,
             tab_asset,
             tab: None,

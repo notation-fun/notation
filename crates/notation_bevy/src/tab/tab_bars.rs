@@ -37,7 +37,7 @@ impl TabBars {
 }
 impl<'a> View<NotationLayout<'a>> for TabBars {
     fn log_layout_changed(&self) -> bool {
-        true
+        false
     }
 }
 
