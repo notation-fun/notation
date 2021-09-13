@@ -133,9 +133,11 @@ impl LayoutSettings {
     ) -> f32 {
         let (row, col) = grid_data.calc_row_col(pos_data.bar_position.bar_ordinal - 1);
         let mut y = pos_data.bar_layout.offset.y;
-        if row > 0 {
-            let grid_size = layout.size;
-            let content_size = grid_data.content_size;
+        let grid_size = layout.size;
+        let content_size = grid_data.content_size;
+        if grid_size.height > content_size.height {
+            y = -(grid_size.height - content_size.height);
+        } else if row > 0 {
             let last_row_height = grid_data.calc_cell_size(row - 1, col).height;
             if last_row_height + pos_data.bar_layout.size.height <= grid_size.height / 2.0 {
                 y = grid_data.calc_cell_offset(row - 1, col).y;
