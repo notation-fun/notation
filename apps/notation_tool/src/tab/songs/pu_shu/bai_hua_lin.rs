@@ -6,7 +6,7 @@ pub fn new_tab() -> Tab {
         Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(118))
         Tracks: [
             {chord Chord [
-                $duration = _1
+                $duration = D_1_2
                 "1" Chord ( 1: 3 5 )
                 "1/3" Chord ( 1: 3 5 /3 )
                 "2-" Chord ( 2: 3- 5 )
@@ -21,7 +21,7 @@ pub fn new_tab() -> Tab {
             ]}
             {guitar Guitar [
                 Fretboard
-                $duration = _1
+                $duration = D_1_2
                 "Em" Shape ( 0 2 2 0 0 0 )
                 "Adim" Shape ( 0 0 1 2 1 0 )
                 "B7" Shape ( 0 2 4 2 4 2 )

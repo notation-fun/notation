@@ -4,7 +4,7 @@ use bevy_utils::prelude::{GridData, LayoutData};
 use float_eq::float_ne;
 use std::sync::Arc;
 
-use notation_model::prelude::{LaneKind, Position};
+use notation_model::prelude::{Position};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -32,10 +32,6 @@ impl Default for LayoutMode {
 pub struct LayoutSettings {
     pub mode: LayoutMode,
     pub focus_bar_ease_ms: u64,
-    pub shapes_lane_order: usize,
-    pub strings_lane_order: usize,
-    pub lyrics_lane_order: usize,
-    pub melody_lane_order: usize,
     pub focusing_bar_ordinal: usize,
 }
 
@@ -44,29 +40,15 @@ impl Default for LayoutSettings {
         Self {
             mode: LayoutMode::default(),
             focus_bar_ease_ms: 250,
-            shapes_lane_order: 1,
-            strings_lane_order: 2,
-            lyrics_lane_order: 3,
-            melody_lane_order: 4,
             focusing_bar_ordinal: usize::MAX,
         }
     }
 }
 
 impl LayoutSettings {
-    pub fn calc_lane_order(&self, lane_layout: &LaneLayoutData) -> (usize, usize) {
-        let (track_index, lane_kind) = lane_layout.order();
-        (track_index, match lane_kind {
-            LaneKind::Lyrics => self.lyrics_lane_order,
-            LaneKind::Melody => self.melody_lane_order,
-            LaneKind::Strings => self.strings_lane_order,
-            LaneKind::Shapes => self.shapes_lane_order,
-            _ => 0,
-        })
-    }
     pub fn sort_lane_layouts(&self, lanes: &Vec<LaneLayoutData>) -> Vec<LaneLayoutData> {
         let mut sorted: Vec<LaneLayoutData> = lanes.clone();
-        sorted.sort_by(|a, b| self.calc_lane_order(a).cmp(&self.calc_lane_order(b)));
+        sorted.sort_by(|a, b| a.order().cmp(&b.order()));
         sorted
     }
     pub fn bar_layout_of_pos(

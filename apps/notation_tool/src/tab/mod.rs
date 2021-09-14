@@ -19,7 +19,7 @@ impl<'a> TabInfo<'a> {
 
 pub fn get_tab_list<'a>() -> Vec<TabInfo<'a>> {
     vec![
-        TabInfo::new("test", test::new_tab_test),
+        TabInfo::new("test", test::new_tab),
         TabInfo::new("beginner:1_right_hand", beginner::right_hand_1::new_tab),
         TabInfo::new(
             "songs:pu_shu:bai_hua_lin",
@@ -32,6 +32,10 @@ pub fn get_tab_list<'a>() -> Vec<TabInfo<'a>> {
         TabInfo::new(
             "songs:misc:stand_by_me",
             songs::misc::stand_by_me::new_tab,
+        ),
+        TabInfo::new(
+            "songs:misc:scarborough_fair",
+            songs::misc::scarborough_fair::new_tab,
         ),
     ]
 }

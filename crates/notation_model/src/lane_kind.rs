@@ -14,8 +14,8 @@ pub enum LaneKind {
     Melody,
     Harmany,
     Keyboard,
-    Strings,
     Shapes,
+    Strings,
 }
 impl Display for LaneKind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -28,6 +28,20 @@ impl Default for LaneKind {
     }
 }
 impl LaneKind {
+    pub const LEN: usize = 9;
+    pub fn order(&self) -> usize {
+        match self {
+            LaneKind::None => 0,
+            LaneKind::Meta => 1,
+            LaneKind::Chord => 2,
+            LaneKind::Lyrics => 3,
+            LaneKind::Melody => 4,
+            LaneKind::Harmany => 5,
+            LaneKind::Keyboard => 6,
+            LaneKind::Shapes => 7,
+            LaneKind::Strings => 8,
+        }
+    }
     pub fn of_entry(track_kind: &TrackKind, entry: &ProtoEntry) -> Self {
         match track_kind {
             TrackKind::Meta => Self::Meta,

@@ -134,8 +134,7 @@ impl TabBars {
                 if !lane_layouts.contains_key(&lane_id) {
                     let height = theme.sizes.layout.calc_lane_height(lane.kind);
                     let margin = theme.sizes.layout.lane_margin;
-                    let index = lane_layouts.len();
-                    lane_layouts.insert(lane_id, LaneLayoutData::new(index, &lane, height, margin));
+                    lane_layouts.insert(lane_id, LaneLayoutData::new(&lane, height, margin));
                 }
             }
         }

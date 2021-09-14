@@ -29,7 +29,7 @@ pub enum Tempo {
     Allegrissimo,
     Presto,
     Prestissimo,
-    Bpm(u8),
+    Bpm(u16),
 }
 impl Display for Tempo {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -37,8 +37,8 @@ impl Display for Tempo {
     }
 }
 
-pub type BpmRange = (u8, u8);
-pub type Bpm = u8;
+pub type BpmRange = (u16, u16);
+pub type Bpm = u16;
 
 impl From<Tempo> for BpmRange {
     fn from(v: Tempo) -> Self {

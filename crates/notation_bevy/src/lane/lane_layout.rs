@@ -4,7 +4,6 @@ use std::sync::{Arc, RwLock};
 
 #[derive(Clone, Debug)]
 pub struct LaneLayoutData {
-    pub index: usize,
     pub track_id: String,
     pub track_props: TrackProps,
     pub lane_kind: LaneKind,
@@ -14,9 +13,8 @@ pub struct LaneLayoutData {
     pub visible: Arc<RwLock<bool>>,
 }
 impl LaneLayoutData {
-    pub fn new(index: usize, lane: &BarLane, height: f32, margin: f32) -> Self {
+    pub fn new(lane: &BarLane, height: f32, margin: f32) -> Self {
         Self {
-            index,
             track_id: lane.track.id.clone(),
             track_props: lane.track.props,
             lane_kind: lane.kind,
@@ -29,8 +27,8 @@ impl LaneLayoutData {
     pub fn id(&self) -> String {
         format!("{}:{}", self.track_id, self.lane_kind)
     }
-    pub fn order(&self) -> (usize, LaneKind) {
-        (self.track_props.index, self.lane_kind)
+    pub fn order(&self) -> usize {
+        self.track_props.index * LaneKind::LEN + self.lane_kind.order()
     }
     pub fn is_ghost(&self) -> bool {
         self.lane.is_none()

@@ -25,7 +25,7 @@ impl<'a> View<NotationLayout<'a>> for LaneView {
 }
 impl<'a> VBoxCell<NotationLayout<'a>> for LaneView {
     fn order(&self) -> usize {
-        self.index
+        self.order()
     }
 }
 

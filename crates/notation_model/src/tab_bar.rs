@@ -147,16 +147,18 @@ impl TabBar {
     ) -> Option<T> {
         if let Some(lane) = self.get_lane_of_kind(lane_kind, track_index) {
             for entry in lane.entries.iter() {
+                let mut in_range = in_bar_pos.is_none();
                 if let Some(in_bar_pos) = in_bar_pos {
-                    if in_bar_pos > entry.props.in_bar_pos + entry.model().props.tied_units {
-                        continue;
-                    }
                     if in_bar_pos < entry.props.in_bar_pos {
                         break;
+                    } else {
+                        in_range = in_bar_pos < entry.props.in_bar_pos + entry.model().props.tied_units
                     }
                 }
-                if let Some(result) = predicate(entry.as_ref()) {
-                    return Some(result);
+                if in_range {
+                    if let Some(result) = predicate(entry.as_ref()) {
+                        return Some(result);
+                    }
                 }
             }
         }
