@@ -4,6 +4,7 @@ use notation_proto::prelude::*;
 //photo book 02 - page 68
 pub fn new_tab() -> Tab {
     tab! {
+        "ef6bb44b-17cf-47e6-a50e-0ab636868334"
         Meta: TabMeta::new(Key::A, Scale::Major, Signature::_4_4, Tempo::Bpm(72))
         Tracks: [
             {chord Chord [

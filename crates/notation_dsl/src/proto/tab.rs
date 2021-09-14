@@ -2,7 +2,7 @@ use fehler::throws;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
-use syn::{Expr, Token};
+use syn::{Expr, LitStr, Token};
 
 use crate::proto::form::FormDsl;
 
@@ -10,6 +10,7 @@ use crate::proto::section::SectionDsl;
 use crate::proto::track::TrackDsl;
 
 pub struct TabDsl {
+    uuid: String,
     meta: Expr,
     tracks: Vec<TrackDsl>,
     sections: Vec<SectionDsl>,
@@ -26,6 +27,8 @@ mod kw {
 impl Parse for TabDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
+        let uuid = input.parse::<LitStr>()?.value();
+
         input.parse::<kw::Meta>()?;
         input.parse::<Token![:]>()?;
         let meta = input.parse()?;
@@ -43,6 +46,7 @@ impl Parse for TabDsl {
         let form = input.parse()?;
 
         TabDsl {
+            uuid,
             meta,
             tracks,
             sections,
@@ -54,6 +58,7 @@ impl Parse for TabDsl {
 impl ToTokens for TabDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let TabDsl {
+            uuid,
             meta,
             tracks,
             sections,
@@ -63,6 +68,7 @@ impl ToTokens for TabDsl {
         let sections_quote = SectionDsl::quote_vec(sections);
         tokens.extend(quote! {
             Tab::new(
+                #uuid,
                 #meta,
                 #tracks_quote,
                 #sections_quote,

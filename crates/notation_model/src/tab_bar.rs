@@ -192,21 +192,22 @@ macro_rules! impl_get_fretted_shape {
     ($name:ident, $strings:literal, $as_fretted:ident, $get_fretboard:ident, $fretboard:ident, $hand_shape:ident) => {
         impl TabBar {
             pub fn $name(&self, entry: &LaneEntry) -> Option<($fretboard, $hand_shape)> {
-                self.get_entry_in_other_lane(
-                    LaneKind::Shapes,
-                    Some(entry.lane_props().track.index),
-                    Some(entry.props.in_bar_pos),
-                    &|x: &LaneEntry| {
-                        x.model()
-                            .$as_fretted()
-                            .and_then(|y| y.as_shape())
-                            .and_then(|z| {
-                                x.lane()
-                                    .and_then(|lane| lane.track.$get_fretboard())
-                                    .map(|fretboard| (fretboard, z.clone()))
-                            })
-                    },
-                )
+                entry.track()
+                    .and_then(|t| t.$get_fretboard())
+                    .map(|fretboard| {
+                        let shape = self.get_entry_in_other_lane(
+                            LaneKind::Shapes,
+                            Some(entry.lane_props().track.index),
+                            Some(entry.props.in_bar_pos),
+                            &|x: &LaneEntry| {
+                                x.model()
+                                    .$as_fretted()
+                                    .and_then(|y| y.as_shape())
+                                    .map(|y| y.clone())
+                            },
+                        ).unwrap_or_default();
+                        (fretboard, shape)
+                    })
             }
         }
     };

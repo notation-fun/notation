@@ -1,5 +1,5 @@
 (
-    uuid: "9a9f8674-76dc-4c5a-9a14-cb8bf67ad249",
+    uuid: "06dd7278-cdaf-40dd-abc6-6e66ec2d6b8c",
     meta: (
         key: Natural(E),
         scale: Minor,
@@ -18,12 +18,12 @@
                     "dsl::context::duration",
                     "D_1_2",
                 ),// [0]
-                Mark("6-_7"),// [1]
+                Mark("6sus4_7"),// [1]
                 Core(Chord(
                     (
                         root: La,
                         intervals: Tetrad(
-                            Minor3nd,
+                            Perfect4th,
                             Perfect5th,
                             Minor7th,
                         ),
@@ -31,16 +31,16 @@
                     ),
                     Dotted(Half),
                 )),// [2]
-                Mark("6-_7/4"),// [3]
+                Mark("2_9_11"),// [3]
                 Core(Chord(
                     (
-                        root: La,
+                        root: Re,
                         intervals: Tetrad(
-                            Minor3nd,
-                            Perfect5th,
-                            Minor7th,
+                            Major3nd,
+                            Major2nd,
+                            Perfect4th,
                         ),
-                        base: Some(Perfect4th),
+                        base: None,
                     ),
                     Dotted(Half),
                 )),// [4]
@@ -163,7 +163,6 @@
                     ),
                     Simple(Quarter),
                 )),// [24]
-                Mark("|"),// [25]
                 Core(Chord(
                     (
                         root: La,
@@ -174,7 +173,7 @@
                         base: None,
                     ),
                     Simple(Quarter),
-                )),// [26]
+                )),// [25]
                 Mark("|"),
             ],
         ),// [0]
@@ -234,7 +233,7 @@
                     "dsl::context::duration",
                     "D_1_2",
                 ),// [1]
-                Mark("Am7"),// [2]
+                Mark("Asus4"),// [2]
                 Fretted6(Shape(
                     (
                         frets: (
@@ -256,7 +255,7 @@
                     ),
                     Dotted(Half),
                 )),// [3]
-                Mark("Am7/D"),// [4]
+                Mark("Dadd11"),// [4]
                 Fretted6(Shape(
                     (
                         frets: (
@@ -1208,6 +1207,34 @@
                     )),
                     Simple(Eighth),
                 )),// [95]
+                Mark("|"),// [96]
+                Extra(
+                    "dsl::context::duration",
+                    "D_1_2",
+                ),// [97]
+                Mark("o:1"),// [98]
+                Fretted6(Pick(
+                    Single((
+                        string: 5,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Dotted(Half),
+                )),// [99]
+                Mark("|"),// [100]
+                Mark("o:2"),// [101]
+                Fretted6(Pick(
+                    Single((
+                        string: 1,
+                        fret: Some(12),
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Dotted(Half),
+                )),// [102]
                 Mark("|"),
             ],
         ),// [1]
@@ -1842,393 +1869,6 @@
                     ),
                     Simple(Quarter),
                 )),// [178]
-                Mark("|"),// [179]
-                Mark("v4:12"),// [180]
-                Core(Rest(Simple(Half))),// [181]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [182]
-                Mark("|"),// [183]
-                Mark("v4:13"),// [184]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [185]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [186]
-                Mark("|"),// [187]
-                Mark("v4:14"),// [188]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [189]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [190]
-                Mark("|"),// [191]
-                Mark("v4:15"),// [192]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [193]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [194]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [195]
-                Mark("|"),// [196]
-                Mark("v4:16"),// [197]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Eighth),
-                )),// [198]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Eighth),
-                )),// [199]
-                Core(Tie),// [200]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [201]
-                Mark("|"),// [202]
-                Mark("v4:18"),// [203]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [204]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [205]
-                Mark("|"),// [206]
-                Mark("v4:19"),// [207]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [208]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [209]
-                Mark("|"),// [210]
-                Mark("v4:20"),// [211]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [212]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [213]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [214]
-                Mark("|"),// [215]
-                Mark("v4:21"),// [216]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Dotted(Half),
-                )),// [217]
-                Mark("|"),// [218]
-                Mark("v5:1"),// [219]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [220]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [221]
-                Mark("|"),// [222]
-                Mark("v5:2"),// [223]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Eighth),
-                )),// [224]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [225]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Eighth),
-                )),// [226]
-                Mark("|"),// [227]
-                Mark("v5:3"),// [228]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Dotted(Quarter),
-                )),// [229]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Eighth),
-                )),// [230]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [231]
-                Mark("|"),// [232]
-                Mark("v5:4"),// [233]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Dotted(Half),
-                )),// [234]
-                Mark("|"),// [235]
-                Mark("v5:6"),// [236]
-                Core(Rest(Simple(Quarter))),// [237]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [238]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [239]
-                Mark("|"),// [240]
-                Mark("v5:7"),// [241]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [242]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [243]
-                Mark("|"),// [244]
-                Mark("v5:8"),// [245]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [246]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [247]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [248]
-                Mark("|"),// [249]
-                Mark("v5:9"),// [250]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Dotted(Half),
-                )),// [251]
-                Mark("|"),// [252]
-                Mark("v5:12"),// [253]
-                Core(Rest(Simple(Half))),// [254]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [255]
-                Mark("|"),// [256]
-                Mark("v5:13"),// [257]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [258]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [259]
-                Mark("|"),// [260]
-                Mark("v5:14"),// [261]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [262]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [263]
-                Mark("|"),// [264]
-                Mark("v5:15"),// [265]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [266]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [267]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [268]
-                Mark("|"),// [269]
-                Mark("v5:16"),// [270]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Eighth),
-                )),// [271]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Eighth),
-                )),// [272]
-                Core(Tie),// [273]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [274]
-                Mark("|"),// [275]
-                Mark("v5:18"),// [276]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [277]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [278]
-                Mark("|"),// [279]
-                Mark("v5:19"),// [280]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Half),
-                )),// [281]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [282]
-                Mark("|"),// [283]
-                Mark("v5:20"),// [284]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [285]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [286]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Simple(Quarter),
-                )),// [287]
-                Mark("|"),// [288]
-                Mark("v5:21"),// [289]
-                Lyric(Word(
-                    (
-                        text: "",
-                    ),
-                    Dotted(Half),
-                )),// [290]
                 Mark("|"),
             ],
         ),// [2]
@@ -3003,7 +2643,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7"),
+                                    begin: Mark("6sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3013,7 +2653,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -3032,7 +2672,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7/4"),
+                                    begin: Mark("2_9_11"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3042,7 +2682,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7/D"),
+                                    begin: Mark("Dadd11"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -3096,7 +2736,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7"),
+                                    begin: Mark("6sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3106,7 +2746,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -3286,7 +2926,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7"),
+                                    begin: Mark("6sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3296,7 +2936,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -3476,7 +3116,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7"),
+                                    begin: Mark("6sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3486,7 +3126,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -3515,7 +3155,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -3603,7 +3243,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7"),
+                                    begin: Mark("6sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3613,7 +3253,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -3832,7 +3472,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7"),
+                                    begin: Mark("6sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3842,7 +3482,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -4002,7 +3642,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-_7"),
+                                    begin: Mark("6sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4012,7 +3652,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Am7"),
+                                    begin: Mark("Asus4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -4527,6 +4167,60 @@
                     ],
                 ),
             ],
+        ),// [1]
+        (
+            id: "outro",
+            kind: Outro,
+            bars: [
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("o:1"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),// [0]
+                (
+                    layers: [
+                        (
+                            track: "chord",
+                            slices: [
+                                (
+                                    begin: Mark("6-"),
+                                    end: Count(1),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),// [0]
+                        (
+                            track: "guitar",
+                            slices: [
+                                (
+                                    begin: Mark("o:2"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
         ),
     ],
     form: (
@@ -4534,7 +4228,11 @@
             "intro",// [0]
             "verse",// [1]
             "verse",// [2]
-            "verse",
+            "verse",// [3]
+            "verse",// [4]
+            "verse",// [5]
+            "intro",// [6]
+            "outro",
         ],
     ),
 )

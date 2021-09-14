@@ -3,12 +3,13 @@ use notation_proto::prelude::*;
 
 pub fn new_tab() -> Tab {
     tab! {
+        "06dd7278-cdaf-40dd-abc6-6e66ec2d6b8c"
         Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(129))
         Tracks: [
             {chord Chord [
                 $duration = D_1_2
-                "6-_7" Chord ( 6: 3- 5 7- )
-                "6-_7/4" Chord ( 6: 3- 5 7- /4 )
+                "6sus4_7" Chord ( 6: 4 5 7- )
+                "2_9_11" Chord ( 2: 3 9 11 )
                 "5/4" Chord ( 5: 3 5 /4 )
                 "5" Chord ( 5: 3 5 )
                 "6sus2" Chord ( 6: 2 5 )
@@ -22,14 +23,14 @@ pub fn new_tab() -> Tab {
                 "v:19"
                     $duration = _1_4
                     Chord ( 1: 3 5 )
-                    Chord ( 5: 3 5 /3) |
+                    Chord ( 5: 3 5 /3)
                     Chord ( 6: 3- 5 ) |
             ]}
             {guitar Guitar [
                 Fretboard capo: 7
                 $duration = D_1_2
-                "Am7" Shape ( 0 0 4 0 3 0 )
-                "Am7/D" Shape ( 0 5 4 0 3 0 )
+                "Asus4" Shape ( 0 0 4 0 3 0 )
+                "Dadd11" Shape ( 0 5 4 0 3 0 )
                 "G/C" Shape ( _ 3 0 0 0 _ )
                 "Asus2" Shape ( _ 0 2 2 0 0 )
                 "G'" Shape ( 3 _ 0 0 0 _ )
@@ -56,6 +57,9 @@ pub fn new_tab() -> Tab {
                 "v:21" Pick [ (4@2 2@1 *) (4 2 *) 6* ] |
                 "v:23" Pick [ (6 2) 3 4 3 (4@2 2@1 *) ] |
                 "v:24" Pick [ (4 2 *) (4 2 -) (4@2 2@1 -) (4 2 -) (6 3) 4 ] |
+                $duration = D_1_2
+                "o:1" Pick [ 5 ] |
+                "o:2" Pick [ 1@12 ] |
             ]}
             {lyrics Lyrics [
                 $duration = _1_4
@@ -102,32 +106,6 @@ pub fn new_tab() -> Tab {
                 "v4:2" Word [ "reap", "it"+ "in", "a", ] |
                 "v4:3" Word [ "si-", "ckle"+ "of" ] |
                 "v4:4" Word [ "lea-"* "ther" ] |
-                "v4:12" Word [ _* "" ] |
-                "v4:13" Word [ ""* "" ] |
-                "v4:14" Word [ ""* "" ] |
-                "v4:15" Word [ "" "" "" ] |
-                "v4:16" Word [ "", "", @ ""* ] |
-                "v4:18" Word [ ""* "" ] |
-                "v4:19" Word [ ""* "" ] |
-                "v4:20" Word [ "" "" "" ] |
-                "v4:21" Word [ ""*+ ] |
-                "v5:1" Word [ ""* "" ] |
-                "v5:2" Word [ "", ""* "", ] |
-                "v5:3" Word [ ""+ "", "" ] |
-                "v5:4" Word [ ""*+ ] |
-                "v5:6" Word [ _ "" "" ] |
-                "v5:7" Word [ ""* "" ] |
-                "v5:8" Word [ "" "" "" ] |
-                "v5:9" Word [ ""*+ ] |
-                "v5:12" Word [ _* "" ] |
-                "v5:13" Word [ ""* "" ] |
-                "v5:14" Word [ ""* "" ] |
-                "v5:15" Word [ "" "" "" ] |
-                "v5:16" Word [ "", "", @ ""* ] |
-                "v5:18" Word [ ""* "" ] |
-                "v5:19" Word [ ""* "" ] |
-                "v5:20" Word [ "" "" "" ] |
-                "v5:21" Word [ ""*+ ] |
             ]}
             {vocal Vocal [
                 $key = E
@@ -166,11 +144,11 @@ pub fn new_tab() -> Tab {
         Sections: [
             {intro Intro [
                 {
-                    chord [ "6-_7" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                 } {
-                    chord [ "6-_7/4" 1 ]
-                    guitar [ "Am7/D" 1 ; "i" | ]
+                    chord [ "2_9_11" 1 ]
+                    guitar [ "Dadd11" 1 ; "i" | ]
                 } {
                     chord [ "5/4" 1 ]
                     guitar [ "G/C" 1 ; "i:3" | ]
@@ -178,8 +156,8 @@ pub fn new_tab() -> Tab {
             ]}
             {verse Verse [
                 {
-                    chord [ "6-_7" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v1:1" | @ 1 5 ; "v2:1" | @ 2 ; "v3:1" | @ 3 ; "v4:1" | @ 4 ; "v5:1" | @ 5 ]
                     vocal [ "v:1" | @ 1 5 ; "v2:1" | @ 2 3 4 ]
                 }
@@ -190,8 +168,8 @@ pub fn new_tab() -> Tab {
                     vocal [ "v:2" | @ 1 5 ; "v2:2" | @ 2 3 ; "v4:2" | @ 4 ]
                 }
                 {
-                    chord [ "6-_7" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v1:3" | @ 1 5 ; "v2:3" | @ 2 ; "v3:3" | @ 3 ; "v4:3" | @ 4 ; "v5:3" | @ 5 ]
                     vocal [ "v:3" | @ 1 5 ; "v2:3" | @ 2 3 ; "v4:3" | @ 4 ]
                 }
@@ -202,12 +180,12 @@ pub fn new_tab() -> Tab {
                     vocal [ "v:4" | @ 1 2 3 5 ; "v4:4" | @ 4 ]
                 }
                 {
-                    chord [ "6-_7" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                 }
                 {
                     chord [ "6sus2" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v:6" | ]
                     vocal [ "v:6" | ]
                 }
@@ -218,8 +196,8 @@ pub fn new_tab() -> Tab {
                     vocal [ "v:7" | ]
                 }
                 {
-                    chord [ "6-_7" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v:8" | ]
                     vocal [ "v:8" | ]
                 }
@@ -244,8 +222,8 @@ pub fn new_tab() -> Tab {
                     vocal [ "v:12" | ]
                 }
                 {
-                    chord [ "6-_7" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v1:13" | @ 1 5 ; "v2:13" | @ 2 ; "v3:13" | @ 3 ; "v4:13" | @ 4 ]
                     vocal [ "v:13" | @ 1 2 ; "v3:13" | @ 3 4 5 ]
                 }
@@ -256,8 +234,8 @@ pub fn new_tab() -> Tab {
                     vocal [ "v:14" | @ 1 2 3 ; "v4:14" | @ 4 5 ]
                 }
                 {
-                    chord [ "6-_7" 1 ]
-                    guitar [ "Am7" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v1:15" | @ 1 5 ; "v2:15" | @ 2 ; "v3:15" | @ 3 ; "v4:15" | @ 4 ]
                     vocal [ "v:15" | @ 1 2 3 ; "v4:15" | @ 4 5 ]
                 }
@@ -308,8 +286,18 @@ pub fn new_tab() -> Tab {
                     guitar [ "G" 1 ; "v:24" | ]
                 }
             ]}
+            {outro Outro [
+                {
+                    chord [ "6-" 1 ]
+                    guitar [ "o:1" | ]
+                }
+                {
+                    chord [ "6-" 1 ]
+                    guitar [ "o:2" | ]
+                }
+            ]}
         ]
-        Form: intro verse verse verse
+        Form: intro verse verse verse verse verse intro outro
     }
 }
 

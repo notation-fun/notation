@@ -35,7 +35,7 @@ impl Parse for IntervalDsl {
                     Interval::Major3nd
                 }
             }
-            4 => {
+            4 | 11 => {
                 if input.peek(Token![+]) {
                     input.parse::<Token![+]>()?;
                     Interval::Augmented4th
@@ -54,7 +54,7 @@ impl Parse for IntervalDsl {
                     Interval::Perfect5th
                 }
             }
-            6 => {
+            6 | 13 => {
                 if input.peek(Token![-]) {
                     input.parse::<Token![-]>()?;
                     Interval::Minor6th

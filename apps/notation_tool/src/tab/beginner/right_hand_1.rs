@@ -3,6 +3,7 @@ use notation_proto::prelude::*;
 
 pub fn new_tab() -> Tab {
     tab! {
+        "c430733f-46c3-4db2-9685-a72c05027e62"
         Meta: TabMeta::new(Key::G, Scale::Major, Signature::_4_4, Tempo::Bpm(60))
         Tracks: [
             {chord Chord [

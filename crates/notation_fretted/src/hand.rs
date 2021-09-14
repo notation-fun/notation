@@ -44,7 +44,13 @@ macro_rules! impl_hand_shape {
                 Ok(())
             }
         }
-
+        impl Default for $type {
+            fn default() -> Self {
+                let frets = [Some(0) ; $strings];
+                let fingers = [None ; $strings];
+                Self::new(frets, fingers)
+            }
+        }
         impl $type {
             pub fn new(frets: [Option<u8>; $strings], fingers: [Option<Finger>; $strings]) -> Self {
                 Self { frets, fingers }
