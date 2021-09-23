@@ -3,25 +3,50 @@ use notation_proto::prelude::*;
 
 pub fn new_tab() -> Tab {
     tab! {
-        "86a6b734-1aa2-11ec-a594-3f319a5fdca9"
+        "06dd7278-cdaf-40dd-abc6-6e66ec2d6b8c"
         Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(129))
         Tracks: [
             {chord Chord [
                 $duration = D_1_2
-                "6" Chord ( 6: 3- 5 )
+                "6sus4_7" Chord ( 6: 4 5 7- )
+                "2_9_11" Chord ( 2: 3 9 11 )
                 "5/4" Chord ( 5: 3 5 /4 )
                 "5" Chord ( 5: 3 5 )
+                "6sus2" Chord ( 6: 2 5 )
+                "6-" Chord ( 6: 3- 5 )
                 "1" Chord ( 1: 3 5 )
-                "2" Chord ( 2: 3 5 )
+                "v:12"
+                    $duration = _1_4
+                    Chord ( 1: 3 5 )
+                    $duration = _1_2
+                    Chord ( 2: 3 5 ) |
+                "v:19"
+                    $duration = _1_4
+                    Chord ( 1: 3 5 )
+                    Chord ( 5: 3 5 /3)
+                    Chord ( 6: 3- 5 ) |
             ]}
             {guitar Guitar [
                 Fretboard capo: 7
                 $duration = D_1_2
-                "Em" Shape ( 0 2 2 0 0 0 )
-                "D" Shape ( _ _ 0 2 3 2 )
-                "Dsus4" Shape ( _ _ 0 2 3 3 )
+                "Asus4" Shape ( 0 0 4 0 3 0 )
+                "Dadd11" Shape ( 0 5 4 0 3 0 )
+                "G/C" Shape ( _ 3 0 0 0 _ )
+                "Asus2" Shape ( _ 0 2 2 0 0 )
+                "G'" Shape ( 3 _ 0 0 0 _ )
                 "G" Shape ( 3 2 0 0 0 3 )
-                "A" Shape ( _ 0 2 2 2 0 )
+                "C" Shape ( 0 3 2 0 1 0 )
+                "Am" Shape ( 0 0 2 2 1 0 )
+                "C_D"
+                    $duration = _1_4
+                    Shape ( 0 3 2 0 1 0 )
+                    $duration = _1_2
+                    Shape ( 0 0 0 2 3 2 ) |
+                "C_G/B_Am"
+                    $duration = _1_4
+                    Shape ( 0 3 2 0 1 0 )
+                    Shape ( _ 2 0 0 3 0 )
+                    Shape ( 0 0 2 2 1 0 ) |
                 $duration = _1_8
                 "i" Pick [ 5 1 3 4 2 3 ] |
                 "i:3" Pick [ 5 2 3* 5@2* ] |
