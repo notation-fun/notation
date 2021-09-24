@@ -1,8 +1,8 @@
 use midir::{MidiOutput, MidiOutputConnection};
-use notation_model::prelude::PlaySpeed;
-use std::sync::Mutex;
+use notation_model::prelude::{PlaySpeed, Tab};
+use std::sync::{Arc, Mutex};
 
-use crate::prelude::{MidiMessage, MidiSettings, MidiSynth};
+use crate::prelude::{MidiMessage, MidiSettings, MidiState, MidiSynth};
 
 pub struct MidiHub {
     pub output_conn: Option<Mutex<MidiOutputConnection>>,
@@ -61,6 +61,16 @@ impl MidiHub {
             self.check_output_synth();
         } else {
             self.check_output_conn();
+        }
+    }
+    pub fn switch_tab(&mut self, settings: &MidiSettings, state: &mut MidiState, tab: Arc<Tab>) {
+        state.switch_tab(&settings, self, tab.clone());
+        self.init_channels(settings, state);
+    }
+    pub fn init_channels(&mut self, settings: &MidiSettings, state: &MidiState) {
+        self.check_output(settings);
+        if let Some(synth) = &self.output_synth {
+            synth.init_channels(settings, state);
         }
     }
     pub fn send(&mut self, settings: &MidiSettings, speed: &PlaySpeed, msg: &MidiMessage) {

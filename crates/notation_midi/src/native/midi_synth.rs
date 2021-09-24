@@ -1,6 +1,6 @@
 use helgoboss_midi::StructuredShortMessage;
 
-use crate::prelude::MidiMessage;
+use crate::prelude::{MidiMessage, MidiSettings, MidiState};
 use notation_model::prelude::PlaySpeed;
 
 use super::audio_stream::DoubleAudioBuffer;
@@ -41,6 +41,8 @@ impl MidiSynth {
              */
             synth.write(data).unwrap();
         });
+    }
+    pub fn init_channels(&self, _settings: &MidiSettings, _state: &MidiState) {
     }
     pub fn send(&self, _speed: &PlaySpeed, msg: &MidiMessage) -> Result<(), String> {
         match msg.midi {

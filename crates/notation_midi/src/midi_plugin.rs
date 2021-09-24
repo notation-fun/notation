@@ -33,7 +33,7 @@ fn on_switch_tab(
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
     for evt in evts.iter() {
-        state.switch_tab(&settings, &mut hub, evt.tab.clone());
+        hub.switch_tab(&settings, &mut state, evt.tab.clone());
         _do_tick(
             &settings,
             &mut state,

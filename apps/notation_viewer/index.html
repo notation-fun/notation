@@ -24,19 +24,31 @@
       }
     </style>
 		<script src='https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js'></script>
-		<script src='https://surikov.github.io/webaudiofontdata/sound/0250_SoundBlasterOld_sf2.js'></script>
 		<script>
 			var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
 			var audioContext = new AudioContextFunc();
+      var channels = new Map();
 			var player=new WebAudioFontPlayer();
-			player.loader.decodeAfterLoading(audioContext, '_tone_0250_SoundBlasterOld_sf2');
 
-			function play_note(semitones, seconds){
-				player.queueWaveTable(audioContext, audioContext.destination
-					, _tone_0250_SoundBlasterOld_sf2, 0, semitones, seconds);
+			function play_note(channel, semitones, seconds, volume){
+        const info = channels.get(channel);
+        if (info) {
+          player.queueWaveTable(audioContext, audioContext.destination, window[info.variable], 0, semitones, seconds, volume);
+        }
 			}
 
-      function load_instrument(program) {
+      function init_channel(channel, program) {
+				var nn = player.loader.findInstrument(program);
+        var info = player.loader.instrumentInfo(nn);
+        channels.set(channel, info);
+        console.log('init_channel(', channel, program, ') -> info:', info);
+        player.loader.startLoad(audioContext, info.url, info.variable);
+      }
+
+      function load_instruments() {
+        player.loader.waitLoad(function () {
+          console.log('load_instruments: finished', channels);
+        });
       }
 		</script>
   </head>
