@@ -23,22 +23,22 @@
         background-color: white;
       }
     </style>
-		<script src='https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js'></script>
-		<script>
-			var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
-			var audioContext = new AudioContextFunc();
+    <script src='https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js'></script>
+    <script>
+      var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+      var audioContext = new AudioContextFunc();
+      var player=new WebAudioFontPlayer();
       var channels = new Map();
-			var player=new WebAudioFontPlayer();
 
-			function play_note(channel, semitones, seconds, volume){
+      function play_note(channel, semitones, seconds, volume){
         const info = channels.get(channel);
         if (info) {
           player.queueWaveTable(audioContext, audioContext.destination, window[info.variable], 0, semitones, seconds, volume);
         }
-			}
+      }
 
       function init_channel(channel, program) {
-				var nn = player.loader.findInstrument(program);
+        var nn = player.loader.findInstrument(program);
         var info = player.loader.instrumentInfo(nn);
         channels.set(channel, info);
         console.log('init_channel(', channel, program, ') -> info:', info);
@@ -50,7 +50,7 @@
           console.log('load_instruments: finished', channels);
         });
       }
-		</script>
+    </script>
   </head>
   <script type="module">
     import init from './target/wasm.js'
