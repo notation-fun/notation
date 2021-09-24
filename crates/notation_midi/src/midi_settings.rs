@@ -20,12 +20,12 @@ impl Default for MidiSettings {
     fn default() -> Self {
         Self {
             use_internal_synth: Self::default_use_internal_synth(),
-            vocal_sound: GMSoundSet::Trumpet as u8,
+            vocal_sound: GMSoundSet::Cello as u8,
             vocal_velocity: 90,
             guitar_sound: GMSoundSet::AcousticGuitarSteel as u8,
-            guitar_velocity: 80,
+            guitar_velocity: 100,
             piano_sound: GMSoundSet::AcousticGrandPiano as u8,
-            piano_velocity: 80,
+            piano_velocity: 90,
         }
     }
 }
