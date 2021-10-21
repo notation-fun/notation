@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, LayoutData};
+use bevy_utils::prelude::{BevyUtil, LayoutData, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{BarPosition, Position, TabBarProps, Units};
 
-use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct PosIndicatorData {
@@ -32,69 +32,48 @@ impl PosIndicatorData {
     }
 }
 
-pub struct PosIndicator<'a> {
-    pub theme: &'a NotationTheme,
-    pub data: PosIndicatorData,
-}
-
-impl<'a> LyonShape<shapes::Rectangle> for PosIndicator<'a> {
-    fn get_name(&self) -> String {
-        "Current Pos".to_string()
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        let width = self.theme.sizes.bar.pos_indicator_size;
-        let height = self.data.bar_layout.size.height + self.theme.sizes.bar.bar_separator_extra * 2.0;
-        shapes::Rectangle {
+impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for PosIndicatorData {
+    fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
+        let width = theme.sizes.bar.pos_indicator_size;
+        let height = self.bar_layout.size.height + theme.sizes.bar.bar_separator_extra * 2.0;
+        let color = theme
+                .colors
+                .of_section(self.bar_props.section_index);
+        let outline_color = theme.colors.bar.pos_indicator_color;
+        let outline_width = theme.sizes.bar.pos_indicator_outline;
+        let offset = if self.bar_layout.size.width <= 0.0 {
+            BevyUtil::offscreen_offset()
+        } else {
+            let y = self.bar_layout.offset.y;
+            Vec3::new(
+                self.offset_x(),
+                y + theme.sizes.bar.bar_separator_extra,
+                theme.core.pos_indicator_z,
+            )
+        };
+        OutlineRectangle {
             width,
             height,
             origin: shapes::RectangleOrigin::TopLeft,
+            color,
+            outline_width,
+            outline_color,
+            offset,
         }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::outlined(
-            self.theme
-                    .colors
-                    .of_section(self.data.bar_props.section_index),
-            self.theme.colors.bar.pos_indicator_color,
-        )
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Outlined {
-            fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(self.theme.sizes.bar.pos_indicator_outline),
-        }
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.bar_layout.size.width <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        let y = self.data.bar_layout.offset.y;
-        Transform::from_xyz(
-            self.data.offset_x(),
-            y + self.theme.sizes.bar.bar_separator_extra,
-            self.theme.core.pos_indicator_z,
-        )
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, PosIndicatorData, shapes::Rectangle, PosIndicator<'a>>
-    for PosIndicator<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: PosIndicatorData) -> PosIndicator<'a> {
-        PosIndicator::<'a> { theme, data }
-    }
-}
 
-impl<'a> PosIndicator<'a> {
+impl PosIndicatorData {
     pub fn update_pos(
         commands: &mut Commands,
-        theme: &'a NotationTheme,
+        theme: &NotationTheme,
         pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
         pos: Position,
     ) -> Option<PosIndicatorData> {
         if let Ok((entity, mut data)) = pos_indicator_query.single_mut() {
             data.bar_position = pos.bar;
-            Self::update(commands, theme, entity, &data);
+            data.update(commands, theme, entity);
             Some(data.clone())
         } else {
             None

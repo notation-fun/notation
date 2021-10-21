@@ -3,10 +3,10 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::BevyUtil;
+use bevy_utils::prelude::{ShapeOp, StrokePath};
 use notation_model::prelude::{Signature, TabBarProps, Units};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{BarData, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct RhythmIndicatorValue {
@@ -45,63 +45,45 @@ impl RhythmIndicatorData {
     }
 }
 
-pub struct RhythmIndicator<'a> {
-    theme: &'a NotationTheme,
-    data: RhythmIndicatorData,
-}
-
-impl<'a> LyonShape<shapes::SvgPathShape> for RhythmIndicator<'a> {
-    fn get_name(&self) -> String {
-        format!("| {}", self.data.bar_props.section_ordinal)
-    }
-    fn get_shape(&self) -> shapes::SvgPathShape {
-        self.data.shape(self.theme)
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(
-            self.theme
-                .colors
-                .of_section(self.data.bar_props.section_index),
-        )
-        /*
-        ShapeColors::new(self.theme.colors.rhythm.indicator)
-         */
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.sizes.tab_control.rhythm_indicator_line_width;
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.bar_radius <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        Transform {
-            translation: Vec3::new(0.0, 0.0, 1.0),
-            rotation: Quat::from_rotation_z(self.data.angle()),
-            scale: Vec3::ONE,
+impl ShapeOp<NotationTheme, shapes::SvgPathShape, StrokePath> for RhythmIndicatorData {
+    fn get_shape(&self, theme: &NotationTheme) -> StrokePath {
+        let width = self.value.bar_radius * theme.sizes.tab_control.rhythm_indicator_width_factor;
+        let radius = self.value.bar_radius * theme.sizes.tab_control.rhythm_indicator_radius_factor;
+        let path = format!(
+            "M {} {} L {} {} L {} {} Z",
+            radius,
+            0.0,
+            radius + width / 2.0,
+            radius,
+            radius - width / 2.0,
+            radius
+        );
+        let color = theme
+            .colors
+            .of_section(self.bar_props.section_index);
+        let line_width = theme.sizes.tab_control.rhythm_indicator_line_width;
+        StrokePath {
+            size: Vec2::new(radius * 2.0, radius * 2.0),
+            path,
+            color,
+            line_width,
+            offset: Vec3::new(0.0, 0.0, 1.0),
+            scale: 1.0,
+            angle: self.angle(),
         }
     }
 }
 
-impl<'a>
-    LyonShapeOp<'a, NotationTheme, RhythmIndicatorData, shapes::SvgPathShape, RhythmIndicator<'a>>
-    for RhythmIndicator<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: RhythmIndicatorData) -> RhythmIndicator<'a> {
-        RhythmIndicator::<'a> { theme, data }
-    }
-}
-
-impl<'a> RhythmIndicator<'a> {
+impl RhythmIndicatorData {
     pub fn update_size(
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         entity: Entity,
-        data: &mut RhythmIndicatorData,
         bar_radius: f32,
     ) {
-        data.value.bar_radius = bar_radius;
-        RhythmIndicator::update(commands, theme, entity, data);
+        self.value.bar_radius = bar_radius;
+        self.update(commands, theme, entity);
     }
     pub fn spawn(
         commands: &mut Commands,
@@ -119,7 +101,7 @@ impl<'a> RhythmIndicator<'a> {
             bar_props,
             value: indicator_value,
         };
-        let indicator_entity = RhythmIndicator::create(commands, theme, entity, indicator_data);
+        let indicator_entity = indicator_data.create(commands, theme, entity);
         indicator_entity
     }
 }

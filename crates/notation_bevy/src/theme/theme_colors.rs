@@ -92,6 +92,7 @@ pub struct ThemeColors {
     pub strings: StringsColors,
     pub rhythm: RhythmColors,
     pub mini_map: MiniMapColors,
+    pub ui: UiColors,
 }
 
 impl ThemeColors {
@@ -395,5 +396,18 @@ impl ThemeColors {
     }
     pub fn of_section(&self, v: usize) -> Color {
         self.section.of_section(v)
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct UiColors {
+    pub control_background: Color,
+}
+impl Default for UiColors {
+    fn default() -> Self {
+        Self {
+            control_background: hex_linear("FFF9F2"),
+        }
     }
 }

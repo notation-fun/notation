@@ -1,49 +1,22 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp};
-use crate::prelude::LayoutData;
+use crate::prelude::{LayoutData, OutlineRectangle, ShapeOp};
 
 use super::theme::BevyUtilsTheme;
 
-pub struct LayoutShape<'a> {
-    pub theme: &'a BevyUtilsTheme,
-    pub data: LayoutData,
-}
-
-impl<'a> LyonShape<shapes::Rectangle> for LayoutShape<'a> {
-    fn get_name(&self) -> String {
-        format!("{}", self.data)
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        shapes::Rectangle {
-            width: self.data.size.width,
-            height: self.data.size.height,
-            origin: shapes::RectangleOrigin::from(self.data),
+impl ShapeOp<BevyUtilsTheme, shapes::Rectangle, OutlineRectangle> for LayoutData {
+    fn get_shape(&self, theme: &BevyUtilsTheme) -> OutlineRectangle {
+        let color = theme.layout.get_view_color();
+        let outline_color = theme.layout.border_color;
+        OutlineRectangle {
+            width: self.size.width,
+            height: self.size.height,
+            origin: shapes::RectangleOrigin::from(*self),
+            color,
+            outline_width: theme.layout.border_line_width,
+            outline_color,
+            offset: Vec3::new(self.offset.x, self.offset.y, 2.0),
         }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::outlined(
-            self.theme.layout.get_view_color(),
-            self.theme.layout.border_color,
-        )
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Outlined {
-            fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default()
-                .with_line_width(self.theme.layout.border_line_width),
-        }
-    }
-    fn get_transform(&self) -> Transform {
-        Transform::from_xyz(self.data.offset.x, self.data.offset.y, 2.0)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, BevyUtilsTheme, LayoutData, shapes::Rectangle, LayoutShape<'a>>
-    for LayoutShape<'a>
-{
-    fn new_shape(theme: &'a BevyUtilsTheme, data: LayoutData) -> LayoutShape<'a> {
-        LayoutShape::<'a> { theme, data }
     }
 }

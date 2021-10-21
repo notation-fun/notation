@@ -6,7 +6,7 @@ use notation_model::prelude::{
     Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Note, Pick, Syllable, TabMeta,
 };
 
-use crate::chord::chord_note::{ChordNote, ChordNoteData, ChordNoteExtra, ChordNoteValue};
+use crate::chord::chord_note::{ChordNoteData, ChordNoteExtra, ChordNoteValue};
 use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
@@ -22,7 +22,6 @@ pub struct FretFingerExtra {
 }
 
 pub type FretFingerData = ChordNoteData<FretFingerExtra>;
-pub type FretFinger<'a> = ChordNote<'a, FretFingerExtra>;
 
 impl FretFingerExtra {
     pub fn new(string: u8, pick: bool, fret: Option<u8>, finger: Option<Finger>) -> Self {
@@ -127,7 +126,7 @@ impl FretFingerData {
             visible != self.value.extra.visible
         }
     }
-    pub fn update(
+    pub fn update_value(
         &mut self,
         shape: &HandShape6,
         fretboard: Option<Fretboard6>,
@@ -161,7 +160,7 @@ impl ChordNoteExtra for FretFingerExtra {
     }
     fn offset(&self, theme: &NotationTheme) -> Vec2 {
         if !self.visible || self.guitar_size.width <= 0.0 {
-            return BevyUtil::offscreen_offset();
+            return BevyUtil::offscreen_offset_2();
         }
         let x = theme
             .guitar

@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::BevyUtil;
+use bevy_utils::prelude::{BevyUtil, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{Note, PlayingState, Syllable, SyllableNote};
 
-use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{EntryData, NotationTheme};
 use notation_model::prelude::TabBar;
 
 use super::tone_mode::ToneMode;
@@ -34,90 +34,65 @@ impl ToneNoteValue {
         self.syllable_note.syllable
     }
 }
-pub struct ToneNoteShape<'a> {
-    theme: &'a NotationTheme,
-    data: ToneNoteData,
-}
 
-impl<'a> ToneNoteShape<'a> {
-    fn calc_outline(&self) -> f32 {
-        self.theme
-            .sizes
-            .melody
-            .note_outline
-            .of_state(&self.data.value.playing_state)
-    }
-    fn calc_width_height(&self) -> (f32, f32) {
-        let outline = self.calc_outline();
-        let width = self.data.value.bar_size / self.data.bar_props.bar_units.0
-            * self.data.entry_props.tied_units.0;
-        let mut height = self.theme.melody.note_height;
-        if self.data.value.playing_state.is_current() {
-            height += outline;
-        }
-        (width, height)
-    }
-}
-
-impl<'a> LyonShape<shapes::Rectangle> for ToneNoteShape<'a> {
-    fn get_name(&self) -> String {
-        format!(
-            "{}:{}",
-            self.data.bar_props.bar_ordinal, self.data.value.note
-        )
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        let (width, height) = self.calc_width_height();
-        shapes::Rectangle {
+impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for ToneNoteData {
+    fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
+        let (width, height) = self.calc_width_height(theme);
+        let color = theme.colors.of_syllable(self.value.syllable());
+        let outline_color = theme
+            .colors
+            .syllables
+            .outline
+            .of_state(&self.value.playing_state);
+        let outline_width = self.calc_outline(theme);
+        let offset = if self.value.bar_size <= 0.0 {
+            BevyUtil::offscreen_offset()
+        } else {
+            let x = self.value.bar_size / self.bar_props.bar_units.0
+                * self.entry_props.in_bar_pos.0;
+            let y = if self.value.mode.is_melody() {
+                theme
+                    .melody
+                    .calc_note_y(self.value.note, self.value.syllable_note)
+            } else {
+                0.0
+            };
+            let (_width, height) = self.calc_width_height(theme);
+            let extra_z = if self.value.playing_state.is_current() {
+                1.0
+            } else {
+                0.0
+            };
+            Vec3::new(x, y + height / 2.0, theme.strings.pick_z + extra_z)
+        };
+        OutlineRectangle {
             width,
             height,
             origin: shapes::RectangleOrigin::TopLeft,
+            color,
+            outline_width,
+            outline_color,
+            offset,
         }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::outlined(
-            self.theme.colors.of_syllable(self.data.value.syllable()),
-            self.theme
-                .colors
-                .syllables
-                .outline
-                .of_state(&self.data.value.playing_state),
-        )
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        let outline = self.calc_outline();
-        DrawMode::Outlined {
-            fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(outline),
-        }
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.bar_size <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        let x = self.data.value.bar_size / self.data.bar_props.bar_units.0
-            * self.data.entry_props.in_bar_pos.0;
-        let y = if self.data.value.mode.is_melody() {
-            self.theme
-                .melody
-                .calc_note_y(self.data.value.note, self.data.value.syllable_note)
-        } else {
-            0.0
-        };
-        let (_width, height) = self.calc_width_height();
-        let extra_z = if self.data.value.playing_state.is_current() {
-            1.0
-        } else {
-            0.0
-        };
-        Transform::from_xyz(x, y + height / 2.0, self.theme.strings.pick_z + extra_z)
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, ToneNoteData, shapes::Rectangle, ToneNoteShape<'a>>
-    for ToneNoteShape<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: ToneNoteData) -> ToneNoteShape<'a> {
-        ToneNoteShape::<'a> { theme, data }
+impl ToneNoteData {
+    fn calc_outline(&self, theme: &NotationTheme) -> f32 {
+        theme
+            .sizes
+            .melody
+            .note_outline
+            .of_state(&self.value.playing_state)
+    }
+    fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
+        let outline = self.calc_outline(theme);
+        let width = self.value.bar_size / self.bar_props.bar_units.0
+            * self.entry_props.tied_units.0;
+        let mut height = theme.melody.note_height;
+        if self.value.playing_state.is_current() {
+            height += outline;
+        }
+        (width, height)
     }
 }

@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, LayoutSize};
+use bevy_utils::prelude::{BevyUtil, LayoutSize, ShapeOp, StrokeLine};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{BarData, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct BarSeparatorValue {
@@ -19,52 +19,28 @@ impl BarSeparatorValue {
         }
     }
 }
-pub struct BarSeparator<'a> {
-    theme: &'a NotationTheme,
-    data: BarSeparatorData,
-}
 
-impl<'a> LyonShape<shapes::Line> for BarSeparator<'a> {
-    fn get_name(&self) -> String {
-        if self.data.value.is_begin {
-            format!("| {}", self.data.bar_props.bar_ordinal)
+impl ShapeOp<NotationTheme, shapes::Line, StrokeLine> for BarSeparatorData {
+    fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
+        let offset = if self.value.bar_size.width <= 0.0 {
+            BevyUtil::offscreen_offset()
         } else {
-            format!("{} |", self.data.bar_props.bar_ordinal)
-        }
-    }
-    fn get_shape(&self) -> shapes::Line {
-        shapes::Line(
-            Vec2::new(0.0, self.theme.sizes.bar.bar_separator_extra),
-            Vec2::new(
-                0.0,
-                -self.data.value.bar_size.height - self.theme.sizes.bar.bar_separator_extra,
-            ),
-        )
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.colors.bar.bar_separator_color)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.sizes.bar.bar_separator_size;
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.bar_size.width <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        let x = if self.data.value.is_begin {
-            0.0
-        } else {
-            self.data.value.bar_size.width
+            let x = if self.value.is_begin {
+                0.0
+            } else {
+                self.value.bar_size.width
+            };
+            Vec3::new(x, 0.0, theme.core.bar_separator_z)
         };
-        Transform::from_xyz(x, 0.0, self.theme.core.bar_separator_z)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, BarSeparatorData, shapes::Line, BarSeparator<'a>>
-    for BarSeparator<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: BarSeparatorData) -> BarSeparator<'a> {
-        BarSeparator::<'a> { theme, data }
+        StrokeLine {
+            from: Vec2::new(0.0, theme.sizes.bar.bar_separator_extra),
+            to: Vec2::new(
+                0.0,
+                -self.value.bar_size.height - theme.sizes.bar.bar_separator_extra,
+            ),
+            line_width: theme.sizes.bar.bar_separator_size,
+            color: theme.colors.bar.bar_separator_color,
+            offset,
+        }
     }
 }

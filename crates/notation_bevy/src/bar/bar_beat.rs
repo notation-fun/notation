@@ -2,9 +2,9 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::LayoutSize;
+use bevy_utils::prelude::{FillRectangle, LayoutSize, ShapeOp};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{BarData, NotationTheme};
 use notation_model::prelude::{Signature, TabBar};
 
 #[derive(Clone, Debug)]
@@ -44,47 +44,23 @@ impl BarBeatValue {
 
 pub type BarBeatData = BarData<BarBeatValue>;
 
-pub struct BarBeat<'a> {
-    theme: &'a NotationTheme,
-    data: BarBeatData,
-}
-
-impl<'a> LyonShape<shapes::Rectangle> for BarBeat<'a> {
-    fn get_name(&self) -> String {
-        format!(
-            "{}:{}",
-            self.data.bar_props.bar_ordinal, self.data.value.beat
-        )
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        shapes::Rectangle {
-            width: self.data.value.bar_size.width / self.data.value.bar_beats as f32,
-            height: (self.data.value.bar_size.height + self.theme.sizes.bar.bar_beat_extra * 2.0),
-            origin: shapes::RectangleOrigin::TopLeft,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let signature = self.data.value.signature;
-        let color = self
-            .theme
+impl ShapeOp<NotationTheme, shapes::Rectangle, FillRectangle> for BarBeatData {
+    fn get_shape(&self, theme: &NotationTheme) -> FillRectangle {
+        let signature = self.value.signature;
+        let color = theme
             .colors.bar
-            .get_beat_color(&signature, self.data.value.beat);
-        ShapeColors::new(color.unwrap_or(self.theme.core.background_color))
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-    fn get_transform(&self) -> Transform {
-        let x = self.data.value.bar_size.width / self.data.value.bar_beats as f32
-            * self.data.value.beat as f32;
-        Transform::from_xyz(x, self.theme.sizes.bar.bar_beat_extra, self.theme.core.beat_z)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, BarBeatData, shapes::Rectangle, BarBeat<'a>>
-    for BarBeat<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: BarBeatData) -> BarBeat<'a> {
-        BarBeat::<'a> { theme, data }
+            .get_beat_color(&signature, self.value.beat)
+            .unwrap_or(theme.core.background_color);
+        let x = self.value.bar_size.width / self.value.bar_beats as f32
+            * self.value.beat as f32;
+        FillRectangle {
+            width: self.value.bar_size.width / self.value.bar_beats as f32,
+            height: self.value.bar_size.height + theme.sizes.bar.bar_beat_extra * 2.0,
+            origin: shapes::RectangleOrigin::TopLeft,
+            color,
+            offset: Vec3::new(
+                x, theme.sizes.bar.bar_beat_extra, theme.core.beat_z,
+            ),
+        }
     }
 }

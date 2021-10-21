@@ -1,9 +1,10 @@
 use bevy::prelude::*;
 
-use crate::prelude::{LyonShapeOp, NotationTheme};
+use crate::prelude::{NotationTheme};
 use notation_model::prelude::BarLane;
+use bevy_utils::prelude::ShapeOp;
 
-use super::single_string::{SingleString, SingleStringData, SingleStringValue};
+use super::single_string::{SingleStringData, SingleStringValue};
 
 macro_rules! impl_strings_grid {
     ($type:ident, $strings: literal) => {
@@ -19,14 +20,14 @@ macro_rules! impl_strings_grid {
                 lane: &BarLane,
             ) {
                 for string in 1..=$strings {
-                    SingleString::create(
+                    let data = SingleStringData::new(lane, SingleStringValue {
+                        string: string as u8,
+                        bar_size: 0.0,
+                    });
+                    data.create(
                         commands,
                         theme,
                         entity,
-                        SingleStringData::new(lane, SingleStringValue {
-                            string: string as u8,
-                            bar_size: 0.0,
-                        }),
                     );
                 }
             }

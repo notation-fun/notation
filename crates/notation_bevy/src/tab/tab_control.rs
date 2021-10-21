@@ -2,17 +2,15 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{
-    BevyUtil, ColorBackground, DockPanel, DockSide, LayoutChangedQuery, LayoutConstraint,
-    LayoutSize, View, ViewBundle,
-};
+use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 use notation_model::prelude::Tab;
 
-use crate::prelude::{NotationAssets, NotationTheme};
-use crate::rhythm::rhythm_bar::{RhythmBar, RhythmBarData};
-use crate::rhythm::rhythm_beat::RhythmBeatData;
-use crate::rhythm::rhythm_indicator::RhythmIndicatorData;
+use crate::play::play_panel::PlayPanel;
+use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
+use crate::rhythm::rhythm_view::RhythmView;
 use crate::ui::layout::NotationLayout;
+
+use super::tab_events::TabControlDoLayoutEvent;
 
 pub struct TabControl {
     pub tab: Arc<Tab>,
@@ -45,6 +43,9 @@ impl<'a> View<NotationLayout<'a>> for TabControl {
             LayoutSize::new(width, constraint.max.height)
         }
     }
+    fn log_set_layout(&self) -> bool {
+        true
+    }
 }
 impl<'a> DockPanel<NotationLayout<'a>> for TabControl {
     fn dock_side(&self, engine: &NotationLayout<'a>, size: LayoutSize) -> DockSide {
@@ -55,6 +56,7 @@ impl<'a> DockPanel<NotationLayout<'a>> for TabControl {
         }
     }
 }
+impl<'a> DockView<NotationLayout<'a>, RhythmView, PlayPanel> for TabControl {}
 
 impl TabControl {
     pub fn spawn(
@@ -71,61 +73,42 @@ impl TabControl {
             commands,
             control_entity,
             theme.core.mini_map_z,
-            theme.colors.chord.background,
+            theme.colors.ui.control_background,
         );
-        let bar_props = tab
-            .get_bar_of_ordinal(1)
-            .map(|x| x.props)
-            .unwrap_or_default();
-        let chord = tab.get_bar_of_ordinal(1).and_then(|x| x.get_chord(None));
-        RhythmBar::spawn(
+        RhythmView::spawn(
             commands,
             assets,
             theme,
             control_entity,
-            bar_props,
-            tab.signature(),
-            chord,
+            tab,
+        );
+        PlayPanel::spawn(
+            commands,
+            assets,
+            theme,
+            control_entity,
         );
         control_entity
     }
-    pub fn on_layout_changed(
-        mut commands: Commands,
+    pub fn do_layout(
+        mut evts: EventReader<TabControlDoLayoutEvent>,
         theme: Res<NotationTheme>,
-        query: LayoutChangedQuery<TabControl>,
-        mut bar_query: Query<(&Parent, Entity, &mut RhythmBarData, &Children), With<RhythmBarData>>,
-        mut beat_query: Query<(Entity, &mut RhythmBeatData)>,
-        mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
+        state: Res<NotationAppState>,
+        settings: Res<NotationSettings>,
+        mut layout_query: LayoutQuery,
+        panel_query: ViewQuery<RhythmView>,
+        content_query: ViewQuery<PlayPanel>,
     ) {
-        for (entity, _view, layout) in query.iter() {
-            if layout.size.width <= 0.0 || layout.size.height <= 0.0 {
-                return;
-            }
-            for (parent, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
-                if parent.0 == entity {
-                    let ratio = theme.sizes.tab_control.control_width
-                        / theme.sizes.tab_control.control_height;
-                    let tall_mode = layout.size.width / layout.size.height < ratio;
-                    let height = if tall_mode {
-                        layout.size.width / ratio
-                    } else {
-                        layout.size.height
-                    };
-                    let radius = height * theme.sizes.tab_control.rhythm_bar_radius_factor
-                        + theme.sizes.tab_control.rhythm_bar_radius_extra;
-                    RhythmBar::update_size(
-                        &mut commands,
-                        &theme,
-                        &mut beat_query,
-                        &mut indicator_query,
-                        bar_entity,
-                        &mut bar_data,
-                        bar_children,
-                        radius,
-                        Vec2::new(height / 2.0, -layout.size.height / 2.0),
-                    )
-                }
-            }
+        let engine = NotationLayout::new(&theme, &state, &settings);
+        for evt in evts.iter() {
+            evt.view.do_layout(
+                &engine,
+                &mut layout_query,
+                &panel_query,
+                &content_query,
+                evt.entity,
+                evt.layout,
+            );
         }
     }
 }

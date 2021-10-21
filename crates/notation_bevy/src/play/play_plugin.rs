@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use bevy_utils::prelude::{GridData, LayoutData};
+use bevy_utils::prelude::{GridData, LayoutData, ShapeOp};
 use notation_midi::prelude::PlayControlEvent;
 use notation_model::prelude::{
     LaneEntry, PlayState, PlayingState, Position, Tab, TabBarProps, TickResult,
@@ -11,7 +11,7 @@ use bevy::prelude::*;
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_playing::ChordPlaying;
 use crate::prelude::{
-    BarPlaying, EntryPlaying, LyonShapeOp, NotationAssetsStates, NotationSettings, NotationTheme,
+    BarPlaying, EntryPlaying, NotationAssetsStates, NotationSettings, NotationTheme,
     TabBars, TabState,
 };
 
@@ -19,8 +19,8 @@ use crate::settings::layout_settings::LayoutMode;
 use crate::tab::tab_events::TabBarsResizedEvent;
 use crate::tab::tab_state::TabPlayStateChanged;
 
-use super::bar_indicator::{BarIndicator, BarIndicatorData};
-use super::pos_indicator::{PosIndicator, PosIndicatorData};
+use super::bar_indicator::{BarIndicatorData};
+use super::pos_indicator::{PosIndicatorData};
 
 pub struct PlayPlugin;
 
@@ -44,9 +44,9 @@ impl PlayPlugin {
         tab: &Tab,
     ) {
         let bar_data = BarIndicatorData::new();
-        BarIndicator::create(commands, &theme, entity, bar_data);
+        bar_data.create(commands, &theme, entity);
         let pos_data = PosIndicatorData::new(tab.bar_units());
-        PosIndicator::create(commands, &theme, entity, pos_data);
+        pos_data.create(commands, &theme, entity);
     }
 }
 
@@ -69,12 +69,12 @@ fn update_indicators(
     for (entity, mut data) in bar_indicator_query.iter_mut() {
         data.bar_props = bar_props;
         data.bar_layout = bar_layout;
-        BarIndicator::update(commands, &theme, entity, &data);
+        data.update(commands, &theme, entity);
     }
     for (entity, mut data) in pos_indicator_query.iter_mut() {
         data.bar_props = bar_props;
         data.bar_layout = bar_layout;
-        PosIndicator::update(commands, &theme, entity, &data);
+        data.update(commands, &theme, entity);
         settings
             .layout
             .focus_bar(commands, theme, tab_bars_query, &data);
@@ -186,7 +186,7 @@ fn on_tab_play_state_changed(
 ) {
     for (state_entity, tab_state) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
-        if let Some(pos_data) = PosIndicator::update_pos(
+        if let Some(pos_data) = PosIndicatorData::update_pos(
             &mut commands,
             &theme,
             &mut pos_indicator_query,
@@ -238,7 +238,7 @@ fn on_tick(
         tab_state.set_play_state(commands, state_entity, PlayState::Stopped);
     } else {
         if let Some(pos_data) =
-            PosIndicator::update_pos(commands, theme, pos_indicator_query, *new_position)
+            PosIndicatorData::update_pos(commands, theme, pos_indicator_query, *new_position)
         {
             if settings.layout.mode == LayoutMode::Line && pos_data.is_synced() {
                 settings

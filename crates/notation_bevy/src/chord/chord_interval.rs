@@ -5,7 +5,7 @@ use notation_model::prelude::{Interval, ModelEntryProps, Syllable};
 
 use crate::prelude::NotationTheme;
 
-use super::chord_note::{ChordNote, ChordNoteData, ChordNoteExtra, ChordNoteValue};
+use super::chord_note::{ChordNoteData, ChordNoteExtra, ChordNoteValue};
 
 #[derive(Clone, Debug)]
 pub struct ChordIntervalExtra {
@@ -14,7 +14,6 @@ pub struct ChordIntervalExtra {
     pub diagram_radius: f32,
 }
 pub type ChordIntervalData = ChordNoteData<ChordIntervalExtra>;
-pub type ChordInterval<'a> = ChordNote<'a, ChordIntervalExtra>;
 
 impl ChordNoteExtra for ChordIntervalExtra {
     fn set_diagram_radius(&mut self, diagram_radius: f32) {

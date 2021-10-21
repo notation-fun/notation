@@ -4,10 +4,10 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use bevy_utils::prelude::BevyUtil;
+use bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::{Signature, TabBarProps, Units};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{BarData, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct RhythmBeatValue {
@@ -25,14 +25,15 @@ impl Display for RhythmBeatValue {
 pub type RhythmBeatData = BarData<RhythmBeatValue>;
 
 impl RhythmBeatData {
-    pub fn offset(&self, theme: &NotationTheme) -> Vec2 {
+    pub fn offset(&self, theme: &NotationTheme) -> Vec3 {
         let total = self.value.signature.bar_beats;
         let angle_offset = PI / 2.0;
         let angle = -PI * 2.0 * self.value.index as f32 / total as f32 + angle_offset;
         let factor = theme.sizes.tab_control.rhythm_beat_offset_factor;
-        Vec2::new(
+        Vec3::new(
             self.value.bar_radius * factor * angle.cos(),
             self.value.bar_radius * factor * angle.sin(),
+            2.0,
         )
     }
     pub fn scale(&self, theme: &NotationTheme) -> f32 {
@@ -57,62 +58,34 @@ impl RhythmBeatData {
     }
 }
 
-pub struct RhythmBeat<'a> {
-    theme: &'a NotationTheme,
-    data: RhythmBeatData,
-}
-
-impl<'a> LyonShape<shapes::Circle> for RhythmBeat<'a> {
-    fn get_name(&self) -> String {
-        format!("{}", self.data)
-    }
-    fn get_shape(&self) -> shapes::Circle {
-        let radius = self.data.value.bar_radius
-            * self.theme.sizes.tab_control.rhythm_beat_radius_factor
-            * self.data.scale(self.theme);
-        shapes::Circle {
-            center: Vec2::ZERO,
-            radius,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let color = self
-            .theme
+impl ShapeOp<NotationTheme, shapes::Circle, FillCircle> for RhythmBeatData {
+    fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
+        let radius = self.value.bar_radius
+            * theme.sizes.tab_control.rhythm_beat_radius_factor
+            * self.scale(theme);
+        let color = theme
             .colors
             .rhythm
-            .get_beat_color(&self.data.value.signature, self.data.value.index);
-        ShapeColors::new(color)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.bar_radius <= 0.0 {
-            return BevyUtil::offscreen_transform();
+            .get_beat_color(&self.value.signature, self.value.index);
+        let offset = self.offset(theme);
+        FillCircle {
+            radius,
+            color,
+            offset,
         }
-        let offset = self.data.offset(self.theme);
-        Transform::from_xyz(offset.x, offset.y, 2.0)
     }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, RhythmBeatData, shapes::Circle, RhythmBeat<'a>>
-    for RhythmBeat<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: RhythmBeatData) -> RhythmBeat<'a> {
-        RhythmBeat::<'a> { theme, data }
-    }
-}
-
-impl<'a> RhythmBeat<'a> {
+impl RhythmBeatData {
     pub fn update_size(
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         entity: Entity,
-        data: &mut RhythmBeatData,
         bar_radius: f32,
     ) {
-        data.value.bar_radius = bar_radius;
-        RhythmBeat::update(commands, theme, entity, data);
+        self.value.bar_radius = bar_radius;
+        self.update(commands, theme, entity);
     }
     pub fn spawn(
         commands: &mut Commands,
@@ -132,7 +105,7 @@ impl<'a> RhythmBeat<'a> {
             bar_props,
             value: beat_value,
         };
-        let beat_entity = RhythmBeat::create(commands, theme, entity, beat_data);
+        let beat_entity = beat_data.create(commands, theme, entity);
         beat_entity
     }
 }

@@ -1,11 +1,11 @@
 use bevy::prelude::*;
 
-use bevy_utils::prelude::BevyUtil;
+use bevy_utils::prelude::{BevyUtil, ShapeOp};
 use notation_model::prelude::LaneEntry;
 
-use crate::prelude::{EntryPlaying, LyonShapeOp, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme};
 
-use super::word_text::{WordTextData, WordTextShape, WordTextValue};
+use super::word_text::{WordTextData, WordTextValue};
 
 pub fn create_word_text(
     commands: &mut Commands,
@@ -22,7 +22,7 @@ pub fn create_word_text(
     }
         */
     let data = WordTextData::new(entry, text.clone());
-    let text_entity = WordTextShape::create(commands, theme, entity, data);
+    let text_entity = data.create(commands, theme, entity);
     if text.word.text != "" {
         theme
             .lyrics
@@ -44,7 +44,7 @@ pub fn on_entry_playing_changed(
         for child in children.iter() {
             if let Ok((entity, mut data, text_children)) = text_query.q0_mut().get_mut(*child) {
                 data.value.playing_state = playing.value;
-                WordTextShape::update(&mut commands, &theme, entity, &data);
+                data.update(&mut commands, &theme, entity);
                 for child in text_children.iter() {
                     if let Ok(mut text) = font_query.get_mut(*child) {
                         BevyUtil::set_text_size_color(&mut text, data.calc_text_font_size(&theme), data.calc_text_color(&theme));
@@ -52,7 +52,7 @@ pub fn on_entry_playing_changed(
                 }
             } else if let Ok((entity, mut data)) = text_query.q1_mut().get_mut(*child) {
                 data.value.playing_state = playing.value;
-                WordTextShape::update(&mut commands, &theme, entity, &data);
+                data.update(&mut commands, &theme, entity);
             }
         }
     }

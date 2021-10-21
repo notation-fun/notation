@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
 use crate::prelude::NotationAssets;
@@ -59,10 +58,12 @@ impl Default for ShapesTheme {
 impl ShapesTheme {
     pub fn insert_shape_text(
         &self,
-        entity_commands: &mut EntityCommands,
+        commands: &mut Commands,
         assets: &NotationAssets,
+        entity: Entity,
         text: &String,
     ) {
+        let mut entity_commands = commands.spawn();
         let font = assets.en_font.clone();
         let style = TextStyle {
             font,
@@ -78,5 +79,7 @@ impl ShapesTheme {
             transform: Transform::from_xyz(self.shape_text_x, self.shape_text_y, self.shape_text_z),
             ..Default::default()
         });
+        let text_entity = entity_commands.id();
+        commands.entity(entity).push_children(&[text_entity]);
     }
 }

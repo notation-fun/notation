@@ -2,9 +2,10 @@ use std::f32::consts::PI;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use bevy_utils::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::IntervalQuality;
 
-use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct IntervalDotData {
@@ -23,7 +24,7 @@ impl IntervalDotData {
             note_radius,
         }
     }
-    fn circle_offset(total: usize, index: usize, note_radius: f32, factor: f32) -> Vec2 {
+    fn circle_offset(total: usize, index: usize, note_radius: f32, factor: f32) -> Vec3 {
         let angle_offset = match total {
             2 => -90,
             3 => -150,
@@ -33,18 +34,19 @@ impl IntervalDotData {
             * PI
             / 180.0;
         let angle = PI * 2.0 * index as f32 / total as f32 + angle_offset;
-        Vec2::new(
+        Vec3::new(
             note_radius * factor * angle.cos(),
             note_radius * factor * angle.sin(),
+            1.0,
         )
     }
-    fn offset(&self, theme: &NotationTheme) -> Vec2 {
+    fn offset(&self, theme: &NotationTheme) -> Vec3 {
         if self.total == 0 || self.note_radius <= 0.0 {
-            return Vec2::ZERO;
+            return Vec3::ZERO;
         }
         if self.index == 0 {
             if self.total == 1 || self.total == 5 || self.total == 7 {
-                return Vec2::ZERO;
+                return Vec3::ZERO;
             }
         }
         if self.total != 6 {
@@ -67,70 +69,31 @@ impl IntervalDotData {
             let y = ((self.index % 3) as f32 - 1.0)
                 * self.note_radius
                 * theme.sizes.chord.interval_dot_offset_6_factor.1;
-            Vec2::new(x, y)
+            Vec3::new(x, y, 1.0)
         }
     }
-}
-pub struct IntervalDot<'a> {
-    theme: &'a NotationTheme,
-    data: IntervalDotData,
 }
 
-impl<'a> LyonShape<shapes::Circle> for IntervalDot<'a> {
-    fn get_name(&self) -> String {
-        format!(
-            "{}:{}/{}",
-            self.data.quality, self.data.index, self.data.total,
-        )
-    }
-    fn get_shape(&self) -> shapes::Circle {
-        let radius = if self.data.total == 1 {
-            self.data.note_radius * self.theme.sizes.chord.interval_dot_big_radius_factor
+impl ShapeOp<NotationTheme, shapes::Circle, OutlineCircle> for IntervalDotData {
+    fn get_shape(&self, theme: &NotationTheme) -> OutlineCircle {
+        let radius = if self.total == 1 {
+            self.note_radius * theme.sizes.chord.interval_dot_big_radius_factor
         } else {
-            self.data.note_radius * self.theme.sizes.chord.interval_dot_radius_factor
+            self.note_radius * theme.sizes.chord.interval_dot_radius_factor
         };
-        shapes::Circle {
-            radius,
-            center: Vec2::ZERO,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let color = self.theme.colors.chord.dot.of_quality(&self.data.quality);
-        let outline = self.theme.sizes.chord.interval_dot_outline;
-        if outline > 0.0 {
-            ShapeColors::outlined(
-                color,
-                self.theme
+        let color = theme.colors.chord.dot.of_quality(&self.quality);
+        let outline_width = theme.sizes.chord.interval_dot_outline;
+        let outline_color = theme
                     .colors
                     .chord
                     .dot_outline
-                    .of_quality(&self.data.quality),
-            )
-        } else {
-            ShapeColors::new(color)
+                    .of_quality(&self.quality);
+        OutlineCircle {
+            radius,
+            color,
+            outline_width,
+            outline_color,
+            offset: self.offset(theme),
         }
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        let outline = self.theme.sizes.chord.interval_dot_outline;
-        if outline > 0.0 {
-            DrawMode::Outlined {
-                fill_options: FillOptions::default(),
-                outline_options: StrokeOptions::default().with_line_width(outline),
-            }
-        } else {
-            DrawMode::Fill(FillOptions::default())
-        }
-    }
-    fn get_transform(&self) -> Transform {
-        let offset = self.data.offset(self.theme);
-        Transform::from_xyz(offset.x, offset.y, 1.0)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, IntervalDotData, shapes::Circle, IntervalDot<'a>>
-    for IntervalDot<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: IntervalDotData) -> IntervalDot<'a> {
-        IntervalDot::<'a> { theme, data }
     }
 }

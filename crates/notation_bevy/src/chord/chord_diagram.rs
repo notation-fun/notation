@@ -3,12 +3,13 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
+use bevy_utils::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, ModelEntryProps, PlayingState};
 
-use crate::prelude::{LyonShape, LyonShapeOp, ModelEntryData, NotationTheme};
+use crate::prelude::{ModelEntryData, NotationTheme};
 
-use super::chord_base::{ChordBase, ChordBaseData};
-use super::chord_interval::{ChordInterval, ChordIntervalData};
+use super::chord_base::{ChordBaseData};
+use super::chord_interval::{ChordIntervalData};
 use super::interval_dot::IntervalDotData;
 
 #[derive(Clone, Debug)]
@@ -24,105 +25,69 @@ impl Display for ChordDiagramValue {
 }
 pub type ChordDiagramData = ModelEntryData<ChordDiagramValue>;
 
-pub struct ChordDiagram<'a> {
-    theme: &'a NotationTheme,
-    data: ChordDiagramData,
-}
-
-impl<'a> LyonShape<shapes::Circle> for ChordDiagram<'a> {
-    fn get_name(&self) -> String {
-        format!("{}", self.data)
-    }
-    fn get_shape(&self) -> shapes::Circle {
-        let outline = self
-            .theme
+impl ShapeOp<NotationTheme, shapes::Circle, OutlineCircle> for ChordDiagramData {
+    fn get_shape(&self, theme: &NotationTheme) -> OutlineCircle {
+        let outline_width = theme
             .sizes
             .chord
             .diagram_outline
-            .of_state(&self.data.value.playing_state);
-        let mut radius = self.data.value.radius;
-        if self.data.value.playing_state.is_current() {
-            radius += outline;
+            .of_state(&self.value.playing_state);
+        let mut radius = self.value.radius;
+        if self.value.playing_state.is_current() {
+            radius += outline_width;
         } else {
-            radius -= outline;
+            radius -= outline_width;
         }
-
-        shapes::Circle {
-            center: Vec2::ZERO,
-            radius,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let fill = self.theme.colors.of_syllable(self.data.value.chord.root);
-        let outline = self
-            .theme
+        let color = theme.colors.of_syllable(self.value.chord.root);
+        let outline_color = theme
             .colors
             .chord
             .diagram_outline
-            .of_state(&self.data.value.playing_state);
-        ShapeColors::outlined(fill, outline)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Outlined {
-            fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(
-                self.theme
-                    .sizes
-                    .chord
-                    .diagram_outline
-                    .of_state(&self.data.value.playing_state),
-            ),
+            .of_state(&self.value.playing_state);
+        OutlineCircle {
+            radius,
+            color,
+            outline_width,
+            outline_color,
+            offset: Vec3::new(0.0, 0.0, theme.core.mini_bar_z),
         }
     }
-    fn get_transform(&self) -> Transform {
-        Transform::from_xyz(0.0, 0.0, self.theme.core.mini_bar_z)
-    }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, ChordDiagramData, shapes::Circle, ChordDiagram<'a>>
-    for ChordDiagram<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: ChordDiagramData) -> ChordDiagram<'a> {
-        ChordDiagram::<'a> { theme, data }
-    }
-}
-
-impl<'a> ChordDiagram<'a> {
+impl ChordDiagramData {
     pub fn update_size(
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         interval_query: &mut Query<(Entity, &mut ChordIntervalData, &Children)>,
         base_query: &mut Query<(Entity, &mut ChordBaseData, &Children)>,
         dot_query: &mut Query<(Entity, &mut IntervalDotData)>,
         entity: Entity,
-        data: &mut ChordDiagramData,
         children: &Children,
         radius: f32,
     ) {
-        data.value.radius = radius;
-        ChordDiagram::update(commands, theme, entity, data);
+        self.value.radius = radius;
+        self.update(commands, theme, entity);
         for child in children.iter() {
             if let Ok((interval_entity, mut interval_data, interval_children)) =
                 interval_query.get_mut(*child)
             {
-                ChordInterval::update_size(
+                interval_data.update_size(
                     commands,
                     theme,
                     dot_query,
                     interval_entity,
-                    &mut interval_data,
                     interval_children,
                     radius,
                 );
             } else if let Ok((base_entity, mut base_data, base_chidren)) =
                 base_query.get_mut(*child)
             {
-                ChordBase::update_size(
+                base_data.update_size(
                     commands,
                     theme,
                     dot_query,
                     base_entity,
-                    &mut base_data,
                     base_chidren,
                     radius,
                 );
@@ -130,14 +95,14 @@ impl<'a> ChordDiagram<'a> {
         }
     }
     pub fn update_playing_state(
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         entity: Entity,
-        data: &mut ChordDiagramData,
         playing_state: PlayingState,
     ) {
-        data.value.playing_state = playing_state;
-        ChordDiagram::update(commands, theme, entity, data);
+        self.value.playing_state = playing_state;
+        self.update(commands, theme, entity);
     }
     pub fn spawn(
         commands: &mut Commands,
@@ -156,7 +121,7 @@ impl<'a> ChordDiagram<'a> {
             entry_props,
             value: chord_value,
         };
-        let diagram_entity = ChordDiagram::create(commands, theme, entity, chord_data);
+        let diagram_entity = chord_data.create(commands, theme, entity);
         let intervals = chord.intervals.get_intervals();
         for (index, interval) in intervals.iter().enumerate() {
             let interval_data = ChordIntervalData::new_data(
@@ -167,11 +132,11 @@ impl<'a> ChordDiagram<'a> {
                 index,
                 radius,
             );
-            ChordInterval::spawn(commands, theme, diagram_entity, interval_data);
+            interval_data.spawn(commands, theme, diagram_entity);
         }
         if let Some(base) = chord.base {
             let base_data = ChordBaseData::new_data(entry_props, chord.root, base.clone(), radius);
-            ChordBase::spawn(commands, theme, diagram_entity, base_data);
+            base_data.spawn(commands, theme, diagram_entity);
         }
         diagram_entity
     }

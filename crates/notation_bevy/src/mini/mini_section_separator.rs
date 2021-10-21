@@ -2,9 +2,9 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::BevyUtil;
+use bevy_utils::prelude::{BevyUtil, ShapeOp, StrokeLine};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{BarData, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct MiniSectionSeparatorValue {
@@ -26,55 +26,27 @@ impl Display for MiniSectionSeparatorValue {
 }
 pub type MiniSectionSeparatorData = BarData<MiniSectionSeparatorValue>;
 
-pub struct MiniSectionSeparator<'a> {
-    theme: &'a NotationTheme,
-    data: MiniSectionSeparatorData,
-}
-
-impl<'a> LyonShape<shapes::Line> for MiniSectionSeparator<'a> {
-    fn get_name(&self) -> String {
-        format!("| {}", self.data.bar_props.section_ordinal)
-    }
-    fn get_shape(&self) -> shapes::Line {
-        shapes::Line(
-            Vec2::new(
+impl ShapeOp<NotationTheme, shapes::Line, StrokeLine> for MiniSectionSeparatorData {
+    fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
+        let offset = if self.value.width <= 0.0 {
+            BevyUtil::offscreen_offset()
+        } else {
+            let line_width = theme.sizes.mini_map.section_separator;
+            let x_offset = -self.value.width / 2.0;
+            Vec3::new(line_width + x_offset, 0.0, theme.core.mini_bar_z + 2.0)
+        };
+        StrokeLine {
+            from: Vec2::new(
                 0.0,
-                self.theme.sizes.mini_map.bar_height / 2.0
-                    + self.theme.sizes.mini_map.bar_margin().height * 2.0,
+                theme.sizes.mini_map.bar_height / 2.0
+                    + theme.sizes.mini_map.bar_margin().height * 2.0,
             ),
-            Vec2::new(0.0, -self.theme.sizes.mini_map.bar_height / 2.0),
-        )
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(
-            self.theme
+            to: Vec2::new(0.0, -theme.sizes.mini_map.bar_height / 2.0),
+            line_width: theme.sizes.mini_map.section_separator,
+            color: theme
                 .colors
-                .of_section(self.data.bar_props.section_index),
-        )
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.sizes.mini_map.section_separator;
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.width <= 0.0 {
-            return BevyUtil::offscreen_transform();
+                .of_section(self.bar_props.section_index),
+            offset,
         }
-        let line_width = self.theme.sizes.mini_map.section_separator;
-        let x_offset = -self.data.value.width / 2.0;
-
-        Transform::from_xyz(line_width + x_offset, 0.0, self.theme.core.mini_bar_z + 2.0)
-    }
-}
-
-impl<'a>
-    LyonShapeOp<'a, NotationTheme, MiniSectionSeparatorData, shapes::Line, MiniSectionSeparator<'a>>
-    for MiniSectionSeparator<'a>
-{
-    fn new_shape(
-        theme: &'a NotationTheme,
-        data: MiniSectionSeparatorData,
-    ) -> MiniSectionSeparator<'a> {
-        MiniSectionSeparator::<'a> { theme, data }
     }
 }

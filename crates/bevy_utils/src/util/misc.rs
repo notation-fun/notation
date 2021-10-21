@@ -3,8 +3,11 @@ use bevy::prelude::*;
 use super::BevyUtil;
 
 impl BevyUtil {
-    pub fn offscreen_offset() -> Vec2 {
+    pub fn offscreen_offset_2() -> Vec2 {
         Vec2::new(-999999.0, -999999.0)
+    }
+    pub fn offscreen_offset() -> Vec3 {
+        Vec3::new(-999999.0, -999999.0, -999999.0)
     }
     pub fn offscreen_transform() -> Transform {
         Transform {

@@ -1,7 +1,6 @@
 use crate::prelude::*;
 use bevy::prelude::*;
 
-use super::layout::LayoutShape;
 use super::theme::BevyUtilsTheme;
 
 #[derive(Debug, Default)]
@@ -21,7 +20,7 @@ fn on_add_layout_data(
     layout_query: Query<(Entity, &LayoutData), Added<LayoutData>>,
 ) {
     for (entity, layout) in layout_query.iter() {
-        LayoutShape::create(&mut commands, &theme, entity, *layout);
+        layout.create(&mut commands, &theme, entity);
     }
 }
 
@@ -31,6 +30,6 @@ fn on_layout_data_changed(
     layout_query: Query<(Entity, &LayoutData), Changed<LayoutData>>,
 ) {
     for (entity, layout) in layout_query.iter() {
-        LayoutShape::update(&mut commands, &theme, entity, &layout);
+        layout.update(&mut commands, &theme, entity);
     }
 }

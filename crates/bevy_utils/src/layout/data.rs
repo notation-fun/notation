@@ -4,9 +4,13 @@ use std::ops::{Add, Sub};
 use bevy::prelude::*;
 use bevy_prototype_lyon::shapes;
 
+#[cfg(feature = "inspector")]
+use bevy_inspector_egui::Inspectable;
+
 use crate::prelude::{LayoutAnchor, LayoutHAnchor, LayoutVAnchor};
 
 #[derive(Copy, Clone, Debug, Default)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutSize {
     pub width: f32,
     pub height: f32,
@@ -46,6 +50,7 @@ impl LayoutConstraint {
 }
 
 #[derive(Copy, Clone, Debug, Default)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutData {
     pub depth: usize,
     pub size: LayoutSize,

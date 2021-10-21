@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
+use bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::Finger;
 
-use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct ShapeFingerData {
@@ -20,48 +21,26 @@ impl ShapeFingerData {
         }
     }
 }
-pub struct ShapeFingerShape<'a> {
-    theme: &'a NotationTheme,
-    data: ShapeFingerData,
-}
 
-impl<'a> LyonShape<shapes::Circle> for ShapeFingerShape<'a> {
-    fn get_name(&self) -> String {
-        format!(
-            "{}:{:?}{:?}",
-            self.data.string, self.data.fret, self.data.finger,
-        )
-    }
-    fn get_shape(&self) -> shapes::Circle {
-        shapes::Circle {
-            radius: self.theme.shapes.shape_finger_radius,
-            center: Vec2::ZERO,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let color = if self.data.fret.is_none() {
-            self.theme.shapes.shape_finger_mute_color
+impl ShapeOp<NotationTheme, shapes::Circle, FillCircle> for ShapeFingerData {
+    fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
+        let color = if self.fret.is_none() {
+            theme.shapes.shape_finger_mute_color
         } else {
-            self.theme.shapes.shape_finger_color
+            theme.shapes.shape_finger_color
         };
-        ShapeColors::new(color)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-    fn get_transform(&self) -> Transform {
-        let shapes = self.theme.shapes;
-        let x = shapes.shape_finger_offset_x - shapes.shape_string_space * self.data.string as f32;
+        let shapes = theme.shapes;
+        let x = shapes.shape_finger_offset_x - shapes.shape_string_space * self.string as f32;
         let y = shapes.shape_finger_offset_y
-            - shapes.shape_fret_space * self.data.fret.unwrap_or(0) as f32;
-        Transform::from_xyz(x, y, self.theme.shapes.shape_text_z)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, ShapeFingerData, shapes::Circle, ShapeFingerShape<'a>>
-    for ShapeFingerShape<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: ShapeFingerData) -> ShapeFingerShape<'a> {
-        ShapeFingerShape::<'a> { theme, data }
+            - shapes.shape_fret_space * self.fret.unwrap_or(0) as f32;
+        FillCircle {
+            radius: theme.shapes.shape_finger_radius,
+            color,
+            offset: Vec3::new(
+                x,
+                y,
+                theme.shapes.shape_text_z,
+            ),
+        }
     }
 }

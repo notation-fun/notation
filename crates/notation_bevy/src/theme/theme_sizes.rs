@@ -171,9 +171,9 @@ pub struct TabControlSizes {
 impl Default for TabControlSizes {
     fn default() -> Self {
         Self {
-            control_width: 160.0,
+            control_width: 240.0,
             control_height: 80.0,
-            dock_top_width: 320.0,
+            dock_top_width: 400.0,
             rhythm_bar_radius_factor: 0.45,
             rhythm_bar_radius_extra: 2.0,
             rhythm_beat_radius_factor: 0.10,

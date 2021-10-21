@@ -1,15 +1,16 @@
 use std::fmt::Display;
+use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use bevy_utils::prelude::BevyUtil;
-use notation_model::prelude::{Chord, Signature, TabBarProps};
+use bevy_utils::prelude::{BevyUtil, FillCircle, ShapeOp};
+use notation_model::prelude::{Chord, Signature, Tab};
 
-use crate::prelude::{BarData, LyonShape, LyonShapeOp, NotationAssets, NotationTheme, TabState};
+use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState};
 
-use super::rhythm_beat::{RhythmBeat, RhythmBeatData};
-use super::rhythm_indicator::{RhythmIndicator, RhythmIndicatorData};
+use super::rhythm_beat::{RhythmBeatData};
+use super::rhythm_indicator::{RhythmIndicatorData};
 
 #[derive(Clone, Debug)]
 pub struct RhythmBarValue {
@@ -26,75 +27,45 @@ impl Display for RhythmBarValue {
 
 pub type RhythmBarData = BarData<RhythmBarValue>;
 
-pub struct RhythmBar<'a> {
-    theme: &'a NotationTheme,
-    data: RhythmBarData,
-}
-
-impl<'a> LyonShape<shapes::Circle> for RhythmBar<'a> {
-    fn get_name(&self) -> String {
-        format!("{}", self.data)
-    }
-    fn get_shape(&self) -> shapes::Circle {
-        let radius = self.data.value.radius;
-        shapes::Circle {
-            center: Vec2::ZERO,
-            radius,
+impl ShapeOp<NotationTheme, shapes::Circle, FillCircle> for RhythmBarData {
+    fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
+        FillCircle {
+            radius: self.value.radius,
+            color: theme.colors.of_option_chord(self.value.chord),
+            offset: Vec3::new(
+                self.value.offset.x,
+                self.value.offset.y,
+                theme.core.mini_bar_z,
+            ),
         }
     }
-    fn get_colors(&self) -> ShapeColors {
-        let fill = self.theme.colors.of_option_chord(self.data.value.chord);
-        ShapeColors::new(fill)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.radius <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        Transform::from_xyz(
-            self.data.value.offset.x,
-            self.data.value.offset.y,
-            self.theme.core.mini_bar_z,
-        )
-    }
 }
 
-impl<'a> LyonShapeOp<'a, NotationTheme, RhythmBarData, shapes::Circle, RhythmBar<'a>>
-    for RhythmBar<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: RhythmBarData) -> RhythmBar<'a> {
-        RhythmBar::<'a> { theme, data }
-    }
-}
-
-impl<'a> RhythmBar<'a> {
+impl RhythmBarData {
     pub fn update_size(
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         beat_query: &mut Query<(Entity, &mut RhythmBeatData)>,
         indicator_query: &mut Query<(Entity, &mut RhythmIndicatorData)>,
         entity: Entity,
-        data: &mut RhythmBarData,
         children: &Children,
         radius: f32,
         offset: Vec2,
     ) {
-        data.value.radius = radius;
-        data.value.offset = offset;
-        RhythmBar::update(commands, theme, entity, data);
+        self.value.radius = radius;
+        self.value.offset = offset;
+        self.update(commands, theme, entity);
         for child in children.iter() {
             if let Ok((beat_entity, mut beat_data)) = beat_query.get_mut(*child) {
-                RhythmBeat::update_size(commands, theme, beat_entity, &mut beat_data, radius);
+                beat_data.update_size(commands, theme, beat_entity, radius);
             } else if let Ok((indicator_entity, mut indicator_data)) =
                 indicator_query.get_mut(*child)
             {
-                RhythmIndicator::update_size(
+                indicator_data.update_size(
                     commands,
                     theme,
                     indicator_entity,
-                    &mut indicator_data,
                     radius,
                 );
             }
@@ -105,10 +76,14 @@ impl<'a> RhythmBar<'a> {
         assets: &NotationAssets,
         theme: &NotationTheme,
         entity: Entity,
-        bar_props: TabBarProps,
-        signature: Signature,
-        chord: Option<Chord>,
+        tab: &Arc<Tab>,
     ) -> Entity {
+        let signature = tab.signature();
+        let bar_props = tab
+            .get_bar_of_ordinal(1)
+            .map(|x| x.props)
+            .unwrap_or_default();
+        let chord = tab.get_bar_of_ordinal(1).and_then(|x| x.get_chord(None));
         let bar_value = RhythmBarValue {
             signature,
             chord,
@@ -119,12 +94,12 @@ impl<'a> RhythmBar<'a> {
             bar_props,
             value: bar_value,
         };
-        let bar_entity = RhythmBar::create(commands, theme, entity, bar_data);
+        let bar_entity = bar_data.create(commands, theme, entity);
         let beats = signature.bar_beats;
         for index in 0..beats {
-            RhythmBeat::spawn(commands, theme, bar_entity, bar_props, signature, index);
+            RhythmBeatData::spawn(commands, theme, bar_entity, bar_props, signature, index);
         }
-        RhythmIndicator::spawn(commands, theme, bar_entity, bar_props, signature);
+        RhythmIndicatorData::spawn(commands, theme, bar_entity, bar_props, signature);
         theme
             .texts
             .rhythm
@@ -157,7 +132,7 @@ impl<'a> RhythmBar<'a> {
                 if bar_data.value.chord != current_chord {
                     bar_data.bar_props = bar_props;
                     bar_data.value.chord = current_chord;
-                    RhythmBar::update(&mut commands, &theme, bar_entity, &bar_data);
+                    bar_data.update(&mut commands, &theme, bar_entity);
                 }
                 for child in bar_children.iter() {
                     if let Ok(mut text) = font_query.get_mut(*child) {
@@ -170,12 +145,12 @@ impl<'a> RhythmBar<'a> {
             for (beat_entity, mut beat_data) in beat_query.iter_mut() {
                 beat_data.bar_props = bar_props;
                 beat_data.value.in_bar_pos = in_bar_pos;
-                RhythmBeat::update(&mut commands, &theme, beat_entity, &beat_data);
+                beat_data.update(&mut commands, &theme, beat_entity);
             }
             for (indicator_entity, mut indicator_data) in indicator_query.iter_mut() {
                 indicator_data.bar_props = bar_props;
                 indicator_data.value.in_bar_pos = in_bar_pos;
-                RhythmIndicator::update(&mut commands, &theme, indicator_entity, &indicator_data);
+                indicator_data.update(&mut commands, &theme, indicator_entity);
             }
         }
     }

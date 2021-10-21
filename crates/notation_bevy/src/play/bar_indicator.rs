@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, LayoutData};
+use bevy_utils::prelude::{BevyUtil, LayoutData, StrokeRectangle, ShapeOp};
 use notation_model::prelude::TabBarProps;
 
-use crate::prelude::{LyonShape, LyonShapeOp, NotationTheme};
+use crate::prelude::{NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct BarIndicatorData {
@@ -20,43 +20,22 @@ impl BarIndicatorData {
     }
 }
 
-pub struct BarIndicator<'a> {
-    pub theme: &'a NotationTheme,
-    pub data: BarIndicatorData,
-}
-
-impl<'a> LyonShape<shapes::Rectangle> for BarIndicator<'a> {
-    fn get_name(&self) -> String {
-        "Current Bar".to_string()
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        shapes::Rectangle {
-            width: self.data.bar_layout.size.width,
-            height: self.data.bar_layout.size.height + self.theme.sizes.bar.bar_separator_extra * 2.0,
+impl ShapeOp<NotationTheme, shapes::Rectangle, StrokeRectangle> for BarIndicatorData {
+    fn get_shape(&self, theme: &NotationTheme) -> StrokeRectangle {
+        let offset = if self.bar_layout.size.width <= 0.0 {
+            BevyUtil::offscreen_offset()
+        } else {
+            let x = self.bar_layout.offset.x;
+            let y = self.bar_layout.offset.y + theme.sizes.bar.bar_separator_extra;
+            Vec3::new(x, y, theme.core.bar_indicator_z)
+        };
+        StrokeRectangle {
+            width: self.bar_layout.size.width,
+            height: self.bar_layout.size.height + theme.sizes.bar.bar_separator_extra * 2.0,
             origin: shapes::RectangleOrigin::TopLeft,
+            color: theme.colors.bar.bar_indicator,
+            line_width: theme.sizes.bar.pos_indicator_size,
+            offset,
         }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.theme.colors.bar.bar_indicator)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self.theme.sizes.bar.pos_indicator_size;
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.bar_layout.size.width <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        let x = self.data.bar_layout.offset.x;
-        let y = self.data.bar_layout.offset.y + self.theme.sizes.bar.bar_separator_extra;
-        Transform::from_xyz(x, y, self.theme.core.bar_indicator_z)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, BarIndicatorData, shapes::Rectangle, BarIndicator<'a>>
-    for BarIndicator<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: BarIndicatorData) -> BarIndicator<'a> {
-        BarIndicator::<'a> { theme, data }
     }
 }

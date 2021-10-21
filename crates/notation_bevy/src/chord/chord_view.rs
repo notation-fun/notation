@@ -12,7 +12,7 @@ use crate::prelude::NotationTheme;
 use crate::ui::layout::NotationLayout;
 
 use super::chord_base::ChordBaseData;
-use super::chord_diagram::{ChordDiagram, ChordDiagramData};
+use super::chord_diagram::{ChordDiagramData};
 use super::chord_interval::ChordIntervalData;
 use super::chord_playing::ChordPlaying;
 use super::interval_dot::IntervalDotData;
@@ -91,14 +91,13 @@ impl ChordView {
                 if let Ok((diagram_entity, mut diagram_data, diagram_children)) =
                     diagram_query.get_mut(*child)
                 {
-                    ChordDiagram::update_size(
+                    diagram_data.update_size(
                         &mut commands,
                         &theme,
                         &mut interval_query,
                         &mut base_query,
                         &mut dot_query,
                         diagram_entity,
-                        &mut diagram_data,
                         diagram_children,
                         radius,
                     );
@@ -123,7 +122,7 @@ impl ChordView {
         );
         //TODO: handle initialization in a nicer way.
         let radius = 0.0;
-        ChordDiagram::spawn(commands, theme, chord_entity, entry.props, chord, radius);
+        ChordDiagramData::spawn(commands, theme, chord_entity, entry.props, chord, radius);
         commands
             .entity(chord_entity)
             .insert(ChordPlaying::from((entry.props, chord)));
@@ -141,11 +140,10 @@ impl ChordView {
         for (_entity, playing, _view, children) in query.iter_mut() {
             for child in children.iter() {
                 if let Ok((diagram_entity, mut diagram_data)) = diagram_query.get_mut(*child) {
-                    ChordDiagram::update_playing_state(
+                    diagram_data.update_playing_state(
                         &mut commands,
                         &theme,
                         diagram_entity,
-                        &mut diagram_data,
                         playing.value.state,
                     );
                 }

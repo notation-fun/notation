@@ -3,12 +3,12 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use bevy_utils::prelude::BevyUtil;
+use bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::{Interval, Syllable};
 
-use crate::prelude::{LyonShape, LyonShapeOp, ModelEntryData, NotationTheme};
+use crate::prelude::{ModelEntryData, NotationTheme};
 
-use super::interval_dot::{IntervalDot, IntervalDotData};
+use super::interval_dot::{IntervalDotData};
 
 pub trait ChordNoteExtra: Send + Sync + Clone {
     fn offset(&self, theme: &NotationTheme) -> Vec2;
@@ -59,82 +59,62 @@ impl<T: ChordNoteExtra + 'static> ChordNoteValue<T> {
 
 pub type ChordNoteData<T> = ModelEntryData<ChordNoteValue<T>>;
 
-pub struct ChordNote<'a, T: ChordNoteExtra + 'static> {
-    pub theme: &'a NotationTheme,
-    pub data: ChordNoteData<T>,
-}
-
-impl<'a, T: ChordNoteExtra + 'static> LyonShape<shapes::Circle> for ChordNote<'a, T> {
-    fn get_name(&self) -> String {
-        BevyUtil::cap_str(self.data.to_string(), 32)
-    }
-    fn get_shape(&self) -> shapes::Circle {
-        shapes::Circle {
-            center: Vec2::ZERO,
-            radius: self.data.value.extra.radius(self.theme),
+impl<T: ChordNoteExtra + 'static> ShapeOp<NotationTheme, shapes::Circle, FillCircle> for ChordNoteData<T> {
+    fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
+        let color = theme
+            .colors
+            .of_syllable(self.value.calc_syllable());
+        let color = self.value.extra.get_color(theme, color);
+        let offset = self.value.extra.offset(theme);
+        FillCircle {
+            radius: self.value.extra.radius(theme),
+            color,
+            offset: Vec3::new(
+                offset.x,
+                offset.y,
+                self.value.extra.get_z(theme),
+            ),
         }
     }
-    fn get_colors(&self) -> ShapeColors {
-        let color = self
-            .theme
-            .colors
-            .of_syllable(self.data.value.calc_syllable());
-        ShapeColors::new(self.data.value.extra.get_color(self.theme, color))
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-    fn get_transform(&self) -> Transform {
-        let offset = self.data.value.extra.offset(self.theme);
-        Transform::from_xyz(offset.x, offset.y, self.data.value.extra.get_z(self.theme))
-    }
 }
 
-impl<'a, T: ChordNoteExtra + 'static>
-    LyonShapeOp<'a, NotationTheme, ChordNoteData<T>, shapes::Circle, ChordNote<'a, T>>
-    for ChordNote<'a, T>
-{
-    fn new_shape(theme: &'a NotationTheme, data: ChordNoteData<T>) -> ChordNote<'a, T> {
-        ChordNote::<'a, T> { theme, data }
-    }
-}
 
-impl<'a, T: ChordNoteExtra + 'static> ChordNote<'a, T> {
+impl<T: ChordNoteExtra + 'static> ChordNoteData<T> {
     pub fn update_size(
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         dot_query: &mut Query<(Entity, &mut IntervalDotData)>,
         entity: Entity,
-        data: &mut ChordNoteData<T>,
         children: &Children,
         diagram_radius: f32,
     ) {
-        data.value.extra.set_diagram_radius(diagram_radius);
-        let note_radius = data.value.extra.radius(theme);
-        ChordNote::<T>::update(commands, theme, entity, data);
+        self.value.extra.set_diagram_radius(diagram_radius);
+        let note_radius = self.value.extra.radius(theme);
+        self.update(commands, theme, entity);
         for child in children.iter() {
             if let Ok((dot_entity, mut dot_data)) = dot_query.get_mut(*child) {
                 dot_data.note_radius = note_radius;
-                IntervalDot::update(commands, theme, dot_entity, &dot_data)
+                dot_data.update(commands, theme, dot_entity)
             }
         }
     }
     pub fn spawn(
+        &self,
         commands: &mut Commands,
         theme: &NotationTheme,
         entity: Entity,
-        data: ChordNoteData<T>,
     ) -> Entity {
-        let note_entity = ChordNote::create(commands, theme, entity, data.clone());
-        Self::respawn_dots(commands, theme, None, note_entity, &data);
+        let note_entity = self.create(commands, theme, entity);
+        self.respawn_dots(commands, theme, None, note_entity);
         note_entity
     }
     pub fn respawn_dots(
+        &self,
         commands: &mut Commands,
         theme: &NotationTheme,
         dot_query: Option<&Query<&Children>>,
         note_entity: Entity,
-        data: &ChordNoteData<T>,
     ) {
         if let Some(dot_query) = dot_query {
             for children in dot_query.get(note_entity) {
@@ -143,13 +123,13 @@ impl<'a, T: ChordNoteExtra + 'static> ChordNote<'a, T> {
                 }
             }
         }
-        if data.value.extra.show_dots() {
-            let quality = data.value.interval.into();
-            let dot_count = data.value.interval.dot_count();
-            let note_radius = data.value.extra.radius(theme);
+        if self.value.extra.show_dots() {
+            let quality = self.value.interval.into();
+            let dot_count = self.value.interval.dot_count();
+            let note_radius = self.value.extra.radius(theme);
             for index in 0..dot_count {
                 let dot_data = IntervalDotData::new(quality, dot_count, index, note_radius);
-                IntervalDot::create(commands, theme, note_entity, dot_data);
+                dot_data.create(commands, theme, note_entity);
             }
         }
     }

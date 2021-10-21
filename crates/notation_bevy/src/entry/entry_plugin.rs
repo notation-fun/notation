@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::LyonShapeOp;
+use bevy_utils::prelude::{ShapeOp};
 
 use crate::chord::chord_view::ChordView;
 use crate::prelude::{
@@ -9,13 +9,13 @@ use crate::prelude::{
     NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle,
 };
 use crate::shapes::shape_diagram::{
-    ShapeDiagram4, ShapeDiagram6, ShapeDiagramData4, ShapeDiagramData6,
+    ShapeDiagramData4, ShapeDiagramData6,
 };
-use crate::strings::pick_note::{PickNoteData, PickNoteShape};
-use crate::strings::single_string::{SingleString, SingleStringData};
+use crate::strings::pick_note::{PickNoteData};
+use crate::strings::single_string::{SingleStringData};
 use crate::tab::tab_events::TabBarsResizedEvent;
-use crate::tone::tone_note::{ToneNoteData, ToneNoteShape};
-use crate::word::word_text::{WordTextData, WordTextShape};
+use crate::tone::tone_note::{ToneNoteData};
+use crate::word::word_text::{WordTextData};
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;
@@ -156,7 +156,7 @@ fn on_tab_bars_resized(
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;
-                    ToneNoteShape::update(&mut commands, &theme, entity, &data);
+                    data.update(&mut commands, &theme, entity);
                 }
             }
         }
@@ -164,7 +164,7 @@ fn on_tab_bars_resized(
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;
-                    PickNoteShape::update(&mut commands, &theme, entity, &data);
+                    data.update(&mut commands, &theme, entity);
                 }
             }
         }
@@ -172,7 +172,7 @@ fn on_tab_bars_resized(
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;
-                    SingleString::update(&mut commands, &theme, entity, &data);
+                    data.update(&mut commands, &theme, entity);
                 }
             }
         }
@@ -180,7 +180,7 @@ fn on_tab_bars_resized(
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;
-                    WordTextShape::update(&mut commands, &theme, entity, &data);
+                    data.update(&mut commands, &theme, entity);
                 }
             }
         }
@@ -188,7 +188,7 @@ fn on_tab_bars_resized(
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;
-                    ShapeDiagram6::update(&mut commands, &theme, entity, &data);
+                    data.update(&mut commands, &theme, entity);
                 }
             }
         }
@@ -196,7 +196,7 @@ fn on_tab_bars_resized(
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;
-                    ShapeDiagram4::update(&mut commands, &theme, entity, &data);
+                    data.update(&mut commands, &theme, entity);
                 }
             }
         }

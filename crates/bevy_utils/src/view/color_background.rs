@@ -3,9 +3,7 @@ use std::fmt::Display;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use crate::prelude::{
-    BevyUtil, LayoutAnchor, LayoutData, LyonShape, NoThemeLyonShape, SingleBundle,
-};
+use crate::prelude::{BevyUtil, FillRectangle, LayoutAnchor, LayoutData, ShapeOp, SingleBundle};
 
 #[derive(Clone, Debug)]
 pub struct HasColorBackground;
@@ -31,30 +29,18 @@ impl ColorBackground {
     }
 }
 
-impl LyonShape<shapes::Rectangle> for ColorBackground {
-    fn get_name(&self) -> String {
-        format!("{}", self)
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        shapes::Rectangle {
+impl ShapeOp<(), shapes::Rectangle, FillRectangle> for ColorBackground {
+    fn get_shape(&self, _theme: &()) -> FillRectangle {
+        let offset = self.layout.calc_offset(LayoutAnchor::CENTER, Vec2::ZERO);
+        FillRectangle {
             width: self.layout.size.width,
             height: self.layout.size.height,
             origin: shapes::RectangleOrigin::Center,
+            color: self.color,
+            offset: Vec3::new(offset.x, offset.y, self.z),
         }
     }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.color)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
-    }
-    fn get_transform(&self) -> Transform {
-        let offset = self.layout.calc_offset(LayoutAnchor::CENTER, Vec2::ZERO);
-        Transform::from_xyz(offset.x, offset.y, self.z)
-    }
 }
-
-impl NoThemeLyonShape<shapes::Rectangle> for ColorBackground {}
 
 impl ColorBackground {
     pub fn setup(app: &mut AppBuilder) {
@@ -69,7 +55,7 @@ impl ColorBackground {
             for child in children.iter() {
                 if let Ok((background_entity, mut background)) = background_query.get_mut(*child) {
                     background.layout = *layout;
-                    background.update(&mut commands, background_entity);
+                    background.update(&mut commands, &(), background_entity);
                 }
             }
         }

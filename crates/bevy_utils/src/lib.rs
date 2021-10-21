@@ -1,6 +1,6 @@
 pub mod bundle;
 pub mod layout;
-pub mod lyon;
+pub mod shape;
 pub mod util;
 pub mod view;
 
@@ -28,7 +28,15 @@ pub mod prelude {
         View, ViewAddedQuery, ViewEntity, ViewQuery, ViewRootAddedQuery, ViewRootQuery,
     };
     #[doc(hidden)]
-    pub use crate::lyon::lyon_shape::{LyonShape, LyonShapeOp, NoThemeLyonShape};
+    pub use crate::shape::shape::{Shape, ShapeOp};
+    #[doc(hidden)]
+    pub use crate::shape::rectangle::{FillRectangle, StrokeRectangle, OutlineRectangle};
+    #[doc(hidden)]
+    pub use crate::shape::circle::{FillCircle, OutlineCircle};
+    #[doc(hidden)]
+    pub use crate::shape::line::{StrokeLine};
+    #[doc(hidden)]
+    pub use crate::shape::path::{StrokePath};
     #[doc(hidden)]
     pub use crate::util::BevyUtil;
     #[doc(hidden)]

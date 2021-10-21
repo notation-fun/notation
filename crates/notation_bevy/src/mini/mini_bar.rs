@@ -3,14 +3,14 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, View, ViewBundle};
+use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View, ViewBundle};
 use notation_model::prelude::{PlayingState, Syllable, TabBar};
 
-use crate::prelude::{BarData, BarPlaying, LyonShape, LyonShapeOp, NotationAssets, NotationTheme};
+use crate::prelude::{BarData, BarPlaying, NotationAssets, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::mini_section_separator::{
-    MiniSectionSeparator, MiniSectionSeparatorData, MiniSectionSeparatorValue,
+    MiniSectionSeparatorData, MiniSectionSeparatorValue,
 };
 
 pub type MiniBar = BarData<Arc<TabBar>>;
@@ -37,78 +37,42 @@ impl Display for MiniBarValue {
 }
 pub type MiniBarData = BarData<MiniBarValue>;
 
-pub struct MiniBarShape<'a> {
-    theme: &'a NotationTheme,
-    data: MiniBarData,
-}
-
-impl<'a> LyonShape<shapes::Rectangle> for MiniBarShape<'a> {
-    fn get_name(&self) -> String {
-        format!("{}: {:?}", self.data.bar_props.bar_ordinal, self.data.value)
-    }
-    fn get_shape(&self) -> shapes::Rectangle {
-        let (mut width, mut height) = (self.data.value.width, self.theme.sizes.mini_map.bar_height);
-        let outline = self
-            .theme
+impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for MiniBarData {
+    fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
+        let (mut width, mut height) = (self.value.width, theme.sizes.mini_map.bar_height);
+        let outline_width = theme
             .sizes
             .mini_map
             .bar_outline
-            .of_state(&self.data.value.playing_state);
-        if self.data.value.playing_state.is_current() {
-            width += outline;
-            height += outline;
+            .of_state(&self.value.playing_state);
+        if self.value.playing_state.is_current() {
+            width += outline_width;
+            height += outline_width;
         } else {
-            width -= outline;
-            height -= outline;
+            width -= outline_width;
+            height -= outline_width;
         }
-        shapes::Rectangle {
-            width,
-            height,
-            origin: shapes::RectangleOrigin::Center,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        let fill = self
-            .theme
+        let color = theme
             .colors
-            .of_option_syllable(self.data.value.syllable);
-        let outline = self
-            .theme
+            .of_option_syllable(self.value.syllable);
+        let outline_color = theme
             .colors
             .mini_map
             .bar_outline
-            .of_state(&self.data.value.playing_state);
-        ShapeColors::outlined(fill, outline)
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Outlined {
-            fill_options: FillOptions::default(),
-            outline_options: StrokeOptions::default().with_line_width(
-                self.theme
-                    .sizes
-                    .mini_map
-                    .bar_outline
-                    .of_state(&self.data.value.playing_state),
-            ),
-        }
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.width <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        let mut z = self.theme.core.mini_bar_z;
-        if self.data.value.playing_state.is_current() {
+            .of_state(&self.value.playing_state);
+        let mut z = theme.core.mini_bar_z;
+        if self.value.playing_state.is_current() {
             z += 1.0;
         }
-        Transform::from_xyz(0.0, 0.0, z)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, MiniBarData, shapes::Rectangle, MiniBarShape<'a>>
-    for MiniBarShape<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: MiniBarData) -> MiniBarShape<'a> {
-        MiniBarShape::<'a> { theme, data }
+        OutlineRectangle {
+            width,
+            height,
+            origin: shapes::RectangleOrigin::Center,
+            color,
+            outline_width,
+            outline_color,
+            offset: Vec3::new(0.0, 0.0, z),
+        }
     }
 }
 
@@ -138,14 +102,14 @@ impl MiniBar {
         let syllable = bar.get_chord(None).map(|x| x.root);
         let value = MiniBarValue::new(0.0, syllable);
         let data = MiniBarData::new(bar, value);
-        let shape_entity = MiniBarShape::create(commands, theme, bar_entity, data);
+        let shape_entity = data.create(commands, theme, bar_entity);
         commands
             .entity(shape_entity)
             .insert(BarPlaying::new(bar, PlayingState::Idle));
         if bar.props.bar_index == 0 {
             let section_separator_data =
                 MiniSectionSeparatorData::new(bar, MiniSectionSeparatorValue::new(0.0));
-            MiniSectionSeparator::create(commands, theme, bar_entity, section_separator_data);
+            section_separator_data.create(commands, theme, bar_entity);
             theme.texts.mini_map.spawn_bar_text(
                 commands,
                 shape_entity,
@@ -165,11 +129,11 @@ impl MiniBar {
         for (_entity, _view, layout) in query.iter() {
             for (entity, mut data) in mini_bar_query.iter_mut() {
                 data.value.width = layout.size.width;
-                MiniBarShape::update(&mut commands, &theme, entity, &data);
+                data.update(&mut commands, &theme, entity);
             }
             for (entity, mut data) in mini_section_separator_query.iter_mut() {
                 data.value.width = layout.size.width;
-                MiniSectionSeparator::update(&mut commands, &theme, entity, &data);
+                data.update(&mut commands, &theme, entity);
             }
         }
     }

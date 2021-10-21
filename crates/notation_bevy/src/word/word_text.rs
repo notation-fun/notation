@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::BevyUtil;
+use bevy_utils::prelude::{BevyUtil, ShapeOp, StrokeLine};
 use notation_model::prelude::{LyricWord, PlayingState};
 use std::fmt::Display;
 
-use crate::prelude::{EntryData, LyonShape, LyonShapeOp, NotationTheme, SingleBundle};
+use crate::prelude::{EntryData, NotationTheme, SingleBundle};
 
 #[derive(Clone, Debug)]
 pub struct WordTextValue {
@@ -31,9 +31,32 @@ pub type WordText = SingleBundle<WordTextValue>;
 
 pub type WordTextData = EntryData<WordTextValue>;
 
-pub struct WordTextShape<'a> {
-    theme: &'a NotationTheme,
-    data: WordTextData,
+impl ShapeOp<NotationTheme, shapes::Line, StrokeLine> for WordTextData {
+    fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
+        let width = self.value.bar_size / self.bar_props.bar_units.0
+            * self.entry_props.tied_units.0
+            - theme.lyrics.word_gap;
+        let line_width = theme
+            .sizes
+            .lyrics
+            .line_height
+            .of_state(&self.value.playing_state);
+        let offset = if self.value.bar_size <= 0.0 {
+            BevyUtil::offscreen_offset()
+        } else {
+            let x = self.value.bar_size / self.bar_props.bar_units.0
+                * self.entry_props.in_bar_pos.0;
+            let y = 0.0;
+            Vec3::new(x, y, theme.strings.pick_z)
+        };
+        StrokeLine {
+            from: Vec2::ZERO,
+            to: Vec2::new(width, 0.0),
+            line_width,
+            color: self.calc_text_color(theme),
+            offset,
+        }
+    }
 }
 
 impl WordTextData {
@@ -42,46 +65,5 @@ impl WordTextData {
     }
     pub fn calc_text_font_size(&self, theme: &NotationTheme) -> f32 {
         theme.lyrics.word_font_size.of_state(&self.value.playing_state)
-    }
-}
-
-impl<'a> LyonShape<shapes::Line> for WordTextShape<'a> {
-    fn get_name(&self) -> String {
-        format!("{}:{}", self.data.bar_props.bar_ordinal, self.data.value)
-    }
-    fn get_shape(&self) -> shapes::Line {
-        let width = self.data.value.bar_size / self.data.bar_props.bar_units.0
-            * self.data.entry_props.tied_units.0
-            - self.theme.lyrics.word_gap;
-        shapes::Line(Vec2::ZERO, Vec2::new(width, 0.0))
-    }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.data.calc_text_color(self.theme))
-    }
-    fn get_draw_mode(&self) -> DrawMode {
-        let line_width = self
-            .theme
-            .sizes
-            .lyrics
-            .line_height
-            .of_state(&self.data.value.playing_state);
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(line_width))
-    }
-    fn get_transform(&self) -> Transform {
-        if self.data.value.bar_size <= 0.0 {
-            return BevyUtil::offscreen_transform();
-        }
-        let x = self.data.value.bar_size / self.data.bar_props.bar_units.0
-            * self.data.entry_props.in_bar_pos.0;
-        let y = 0.0;
-        Transform::from_xyz(x, y, self.theme.strings.pick_z)
-    }
-}
-
-impl<'a> LyonShapeOp<'a, NotationTheme, WordTextData, shapes::Line, WordTextShape<'a>>
-    for WordTextShape<'a>
-{
-    fn new_shape(theme: &'a NotationTheme, data: WordTextData) -> WordTextShape<'a> {
-        WordTextShape::<'a> { theme, data }
     }
 }

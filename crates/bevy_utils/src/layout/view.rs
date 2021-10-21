@@ -140,6 +140,9 @@ pub trait View<TE: LayoutEnv>: Any + Send + Sync + ToString + 'static {
     fn is_root(&self) -> bool {
         false
     }
+    fn log_set_layout(&self) -> bool {
+        false
+    }
     fn log_layout_changed(&self) -> bool {
         false
     }
@@ -171,19 +174,19 @@ pub trait View<TE: LayoutEnv>: Any + Send + Sync + ToString + 'static {
         } else {
             data
         };
-        /*
-        if need_adjust {
-            println!(
-                "{}.set_layout_data(\n\t{} {} ->\n\t{}\n)",
-                self.to_string(),
-                data.pivot,
-                data.offset,
-                adjusted
-            );
-        } else {
-            println!("{}.set_layout_data(\n\t{}\n)", self.to_string(), adjusted);
+        if self.log_set_layout() {
+            if need_adjust {
+                println!(
+                    "{}.set_layout_data(\n\t{} {} ->\n\t{}\n)",
+                    self.to_string(),
+                    data.pivot,
+                    data.offset,
+                    adjusted
+                );
+            } else {
+                println!("{}.set_layout_data(\n\t{}\n)", self.to_string(), adjusted);
+            }
         }
-        */
         match layout_query.get_mut(entity) {
             Ok((mut layout_data, mut transform)) => {
                 *layout_data = adjusted;
