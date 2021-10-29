@@ -19,7 +19,7 @@ impl GuitarCapoData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, FillRectangle> for GuitarCapoData {
+impl ShapeOp<NotationTheme, FillRectangle> for GuitarCapoData {
     fn get_shape(&self, theme: &NotationTheme) -> FillRectangle {
         let width = self.guitar_size.width * theme.guitar.capo_width_factor;
         let height = self.guitar_size.height * theme.guitar.capo_height_factor;

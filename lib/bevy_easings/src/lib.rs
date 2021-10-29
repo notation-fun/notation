@@ -9,7 +9,7 @@
     unused_qualifications,
     missing_docs
 )]
-#![feature(float_interpolation)]
+//#![feature(float_interpolation)]
 
 //! Ease plugin for Bevy
 

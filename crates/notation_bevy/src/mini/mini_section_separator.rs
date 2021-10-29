@@ -1,7 +1,6 @@
 use std::fmt::Display;
 
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{BevyUtil, ShapeOp, StrokeLine};
 
 use crate::prelude::{BarData, NotationTheme};
@@ -26,7 +25,7 @@ impl Display for MiniSectionSeparatorValue {
 }
 pub type MiniSectionSeparatorData = BarData<MiniSectionSeparatorValue>;
 
-impl ShapeOp<NotationTheme, shapes::Line, StrokeLine> for MiniSectionSeparatorData {
+impl ShapeOp<NotationTheme, StrokeLine> for MiniSectionSeparatorData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
         let offset = if self.value.width <= 0.0 {
             BevyUtil::offscreen_offset()

@@ -2,7 +2,6 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 
 use bevy_utils::prelude::{BevyUtil, FillCircle, ShapeOp};
 use notation_model::prelude::{Chord, Signature, Tab};
@@ -27,7 +26,7 @@ impl Display for RhythmBarValue {
 
 pub type RhythmBarData = BarData<RhythmBarValue>;
 
-impl ShapeOp<NotationTheme, shapes::Circle, FillCircle> for RhythmBarData {
+impl ShapeOp<NotationTheme, FillCircle> for RhythmBarData {
     fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
         FillCircle {
             radius: self.value.radius,

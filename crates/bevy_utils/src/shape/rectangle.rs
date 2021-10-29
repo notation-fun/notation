@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::BevyUtil;
 
-use super::shape::Shape;
+use super::shape::{Shape, SingleShape};
 
 #[derive(Clone, Debug)]
 pub struct FillRectangle {
@@ -14,7 +14,12 @@ pub struct FillRectangle {
     pub offset: Vec3,
 }
 
-impl Shape<shapes::Rectangle> for FillRectangle {
+impl Shape for FillRectangle {
+    fn _create(&self, commands: &mut Commands, entity: Entity) {
+        self._do_create(commands, entity);
+    }
+}
+impl SingleShape<shapes::Rectangle> for FillRectangle {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.width,
@@ -50,7 +55,12 @@ pub struct StrokeRectangle {
     pub offset: Vec3,
 }
 
-impl Shape<shapes::Rectangle> for StrokeRectangle {
+impl Shape for StrokeRectangle {
+    fn _create(&self, commands: &mut Commands, entity: Entity) {
+        self._do_create(commands, entity);
+    }
+}
+impl SingleShape<shapes::Rectangle> for StrokeRectangle {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.width,
@@ -87,7 +97,12 @@ pub struct OutlineRectangle {
     pub offset: Vec3,
 }
 
-impl Shape<shapes::Rectangle> for OutlineRectangle {
+impl Shape for OutlineRectangle {
+    fn _create(&self, commands: &mut Commands, entity: Entity) {
+        self._do_create(commands, entity);
+    }
+}
+impl SingleShape<shapes::Rectangle> for OutlineRectangle {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
             width: self.width,

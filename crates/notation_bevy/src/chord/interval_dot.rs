@@ -1,7 +1,6 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::IntervalQuality;
 
@@ -74,7 +73,7 @@ impl IntervalDotData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Circle, OutlineCircle> for IntervalDotData {
+impl ShapeOp<NotationTheme, OutlineCircle> for IntervalDotData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineCircle {
         let radius = if self.total == 1 {
             self.note_radius * theme.sizes.chord.interval_dot_big_radius_factor

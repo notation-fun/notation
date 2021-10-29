@@ -45,7 +45,7 @@ impl RhythmIndicatorData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::SvgPathShape, StrokePath> for RhythmIndicatorData {
+impl ShapeOp<NotationTheme, StrokePath> for RhythmIndicatorData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokePath {
         let width = self.value.bar_radius * theme.sizes.tab_control.rhythm_indicator_width_factor;
         let radius = self.value.bar_radius * theme.sizes.tab_control.rhythm_indicator_radius_factor;

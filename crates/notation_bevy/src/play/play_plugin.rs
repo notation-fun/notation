@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use bevy_utils::prelude::{GridData, LayoutData, ShapeOp};
+use bevy_utils::prelude::{DoLayoutEvent, GridData, LayoutData, ShapeOp};
 use notation_midi::prelude::PlayControlEvent;
 use notation_model::prelude::{
     LaneEntry, PlayState, PlayingState, Position, Tab, TabBarProps, TickResult,
@@ -18,16 +18,24 @@ use crate::prelude::{
 use crate::settings::layout_settings::LayoutMode;
 use crate::tab::tab_events::TabBarsResizedEvent;
 use crate::tab::tab_state::TabPlayStateChanged;
+use crate::ui::layout::NotationLayout;
 
 use super::bar_indicator::{BarIndicatorData};
+use super::play_button::PlayButton;
+use super::play_panel::PlayPanel;
 use super::pos_indicator::{PosIndicatorData};
+
+pub type PlayPanelDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, PlayPanel>;
 
 pub struct PlayPlugin;
 
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
+        PlayPanelDoLayoutEvent::setup(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
+                .with_system(PlayPanel::do_layout.system())
+                .with_system(PlayButton::on_layout_changed.system())
                 .with_system(on_bar_playing_changed.system())
                 .with_system(on_tab_play_state_changed.system())
                 .with_system(on_play_control_evt.system())

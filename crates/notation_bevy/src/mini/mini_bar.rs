@@ -37,7 +37,7 @@ impl Display for MiniBarValue {
 }
 pub type MiniBarData = BarData<MiniBarValue>;
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for MiniBarData {
+impl ShapeOp<NotationTheme, OutlineRectangle> for MiniBarData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
         let (mut width, mut height) = (self.value.width, theme.sizes.mini_map.bar_height);
         let outline_width = theme

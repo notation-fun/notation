@@ -5,7 +5,7 @@ use crate::prelude::{LayoutData, OutlineRectangle, ShapeOp};
 
 use super::theme::BevyUtilsTheme;
 
-impl ShapeOp<BevyUtilsTheme, shapes::Rectangle, OutlineRectangle> for LayoutData {
+impl ShapeOp<BevyUtilsTheme, OutlineRectangle> for LayoutData {
     fn get_shape(&self, theme: &BevyUtilsTheme) -> OutlineRectangle {
         let color = theme.layout.get_view_color();
         let outline_color = theme.layout.border_color;

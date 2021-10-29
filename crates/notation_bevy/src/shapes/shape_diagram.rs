@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::{EntryData, NotationTheme};
 use bevy_utils::prelude::{BevyUtil, ShapeOp, StrokePath};
@@ -21,7 +20,7 @@ macro_rules! impl_shape_diagram {
                 })
             }
         }
-        impl ShapeOp<NotationTheme, shapes::SvgPathShape, StrokePath> for $diagram_data {
+        impl ShapeOp<NotationTheme, StrokePath> for $diagram_data {
             fn get_shape(&self, theme: &NotationTheme) -> StrokePath {
                 let x = if self.value.bar_size <= 0.0 {
                     BevyUtil::offscreen_offset().x

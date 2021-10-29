@@ -28,15 +28,15 @@ pub mod prelude {
         View, ViewAddedQuery, ViewEntity, ViewQuery, ViewRootAddedQuery, ViewRootQuery,
     };
     #[doc(hidden)]
-    pub use crate::shape::shape::{Shape, ShapeOp};
+    pub use crate::shape::shape::{SingleShape, ShapeOp};
     #[doc(hidden)]
     pub use crate::shape::rectangle::{FillRectangle, StrokeRectangle, OutlineRectangle};
     #[doc(hidden)]
-    pub use crate::shape::circle::{FillCircle, OutlineCircle};
+    pub use crate::shape::circle::{FillCircle, StrokeCircle, OutlineCircle};
     #[doc(hidden)]
     pub use crate::shape::line::{StrokeLine};
     #[doc(hidden)]
-    pub use crate::shape::path::{StrokePath};
+    pub use crate::shape::path::{FillPath, StrokePath, StrokeCirclePath, StrokeRectanglePath};
     #[doc(hidden)]
     pub use crate::util::BevyUtil;
     #[doc(hidden)]

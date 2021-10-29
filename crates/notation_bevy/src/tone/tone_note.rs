@@ -35,7 +35,7 @@ impl ToneNoteValue {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for ToneNoteData {
+impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
         let (width, height) = self.calc_width_height(theme);
         let color = theme.colors.of_syllable(self.value.syllable());

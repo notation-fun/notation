@@ -44,7 +44,7 @@ impl BarBeatValue {
 
 pub type BarBeatData = BarData<BarBeatValue>;
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, FillRectangle> for BarBeatData {
+impl ShapeOp<NotationTheme, FillRectangle> for BarBeatData {
     fn get_shape(&self, theme: &NotationTheme) -> FillRectangle {
         let signature = self.value.signature;
         let color = theme

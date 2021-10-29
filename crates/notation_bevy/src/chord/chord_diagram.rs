@@ -1,7 +1,6 @@
 use std::fmt::Display;
 
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 
 use bevy_utils::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, ModelEntryProps, PlayingState};
@@ -25,7 +24,7 @@ impl Display for ChordDiagramValue {
 }
 pub type ChordDiagramData = ModelEntryData<ChordDiagramValue>;
 
-impl ShapeOp<NotationTheme, shapes::Circle, OutlineCircle> for ChordDiagramData {
+impl ShapeOp<NotationTheme, OutlineCircle> for ChordDiagramData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineCircle {
         let outline_width = theme
             .sizes

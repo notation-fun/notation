@@ -128,7 +128,7 @@ impl GuitarStringData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for GuitarStringData {
+impl ShapeOp<NotationTheme, OutlineRectangle> for GuitarStringData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
         let fret_y = theme.guitar.calc_fret_y(
             self.fret() + self.capo,

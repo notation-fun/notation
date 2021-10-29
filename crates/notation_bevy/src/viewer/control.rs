@@ -134,7 +134,6 @@ impl ControlView {
             }
         }
     }
-
     pub fn play_or_stop(
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
@@ -145,6 +144,16 @@ impl ControlView {
             }
         } else {
             if midi_state.play_control.play() {
+                Self::send_play_state_evt(midi_state, play_control_evts);
+            }
+        }
+    }
+    pub fn stop(
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        if midi_state.play_control.play_state.is_playing() {
+            if midi_state.play_control.stop() {
                 Self::send_play_state_evt(midi_state, play_control_evts);
             }
         }
@@ -205,6 +214,13 @@ impl ControlView {
                         }
                     }
                     let play_speed = settings.speed_factor;
+                    ui.checkbox(&mut midi_state.play_control.should_loop, "Loop");
+                    if ui.button(format!("Begin: {}", midi_state.play_control.begin_bar_ordinal)).clicked() {
+                        midi_state.play_control.begin_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+                    }
+                    if ui.button(format!("End: {}", midi_state.play_control.end_bar_ordinal)).clicked() {
+                        midi_state.play_control.end_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+                    }
                     ui.add(Slider::new(&mut settings.speed_factor, 0.1..=2.0).text("Speed"));
                     if float_ne!(play_speed, settings.speed_factor, abs <= 0.01) {
                         Self::sync_speed_factor(

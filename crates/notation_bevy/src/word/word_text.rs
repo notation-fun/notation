@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{BevyUtil, ShapeOp, StrokeLine};
 use notation_model::prelude::{LyricWord, PlayingState};
 use std::fmt::Display;
@@ -31,7 +30,7 @@ pub type WordText = SingleBundle<WordTextValue>;
 
 pub type WordTextData = EntryData<WordTextValue>;
 
-impl ShapeOp<NotationTheme, shapes::Line, StrokeLine> for WordTextData {
+impl ShapeOp<NotationTheme, StrokeLine> for WordTextData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
         let width = self.value.bar_size / self.bar_props.bar_units.0
             * self.entry_props.tied_units.0

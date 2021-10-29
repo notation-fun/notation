@@ -60,7 +60,7 @@ impl PickNoteData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for PickNoteData {
+impl ShapeOp<NotationTheme, OutlineRectangle> for PickNoteData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
         let (width, height) = self.calc_width_height(theme);
         let color = theme.colors.of_syllable(self.value.syllable);

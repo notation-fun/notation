@@ -20,7 +20,7 @@ impl BarIndicatorData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, StrokeRectangle> for BarIndicatorData {
+impl ShapeOp<NotationTheme, StrokeRectangle> for BarIndicatorData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeRectangle {
         let offset = if self.bar_layout.size.width <= 0.0 {
             BevyUtil::offscreen_offset()

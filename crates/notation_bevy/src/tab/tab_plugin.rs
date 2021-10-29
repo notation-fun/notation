@@ -2,12 +2,13 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_utils::prelude::LayoutData;
-use notation_midi::prelude::JumpToBarEvent;
+use notation_midi::prelude::{JumpToBarEvent, MidiState, PlayControlEvent};
 
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_view::ChordView;
 use crate::mini::mini_bar::MiniBar;
 
+use crate::play::play_button::PlayButton;
 use crate::prelude::{
     AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates,
     NotationSettings, NotationTheme, TabAsset, TabBars, TabState,
@@ -65,10 +66,13 @@ fn on_mouse_clicked(
     settings: Res<NotationSettings>,
     tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
+    button_query: Query<(&Arc<PlayButton>, &LayoutData, &GlobalTransform)>,
     control_query: Query<(&Arc<TabControl>, &LayoutData, &GlobalTransform)>,
     chord_query: Query<(&Arc<ChordView>, &LayoutData, &GlobalTransform)>,
     bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
     mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
+    mut midi_state: ResMut<MidiState>,
+    mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
     let mut pos = None;
     for evt in evts.iter() {
@@ -84,6 +88,25 @@ fn on_mouse_clicked(
             for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
                     jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
+                    return;
+                }
+            }
+            for (button, layout, global_transform) in button_query.iter() {
+                if layout.is_pos_inside(pos, global_transform) {
+                    match button.action {
+                        crate::play::play_button::PlayButtonAction::PlayPause =>
+                            crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts),
+                        crate::play::play_button::PlayButtonAction::Stop =>
+                            crate::viewer::control::ControlView::stop(&mut midi_state, &mut play_control_evts),
+                        crate::play::play_button::PlayButtonAction::Settings =>
+                            app_state.hide_control = false,
+                        crate::play::play_button::PlayButtonAction::SetBegin =>
+                            midi_state.play_control.begin_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal,
+                        crate::play::play_button::PlayButtonAction::SetEnd =>
+                            midi_state.play_control.end_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal,
+                        crate::play::play_button::PlayButtonAction::LoopMode =>
+                            midi_state.play_control.should_loop = !midi_state.play_control.should_loop,
+                    }
                     return;
                 }
             }

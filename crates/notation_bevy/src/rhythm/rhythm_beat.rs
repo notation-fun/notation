@@ -2,7 +2,6 @@ use std::f32::consts::PI;
 use std::fmt::Display;
 
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 
 use bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::{Signature, TabBarProps, Units};
@@ -58,7 +57,7 @@ impl RhythmBeatData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Circle, FillCircle> for RhythmBeatData {
+impl ShapeOp<NotationTheme, FillCircle> for RhythmBeatData {
     fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
         let radius = self.value.bar_radius
             * theme.sizes.tab_control.rhythm_beat_radius_factor

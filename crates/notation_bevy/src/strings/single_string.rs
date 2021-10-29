@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{ShapeOp, StrokeLine};
 
 use crate::prelude::{LaneData, NotationTheme};
@@ -12,7 +11,7 @@ pub struct SingleStringValue {
 
 pub type SingleStringData = LaneData<SingleStringValue>;
 
-impl ShapeOp<NotationTheme, shapes::Line, StrokeLine> for SingleStringData {
+impl ShapeOp<NotationTheme, StrokeLine> for SingleStringData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
         let y = -1.0 * (self.value.string as f32 - 1.0) * theme.sizes.strings.string_space;
         StrokeLine {

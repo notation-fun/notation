@@ -32,7 +32,7 @@ impl PosIndicatorData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Rectangle, OutlineRectangle> for PosIndicatorData {
+impl ShapeOp<NotationTheme, OutlineRectangle> for PosIndicatorData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
         let width = theme.sizes.bar.pos_indicator_size;
         let height = self.bar_layout.size.height + theme.sizes.bar.bar_separator_extra * 2.0;

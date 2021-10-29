@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use super::shape::Shape;
+use super::shape::{Shape, SingleShape};
 
 #[derive(Clone, Debug)]
 pub struct StrokeLine {
@@ -12,7 +12,12 @@ pub struct StrokeLine {
     pub offset: Vec3,
 }
 
-impl Shape<shapes::Line> for StrokeLine {
+impl Shape for StrokeLine {
+    fn _create(&self, commands: &mut Commands, entity: Entity) {
+        self._do_create(commands, entity);
+    }
+}
+impl SingleShape<shapes::Line> for StrokeLine {
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(self.from, self.to)
     }

@@ -1,7 +1,6 @@
 use std::fmt::Display;
 
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 
 use bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::{Interval, Syllable};
@@ -59,7 +58,7 @@ impl<T: ChordNoteExtra + 'static> ChordNoteValue<T> {
 
 pub type ChordNoteData<T> = ModelEntryData<ChordNoteValue<T>>;
 
-impl<T: ChordNoteExtra + 'static> ShapeOp<NotationTheme, shapes::Circle, FillCircle> for ChordNoteData<T> {
+impl<T: ChordNoteExtra + 'static> ShapeOp<NotationTheme, FillCircle> for ChordNoteData<T> {
     fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
         let color = theme
             .colors

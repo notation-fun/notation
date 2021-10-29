@@ -29,7 +29,7 @@ impl ColorBackground {
     }
 }
 
-impl ShapeOp<(), shapes::Rectangle, FillRectangle> for ColorBackground {
+impl ShapeOp<(), FillRectangle> for ColorBackground {
     fn get_shape(&self, _theme: &()) -> FillRectangle {
         let offset = self.layout.calc_offset(LayoutAnchor::CENTER, Vec2::ZERO);
         FillRectangle {

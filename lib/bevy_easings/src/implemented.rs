@@ -122,10 +122,10 @@ impl Lerp for EaseValue<Val> {
     fn lerp(&self, other: &Self, scalar: &Self::Scalar) -> Self {
         match (self.0, other.0) {
             (Val::Percent(self_val), Val::Percent(other_val)) => {
-                EaseValue(Val::Percent(self_val.lerp(other_val, *scalar)))
+                EaseValue(Val::Percent(self_val.lerp(&other_val, scalar)))
             }
             (Val::Px(self_val), Val::Px(other_val)) => {
-                EaseValue(Val::Px(self_val.lerp(other_val, *scalar)))
+                EaseValue(Val::Px(self_val.lerp(&other_val, scalar)))
             }
             _ => EaseValue(self.0),
         }

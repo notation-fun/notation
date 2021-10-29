@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 use bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::Finger;
 
@@ -22,7 +21,7 @@ impl ShapeFingerData {
     }
 }
 
-impl ShapeOp<NotationTheme, shapes::Circle, FillCircle> for ShapeFingerData {
+impl ShapeOp<NotationTheme, FillCircle> for ShapeFingerData {
     fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
         let color = if self.fret.is_none() {
             theme.shapes.shape_finger_mute_color
