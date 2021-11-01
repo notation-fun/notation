@@ -2,7 +2,7 @@ use crate::prelude::{
     JumpToBarEvent, MidiHub, MidiSettings, MidiState, PlayControlEvent, SwitchTabEvent,
 };
 use bevy::prelude::*;
-use notation_model::prelude::PlayClock;
+use notation_model::prelude::{PlayClock};
 
 pub struct MidiPlugin;
 
@@ -57,7 +57,7 @@ fn on_jump_to_bar(
         bar_props = Some(evt.bar_props);
     }
     if let Some(bar_props) = bar_props {
-        state.jump_to_bar(bar_props);
+        state.jump_to_bar(&settings, &mut hub, bar_props);
         _do_tick(
             &settings,
             &mut state,

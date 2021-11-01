@@ -11,7 +11,7 @@ use bevy_utils::prelude::{
 use float_eq::float_ne;
 use notation_midi::prelude::{MidiState, PlayControlEvent};
 use notation_model::play::play_control::TickResult;
-use notation_model::prelude::Tab;
+use notation_model::prelude::{Tab, Units};
 
 use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
@@ -139,9 +139,7 @@ impl ControlView {
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
         if midi_state.play_control.play_state.is_playing() {
-            if midi_state.play_control.stop() {
-                Self::send_play_state_evt(midi_state, play_control_evts);
-            }
+            Self::stop(midi_state, play_control_evts);
         } else {
             if midi_state.play_control.play() {
                 Self::send_play_state_evt(midi_state, play_control_evts);
@@ -152,13 +150,35 @@ impl ControlView {
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
-        if midi_state.play_control.play_state.is_playing() {
-            if midi_state.play_control.stop() {
-                Self::send_play_state_evt(midi_state, play_control_evts);
-            }
+        if midi_state.play_control.stop() {
+            midi_state.play_control.position.bar.bar_ordinal = midi_state.play_control.begin_bar_ordinal;
+            midi_state.play_control.position.bar.in_bar_pos = Units(0.0);
+            Self::send_play_state_evt(midi_state, play_control_evts);
         }
     }
-
+    pub fn send_begin_end_evt(
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        play_control_evts.send(PlayControlEvent::on_begin_end(
+            midi_state.play_control.begin_bar_ordinal,
+            midi_state.play_control.end_bar_ordinal,
+        ));
+    }
+    pub fn set_begin_bar_ordinal(
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        midi_state.play_control.begin_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+        Self::send_begin_end_evt(midi_state, play_control_evts);
+    }
+    pub fn set_end_bar_ordinal(
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        midi_state.play_control.end_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+        Self::send_begin_end_evt(midi_state, play_control_evts);
+    }
     pub fn toggle_layout_mode(
         commands: &mut Commands,
         state: &mut ResMut<NotationAppState>,
@@ -216,10 +236,10 @@ impl ControlView {
                     let play_speed = settings.speed_factor;
                     ui.checkbox(&mut midi_state.play_control.should_loop, "Loop");
                     if ui.button(format!("Begin: {}", midi_state.play_control.begin_bar_ordinal)).clicked() {
-                        midi_state.play_control.begin_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+                        Self::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
                     }
                     if ui.button(format!("End: {}", midi_state.play_control.end_bar_ordinal)).clicked() {
-                        midi_state.play_control.end_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+                        Self::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
                     }
                     ui.add(Slider::new(&mut settings.speed_factor, 0.1..=2.0).text("Speed"));
                     if float_ne!(play_speed, settings.speed_factor, abs <= 0.01) {

@@ -110,9 +110,8 @@ impl BarView {
         );
         let signature = bar.signature();
         for beat in 0..signature.bar_beats {
-            BarBeatValue::may_new(theme, bar, &signature, beat)
-                .map(|value| BarBeatData::new(bar, value))
-                .map(|data| data.create(commands, theme, bar_entity));
+            let data = BarBeatData::new(bar, BarBeatValue::new(bar, &signature, beat));
+            data.create(commands, theme, bar_entity);
         }
         bar_entity
     }

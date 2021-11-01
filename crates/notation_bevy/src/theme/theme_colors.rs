@@ -137,9 +137,12 @@ impl Default for SyllableColors {
 pub struct BarColors {
     pub bar_indicator: Color,
     pub bar_separator_color: Color,
-    pub beat_color0: Option<Color>,
-    pub beat_color1: Option<Color>,
-    pub beat_color2: Option<Color>,
+    pub selected_beat_color0: Color,
+    pub selected_beat_color1: Color,
+    pub selected_beat_color2: Color,
+    pub beat_color0: Color,
+    pub beat_color1: Color,
+    pub beat_color2: Color,
     pub pos_indicator_color: Color,
 }
 impl Default for BarColors {
@@ -147,35 +150,49 @@ impl Default for BarColors {
         Self {
             bar_indicator: hex_linear("000000AA"),
             bar_separator_color: ThemeColors::hex_linear("D3B59C"),
-            beat_color0: None,
-            beat_color1: Some(ThemeColors::hex_linear("00000010")),
-            beat_color2: None,
+            selected_beat_color0: ThemeColors::hex_linear("FFFFFF88"),
+            selected_beat_color1: ThemeColors::hex_linear("FFFFFF44"),
+            selected_beat_color2: ThemeColors::hex_linear("FFFFFF88"),
+            beat_color0: ThemeColors::hex_linear("00000000"),
+            beat_color1: ThemeColors::hex_linear("00000010"),
+            beat_color2: ThemeColors::hex_linear("00000000"),
             pos_indicator_color: ThemeColors::hex_linear("00000077"),
         }
     }
 }
 impl BarColors {
-    pub fn get_beat_color(&self, signature: &Signature, beat: u8) -> Option<Color> {
+    pub fn get_beat_color(&self, signature: &Signature, beat: u8, selected: bool) -> Color {
+        if selected {
+            self._get_beat_color(signature, beat, self.selected_beat_color0, self.selected_beat_color1, self.selected_beat_color2)
+        } else {
+            self._get_beat_color(signature, beat, self.beat_color0, self.beat_color1, self.beat_color2)
+        }
+    }
+    pub fn _get_beat_color(&self, signature: &Signature, beat: u8,
+        color0: Color,
+        color1: Color,
+        color2: Color,
+    ) -> Color {
         if beat == 0 {
-            return self.beat_color0;
+            return color0;
         }
         if signature.bar_beats % 4 == 0 {
             match beat % 4 {
-                1 => self.beat_color1,
-                2 => self.beat_color2,
-                3 => self.beat_color1,
-                _ => self.beat_color0,
+                1 => color1,
+                2 => color2,
+                3 => color1,
+                _ => color0,
             }
         } else if signature.bar_beats % 3 == 0 {
             match beat % 3 {
-                1 => self.beat_color1,
-                2 => self.beat_color2,
-                _ => self.beat_color0,
+                1 => color1,
+                2 => color2,
+                _ => color0,
             }
         } else {
             match beat % 2 {
-                1 => self.beat_color1,
-                _ => self.beat_color0,
+                1 => color1,
+                _ => color0,
             }
         }
     }

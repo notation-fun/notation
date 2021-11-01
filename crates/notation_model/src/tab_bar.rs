@@ -1,9 +1,7 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
-use notation_proto::prelude::{
-    Chord, Fretboard4, Fretboard6, HandShape4, HandShape6, Note, SyllableNote, TabPosition,
-};
+use notation_proto::prelude::{BarPosition, Chord, Fretboard4, Fretboard6, HandShape4, HandShape6, Note, Position, SyllableNote, TabPosition};
 
 use crate::prelude::{
     Bar, BarLane, LaneEntry, LaneKind, Pitch, Section, Signature, Syllable, Tab, TabMeta, Unit,
@@ -18,6 +16,18 @@ pub struct TabBarProps {
     pub bar_index: usize,
     pub bar_ordinal: usize,
     pub bar_units: Units,
+}
+
+impl From<TabBarProps> for BarPosition {
+    fn from(v: TabBarProps) -> Self {
+        BarPosition::new(v.bar_units, v.bar_ordinal, Units(0.0))
+    }
+}
+
+impl From<TabBarProps> for Position {
+    fn from(v: TabBarProps) -> Self {
+        Position::from(BarPosition::from(v))
+    }
 }
 
 #[derive(Debug)]

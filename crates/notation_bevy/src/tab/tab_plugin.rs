@@ -101,9 +101,9 @@ fn on_mouse_clicked(
                         crate::play::play_button::PlayButtonAction::Settings =>
                             app_state.hide_control = false,
                         crate::play::play_button::PlayButtonAction::SetBegin =>
-                            midi_state.play_control.begin_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal,
+                            crate::viewer::control::ControlView::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::SetEnd =>
-                            midi_state.play_control.end_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal,
+                            crate::viewer::control::ControlView::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::LoopMode =>
                             midi_state.play_control.should_loop = !midi_state.play_control.should_loop,
                     }

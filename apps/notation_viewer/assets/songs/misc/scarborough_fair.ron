@@ -1869,6 +1869,96 @@
                     ),
                     Simple(Quarter),
                 )),// [178]
+                Mark("|"),// [179]
+                Mark("v4:12"),// [180]
+                Core(Rest(Simple(Half))),// [181]
+                Lyric(Word(
+                    (
+                        text: "and",
+                    ),
+                    Simple(Eighth),
+                )),// [182]
+                Lyric(Word(
+                    (
+                        text: "to-",
+                    ),
+                    Simple(Quarter),
+                )),// [183]
+                Mark("|"),// [184]
+                Mark("v4:13"),// [185]
+                Lyric(Word(
+                    (
+                        text: "ga-",
+                    ),
+                    Simple(Quarter),
+                )),// [186]
+                Lyric(Word(
+                    (
+                        text: "ther",
+                    ),
+                    Simple(Quarter),
+                )),// [187]
+                Lyric(Word(
+                    (
+                        text: "it",
+                    ),
+                    Simple(Quarter),
+                )),// [188]
+                Mark("|"),// [189]
+                Mark("v4:14"),// [190]
+                Lyric(Word(
+                    (
+                        text: "all",
+                    ),
+                    Simple(Half),
+                )),// [191]
+                Lyric(Word(
+                    (
+                        text: "in",
+                    ),
+                    Simple(Eighth),
+                )),// [192]
+                Lyric(Word(
+                    (
+                        text: "a",
+                    ),
+                    Simple(Eighth),
+                )),// [193]
+                Mark("|"),// [194]
+                Mark("v4:15"),// [195]
+                Lyric(Word(
+                    (
+                        text: "bunch",
+                    ),
+                    Simple(Half),
+                )),// [196]
+                Lyric(Word(
+                    (
+                        text: "of",
+                    ),
+                    Simple(Quarter),
+                )),// [197]
+                Mark("|"),// [198]
+                Mark("v4:16"),// [199]
+                Lyric(Word(
+                    (
+                        text: "hea-",
+                    ),
+                    Simple(Eighth),
+                )),// [200]
+                Lyric(Word(
+                    (
+                        text: "ther",
+                    ),
+                    Simple(Eighth),
+                )),// [201]
+                Core(Tie),// [202]
+                Lyric(Word(
+                    (
+                        text: "",
+                    ),
+                    Simple(Half),
+                )),// [203]
                 Mark("|"),
             ],
         ),// [2]
@@ -2573,21 +2663,21 @@
                             sign: Natural,
                         ),
                     )),
-                    Simple(Eighth),
+                    Simple(Quarter),
                 )),// [122]
                 Core(Tone(
                     Single((
-                        octave: P5,
+                        octave: P4,
                         pitch: (
                             name: F,
                             sign: Sharp,
                         ),
                     )),
-                    Simple(Eighth),
+                    Simple(Quarter),
                 )),// [123]
                 Core(Tone(
                     Single((
-                        octave: P5,
+                        octave: P4,
                         pitch: (
                             name: E,
                             sign: Natural,
@@ -2601,8 +2691,8 @@
                     Single((
                         octave: P4,
                         pitch: (
-                            name: A,
-                            sign: Natural,
+                            name: F,
+                            sign: Sharp,
                         ),
                     )),
                     Simple(Eighth),

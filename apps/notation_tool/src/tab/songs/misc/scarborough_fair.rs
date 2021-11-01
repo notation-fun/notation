@@ -81,6 +81,11 @@ pub fn new_tab() -> Tab {
                 "v4:2" Word [ "reap", "it"+ "in", "a", ] |
                 "v4:3" Word [ "si-", "ckle"+ "of" ] |
                 "v4:4" Word [ "lea-"* "ther" ] |
+                "v4:12" Word [ _* "and", "to-" ] |
+                "v4:13" Word [ "ga-" "ther" "it" ] |
+                "v4:14" Word [ "all"* "in", "a", ] |
+                "v4:15" Word [ "bunch"* "of" ] |
+                "v4:16" Word [ "hea-", "ther", @ ""* ] |
             ]}
             {vocal Vocal [
                 $key = E
@@ -112,8 +117,8 @@ pub fn new_tab() -> Tab {
                 "v4:4" Tone [ .6* .6 ] |
                 "v4:12" Tone [ _* 6, 6, ] |
                 "v4:14" Tone [ 5* 2, 2, ] |
-                "v4:15" Tone [ 1 ,7 ,6 ] |
-                "v4:16" Tone [ 2, .5, @ .5* ] |
+                "v4:15" Tone [ 1 .7 .6 ] |
+                "v4:16" Tone [ .7, .5, @ .5* ] |
             ]}
         ]
         Sections: [

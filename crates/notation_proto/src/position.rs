@@ -45,7 +45,7 @@ impl Display for BarPosition {
 }
 impl From<BarPosition> for Units {
     fn from(v: BarPosition) -> Self {
-        Units(v.bar_ordinal as f32 * v.bar_units.0 + v.in_bar_pos.0)
+        v.bar_pos() + v.in_bar_pos
     }
 }
 impl BarPosition {
@@ -63,6 +63,9 @@ impl BarPosition {
     }
     pub fn with_delay(&self, delay: Units) -> Self {
         Self::new(self.bar_units, self.bar_ordinal, self.in_bar_pos + delay)
+    }
+    pub fn bar_pos(&self) -> Units {
+        Units((self.bar_ordinal - 1) as f32 * self.bar_units.0)
     }
 }
 
@@ -131,5 +134,21 @@ impl Position {
     ) -> bool {
         let in_tab_pos = self.cal_bar_pos(pos.bar_ordinal) + pos.in_bar_pos + units;
         self._is_passed(pass_mode, in_tab_pos)
+    }
+}
+
+impl From<BarPosition> for TabPosition {
+    fn from(v: BarPosition) -> Self {
+        TabPosition::new(Units::from(v))
+    }
+}
+
+
+impl From<BarPosition> for Position {
+    fn from(v: BarPosition) -> Self {
+        Position {
+            tab: TabPosition::from(v),
+            bar: v,
+        }
     }
 }

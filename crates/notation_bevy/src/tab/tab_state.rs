@@ -46,11 +46,22 @@ impl TabState {
     pub fn set_speed_factor(&mut self, speed_factor: f32) {
         self.play_control.play_speed.set_factor(speed_factor);
     }
+    pub fn set_begin_end(&mut self, begin_bar_ordinal: usize, end_bar_ordinal: usize) {
+        self.play_control.begin_bar_ordinal = begin_bar_ordinal;
+        self.play_control.end_bar_ordinal = end_bar_ordinal;
+    }
     pub fn set_position(&mut self, position: Position) {
         self.play_control.position = position;
     }
     pub fn is_bar_in_range(&self, bar_ordinal: usize) -> bool {
         self.play_control.is_bar_in_range(bar_ordinal)
+    }
+    pub fn is_bar_selected(&self, bar_ordinal: usize) -> bool {
+        if self.play_control.begin_bar_ordinal != 1 || self.play_control.end_bar_ordinal != self.tab.bars.len() {
+            self.play_control.is_bar_in_range(bar_ordinal)
+        } else {
+            false
+        }
     }
     pub fn get_position(
         tab_state_query: &Query<(Entity, &TabState), With<TabState>>,

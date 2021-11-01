@@ -230,12 +230,17 @@ impl MidiState {
         self.play_control = PlayControl::new(&tab);
         self.init_channels(settings, hub);
     }
-    pub fn jump_to_bar(&mut self, bar_props: TabBarProps) {
+    pub fn jump_to_bar(&mut self, settings: &MidiSettings, hub: &mut MidiHub, bar_props: TabBarProps) {
         self.play_control
             .position
             .set_in_bar(bar_props.bar_ordinal, Units(0.0));
-        for channel in self.channels.iter_mut() {
-            channel.calc_next_index(&self.play_control.position.bar);
+        if self.play_control.is_bar_in_range(bar_props.bar_ordinal) {
+            for channel in self.channels.iter_mut() {
+                channel.calc_next_index(&self.play_control.position.bar);
+            }
+        } else if self.play_control.play_state.is_playing() {
+            self.play_control.pause();
+            self.init_channels(settings, hub);
         }
     }
     pub fn tick(

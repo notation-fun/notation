@@ -31,6 +31,7 @@ pub enum PlayControlEvent {
     },
     OnPlayState(PlayState),
     OnSpeedFactor(f32),
+    OnBeginEnd(usize, usize),
 }
 impl PlayControlEvent {
     pub fn on_tick(position: Position, tick_result: TickResult) -> Self {
@@ -44,5 +45,8 @@ impl PlayControlEvent {
     }
     pub fn on_speed_factor(play_speed: f32) -> Self {
         Self::OnSpeedFactor(play_speed)
+    }
+    pub fn on_begin_end(begin_bar_ordinal: usize, end_bar_ordinal: usize) -> Self {
+        Self::OnBeginEnd(begin_bar_ordinal, end_bar_ordinal)
     }
 }

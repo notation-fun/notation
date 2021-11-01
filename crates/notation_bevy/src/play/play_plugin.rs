@@ -8,6 +8,7 @@ use notation_model::prelude::{
 
 use bevy::prelude::*;
 
+use crate::bar::bar_beat::BarBeatData;
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_playing::ChordPlaying;
 use crate::prelude::{
@@ -287,6 +288,7 @@ fn on_play_control_evt(
         &LayoutData,
         &Arc<GridData>,
     )>,
+    mut beat_query: Query<(Entity, &mut BarBeatData)>,
 ) {
     for evt in evts.iter() {
         for (state_entity, mut tab_state) in tab_state_query.iter_mut() {
@@ -315,7 +317,11 @@ fn on_play_control_evt(
                     tab_state.set_play_state(&mut commands, state_entity, *play_state);
                 }
                 PlayControlEvent::OnSpeedFactor(play_speed) => {
-                    tab_state.set_speed_factor(*play_speed)
+                    tab_state.set_speed_factor(*play_speed);
+                }
+                PlayControlEvent::OnBeginEnd(begin_bar_ordinal, end_bar_ordinal) => {
+                    tab_state.set_begin_end(*begin_bar_ordinal, *end_bar_ordinal);
+                    BarBeatData::update_all(&mut commands, &theme, &tab_state, &mut beat_query);
                 }
             }
         }

@@ -128,7 +128,7 @@ impl PlayControl {
                     self.position
                         .set_in_bar(self.begin_bar_ordinal, self.position.bar.in_bar_pos);
                     if self.position.bar.bar_ordinal > self.end_bar_ordinal {
-                        self.stop() //Corner case for too smal range
+                        self.stop() //Corner case for too small range
                     } else {
                         false
                     }
