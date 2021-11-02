@@ -420,11 +420,24 @@ impl ThemeColors {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct UiColors {
     pub control_background: Color,
+    pub button_on: Color,
+    pub button_off: Color,
 }
 impl Default for UiColors {
     fn default() -> Self {
         Self {
             control_background: hex_linear("FFF9F2"),
+            button_on: hex_linear("F27D7A"),
+            button_off: hex_linear("888888"),
+        }
+    }
+}
+impl UiColors {
+    pub fn of_button(&self, on: bool) -> Color {
+        if on {
+            self.button_on
+        } else {
+            self.button_off
         }
     }
 }

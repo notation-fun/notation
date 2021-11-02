@@ -37,7 +37,8 @@ impl EntryPlaying {
         let playing_bar_ordinal = new_position.bar.bar_ordinal;
         for (_entity, entry, mut entry_playing) in query.iter_mut() {
             let bar_ordinal = entry_playing.bar_props.bar_ordinal;
-            if tab_state.is_bar_in_range(bar_ordinal) {
+            // Hacky way to allow click on not selected bar, might do proper fix in the future
+            if true || tab_state.is_bar_in_range(bar_ordinal) {
                 if entry_playing.value.is_current()
                     && new_position.is_passed_with(
                         entry.pass_mode(),

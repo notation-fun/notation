@@ -86,7 +86,6 @@ impl ControlView {
         state.tab = None;
         state.viewer_uuid = Uuid::new_v4();
     }
-
     pub fn sync_speed_factor(
         settings: &NotationSettings,
         midi_state: &mut MidiState,
@@ -100,7 +99,18 @@ impl ControlView {
             midi_state.play_control.play_speed.factor(),
         ));
     }
-
+    pub fn sync_should_loop(
+        settings: &NotationSettings,
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        midi_state
+            .play_control
+            .should_loop = settings.should_loop;
+        play_control_evts.send(PlayControlEvent::on_should_loop(
+            midi_state.play_control.should_loop,
+        ));
+    }
     pub fn send_play_state_evt(
         midi_state: &MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
@@ -165,18 +175,34 @@ impl ControlView {
             midi_state.play_control.end_bar_ordinal,
         ));
     }
+    pub fn clear_begin_end(
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        midi_state.play_control.begin_bar_ordinal = 1;
+        midi_state.play_control.end_bar_ordinal = midi_state.play_control.bars;
+        Self::send_begin_end_evt(midi_state, play_control_evts);
+    }
     pub fn set_begin_bar_ordinal(
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
-        midi_state.play_control.begin_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+        let begin_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+        midi_state.play_control.begin_bar_ordinal = begin_bar_ordinal;
+        if midi_state.play_control.end_bar_ordinal < begin_bar_ordinal {
+            midi_state.play_control.end_bar_ordinal = begin_bar_ordinal;
+        }
         Self::send_begin_end_evt(midi_state, play_control_evts);
     }
     pub fn set_end_bar_ordinal(
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
-        midi_state.play_control.end_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+        let end_bar_ordinal = midi_state.play_control.position.bar.bar_ordinal;
+        midi_state.play_control.end_bar_ordinal = end_bar_ordinal;
+        if midi_state.play_control.begin_bar_ordinal > end_bar_ordinal {
+            midi_state.play_control.begin_bar_ordinal = end_bar_ordinal;
+        }
         Self::send_begin_end_evt(midi_state, play_control_evts);
     }
     pub fn toggle_layout_mode(
@@ -234,7 +260,15 @@ impl ControlView {
                         }
                     }
                     let play_speed = settings.speed_factor;
-                    ui.checkbox(&mut midi_state.play_control.should_loop, "Loop");
+                    let should_loop = settings.should_loop;
+                    ui.checkbox(&mut settings.should_loop, "Loop");
+                    if should_loop != settings.should_loop {
+                        Self::sync_should_loop(
+                            &settings,
+                            &mut midi_state,
+                            &mut play_control_evts,
+                        )
+                    }
                     if ui.button(format!("Begin: {}", midi_state.play_control.begin_bar_ordinal)).clicked() {
                         Self::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
                     }
@@ -245,7 +279,7 @@ impl ControlView {
                     if float_ne!(play_speed, settings.speed_factor, abs <= 0.01) {
                         Self::sync_speed_factor(
                             &settings,
-                            &mut &mut midi_state,
+                            &mut midi_state,
                             &mut play_control_evts,
                         )
                     }

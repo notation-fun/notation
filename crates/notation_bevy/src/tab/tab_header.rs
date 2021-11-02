@@ -62,13 +62,14 @@ impl TabHeader {
         commands: &mut Commands,
         assets: &NotationAssets,
         theme: &NotationTheme,
+        settings: &NotationSettings,
         entity: Entity,
         tab: &Arc<Tab>,
     ) -> Entity {
         let view_bundle = ViewBundle::from(TabHeader::new(tab.clone()));
         let view = view_bundle.view.clone();
         let header_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
-        TabControl::spawn(commands, assets, theme, header_entity, &tab);
+        TabControl::spawn(commands, assets, theme, settings, header_entity, &tab);
         TabChords::spawn(commands, theme, header_entity, &tab, &view.chords);
         header_entity
     }

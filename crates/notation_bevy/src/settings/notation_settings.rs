@@ -9,6 +9,7 @@ use super::layout_settings::LayoutSettings;
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotationSettings {
     pub layout: LayoutSettings,
+    pub should_loop: bool,
     pub speed_factor: f32,
     pub always_show_fret: bool,
     pub melody_piano_mode: bool,
@@ -19,6 +20,7 @@ impl Default for NotationSettings {
     fn default() -> Self {
         Self {
             layout: LayoutSettings::default(),
+            should_loop: false,
             speed_factor: 1.0,
             always_show_fret: false,
             melody_piano_mode: false,

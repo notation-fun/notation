@@ -14,7 +14,8 @@ impl BarPlaying {
     ) {
         for (_entity, mut bar_playing) in query.iter_mut() {
             let bar_ordinal = bar_playing.bar_props.bar_ordinal;
-            if tab_state.is_bar_in_range(bar_ordinal) {
+            // Hacky way to allow click on not selected bar, might do proper fix in the future
+            if true || tab_state.is_bar_in_range(bar_ordinal) {
                 if bar_ordinal == playing_bar_ordinal {
                     if bar_playing.value != PlayingState::Current {
                         bar_playing.value = PlayingState::Current;

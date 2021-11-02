@@ -1,8 +1,9 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::LayoutData;
+use bevy_utils::prelude::{LayoutData};
 use notation_midi::prelude::{JumpToBarEvent, MidiState, PlayControlEvent};
+use notation_model::prelude::TabBarProps;
 
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_view::ChordView;
@@ -59,11 +60,18 @@ impl Plugin for TabPlugin {
     }
 }
 
+fn jump_to_bar(
+    jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
+    bar_props: TabBarProps,
+) {
+    jump_to_bar_evts.send(JumpToBarEvent::new(bar_props));
+}
+
 fn on_mouse_clicked(
     mut evts: EventReader<MouseClickedEvent>,
     _theme: Res<NotationTheme>,
     mut app_state: ResMut<NotationAppState>,
-    settings: Res<NotationSettings>,
+    mut settings: ResMut<NotationSettings>,
     tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
     button_query: Query<(&Arc<PlayButton>, &LayoutData, &GlobalTransform)>,
@@ -87,7 +95,7 @@ fn on_mouse_clicked(
             println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
             for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
-                    jump_to_bar_evts.send(JumpToBarEvent::new(mini_bar.bar_props));
+                    jump_to_bar( &mut jump_to_bar_evts, mini_bar.bar_props);
                     return;
                 }
             }
@@ -98,14 +106,16 @@ fn on_mouse_clicked(
                             crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::Stop =>
                             crate::viewer::control::ControlView::stop(&mut midi_state, &mut play_control_evts),
-                        crate::play::play_button::PlayButtonAction::Settings =>
-                            app_state.hide_control = false,
+                        crate::play::play_button::PlayButtonAction::LoopMode => {
+                            settings.should_loop = !settings.should_loop;
+                            crate::viewer::control::ControlView::sync_should_loop(&settings, &mut midi_state, &mut play_control_evts)
+                        }
                         crate::play::play_button::PlayButtonAction::SetBegin =>
                             crate::viewer::control::ControlView::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::SetEnd =>
                             crate::viewer::control::ControlView::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts),
-                        crate::play::play_button::PlayButtonAction::LoopMode =>
-                            midi_state.play_control.should_loop = !midi_state.play_control.should_loop,
+                        crate::play::play_button::PlayButtonAction::Clear =>
+                            crate::viewer::control::ControlView::clear_begin_end(&mut midi_state, &mut play_control_evts),
                     }
                     return;
                 }
@@ -123,14 +133,14 @@ fn on_mouse_clicked(
                     let position =
                         TabState::get_position(&tab_state_query, chord.entry.tab().map(|x| x.uuid));
                     if let Some(next_bar) = chord.search_next(true, position) {
-                        jump_to_bar_evts.send(JumpToBarEvent::new(next_bar.props));
+                        jump_to_bar(&mut jump_to_bar_evts, next_bar.props);
                     }
                     return;
                 }
             }
             for (bar, layout, global_transform) in bar_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
-                    jump_to_bar_evts.send(JumpToBarEvent::new(bar.bar_props));
+                    jump_to_bar(&mut jump_to_bar_evts, bar.bar_props);
                     return;
                 }
             }

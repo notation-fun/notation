@@ -36,6 +36,7 @@ impl Plugin for PlayPlugin {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(PlayPanel::do_layout.system())
+                .with_system(PlayPanel::on_play_control_evt.system())
                 .with_system(PlayButton::on_layout_changed.system())
                 .with_system(on_bar_playing_changed.system())
                 .with_system(on_tab_play_state_changed.system())
@@ -322,6 +323,10 @@ fn on_play_control_evt(
                 PlayControlEvent::OnBeginEnd(begin_bar_ordinal, end_bar_ordinal) => {
                     tab_state.set_begin_end(*begin_bar_ordinal, *end_bar_ordinal);
                     BarBeatData::update_all(&mut commands, &theme, &tab_state, &mut beat_query);
+                }
+                PlayControlEvent::OnShouldLoop(should_loop) => {
+                    tab_state.set_should_loop(*should_loop);
+
                 }
             }
         }

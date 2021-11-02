@@ -63,6 +63,7 @@ impl TabControl {
         commands: &mut Commands,
         assets: &NotationAssets,
         theme: &NotationTheme,
+        settings: &NotationSettings,
         entity: Entity,
         tab: &Arc<Tab>,
     ) -> Entity {
@@ -86,7 +87,9 @@ impl TabControl {
             commands,
             assets,
             theme,
+            settings,
             control_entity,
+            tab,
         );
         control_entity
     }

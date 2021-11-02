@@ -49,8 +49,8 @@ impl TabView {
             tab_entity,
             ViewBundle::from(TabContent::new(tab.clone())),
         );
-        TabHeader::spawn(commands, assets, theme, content_entity, &tab);
-        TabBars::spawn(commands, assets, theme, &settings, content_entity, &tab);
+        TabHeader::spawn(commands, assets, theme, settings, content_entity, &tab);
+        TabBars::spawn(commands, assets, theme, settings, content_entity, &tab);
         tab_entity
     }
     pub fn do_layout(

@@ -46,6 +46,7 @@ pub struct UnitsToSeconds(pub f32);
 #[derive(Debug)]
 pub struct PlayControl {
     pub position: Position,
+    pub bars: usize,
     pub begin_bar_ordinal: usize,
     pub end_bar_ordinal: usize,
     pub should_loop: bool,
@@ -81,9 +82,10 @@ impl PlayControl {
     fn _new(tab_meta: &TabMeta, bars: usize) -> Self {
         Self {
             position: Position::new(tab_meta.bar_units()),
+            bars,
             begin_bar_ordinal: 1,
             end_bar_ordinal: bars,
-            should_loop: true,
+            should_loop: false,
             play_state: PlayState::default(),
             play_speed: PlaySpeed::new(tab_meta),
         }

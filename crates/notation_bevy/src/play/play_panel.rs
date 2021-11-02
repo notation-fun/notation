@@ -1,11 +1,13 @@
-use std::fmt::Display;
+use std::{fmt::Display, sync::Arc};
 
 use bevy::prelude::*;
 use bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use notation_midi::prelude::PlayControlEvent;
+use notation_model::prelude::{PlayState, Tab};
 
 use crate::{prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme}, ui::layout::NotationLayout};
 
-use super::{play_button::{PlayButton}, play_plugin::PlayPanelDoLayoutEvent};
+use super::{play_button::{PlayButton, PlayButtonShape}, play_plugin::PlayPanelDoLayoutEvent};
 
 pub struct PlayPanel {
     pub playing: bool,
@@ -49,13 +51,15 @@ impl PlayPanel {
         commands: &mut Commands,
         assets: &NotationAssets,
         theme: &NotationTheme,
+        settings: &NotationSettings,
         entity: Entity,
+        tab: &Arc<Tab>,
     ) -> Entity {
         let panel = PlayPanel::default();
         let panel_entity =
             BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(panel));
         for i in 0..=5 {
-            PlayButton::spawn(commands, assets, theme, panel_entity, (i as usize).into());
+            PlayButton::spawn(commands, assets, theme, settings, panel_entity, tab, (i as usize).into());
         }
         panel_entity
     }
@@ -78,6 +82,33 @@ impl PlayPanel {
                 evt.entity,
                 evt.layout,
             )
+        }
+    }
+    pub fn on_play_control_evt(
+        mut commands: Commands,
+        theme: Res<NotationTheme>,
+        mut evts: EventReader<PlayControlEvent>,
+        mut shape_query: Query<(Entity, &mut PlayButtonShape)>,
+    ) {
+        for evt in evts.iter() {
+            match evt {
+                PlayControlEvent::OnTick {position: _, tick_result} => {
+                    if tick_result.stopped {
+                        let play_state = PlayState::Stopped;
+                        PlayButton::on_play_state(&mut commands, &theme, &mut shape_query, &play_state);
+                    }
+                }
+                PlayControlEvent::OnPlayState(play_state) => {
+                    PlayButton::on_play_state(&mut commands, &theme, &mut shape_query, play_state);
+                }
+                PlayControlEvent::OnShouldLoop(should_loop) => {
+                    PlayButton::on_should_loop(&mut commands, &theme, &mut shape_query, *should_loop);
+                }
+                PlayControlEvent::OnBeginEnd(begin_bar_ordinal, end_bar_ordinal) => {
+                    PlayButton::on_begin_end(&mut commands, &theme, &mut shape_query, *begin_bar_ordinal, *end_bar_ordinal)
+                }
+                PlayControlEvent::OnSpeedFactor(_) => {}
+            }
         }
     }
 }

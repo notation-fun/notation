@@ -46,6 +46,9 @@ impl TabState {
     pub fn set_speed_factor(&mut self, speed_factor: f32) {
         self.play_control.play_speed.set_factor(speed_factor);
     }
+    pub fn set_should_loop(&mut self, should_loop: bool) {
+        self.play_control.should_loop = should_loop;
+    }
     pub fn set_begin_end(&mut self, begin_bar_ordinal: usize, end_bar_ordinal: usize) {
         self.play_control.begin_bar_ordinal = begin_bar_ordinal;
         self.play_control.end_bar_ordinal = end_bar_ordinal;
