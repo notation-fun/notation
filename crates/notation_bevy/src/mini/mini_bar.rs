@@ -112,8 +112,8 @@ impl MiniBar {
             section_separator_data.create(commands, theme, bar_entity);
             theme.texts.mini_map.spawn_bar_text(
                 commands,
-                shape_entity,
                 assets,
+                shape_entity,
                 bar.props.bar_ordinal.to_string().as_str(),
             );
         }

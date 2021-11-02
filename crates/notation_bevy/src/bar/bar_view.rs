@@ -71,6 +71,22 @@ impl BarView {
             }
         }
     }
+    pub fn update_number_text(
+        theme: Res<NotationTheme>,
+        settings: Res<NotationSettings>,
+        mut evts: EventReader<BarViewDoLayoutEvent>,
+        mut text_query: Query<(&Parent, &mut Transform), With<Text>>,
+    ) {
+        if !settings.hide_bar_number {
+            for evt in evts.iter() {
+                for (parent, mut transform) in text_query.iter_mut() {
+                    if parent.0 == evt.entity {
+                        theme.texts.tab.update_bar_number_x(&mut transform, evt.layout.size.width);
+                    }
+                }
+            }
+        }
+    }
     pub fn spawn(
         commands: &mut Commands,
         assets: &NotationAssets,
@@ -112,6 +128,12 @@ impl BarView {
         for beat in 0..signature.bar_beats {
             let data = BarBeatData::new(bar, BarBeatValue::new(bar, &signature, beat));
             data.create(commands, theme, bar_entity);
+        }
+        if !settings.hide_bar_number {
+            theme
+                .texts
+                .tab
+                .spawn_bar_number(commands, assets, bar_entity, &bar.props.bar_ordinal.to_string());
         }
         bar_entity
     }

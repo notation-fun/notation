@@ -269,6 +269,11 @@ impl ControlView {
                             &mut play_control_evts,
                         )
                     }
+                    let hide_bar_number = settings.hide_bar_number;
+                    ui.checkbox(&mut settings.hide_bar_number, "Hide Bar Number");
+                    if hide_bar_number != settings.hide_bar_number {
+                        Self::reload_tab(&mut commands, &mut state, &viewer_query);
+                    }
                     if ui.button(format!("Begin: {}", midi_state.play_control.begin_bar_ordinal)).clicked() {
                         Self::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
                     }

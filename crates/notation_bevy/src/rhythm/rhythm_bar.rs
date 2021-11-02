@@ -102,7 +102,7 @@ impl RhythmBarData {
         theme
             .texts
             .rhythm
-            .spawn_bar_text(commands, bar_entity, assets, "0");
+            .spawn_bar_text(commands, assets, bar_entity, "0");
         bar_entity
     }
     pub fn update_rhythm(
