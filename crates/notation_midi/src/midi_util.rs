@@ -12,7 +12,7 @@ pub struct MidiUtil();
 
 impl MidiUtil {
     pub fn note_midi_key_number(note: &Note) -> Option<KeyNumber> {
-        let midi_note = Semitones::from(*note).0 + 12;
+        let midi_note = Semitones::from(*note).0 + 12 - 1; //Not sure why got a higher pitch when playing, temp fix for get it right in video
         KeyNumber::try_from(midi_note as u8).ok()
     }
     pub fn note_midi_on_msg(

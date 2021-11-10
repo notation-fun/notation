@@ -37,10 +37,6 @@ pub fn get_tab_list<'a>() -> Vec<TabInfo<'a>> {
             "songs:misc:scarborough_fair",
             songs::misc::scarborough_fair::new_tab,
         ),
-        TabInfo::new(
-            "songs:misc:scarborough_fair",
-            songs::misc::scarborough_fair_hard::new_tab,
-        ),
     ]
 }
 

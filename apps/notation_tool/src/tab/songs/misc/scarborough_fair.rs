@@ -3,31 +3,58 @@ use notation_proto::prelude::*;
 
 pub fn new_tab() -> Tab {
     tab! {
-        "86a6b734-1aa2-11ec-a594-3f319a5fdca9"
-        Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(129))
+        "06dd7278-cdaf-40dd-abc6-6e66ec2d6b8c"
+        Meta: TabMeta::new(Key::E, Scale::Minor, Signature::_3_4, Tempo::Bpm(110))
         Tracks: [
             {chord Chord [
                 $duration = D_1_2
-                "6" Chord ( 6: 3- 5 )
+                "6sus4_7" Chord ( 6: 4 5 7- )
+                "2_9_11" Chord ( 2: 3 9 11 )
                 "5/4" Chord ( 5: 3 5 /4 )
                 "5" Chord ( 5: 3 5 )
+                "6sus2" Chord ( 6: 2 5 )
+                "6-" Chord ( 6: 3- 5 )
                 "1" Chord ( 1: 3 5 )
-                "2" Chord ( 2: 3 5 )
+                "v:12"
+                    $duration = _1_4
+                    Chord ( 1: 3 5 )
+                    $duration = _1_2
+                    Chord ( 2: 3 5 ) |
+                "v:19"
+                    $duration = _1_4
+                    Chord ( 1: 3 5 )
+                    Chord ( 5: 3 5 /3)
+                    Chord ( 6: 3- 5 ) |
             ]}
             {guitar Guitar [
                 Fretboard capo: 7
                 $duration = D_1_2
-                "Em" Shape ( 0 2 2 0 0 0 )
-                "D" Shape ( _ _ 0 2 3 2 )
-                "Dsus4" Shape ( _ _ 0 2 3 3 )
+                "Asus4" Shape ( 0 0 4 0 3 0 )
+                "Dadd11" Shape ( 0 5 4 0 3 0 )
+                "G/C" Shape ( _ 3 0 0 0 _ )
+                "Asus2" Shape ( _ 0 2 2 0 0 )
+                "G'" Shape ( 3 _ 0 0 0 _ )
                 "G" Shape ( 3 2 0 0 0 3 )
-                "A" Shape ( _ 0 2 2 2 0 )
+                "C" Shape ( 0 3 2 0 1 0 )
+                "Am" Shape ( 0 0 2 2 1 0 )
+                "C_D"
+                    $duration = _1_4
+                    Shape ( 0 3 2 0 1 0 )
+                    $duration = _1_2
+                    Shape ( 0 0 0 2 3 2 ) |
+                "C_G/B_Am"
+                    $duration = _1_4
+                    Shape ( 0 3 2 0 1 0 )
+                    Shape ( _ 2 0 0 3 0 )
+                    Shape ( 0 0 2 2 1 0 ) |
                 $duration = _1_8
                 "i" Pick [ 5 1 3 4 2 3 ] |
+                "i'" Pick [ 5 1 3 4 1 3 ] |
                 "i:3" Pick [ 5 2 3* 5@2* ] |
                 "v:7" Pick [ (6 2) 3 4 (4@2 2@1) (4 2) 3 ] |
                 "v:12" Pick [ (5 2 1) 3 (4 2 1) 3 (4 2) 3 ] |
                 "v:17" Pick [ 5 1 3 4 5 5@2 ] |
+                "v:19" Pick [ (5 1) 3 (5 2) 3 (5 2) 3 ] |
                 "v:20" Pick [ (6 2) 3 4 3 (4@2 2@1) (4 2) ] |
                 "v:21" Pick [ (4@2 2@1 *) (4 2 *) 6* ] |
                 "v:23" Pick [ (6 2) 3 4 3 (4@2 2@1 *) ] |
@@ -133,6 +160,22 @@ pub fn new_tab() -> Tab {
                     chord [ "5/4" 1 ]
                     guitar [ "G/C" 1 ; "i:3" | ]
                 }
+                {
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
+                }
+                {
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "i" | ]
+                }
+                {
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
+                }
+                {
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "i" | ]
+                }
             ]}
             {verse Verse [
                 {
@@ -148,108 +191,108 @@ pub fn new_tab() -> Tab {
                     vocal [ "v:2" | @ 1 5 ; "v2:2" | @ 2 3 ; "v4:2" | @ 4 ]
                 }
                 {
-                    chord [ "6sus4_7" 1 ]
-                    guitar [ "Asus4" 1 ; "i" | ]
+                    chord [ "5" 1 ]
+                    guitar [ "G'" 1 ; "v:7" | ]
                     lyrics [ "v1:3" | @ 1 5 ; "v2:3" | @ 2 ; "v3:3" | @ 3 ; "v4:3" | @ 4 ; "v5:3" | @ 5 ]
                     vocal [ "v:3" | @ 1 5 ; "v2:3" | @ 2 3 ; "v4:3" | @ 4 ]
                 }
                 {
-                    chord [ "6sus2" 1 ]
-                    guitar [ "Asus2" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v1:4" | @ 1 5 ; "v2:4" | @ 2 ; "v3:4" | @ 3 ; "v4:4" | @ 4 ; "v5:4" | @ 5 ]
                     vocal [ "v:4" | @ 1 2 3 5 ; "v4:4" | @ 4 ]
                 }
                 {
-                    chord [ "6sus4_7" 1 ]
-                    guitar [ "Asus4" 1 ; "i" | ]
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "i" | ]
                 }
                 {
-                    chord [ "6sus2" 1 ]
-                    guitar [ "Asus4" 1 ; "i" | ]
+                    chord [ "1" 1 ]
+                    guitar [ "C" 1 ; "i" | ]
                     lyrics [ "v:6" | ]
                     vocal [ "v:6" | ]
                 }
                 {
-                    chord [ "5" 1 ]
-                    guitar [ "G'" 1 ; "v:7" | ]
+                    chord [ "6-" 1 ]
+                    guitar [ "Am" 1 ; "i" | ]
                     lyrics [ "v:7" | ]
                     vocal [ "v:7" | ]
                 }
                 {
-                    chord [ "6sus4_7" 1 ]
-                    guitar [ "Asus4" 1 ; "i" | ]
+                    chord [ "v:12" | ]
+                    guitar [ "C_D" | ; "v:12" | ]
                     lyrics [ "v:8" | ]
                     vocal [ "v:8" | ]
                 }
                 {
-                    chord [ "6sus2" 1 ]
-                    guitar [ "Asus2" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v:9" | ]
                     vocal [ "v:9" | ]
                 }
                 {
-                    chord [ "1" 1 ]
-                    guitar [ "C" 1 ; "i" | ]
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "i" | ]
                 }
                 {
-                    chord [ "6-" 1 ]
-                    guitar [ "Am" 1 ; "i" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                 }
                 {
-                    chord [ "v:12" | ]
-                    guitar [ "C_D" | ; "v:12" | ]
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "i" | ]
                     lyrics [ "v1:12" | @ 1 5 ; "v2:12" | @ 2 ; "v3:12" | @ 3 ; "v4:12" | @ 4 ]
                     vocal [ "v:12" | ]
                 }
                 {
-                    chord [ "6sus4_7" 1 ]
-                    guitar [ "Asus4" 1 ; "i" | ]
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "v:17" | ]
                     lyrics [ "v1:13" | @ 1 5 ; "v2:13" | @ 2 ; "v3:13" | @ 3 ; "v4:13" | @ 4 ]
                     vocal [ "v:13" | @ 1 2 ; "v3:13" | @ 3 4 5 ]
                 }
                 {
-                    chord [ "6sus2" 1 ]
-                    guitar [ "Asus2" 1 ; "i" | ]
+                    chord [ "1" 1 ]
+                    guitar [ "C" 1 ; "i" | ]
                     lyrics [ "v1:14" | @ 1 5 ; "v2:14" | @ 2 ; "v3:14" | @ 3 ; "v4:14" | @ 4 ]
                     vocal [ "v:14" | @ 1 2 3 ; "v4:14" | @ 4 5 ]
                 }
                 {
-                    chord [ "6sus4_7" 1 ]
-                    guitar [ "Asus4" 1 ; "i" | ]
+                    chord [ "v:19" | ]
+                    guitar [ "C_G/B_Am" | ; "v:19" | ]
                     lyrics [ "v1:15" | @ 1 5 ; "v2:15" | @ 2 ; "v3:15" | @ 3 ; "v4:15" | @ 4 ]
                     vocal [ "v:15" | @ 1 2 3 ; "v4:15" | @ 4 5 ]
                 }
                 {
-                    chord [ "6sus2" 1 ]
-                    guitar [ "Asus2" 1 ; "i" | ]
+                    chord [ "5" 1 ]
+                    guitar [ "G" 1 ; "v:20" | ]
                     lyrics [ "v1:16" | @ 1 5 ; "v2:16" | @ 2 ; "v3:16" | @ 3 ; "v4:16" | @ 4 ]
                     vocal [ "v:16" | @ 1 2 3 ; "v4:16" | @ 4 5 ]
                 }
                 {
-                    chord [ "6sus2" 1 ]
-                    guitar [ "Asus2" 1 ; "v:17" | ]
+                    chord [ "5" 1 ]
+                    guitar [ "G" 1 ; "v:21" | ]
                 }
                 {
-                    chord [ "1" 1 ]
-                    guitar [ "C" 1 ; "i" | ]
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "i'" | ]
                     lyrics [ "v1:18" | @ 1 5 ; "v2:18" | @ 2 3 4 ]
                     vocal [ "v:18" | ]
                 }
                 {
-                    chord [ "v:19" | ]
-                    guitar [ "C_G/B_Am" | ; "v:12" | ]
+                    chord [ "5" 1 ]
+                    guitar [ "G" 1 ; "v:23" | ]
                     lyrics [ "v1:19" | @ 1 5 ; "v2:19" | @ 2 3 4 ]
                     vocal [ "v:19" | ]
                 }
                 {
                     chord [ "5" 1 ]
-                    guitar [ "G" 1 ; "v:20" | ]
+                    guitar [ "G" 1 ; "v:24" | ]
                     lyrics [ "v1:20" | @ 1 5 ; "v2:20" | @ 2 3 4 ]
                     vocal [ "v:20" | ]
                 }
                 {
-                    chord [ "5" 1 ]
-                    guitar [ "G" 1 ; "v:21" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                     lyrics [ "v1:21" | @ 1 5 ; "v2:21" | @ 2 3 4 ]
                     vocal [ "v:21" | ]
                 }
@@ -258,15 +301,25 @@ pub fn new_tab() -> Tab {
                     guitar [ "Asus2" 1 ; "i" | ]
                 }
                 {
-                    chord [ "5" 1 ]
-                    guitar [ "G" 1 ; "v:23" | ]
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
                 }
                 {
-                    chord [ "5" 1 ]
-                    guitar [ "G" 1 ; "v:24" | ]
+                    chord [ "6sus2" 1 ]
+                    guitar [ "Asus2" 1 ; "i" | ]
                 }
             ]}
             {outro Outro [
+                {
+                    chord [ "6sus4_7" 1 ]
+                    guitar [ "Asus4" 1 ; "i" | ]
+                } {
+                    chord [ "2_9_11" 1 ]
+                    guitar [ "Dadd11" 1 ; "i" | ]
+                } {
+                    chord [ "5/4" 1 ]
+                    guitar [ "G/C" 1 ; "i:3" | ]
+                }
                 {
                     chord [ "6-" 1 ]
                     guitar [ "o:1" | ]
@@ -277,7 +330,7 @@ pub fn new_tab() -> Tab {
                 }
             ]}
         ]
-        Form: intro verse verse verse verse verse intro outro
+        Form: intro verse verse verse verse verse outro
     }
 }
 

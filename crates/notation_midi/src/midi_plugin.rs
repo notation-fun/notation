@@ -118,7 +118,7 @@ fn do_tick(
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
     clock.tick();
-    println!("do_tick() -> {}", clock.delta_seconds());
+    //println!("do_tick() -> {}", clock.delta_seconds());
     _do_tick(
         &settings,
         &mut state,
