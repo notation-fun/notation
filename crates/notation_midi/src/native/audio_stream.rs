@@ -2,7 +2,7 @@ use std::sync::{Arc, Mutex};
 
 use bevy_kira_audio::{AudioStream, Frame};
 
-pub const AUDIO_BUFFER_SIZE: usize = 4096 * 2;
+pub const AUDIO_BUFFER_SIZE: usize = 2048 * 2;
 
 pub type AudioBuffer = [f32; AUDIO_BUFFER_SIZE];
 

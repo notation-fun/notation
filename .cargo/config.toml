@@ -17,7 +17,7 @@ rustflags = ["-Clink-arg=-fuse-ld=lld", "-Zshare-generics=on", "-Zmacro-backtrac
 
 [target.x86_64-pc-windows-msvc]
 linker = "rust-lld.exe"
-rustflags = ["-Zshare-generics=off", "-Zmacro-backtrace=on"]
+rustflags = ["-Zshare-generics=on", "-Zmacro-backtrace=on"]
 
 # Optional: Uncommenting the following improves compile times, but reduces the amount of debug info to 'line number tables only'
 # In most cases the gains are negligible, but if you are on macos and have slow compile times you should see significant gains.

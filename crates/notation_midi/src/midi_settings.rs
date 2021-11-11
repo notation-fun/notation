@@ -21,11 +21,11 @@ impl Default for MidiSettings {
         Self {
             use_internal_synth: Self::default_use_internal_synth(),
             vocal_sound: GMSoundSet::Cello as u8,
-            vocal_velocity: 90,
+            vocal_velocity: 110,
             guitar_sound: GMSoundSet::AcousticGuitarSteel as u8,
-            guitar_velocity: 100,
+            guitar_velocity: 120,
             piano_sound: GMSoundSet::AcousticGrandPiano as u8,
-            piano_velocity: 90,
+            piano_velocity: 110,
         }
     }
 }
