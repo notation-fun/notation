@@ -12,7 +12,7 @@ repository = "https://github.com/notation-fun/notation"
 proc-macro = true
 
 [dependencies]
-notation_proto = { path = "../notation_proto" }
+notation_proto = { version = "0.1.0", path = "../notation_proto" }
 
 syn = { version = "1.0", features = ["full"] }
 quote = "1.0"
