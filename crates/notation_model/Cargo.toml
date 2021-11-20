@@ -5,6 +5,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
 repository = "https://github.com/notation-fun/notation"
+description = "Fun notation - runtime models"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
