@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, LayoutSize, OutlineRectangle, ShapeOp};
+use notation_bevy_utils::prelude::{BevyUtil, LayoutSize, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{
     Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, SyllableNote, TabMeta, Units,
 };

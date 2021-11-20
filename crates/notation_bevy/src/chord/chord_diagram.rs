@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{OutlineCircle, ShapeOp};
+use notation_bevy_utils::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, ModelEntryProps, PlayingState};
 
 use crate::prelude::{ModelEntryData, NotationTheme};

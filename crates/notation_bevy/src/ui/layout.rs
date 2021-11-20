@@ -1,4 +1,4 @@
-use bevy_utils::prelude::LayoutEnv;
+use notation_bevy_utils::prelude::LayoutEnv;
 
 use crate::prelude::{NotationAppState, NotationSettings, NotationTheme};
 

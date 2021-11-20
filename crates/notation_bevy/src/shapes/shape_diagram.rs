@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::prelude::{EntryData, NotationTheme};
-use bevy_utils::prelude::{BevyUtil, ShapeOp, StrokePath};
+use notation_bevy_utils::prelude::{BevyUtil, ShapeOp, StrokePath};
 use notation_model::prelude::{HandShape4, HandShape6, LaneEntry};
 
 macro_rules! impl_shape_diagram {

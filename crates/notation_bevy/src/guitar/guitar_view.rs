@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, ShapeOp, View, ViewBundle};
+use notation_bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, ShapeOp, View, ViewBundle};
 use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,

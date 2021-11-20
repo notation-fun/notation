@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::prelude::{NotationTheme};
 use notation_model::prelude::BarLane;
-use bevy_utils::prelude::ShapeOp;
+use notation_bevy_utils::prelude::ShapeOp;
 
 use super::single_string::{SingleStringData, SingleStringValue};
 

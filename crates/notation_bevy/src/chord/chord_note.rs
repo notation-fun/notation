@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{FillCircle, ShapeOp};
+use notation_bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::{Interval, Syllable};
 
 use crate::prelude::{ModelEntryData, NotationTheme};

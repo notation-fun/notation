@@ -9,7 +9,7 @@ use crate::prelude::{
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
 use crate::ui::layout::NotationLayout;
-use bevy_utils::prelude::{LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle};
+use notation_bevy_utils::prelude::{LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle};
 use notation_model::prelude::{BarLane, LaneKind, TabBar};
 
 pub type LaneView = LaneLayoutData;

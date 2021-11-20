@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_utils::prelude::{ShapeOp, StrokeLine};
+use notation_bevy_utils::prelude::{ShapeOp, StrokeLine};
 
 use crate::prelude::{LaneData, NotationTheme};
 

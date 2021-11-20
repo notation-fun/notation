@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{
+use notation_bevy_utils::prelude::{
     BevyUtil, ColorBackground, GridData, GridView, LayoutAnchor, LayoutChangedQuery,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };

@@ -4,7 +4,7 @@ use std::sync::{Arc, RwLock};
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{
+use notation_bevy_utils::prelude::{
     BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery,
     LayoutSize, View, ViewBundle, ViewQuery,
 };

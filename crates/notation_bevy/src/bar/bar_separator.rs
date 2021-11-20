@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, LayoutSize, ShapeOp, StrokeLine};
+use notation_bevy_utils::prelude::{BevyUtil, LayoutSize, ShapeOp, StrokeLine};
 
 use crate::prelude::{BarData, NotationTheme};
 

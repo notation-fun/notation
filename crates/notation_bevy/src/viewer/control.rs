@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy::utils::Uuid;
 use bevy_egui::egui::{self, Slider};
 use bevy_egui::EguiContext;
-use bevy_utils::prelude::{
+use notation_bevy_utils::prelude::{
     BevyUtil, DockPanel, DockSide, LayoutAnchor, LayoutConstraint, LayoutSize, View, ViewBundle,
 };
 use float_eq::float_ne;

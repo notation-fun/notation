@@ -3,7 +3,7 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{ShapeOp, StrokePath};
+use notation_bevy_utils::prelude::{ShapeOp, StrokePath};
 use notation_model::prelude::{Signature, TabBarProps, Units};
 
 use crate::prelude::{BarData, NotationTheme};

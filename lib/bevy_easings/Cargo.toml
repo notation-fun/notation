@@ -2,7 +2,7 @@
 name = "bevy_easings"
 version = "0.4.0"
 authors = ["François Mockers <mockersf@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "Easing plugin for Bevy"
 repository = "https://github.com/mockersf/bevy_extra"
 homepage = "https://github.com/mockersf/bevy_extra/tree/master/bevy_easings"

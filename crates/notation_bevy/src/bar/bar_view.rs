@@ -9,7 +9,7 @@ use crate::prelude::{
 };
 use crate::tab::tab_events::BarViewDoLayoutEvent;
 use crate::ui::layout::NotationLayout;
-use bevy_utils::prelude::{BevyUtil, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery};
+use notation_bevy_utils::prelude::{BevyUtil, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery};
 use notation_model::prelude::TabBar;
 
 use super::bar_beat::{BarBeatData, BarBeatValue};

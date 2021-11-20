@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{ShapeOp};
+use notation_bevy_utils::prelude::{ShapeOp};
 
 use crate::chord::chord_view::ChordView;
 use crate::prelude::{

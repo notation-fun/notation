@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{FillRectangle, LayoutSize, ShapeOp};
+use notation_bevy_utils::prelude::{FillRectangle, LayoutSize, ShapeOp};
 
 use crate::prelude::{BarData, NotationTheme, TabState};
 use notation_model::prelude::{Signature, TabBar};

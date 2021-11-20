@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use notation_model::prelude::LaneEntry;
 
-use bevy_utils::prelude::ShapeOp;
+use notation_bevy_utils::prelude::ShapeOp;
 
 use super::shape_diagram::{ShapeDiagramData4, ShapeDiagramData6};
 use super::shape_finger::{ShapeFingerData};

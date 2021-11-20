@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, ShapeOp, FillPath, View, ViewBundle};
+use notation_bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, ShapeOp, FillPath, View, ViewBundle};
 use notation_model::prelude::{PlayState, Tab};
 
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};

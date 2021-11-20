@@ -1,4 +1,4 @@
-use bevy_utils::prelude::LayoutSize;
+use notation_bevy_utils::prelude::LayoutSize;
 use notation_model::prelude::{LaneKind, PlayingState};
 use serde::{Deserialize, Serialize};
 

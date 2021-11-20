@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{
+use notation_bevy_utils::prelude::{
     BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle,
 };
 use notation_model::prelude::{Chord, ModelEntry, Position, Tab, TabBar};

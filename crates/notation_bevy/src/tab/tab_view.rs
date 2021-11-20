@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy_utils::prelude::{BevyUtil, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
+use notation_bevy_utils::prelude::{BevyUtil, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
 use notation_model::prelude::Tab;
 
 use crate::mini::mini_map::MiniMap;

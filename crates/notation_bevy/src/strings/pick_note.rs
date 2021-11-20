@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, OutlineRectangle, ShapeOp};
+use notation_bevy_utils::prelude::{BevyUtil, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{PickNote, PlayingState, Syllable};
 
 use crate::prelude::{EntryData, NotationTheme};

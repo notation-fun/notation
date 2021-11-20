@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, FillRectangle, LayoutSize, ShapeOp};
+use notation_bevy_utils::prelude::{BevyUtil, FillRectangle, LayoutSize, ShapeOp};
 
 use crate::prelude::{NotationTheme};
 

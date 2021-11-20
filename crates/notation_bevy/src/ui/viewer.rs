@@ -3,7 +3,7 @@ use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy_utils::prelude::{
+use notation_bevy_utils::prelude::{
     BevyUtil, ColorBackground, DoLayoutEvent, DockView, LayoutQuery, View, ViewBundle, ViewQuery,
 };
 

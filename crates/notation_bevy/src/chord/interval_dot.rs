@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{OutlineCircle, ShapeOp};
+use notation_bevy_utils::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::IntervalQuality;
 
 use crate::prelude::{NotationTheme};

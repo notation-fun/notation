@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{DoLayoutEvent, ShapeOp};
+use notation_bevy_utils::prelude::{DoLayoutEvent, ShapeOp};
 
 use crate::prelude::{BarPlaying, NotationAssetsStates, NotationTheme};
 use crate::ui::layout::NotationLayout;

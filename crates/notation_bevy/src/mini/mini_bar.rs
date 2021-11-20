@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View, ViewBundle};
+use notation_bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View, ViewBundle};
 use notation_model::prelude::{PlayingState, Syllable, TabBar};
 
 use crate::prelude::{BarData, BarPlaying, NotationAssets, NotationTheme};

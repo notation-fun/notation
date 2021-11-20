@@ -5,7 +5,7 @@ use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy_utils::prelude::{
+use notation_bevy_utils::prelude::{
     DockView, LayoutConstraint, LayoutQuery, View, ViewBundle, ViewQuery, ViewRootAddedQuery,
     ViewRootQuery,
 };

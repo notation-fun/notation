@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_utils::prelude::BevyUtil;
+use notation_bevy_utils::prelude::BevyUtil;
 use notation_model::prelude::PlayingState;
 use serde::{Deserialize, Serialize};
 

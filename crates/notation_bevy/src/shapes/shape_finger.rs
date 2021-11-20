@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_utils::prelude::{FillCircle, ShapeOp};
+use notation_bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::Finger;
 
 use crate::prelude::{NotationTheme};

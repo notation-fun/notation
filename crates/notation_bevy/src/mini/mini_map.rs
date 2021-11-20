@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::prelude::{
     NotationAppState, NotationAssets, NotationLayout, NotationSettings, NotationTheme,
 };
-use bevy_utils::prelude::{
+use notation_bevy_utils::prelude::{
     BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };

@@ -1,4 +1,4 @@
-use bevy_utils::prelude::BevyUtil;
+use notation_bevy_utils::prelude::BevyUtil;
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;

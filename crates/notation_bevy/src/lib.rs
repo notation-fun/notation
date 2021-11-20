@@ -137,5 +137,5 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::viewer::app::NotationViewer;
     #[doc(hidden)]
-    pub use bevy_utils::prelude::*;
+    pub use notation_bevy_utils::prelude::*;
 }

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, ShapeOp};
+use notation_bevy_utils::prelude::{BevyUtil, ShapeOp};
 use notation_model::prelude::LaneEntry;
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme};

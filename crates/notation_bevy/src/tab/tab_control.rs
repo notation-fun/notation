@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use notation_bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 use notation_model::prelude::Tab;
 
 use crate::play::play_panel::PlayPanel;

@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{LayoutData};
+use notation_bevy_utils::prelude::{LayoutData};
 use notation_midi::prelude::{JumpToBarEvent, MidiState, PlayControlEvent};
 use notation_model::prelude::TabBarProps;
 

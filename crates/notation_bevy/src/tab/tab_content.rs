@@ -2,7 +2,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{DockView, LayoutChangedQuery, LayoutQuery, View, ViewQuery};
+use notation_bevy_utils::prelude::{DockView, LayoutChangedQuery, LayoutQuery, View, ViewQuery};
 use notation_model::prelude::Tab;
 
 use crate::prelude::{NotationAppState, NotationSettings, NotationTheme, TabBars};

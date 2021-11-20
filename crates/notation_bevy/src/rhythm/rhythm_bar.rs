@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, FillCircle, ShapeOp};
+use notation_bevy_utils::prelude::{BevyUtil, FillCircle, ShapeOp};
 use notation_model::prelude::{Chord, Signature, Tab};
 
 use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState};

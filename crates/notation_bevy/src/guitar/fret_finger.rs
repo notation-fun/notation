@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, LayoutSize};
+use notation_bevy_utils::prelude::{BevyUtil, LayoutSize};
 use notation_model::prelude::{
     Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Note, Pick, Syllable, TabMeta,
 };

@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, ShapeOp, StrokeLine};
+use notation_bevy_utils::prelude::{BevyUtil, ShapeOp, StrokeLine};
 use notation_model::prelude::{LyricWord, PlayingState};
 use std::fmt::Display;
 

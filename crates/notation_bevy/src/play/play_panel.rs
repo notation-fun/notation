@@ -1,7 +1,7 @@
 use std::{fmt::Display, sync::Arc};
 
 use bevy::prelude::*;
-use bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use notation_bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
 use notation_midi::prelude::PlayControlEvent;
 use notation_model::prelude::{PlayState, Tab};
 

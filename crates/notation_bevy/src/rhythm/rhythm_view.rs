@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, LayoutConstraint, LayoutSize, View, ViewBundle};
+use notation_bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, LayoutConstraint, LayoutSize, View, ViewBundle};
 use notation_model::prelude::Tab;
 
 use crate::prelude::{NotationAssets, NotationTheme};

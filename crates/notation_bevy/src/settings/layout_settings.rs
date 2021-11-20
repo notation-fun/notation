@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
-use bevy_utils::prelude::{GridData, LayoutData};
+use notation_bevy_utils::prelude::{GridData, LayoutData};
 use float_eq::float_ne;
 use std::sync::Arc;
 

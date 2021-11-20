@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_utils::prelude::LayoutData;
+use notation_bevy_utils::prelude::LayoutData;
 use std::sync::Arc;
 
 use notation_model::prelude::{PlayingState, TabBar};
