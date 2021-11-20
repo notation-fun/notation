@@ -55,7 +55,7 @@ getrandom = {version="0.2", features=["wasm-bindgen"]}
 bevy_prototype_lyon = "0.3.1"
 bevy_asset_loader = "0.5.0"
 bevy_egui = "0.6"
-bevy_easings = { path = "../../lib/bevy_easings" }
+bevy_easings = "0.4.1"
 # bevy_svg = "0.3"
 # bevy_svg_map = "0.2"
 
