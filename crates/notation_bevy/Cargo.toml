@@ -35,7 +35,7 @@ native = [
 ]
 
 [dependencies]
-notation_bevy_utils = { path = "../notation_bevy_utils" }
+notation_bevy_utils = { version = "0.1.0", path = "../notation_bevy_utils" }
 
 notation_model = { path = "../notation_model" }
 notation_midi = { path = "../notation_midi" }

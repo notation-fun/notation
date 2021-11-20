@@ -13,4 +13,4 @@ description = "Fun notation - definition for core concepts"
 
 [dependencies]
 fehler = "1.0"
-serde = {version = "1.0.126", features = ["derive"]}
+serde = { version = "1.0.126", features = ["derive"] }

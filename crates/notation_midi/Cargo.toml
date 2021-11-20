@@ -16,7 +16,7 @@ inspector = [
 ]
 
 [dependencies]
-notation_model = { path = "../notation_model" }
+notation_model = { version = "0.1.0", path = "../notation_model" }
 
 midir = "0.7"
 bevy = { version = "0.5.0", default-features = false }
