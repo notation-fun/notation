@@ -1,3 +1,0 @@
-[submodule "lib/rust-music-theory"]
-	path = lib/rust-music-theory
-	url = git@github.com:yjpark/rust-music-theory.git
