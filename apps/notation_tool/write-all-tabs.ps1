@@ -4,5 +4,4 @@ cargo run write-tab --tab songs:pu_shu:bai_hua_lin -o ../notation_viewer/assets/
 cargo run write-tab --tab songs:jay:long_juan_feng -o ../notation_viewer/assets/songs/jay/long_juan_feng.ron
 cargo run write-tab --tab songs:misc:stand_by_me -o ../notation_viewer/assets/songs/misc/stand_by_me.ron
 cargo run write-tab --tab songs:misc:scarborough_fair -o ../notation_viewer/assets/songs/misc/scarborough_fair.ron
-cargo run write-tab --tab songs:misc:scarborough_fair_hard -o ../notation_viewer/assets/songs/misc/scarborough_fair_hard.ron
 

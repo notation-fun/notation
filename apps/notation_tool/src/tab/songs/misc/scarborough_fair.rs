@@ -107,7 +107,7 @@ pub fn new_tab() -> Tab {
                 "v4:1" Word [ "tell", "her"+ "to" ] |
                 "v4:2" Word [ "reap", "it"+ "in", "a", ] |
                 "v4:3" Word [ "si-", "ckle"+ "of" ] |
-                "v4:4" Word [ "lea-"* "ther" ] |
+                "v4:4" Word [ "lea-", "ther", @ ""* ] |
                 "v4:12" Word [ _* "and", "to-" ] |
                 "v4:13" Word [ "ga-" "ther" "it" ] |
                 "v4:14" Word [ "all"* "in", "a", ] |
@@ -138,10 +138,11 @@ pub fn new_tab() -> Tab {
                 "v2:1" Tone [ .6, .6+ .6 ] |
                 "v2:2" Tone [ 3 3 3 ] |
                 "v2:3" Tone [ .7 1 .7 ] |
+                "v3:2" Tone [ 3 2 1 ] |
                 "v3:13" Tone [ 6 6 6 ] |
                 "v4:2" Tone [ 3, 3+ 3, 3, ] |
                 "v4:3" Tone [ .7, 1+ .7 ] |
-                "v4:4" Tone [ .6* .6 ] |
+                "v4:4" Tone [ .6, .6, @ .6* ] |
                 "v4:12" Tone [ _* 6, 6, ] |
                 "v4:14" Tone [ 5* 2, 2, ] |
                 "v4:15" Tone [ 1 .7 .6 ] |
@@ -188,7 +189,7 @@ pub fn new_tab() -> Tab {
                     chord [ "6sus2" 1 ]
                     guitar [ "Asus2" 1 ; "i" | ]
                     lyrics [ "v1:2" | @ 1 5 ; "v2:2" | @ 2 ; "v3:2" | @ 3 ; "v4:2" | @ 4 ; "v5:2" | @ 5 ]
-                    vocal [ "v:2" | @ 1 5 ; "v2:2" | @ 2 3 ; "v4:2" | @ 4 ]
+                    vocal [ "v:2" | @ 1 5 ; "v2:2" | @ 2 ; "v3:2" | @ 3 ; "v4:2" | @ 4 ]
                 }
                 {
                     chord [ "5" 1 ]
@@ -248,25 +249,25 @@ pub fn new_tab() -> Tab {
                     chord [ "6sus2" 1 ]
                     guitar [ "Asus2" 1 ; "v:17" | ]
                     lyrics [ "v1:13" | @ 1 5 ; "v2:13" | @ 2 ; "v3:13" | @ 3 ; "v4:13" | @ 4 ]
-                    vocal [ "v:13" | @ 1 2 ; "v3:13" | @ 3 4 5 ]
+                    vocal [ "v:13" | @ 1 2 5 ; "v3:13" | @ 3 4 ]
                 }
                 {
                     chord [ "1" 1 ]
                     guitar [ "C" 1 ; "i" | ]
                     lyrics [ "v1:14" | @ 1 5 ; "v2:14" | @ 2 ; "v3:14" | @ 3 ; "v4:14" | @ 4 ]
-                    vocal [ "v:14" | @ 1 2 3 ; "v4:14" | @ 4 5 ]
+                    vocal [ "v:14" | @ 1 2 3 5 ; "v4:14" | @ 4 ]
                 }
                 {
                     chord [ "v:19" | ]
                     guitar [ "C_G/B_Am" | ; "v:19" | ]
                     lyrics [ "v1:15" | @ 1 5 ; "v2:15" | @ 2 ; "v3:15" | @ 3 ; "v4:15" | @ 4 ]
-                    vocal [ "v:15" | @ 1 2 3 ; "v4:15" | @ 4 5 ]
+                    vocal [ "v:15" | @ 1 2 3 5 ; "v4:15" | @ 4 ]
                 }
                 {
                     chord [ "5" 1 ]
                     guitar [ "G" 1 ; "v:20" | ]
                     lyrics [ "v1:16" | @ 1 5 ; "v2:16" | @ 2 ; "v3:16" | @ 3 ; "v4:16" | @ 4 ]
-                    vocal [ "v:16" | @ 1 2 3 ; "v4:16" | @ 4 5 ]
+                    vocal [ "v:16" | @ 1 2 3 5 ; "v4:16" | @ 4 ]
                 }
                 {
                     chord [ "5" 1 ]
