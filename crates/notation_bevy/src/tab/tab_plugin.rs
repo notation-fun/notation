@@ -91,7 +91,7 @@ fn on_mouse_clicked(
             if app_state.window_width / 2.0 - pos.x > ControlView::WIDTH {
                 app_state.hide_control = true;
             }
-        } else if !settings.mouse_dragged_panning {
+        } else {
             println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
             for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
@@ -154,7 +154,7 @@ fn on_mouse_dragged(
     mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
 ) {
     for evt in evts.iter() {
-        if settings.mouse_dragged_panning {
+        if settings.allow_panning {
             settings
                 .layout
                 .pan_tab_bars(&mut tab_bars_query, -evt.delta.x, -evt.delta.y);

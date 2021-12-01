@@ -243,7 +243,7 @@ impl ControlView {
                         state.hide_control = true;
                         window_resized_evts.send(WindowResizedEvent());
                     }
-                    ui.checkbox(&mut settings.mouse_dragged_panning, "Panning");
+                    ui.checkbox(&mut settings.allow_panning, "Allow Panning");
                     let play_title = if midi_state.play_control.play_state.is_playing() {
                         "Pause"
                     } else {

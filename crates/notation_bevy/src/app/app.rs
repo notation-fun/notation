@@ -7,7 +7,7 @@ use bevy::window::WindowResized;
 
 use bevy_asset_loader::AssetLoader;
 
-use crate::prelude::*;
+use crate::{prelude::*, settings::layout_settings::LayoutMode};
 use crate::ui::viewer::TabViewerPlugin;
 use crate::viewer::control::ControlView;
 
@@ -108,7 +108,9 @@ impl NotationApp {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(on_window_resized.system())
-                .with_system(handle_inputs.system())
+                .with_system(handle_keyboard_inputs.system())
+                .with_system(handle_mouse_inputs.system())
+                .with_system(handle_touch_inputs.system())
                 .with_system(load_tab.system())
         );
 
@@ -151,26 +153,17 @@ fn load_tab(
     }
 }
 
-fn handle_inputs(
+fn handle_keyboard_inputs(
     mut commands: Commands,
-    windows: Res<Windows>,
     keyboard_input: Res<Input<KeyCode>>,
-    mouse_input: Res<Input<MouseButton>>,
-    mut mouse_motion_events: EventReader<MouseMotion>,
     mut state: ResMut<NotationAppState>,
     mut settings: ResMut<NotationSettings>,
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
-    mut mouse_clicked: EventWriter<MouseClickedEvent>,
-    mut mouse_dragged: EventWriter<MouseDraggedEvent>,
     mut window_resized_evts: EventWriter<WindowResizedEvent>,
     viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
 ) {
-    if keyboard_input.pressed(KeyCode::LControl) {
-        settings.mouse_dragged_panning = true;
-    } else if keyboard_input.just_released(KeyCode::LControl) {
-        settings.mouse_dragged_panning = false;
-    } else if keyboard_input.just_released(KeyCode::Tab) {
+    if keyboard_input.just_released(KeyCode::Tab) {
         state.hide_control = !state.hide_control;
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());
@@ -181,7 +174,19 @@ fn handle_inputs(
         crate::viewer::control::ControlView::play_or_stop(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Backslash) {
         crate::viewer::control::ControlView::toggle_layout_mode(&mut commands, &mut state, &mut settings, &viewer_query);
-    } else if mouse_input.just_released(MouseButton::Left) {
+    }
+}
+
+fn handle_mouse_inputs(
+    windows: Res<Windows>,
+    mouse_input: Res<Input<MouseButton>>,
+    mut settings: ResMut<NotationSettings>,
+    mut mouse_motion_events: EventReader<MouseMotion>,
+    mut mouse_wheel_input: EventReader<bevy::input::mouse::MouseWheel>,
+    mut mouse_clicked: EventWriter<MouseClickedEvent>,
+    mut mouse_dragged: EventWriter<MouseDraggedEvent>,
+) {
+    if mouse_input.just_released(MouseButton::Left) {
         windows
             .get_primary()
             .and_then(|x| x.cursor_position())
@@ -189,11 +194,45 @@ fn handle_inputs(
                 //println!("handle_inputs() -> MouseClickedEvent({:?})", cursor_position);
                 mouse_clicked.send(MouseClickedEvent { cursor_position });
             });
+    } else if mouse_input.just_pressed(MouseButton::Right) {
+    } else if mouse_input.just_released(MouseButton::Right) {
+    } else if mouse_input.pressed(MouseButton::Right) {
+        for event in mouse_motion_events.iter() {
+            //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
+            mouse_dragged.send(MouseDraggedEvent { delta: event.delta });
+        }
     } else {
-        if mouse_input.pressed(MouseButton::Left) {
-            for event in mouse_motion_events.iter() {
-                //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
-                mouse_dragged.send(MouseDraggedEvent { delta: event.delta });
+        for event in mouse_wheel_input.iter() {
+            let mut delta = match event.unit {
+                    bevy::input::mouse::MouseScrollUnit::Line =>
+                        Vec2::new(event.x * settings.panning_line_size, event.y * settings.panning_line_size),
+                    bevy::input::mouse::MouseScrollUnit::Pixel =>
+                        Vec2::new(event.x, event.y),
+                };
+            if settings.layout.mode == LayoutMode::Line {
+                delta = Vec2::new(delta.y, delta.x);
+            }
+            mouse_dragged.send(MouseDraggedEvent { delta: delta });
+        }
+    }
+}
+
+fn handle_touch_inputs(
+    touch_input: Res<Touches>,
+    mut mouse_clicked: EventWriter<MouseClickedEvent>,
+    mut mouse_dragged: EventWriter<MouseDraggedEvent>,
+) {
+    for (index, finger) in touch_input.iter().enumerate() {
+        if index == 0 {
+            if touch_input.just_pressed(finger.id()) {
+                mouse_clicked.send(MouseClickedEvent { cursor_position: finger.position() });
+            }
+        } else if index == 1 {
+            if touch_input.just_pressed(finger.id()) {
+            } else if touch_input.just_released(finger.id()) {
+            } else {
+                let delta = finger.position() - finger.previous_position();
+                mouse_dragged.send(MouseDraggedEvent { delta: delta });
             }
         }
     }

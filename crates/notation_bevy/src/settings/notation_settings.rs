@@ -14,7 +14,8 @@ pub struct NotationSettings {
     pub hide_bar_number: bool,
     pub always_show_fret: bool,
     pub melody_piano_mode: bool,
-    pub mouse_dragged_panning: bool,
+    pub allow_panning: bool,
+    pub panning_line_size: f32,
 }
 
 impl Default for NotationSettings {
@@ -26,7 +27,8 @@ impl Default for NotationSettings {
             hide_bar_number: false,
             always_show_fret: false,
             melody_piano_mode: false,
-            mouse_dragged_panning: false,
+            allow_panning: true,
+            panning_line_size: 32.0,
         }
     }
 }
