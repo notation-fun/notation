@@ -180,7 +180,7 @@ fn handle_keyboard_inputs(
 fn handle_mouse_inputs(
     windows: Res<Windows>,
     mouse_input: Res<Input<MouseButton>>,
-    mut settings: ResMut<NotationSettings>,
+    settings: ResMut<NotationSettings>,
     mut mouse_motion_events: EventReader<MouseMotion>,
     mut mouse_wheel_input: EventReader<bevy::input::mouse::MouseWheel>,
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
