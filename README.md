@@ -42,9 +42,9 @@ Features:
 [Watch on Youtube](https://youtu.be/vxXcNSpCZ5Y)
 
 [Try in browser](https://www.amateurguitar.com/songs/scarborough-fair/)
-Note that the web version is only working in desktop browser, the touch input is not working on mobile browsers yet.
+Note that the web version is only working properly in desktop browser, the audio is not very nice, the touch input is not working reliable on mobile browsers yet, and may have performance issues on certain devices.
 
-Desktop versions will be released later.
+[Desktop versions](https://github.com/notation-fun/notation/releases) can be downloaded from releases.
 
 You can also build it by yourself, make sure follow the [Bevy Engine Setup](https://bevyengine.org/learn/book/getting-started/setup/) first.
 ```
