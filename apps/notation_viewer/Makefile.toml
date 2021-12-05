@@ -54,6 +54,10 @@ disabled = true
 args = ["bundle", "--release", "--features", "inspector", "@@split(CARGO_RELEASE_ARGS, )"]
 command = "cargo"
 
+[tasks.release-native]
+args = ["bundle", "--release", "--features", "native", "@@split(CARGO_RELEASE_ARGS, )"]
+command = "cargo"
+
 [tasks.release-to-amateurguitar-www]
 script_runner = "@shell"
 script = ["""
