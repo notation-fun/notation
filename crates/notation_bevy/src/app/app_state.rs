@@ -10,12 +10,14 @@ pub struct TabPathes(pub Vec<String>);
 pub struct NotationAppState {
     pub window_width: f32,
     pub window_height: f32,
+    pub scale_factor_override: Option<f64>,
     pub tab_path: String,
     pub tab_asset: Handle<TabAsset>,
     pub tab: Option<Arc<Tab>>,
     pub hide_control: bool,
     pub viewer_uuid: Uuid,
     pub parse_error: Option<ParseError>,
+    pub debug_str: Option<String>,
 }
 
 impl NotationAppState {
@@ -24,12 +26,14 @@ impl NotationAppState {
         Self {
             window_width: 0.0,
             window_height: 0.0,
+            scale_factor_override: None,
             tab_path,
             tab_asset,
             tab: None,
             hide_control: true,
             viewer_uuid: Uuid::new_v4(),
             parse_error: None,
+            debug_str: None,
         }
     }
     pub fn change_tab(&mut self, asset_server: &AssetServer, tab_path: String) {

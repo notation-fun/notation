@@ -2806,7 +2806,7 @@ dependencies = [
 
 [[package]]
 name = "notation_bevy"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2830,12 +2830,11 @@ dependencies = [
  "serde_arrays",
  "wasm-bindgen",
  "web-sys",
- "winit",
 ]
 
 [[package]]
 name = "notation_bevy_utils"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2849,12 +2848,11 @@ dependencies = [
  "ron",
  "serde",
  "serde_arrays",
- "winit",
 ]
 
 [[package]]
 name = "notation_core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "fehler",
  "serde",
@@ -2862,7 +2860,7 @@ dependencies = [
 
 [[package]]
 name = "notation_dsl"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "fehler",
  "lazy_static",
@@ -2874,7 +2872,7 @@ dependencies = [
 
 [[package]]
 name = "notation_fretted"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "notation_core",
  "serde",
@@ -2883,7 +2881,7 @@ dependencies = [
 
 [[package]]
 name = "notation_guitar"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "notation_core",
  "notation_fretted",
@@ -2892,7 +2890,7 @@ dependencies = [
 
 [[package]]
 name = "notation_midi"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bevy",
  "bevy-inspector-egui",
@@ -2908,7 +2906,7 @@ dependencies = [
 
 [[package]]
 name = "notation_model"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "fehler",
  "instant",
@@ -2919,7 +2917,7 @@ dependencies = [
 
 [[package]]
 name = "notation_proto"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "notation_core",
  "notation_fretted",
@@ -2930,7 +2928,7 @@ dependencies = [
 
 [[package]]
 name = "notation_tool"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "notation_dsl",
  "notation_proto",
@@ -2941,7 +2939,7 @@ dependencies = [
 
 [[package]]
 name = "notation_viewer"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "notation_bevy",
 ]
@@ -4328,8 +4326,7 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 [[package]]
 name = "winit"
 version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da4eda6fce0eb84bd0a33e3c8794eb902e1033d0a1d5a31bc4f19b1b4bbff597"
+source = "git+https://github.com/yjpark/winit/?branch=touch-input_0.24.0#288cc5ba849f27289198ab5e3c849ec8850b0783"
 dependencies = [
  "bitflags",
  "cocoa",

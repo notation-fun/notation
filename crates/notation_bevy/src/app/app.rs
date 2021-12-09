@@ -180,7 +180,7 @@ fn handle_keyboard_inputs(
 fn handle_mouse_inputs(
     windows: Res<Windows>,
     mouse_input: Res<Input<MouseButton>>,
-    settings: ResMut<NotationSettings>,
+    settings: Res<NotationSettings>,
     mut mouse_motion_events: EventReader<MouseMotion>,
     mut mouse_wheel_input: EventReader<bevy::input::mouse::MouseWheel>,
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
@@ -218,22 +218,40 @@ fn handle_mouse_inputs(
 }
 
 fn handle_touch_inputs(
+    windows: Res<Windows>,
     touch_input: Res<Touches>,
+    mut app_state: ResMut<NotationAppState>,
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
-    mut mouse_dragged: EventWriter<MouseDraggedEvent>,
+    //mut mouse_dragged: EventWriter<MouseDraggedEvent>,
 ) {
-    for (index, finger) in touch_input.iter().enumerate() {
-        if index == 0 {
-            if touch_input.just_pressed(finger.id()) {
-                mouse_clicked.send(MouseClickedEvent { cursor_position: finger.position() });
-            }
-        } else if index == 1 {
-            if touch_input.just_pressed(finger.id()) {
-            } else if touch_input.just_released(finger.id()) {
-            } else {
-                let delta = finger.position() - finger.previous_position();
-                mouse_dragged.send(MouseDraggedEvent { delta: delta });
-            }
+    for (_index, finger) in touch_input.iter().enumerate() {
+        if touch_input.just_pressed(finger.id()) {
+            windows
+                .get_primary()
+                .map(|w| (w.physical_width() as f32, w.physical_height() as f32))
+                .map(| (physical_width, physical_height) | {
+                    /*
+                    Super hacky way to get the touch input in mobile browsers (WASM).
+                    winit not support it yet, using a pull request version, which seems to have some issues
+                    as well, also the touch event triggering is very unreliable during my test, but at least
+                    it's better than no touch at all.
+                    */
+                    let dpi_x = physical_width / app_state.window_width;
+                    let dpi_y = physical_height / app_state.window_height;
+                    let x = finger.position().x * dpi_x;
+                    let y = app_state.window_height - finger.position().y * dpi_y;
+                    app_state.debug_str = Some(format!("Touch: {} {:?} -> {} {}", _index, finger.position(), x, y));
+                    mouse_clicked.send(MouseClickedEvent { cursor_position: Vec2::new(x, y) });
+                });
+        } else if touch_input.just_released(finger.id()) {
+            app_state.debug_str = None;
+        } else {
+            app_state.debug_str = Some(format!("Touch: {} - {:?}", _index, finger.position()));
+            /*
+            let delta = finger.position() - finger.previous_position();
+            app_state.debug_str = Some(format!("Dragged: {}, {:?}", _index, delta));
+            mouse_dragged.send(MouseDraggedEvent { delta: delta });
+             */
         }
     }
 }
@@ -268,6 +286,7 @@ fn on_window_resized(
             window.height = evt.height;
             app_state.window_width = evt.width;
             app_state.window_height = evt.height;
+            app_state.scale_factor_override = window.scale_factor_override;
             window_resized_evts.send(WindowResizedEvent());
         }
     }

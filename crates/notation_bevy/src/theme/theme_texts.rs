@@ -188,4 +188,26 @@ impl MiniMapTexts {
             1.0,
         );
     }
+    pub fn spawn_debug_text(
+        &self,
+        commands: &mut Commands,
+        entity: Entity,
+        assets: &NotationAssets,
+        text: &str,
+    ) {
+        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
+        BevyUtil::spawn_text(
+            commands,
+            entity,
+            text,
+            assets.en_font.clone(),
+            24.0,
+            ThemeColors::hex_linear("000000"),
+            HorizontalAlign::Center,
+            VerticalAlign::Center,
+            0.0,
+            0.0,
+            10.0,
+        );
+    }
 }

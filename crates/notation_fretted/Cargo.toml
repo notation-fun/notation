@@ -12,7 +12,7 @@ description = "Fun notation - definition for fretted instruments"
 [lib]
 
 [dependencies]
-notation_core = { version = "0.1.0", path = "../notation_core" }
+notation_core = { version = "0.2.0", path = "../notation_core" }
 
 serde = { version = "1.0.126", features = ["derive"] }
 

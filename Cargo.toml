@@ -22,4 +22,6 @@ opt-level = 's'
 [profile.dev]
 opt-level = 1
 
-
+[patch.crates-io]
+# winit = { git = "https://github.com/johanhelsing/winit/", branch = "web-touch-pr" }
+winit = { git = "https://github.com/yjpark/winit/", branch = "touch-input_0.24.0" }

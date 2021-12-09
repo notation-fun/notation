@@ -35,10 +35,10 @@ native = [
 ]
 
 [dependencies]
-notation_bevy_utils = { version = "0.1.0", path = "../notation_bevy_utils" }
+notation_bevy_utils = { version = "0.2.0", path = "../notation_bevy_utils" }
 
-notation_model = { version = "0.1.0", path = "../notation_model" }
-notation_midi = { version = "0.1.0", path = "../notation_midi" }
+notation_model = { version = "0.2.0", path = "../notation_model" }
+notation_midi = { version = "0.2.0", path = "../notation_midi" }
 
 serde = {version = "1.0.126", features = ["derive"]}
 # https://github.com/serde-rs/serde/issues/1937
@@ -48,8 +48,7 @@ ron = "0.6"
 float_eq = "0.6"
 
 bevy = { version = "0.5.0", default-features = false }
-winit = "0.24.0"
-# winit = { git = "https://github.com/yjpark/winit/", branch = "touch-input_0.24.0", features = [ "web-sys" ] }
+
 rand = "0.8"
 getrandom = {version="0.2", features=["wasm-bindgen"]}
 

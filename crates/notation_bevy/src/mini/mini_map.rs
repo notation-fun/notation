@@ -75,7 +75,7 @@ impl MiniMap {
     ) -> Entity {
         let minimap = MiniMap::new(tab.clone());
         let map_entity = BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
-        ColorBackground::spawn(
+        let background_entity = ColorBackground::spawn(
             commands,
             map_entity,
             theme.core.mini_map_z,
@@ -84,6 +84,8 @@ impl MiniMap {
         for bar in tab.bars.iter() {
             MiniBar::spawn(commands, assets, theme, map_entity, bar);
         }
+        theme.texts.mini_map
+            .spawn_debug_text(commands, background_entity, &assets, "");
         map_entity
     }
     pub fn do_layout(
@@ -105,6 +107,22 @@ impl MiniMap {
                 evt.entity,
                 evt.layout,
             )
+        }
+    }
+    pub fn update_debug_str(
+        app_state: Res<NotationAppState>,
+        background_query: Query<&ColorBackground>,
+        mut font_query: Query<(&Parent, &mut Text)>,
+    ) {
+        for (parent, mut text) in font_query.iter_mut() {
+            if let Ok(_) = background_query.get(parent.0) {
+                let str = if let Some(debug_str) = &app_state.debug_str {
+                    debug_str.to_string()
+                } else {
+                    "".to_string()
+                };
+                BevyUtil::set_text_value(&mut text, str);
+            }
         }
     }
 }

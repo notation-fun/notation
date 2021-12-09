@@ -11,7 +11,7 @@ description = "Fun notation - definition for guitar"
 [lib]
 
 [dependencies]
-notation_core = { version = "0.1.0", path = "../notation_core" }
-notation_fretted = { version = "0.1.0", path = "../notation_fretted" }
+notation_core = { version = "0.2.0", path = "../notation_core" }
+notation_fretted = { version = "0.2.0", path = "../notation_fretted" }
 
 serde = { version = "1.0.126", features = ["derive"] }
