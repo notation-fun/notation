@@ -61,11 +61,7 @@ command = "cargo"
 [tasks.release-to-amateurguitar-www]
 script_runner = "@shell"
 script = ["""
-cp ./target/wasm.js ../../../../yjpark/juice/static/notation/
-cp ./target/wasm_bg.wasm ../../../../yjpark/juice/static/notation/
-cp -rf ./assets/fonts ../../../../yjpark/juice/static/notation/assets/fonts
-cp -rf ./assets/png ../../../../yjpark/juice/static/notation/assets/png
-cp -rf ./assets/beginner ../../../../yjpark/juice/static/notation/assets/beginner
-cp -rf ./assets/songs ../../../../yjpark/juice/static/notation/assets/songs
+cp ./target/wasm.js ../../public/notation/
+cp ./target/wasm_bg.wasm ../../public/notation/
 """]
 dependencies = ["build-web"]
