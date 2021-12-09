@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{LayoutData};
+use notation_bevy_utils::prelude::{LayoutData, GridData};
 use notation_midi::prelude::{JumpToBarEvent, MidiState, PlayControlEvent};
 use notation_model::prelude::TabBarProps;
 
@@ -150,14 +150,21 @@ fn on_mouse_clicked(
 
 fn on_mouse_dragged(
     mut evts: EventReader<MouseDraggedEvent>,
+    theme: Res<NotationTheme>,
     settings: Res<NotationSettings>,
-    mut tab_bars_query: Query<(Entity, &mut Transform, &Arc<TabBars>)>,
+    mut tab_bars_query: Query<(
+            Entity,
+            &mut Transform,
+            &Arc<TabBars>,
+            &LayoutData,
+            &Arc<GridData>,
+        )>,
 ) {
     for evt in evts.iter() {
         if settings.allow_panning {
             settings
                 .layout
-                .pan_tab_bars(&mut tab_bars_query, -evt.delta.x, -evt.delta.y);
+                .pan_tab_bars(&theme, &mut tab_bars_query, -evt.delta.x, -evt.delta.y);
         }
     }
 }

@@ -8,6 +8,7 @@ use crate::prelude::{Key, Note, Pitch, Semitones, Syllable, SyllableNote};
 pub enum Scale {
     Major,
     Minor,
+    Dorian,
 }
 impl Display for Scale {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -27,6 +28,7 @@ impl Scale {
         match ident {
             "Major" => Self::Major,
             "Minor" => Self::Minor,
+            "Dorian" => Self::Dorian,
             _ => Self::default(),
         }
     }
@@ -38,10 +40,8 @@ impl Scale {
             + match self {
                 Scale::Major => 0,
                 Scale::Minor => 3,
+                Scale::Dorian => -2,
             };
-        if semitones < 0 {
-            semitones += 12
-        }
         Semitones(semitones)
     }
     pub fn calc_syllable(&self, key: &Key, pitch: &Pitch) -> Syllable {

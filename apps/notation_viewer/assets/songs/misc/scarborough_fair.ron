@@ -2,7 +2,7 @@
     uuid: "06dd7278-cdaf-40dd-abc6-6e66ec2d6b8c",
     meta: (
         key: Natural(E),
-        scale: Minor,
+        scale: Dorian,
         signature: (
             beat_unit: Quarter,
             bar_beats: 3,
@@ -18,10 +18,10 @@
                     "dsl::context::duration",
                     "D_1_2",
                 ),// [0]
-                Mark("6sus4_7"),// [1]
+                Mark("2sus4_7"),// [1]
                 Core(Chord(
                     (
-                        root: La,
+                        root: Re,
                         intervals: Tetrad(
                             Perfect4th,
                             Perfect5th,
@@ -31,10 +31,10 @@
                     ),
                     Dotted(Half),
                 )),// [2]
-                Mark("2_9_11"),// [3]
+                Mark("5_9_11"),// [3]
                 Core(Chord(
                     (
-                        root: Re,
+                        root: So,
                         intervals: Tetrad(
                             Major3nd,
                             Major2nd,
@@ -44,10 +44,10 @@
                     ),
                     Dotted(Half),
                 )),// [4]
-                Mark("5/4"),// [5]
+                Mark("1/4"),// [5]
                 Core(Chord(
                     (
-                        root: So,
+                        root: Do,
                         intervals: Triad(
                             Major3nd,
                             Perfect5th,
@@ -56,10 +56,10 @@
                     ),
                     Dotted(Half),
                 )),// [6]
-                Mark("5"),// [7]
+                Mark("1"),// [7]
                 Core(Chord(
                     (
-                        root: So,
+                        root: Do,
                         intervals: Triad(
                             Major3nd,
                             Perfect5th,
@@ -68,10 +68,10 @@
                     ),
                     Dotted(Half),
                 )),// [8]
-                Mark("6sus2"),// [9]
+                Mark("2sus2"),// [9]
                 Core(Chord(
                     (
-                        root: La,
+                        root: Re,
                         intervals: Triad(
                             Major2nd,
                             Perfect5th,
@@ -80,10 +80,10 @@
                     ),
                     Dotted(Half),
                 )),// [10]
-                Mark("6-"),// [11]
+                Mark("2-"),// [11]
                 Core(Chord(
                     (
-                        root: La,
+                        root: Re,
                         intervals: Triad(
                             Minor3nd,
                             Perfect5th,
@@ -92,10 +92,10 @@
                     ),
                     Dotted(Half),
                 )),// [12]
-                Mark("1"),// [13]
+                Mark("4"),// [13]
                 Core(Chord(
                     (
-                        root: Do,
+                        root: Fa,
                         intervals: Triad(
                             Major3nd,
                             Perfect5th,
@@ -111,7 +111,7 @@
                 ),// [16]
                 Core(Chord(
                     (
-                        root: Do,
+                        root: Fa,
                         intervals: Triad(
                             Major3nd,
                             Perfect5th,
@@ -126,7 +126,7 @@
                 ),// [18]
                 Core(Chord(
                     (
-                        root: Re,
+                        root: So,
                         intervals: Triad(
                             Major3nd,
                             Perfect5th,
@@ -143,7 +143,7 @@
                 ),// [22]
                 Core(Chord(
                     (
-                        root: Do,
+                        root: Fa,
                         intervals: Triad(
                             Major3nd,
                             Perfect5th,
@@ -154,7 +154,7 @@
                 )),// [23]
                 Core(Chord(
                     (
-                        root: So,
+                        root: Do,
                         intervals: Triad(
                             Major3nd,
                             Perfect5th,
@@ -165,7 +165,7 @@
                 )),// [24]
                 Core(Chord(
                     (
-                        root: La,
+                        root: Re,
                         intervals: Triad(
                             Minor3nd,
                             Perfect5th,
@@ -2130,7 +2130,7 @@
                 ),// [0]
                 Extra(
                     "dsl::context::scale",
-                    "Minor",
+                    "Dorian",
                 ),// [1]
                 Extra(
                     "dsl::context::duration",
@@ -2934,7 +2934,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -2963,7 +2963,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("2_9_11"),
+                                    begin: Mark("5_9_11"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -2992,7 +2992,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5/4"),
+                                    begin: Mark("1/4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3021,7 +3021,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3050,7 +3050,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3079,7 +3079,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3108,7 +3108,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3143,7 +3143,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3235,7 +3235,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3339,7 +3339,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5"),
+                                    begin: Mark("1"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3437,7 +3437,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3529,7 +3529,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3558,7 +3558,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("1"),
+                                    begin: Mark("4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3607,7 +3607,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-"),
+                                    begin: Mark("2-"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3705,7 +3705,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3754,7 +3754,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3783,7 +3783,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3812,7 +3812,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3885,7 +3885,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -3970,7 +3970,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("1"),
+                                    begin: Mark("4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4140,7 +4140,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5"),
+                                    begin: Mark("1"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4225,7 +4225,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5"),
+                                    begin: Mark("1"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4254,7 +4254,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4315,7 +4315,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5"),
+                                    begin: Mark("1"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4376,7 +4376,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5"),
+                                    begin: Mark("1"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4437,7 +4437,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4498,7 +4498,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4527,7 +4527,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4556,7 +4556,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus2"),
+                                    begin: Mark("2sus2"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4591,7 +4591,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6sus4_7"),
+                                    begin: Mark("2sus4_7"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4649,7 +4649,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5/4"),
+                                    begin: Mark("1/4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4678,7 +4678,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-"),
+                                    begin: Mark("2-"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4702,7 +4702,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("6-"),
+                                    begin: Mark("2-"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
