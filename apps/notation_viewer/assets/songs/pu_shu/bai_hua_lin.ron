@@ -2,7 +2,7 @@
     uuid: "15ab6b58-1eaf-4075-95ab-f0b35117eddb",
     meta: (
         key: Natural(E),
-        scale: Minor,
+        scale: Aeolian,
         signature: (
             beat_unit: Quarter,
             bar_beats: 3,

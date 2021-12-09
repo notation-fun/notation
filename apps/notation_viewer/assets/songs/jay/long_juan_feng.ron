@@ -2,7 +2,7 @@
     uuid: "ef6bb44b-17cf-47e6-a50e-0ab636868334",
     meta: (
         key: Natural(A),
-        scale: Major,
+        scale: Ionian,
         signature: (
             beat_unit: Quarter,
             bar_beats: 4,
@@ -3607,7 +3607,7 @@
                 ),// [0]
                 Extra(
                     "dsl::context::scale",
-                    "Major",
+                    "Ionian",
                 ),// [1]
                 Extra(
                     "dsl::context::duration",

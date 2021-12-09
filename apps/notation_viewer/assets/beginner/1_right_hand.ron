@@ -2,7 +2,7 @@
     uuid: "c430733f-46c3-4db2-9685-a72c05027e62",
     meta: (
         key: Natural(G),
-        scale: Major,
+        scale: Ionian,
         signature: (
             beat_unit: Quarter,
             bar_beats: 4,
