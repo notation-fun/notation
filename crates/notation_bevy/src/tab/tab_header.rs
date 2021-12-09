@@ -6,7 +6,7 @@ use notation_bevy_utils::prelude::{
     BevyUtil, DockPanel, DockSide, DockView, LayoutChangedQuery, LayoutConstraint, LayoutQuery,
     LayoutSize, View, ViewBundle, ViewQuery,
 };
-use notation_model::prelude::{Chord, ModelEntry, Tab, TrackKind};
+use notation_model::prelude::{Tab, TrackKind, TabChord};
 
 use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
 use crate::ui::layout::NotationLayout;
@@ -17,7 +17,7 @@ use super::tab_events::TabHeaderDoLayoutEvent;
 
 pub struct TabHeader {
     pub tab: Arc<Tab>,
-    pub chords: Vec<(Chord, Arc<ModelEntry>)>,
+    pub chords: Vec<TabChord>,
 }
 impl Display for TabHeader {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -28,7 +28,7 @@ impl TabHeader {
     pub fn new(tab: Arc<Tab>) -> Self {
         let chords = tab
             .get_track_of_kind(TrackKind::Chord)
-            .map(|x| x.get_unique_chords())
+            .map(|x| x.get_tab_chords())
             .unwrap_or_default();
         Self { tab, chords }
     }
@@ -70,7 +70,7 @@ impl TabHeader {
         let view = view_bundle.view.clone();
         let header_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
         TabControl::spawn(commands, assets, theme, settings, header_entity, &tab);
-        TabChords::spawn(commands, theme, header_entity, &tab, &view.chords);
+        TabChords::spawn(commands, assets, theme, header_entity, &tab, &view.chords);
         header_entity
     }
     pub fn do_layout(

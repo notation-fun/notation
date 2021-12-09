@@ -131,8 +131,8 @@ fn on_mouse_clicked(
             for (chord, layout, global_transform) in chord_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
                     let position =
-                        TabState::get_position(&tab_state_query, chord.entry.tab().map(|x| x.uuid));
-                    if let Some(next_bar) = chord.search_next(true, position) {
+                        TabState::get_position(&tab_state_query, chord.chord.tab().map(|x| x.uuid));
+                    if let Some(next_bar) = chord.chord.search_next(true, position) {
                         jump_to_bar(&mut jump_to_bar_evts, next_bar.props);
                     }
                     return;

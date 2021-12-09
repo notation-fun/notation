@@ -118,7 +118,7 @@ impl Default for MelodySizes {
     fn default() -> Self {
         Self {
             note_height: 3.0,
-            note_outline: PlayingSize::new(0.5, 1.0, 0.5),
+            note_outline: PlayingSize::new(1.0, 1.5, 1.0),
         }
     }
 }
@@ -148,7 +148,7 @@ impl Default for StringsSizes {
         Self {
             string_space: 10.0,
             note_height: 4.0,
-            note_outline: PlayingSize::new(0.5, 1.0, 0.5),
+            note_outline: PlayingSize::new(1.0, 1.5, 1.0),
         }
     }
 }

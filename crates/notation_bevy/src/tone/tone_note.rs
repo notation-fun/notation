@@ -93,6 +93,6 @@ impl ToneNoteData {
         if self.value.playing_state.is_current() {
             height += outline;
         }
-        (width, height)
+        (width - outline * 2.0, height)
     }
 }

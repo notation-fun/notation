@@ -7,25 +7,25 @@ use notation_bevy_utils::prelude::{
     BevyUtil, ColorBackground, GridData, GridView, LayoutAnchor, LayoutChangedQuery,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
-use notation_model::prelude::{Chord, ModelEntry, Tab};
+use notation_model::prelude::{Tab, TabChord};
 
 use crate::chord::chord_view::ChordView;
-use crate::prelude::{NotationAppState, NotationSettings, NotationTheme};
+use crate::prelude::{NotationAppState, NotationSettings, NotationTheme, NotationAssets};
 use crate::ui::layout::NotationLayout;
 
 use super::tab_events::TabChordsDoLayoutEvent;
 
 pub struct TabChords {
     pub tab: Arc<Tab>,
-    pub chords: Vec<(Chord, Arc<ModelEntry>)>,
+    pub chords: Vec<TabChord>,
 }
 impl Display for TabChords {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<TabChords>({})", self.tab.bars.len())
+        write!(f, "<TabChords>(B:{}, C:{})", self.tab.bars.len(), self.chords.len())
     }
 }
 impl TabChords {
-    pub fn new(tab: Arc<Tab>, chords: Vec<(Chord, Arc<ModelEntry>)>) -> Self {
+    pub fn new(tab: Arc<Tab>, chords: Vec<TabChord>) -> Self {
         Self { tab, chords }
     }
     pub fn calc_grid_data<'a>(
@@ -74,10 +74,11 @@ impl<'a> View<NotationLayout<'a>> for TabChords {
 impl TabChords {
     pub fn spawn(
         commands: &mut Commands,
+        assets: &NotationAssets,
         theme: &NotationTheme,
         entity: Entity,
         tab: &Arc<Tab>,
-        chords: &Vec<(Chord, Arc<ModelEntry>)>,
+        chords: &Vec<TabChord>,
     ) -> Entity {
         let view_bundle = ViewBundle::from(TabChords::new(tab.clone(), chords.clone()));
         let view = view_bundle.view.clone();
@@ -88,8 +89,8 @@ impl TabChords {
             theme.core.mini_map_z,
             theme.colors.chord.background,
         );
-        for (chord, entry) in view.chords.iter() {
-            ChordView::spawn(commands, theme, chords_entity, *chord, entry);
+        for chord_view in view.chords.iter() {
+            ChordView::spawn(commands, assets, theme, chords_entity, chord_view);
         }
         chords_entity
     }

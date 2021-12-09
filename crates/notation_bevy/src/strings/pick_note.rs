@@ -38,11 +38,11 @@ impl PickNoteData {
         let width =
             self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
         let mut height = theme.sizes.strings.note_height;
+        let outline = self.calc_outline(theme);
         if self.value.playing_state.is_current() {
-            let outline = self.calc_outline(theme);
             height += outline * 2.0;
         }
-        (width, height)
+        (width - outline * 2.0, height)
     }
     pub fn calc_outline_color(&self, theme: &NotationTheme) -> Color {
         theme

@@ -4,7 +4,7 @@ use std::sync::{Arc, Weak};
 
 use notation_proto::prelude::Chord;
 
-use crate::prelude::{Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, Tab, TrackKind};
+use crate::prelude::{Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, Tab, TrackKind, TabChord};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct TrackProps {
@@ -98,8 +98,8 @@ impl Track {
         }
         entries
     }
-    pub fn get_chords(&self) -> Vec<(Arc<ModelEntry>, Chord)> {
-        let mut chords = Vec::new();
+    pub fn get_tab_chords(&self) -> Vec<TabChord> {
+        let mut chord_entries: HashMap<Chord, Vec<Arc<ModelEntry>>> = HashMap::new();
         for entry in self.entries.iter() {
             if let Some(chord) = entry
                 .proto
@@ -107,26 +107,22 @@ impl Track {
                 .and_then(|x| x.as_chord())
                 .map(|z| z.to_owned())
             {
-                chords.push((entry.clone(), chord));
+                if !chord_entries.contains_key(&chord) {
+                    chord_entries.insert(chord, Vec::new());
+                }
+                chord_entries.get_mut(&chord).unwrap().push(entry.clone());
             }
         }
-        chords
-    }
-    pub fn get_unique_chords(&self) -> Vec<(Chord, Arc<ModelEntry>)> {
-        let chords = self.get_chords();
-        if chords.len() == 0 {
-            return Vec::new();
-        }
-        let mut unique_chords: HashMap<Chord, Arc<ModelEntry>> = HashMap::new();
-        for (entry, chord) in chords.into_iter() {
-            if !unique_chords.contains_key(&chord) {
-                unique_chords.insert(chord, entry);
-            }
-        }
-        let mut chords = unique_chords
+        let mut chords = chord_entries
             .into_iter()
-            .collect::<Vec<(Chord, Arc<ModelEntry>)>>();
-        chords.sort_by(|(a, _), (b, _)| a.cmp(&b));
+            .map(|(chord, entries)| {
+                let bars = TabChord::calc_bars(self.tab(), chord);
+                TabChord {
+                    chord, entries, bars
+                }
+            })
+            .collect::<Vec<TabChord>>();
+        chords.sort_by(|a, b| a.chord.cmp(&b.chord));
         chords
     }
 }

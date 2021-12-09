@@ -210,7 +210,11 @@ impl Default for ChordColors {
     fn default() -> Self {
         Self {
             background: hex_linear("00000055"),
-            diagram_outline: PlayingColors::default(),
+            diagram_outline: PlayingColors::new(
+                hex_linear("00000066"),
+                hex_linear("FFFFFFAA"),
+                hex_linear("00000066"),
+            ),
             dot: IntervalColors::default(),
             dot_outline: IntervalColors {
                 perfect: hex_linear("000000"),

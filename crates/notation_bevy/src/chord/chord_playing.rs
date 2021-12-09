@@ -27,20 +27,34 @@ impl ChordPlaying {
         tab_state: &TabState,
         new_position: &Position,
     ) {
-        let chord = tab_state
-            .tab
-            .get_bar(new_position.bar)
-            .and_then(|x| x.get_chord(Some(new_position.bar.in_bar_pos)));
-        if let Some(chord) = chord {
-            for (_entity, mut chord_playing) in query.iter_mut() {
-                if chord_playing.value.chord == chord {
-                    if chord_playing.value.state != PlayingState::Current {
-                        chord_playing.value.state = PlayingState::Current;
-                    }
+        let is_current = |c: Chord| {
+            if tab_state.play_control.play_state.is_playing() {
+                let chord = tab_state
+                    .tab
+                    .get_bar(new_position.bar)
+                    .and_then(|x| x.get_chord(Some(new_position.bar.in_bar_pos)));
+                if let Some(chord) = chord {
+                    chord == c
                 } else {
-                    if chord_playing.value.state != PlayingState::Idle {
-                        chord_playing.value.state = PlayingState::Idle;
-                    }
+                    false
+                }
+            } else {
+                let chords = tab_state.tab.get_bar(new_position.bar).map(|x| x.get_chords());
+                if let Some(chords) = chords {
+                    chords.contains(&c)
+                } else {
+                    false
+                }
+            }
+        };
+        for (_entity, mut chord_playing) in query.iter_mut() {
+            if is_current(chord_playing.value.chord) {
+                if chord_playing.value.state != PlayingState::Current {
+                    chord_playing.value.state = PlayingState::Current;
+                }
+            } else {
+                if chord_playing.value.state != PlayingState::Idle {
+                    chord_playing.value.state = PlayingState::Idle;
                 }
             }
         }

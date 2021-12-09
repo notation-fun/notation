@@ -6,9 +6,13 @@ use crate::prelude::{Key, Note, Pitch, Semitones, Syllable, SyllableNote};
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Scale {
-    Major,
-    Minor,
+    Ionian,
     Dorian,
+    Phrygian,
+    Lydian,
+    Mixolydian,
+    Aeolian,
+    Locrian,
 }
 impl Display for Scale {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -17,10 +21,15 @@ impl Display for Scale {
 }
 impl Default for Scale {
     fn default() -> Self {
-        Self::Major
+        Self::Ionian
     }
 }
 impl Scale {
+    #[allow(non_upper_case_globals)]
+    pub const Major: Scale = Scale::Ionian;
+    #[allow(non_upper_case_globals)]
+    pub const Minor: Scale = Scale::Aeolian;
+
     pub fn to_ident(&self) -> String {
         format!("{}", self)
     }
@@ -28,7 +37,13 @@ impl Scale {
         match ident {
             "Major" => Self::Major,
             "Minor" => Self::Minor,
+            "Ionian" => Self::Ionian,
             "Dorian" => Self::Dorian,
+            "Phrygian" => Self::Phrygian,
+            "Lydian" => Self::Lydian,
+            "Mixolydian" => Self::Mixolydian,
+            "Aeolian" => Self::Aeolian,
+            "Locrian" => Self::Locrian,
             _ => Self::default(),
         }
     }
@@ -36,11 +51,15 @@ impl Scale {
 
 impl Scale {
     pub fn calc_do_semitones(&self, key: &Key) -> Semitones {
-        let mut semitones = Semitones::from(*key).0
+        let semitones = Semitones::from(*key).0
             + match self {
-                Scale::Major => 0,
-                Scale::Minor => 3,
+                Scale::Ionian => 0,
                 Scale::Dorian => -2,
+                Scale::Phrygian => -4,
+                Scale::Lydian => -5,
+                Scale::Mixolydian => 5,
+                Scale::Aeolian => 3,
+                Scale::Locrian => 1,
             };
         Semitones(semitones)
     }

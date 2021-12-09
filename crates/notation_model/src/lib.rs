@@ -12,6 +12,7 @@ pub mod play;
 pub mod section;
 pub mod tab;
 pub mod tab_bar;
+pub mod tab_chord;
 pub mod track;
 pub mod util;
 
@@ -40,6 +41,8 @@ pub mod prelude {
     pub use crate::tab::Tab;
     #[doc(hidden)]
     pub use crate::tab_bar::{TabBar, TabBarProps};
+    #[doc(hidden)]
+    pub use crate::tab_chord::{TabChord};
     #[doc(hidden)]
     pub use crate::track::{Track, TrackProps};
     #[doc(hidden)]
