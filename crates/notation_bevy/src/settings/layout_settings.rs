@@ -33,6 +33,7 @@ pub struct LayoutSettings {
     pub mode: LayoutMode,
     pub focus_bar_ease_ms: u64,
     pub focusing_bar_ordinal: usize,
+    pub try_show_last_row_in_grid_mode: bool,
 }
 
 impl Default for LayoutSettings {
@@ -41,6 +42,7 @@ impl Default for LayoutSettings {
             mode: LayoutMode::default(),
             focus_bar_ease_ms: 250,
             focusing_bar_ordinal: usize::MAX,
+            try_show_last_row_in_grid_mode: true,
         }
     }
 }
@@ -150,7 +152,7 @@ impl LayoutSettings {
         let content_size = grid_data.content_size;
         if grid_size.height > content_size.height {
             y = -(grid_size.height - content_size.height);
-        } else if row > 0 {
+        } else if row > 0 && self.try_show_last_row_in_grid_mode {
             let last_row_height = grid_data.calc_cell_size(row - 1, col).height;
             if last_row_height + pos_data.bar_layout.size.height <= grid_size.height / 2.0 {
                 y = grid_data.calc_cell_offset(row - 1, col).y;

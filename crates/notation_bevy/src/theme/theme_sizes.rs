@@ -90,7 +90,7 @@ impl Default for ChordSizes {
     fn default() -> Self {
         Self {
             max_chord_rows: 2,
-            chord_size_range: (48.0, 80.0),
+            chord_size_range: (64.0, 128.0),
             diagram_factor: 0.45,
             diagram_outline: PlayingSize::new(0.5, 2.0, 1.0),
             diagram_interval_radius_factor: 0.33,

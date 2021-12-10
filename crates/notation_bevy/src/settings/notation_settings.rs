@@ -16,6 +16,8 @@ pub struct NotationSettings {
     pub melody_piano_mode: bool,
     pub allow_panning: bool,
     pub panning_line_size: f32,
+    pub override_beat_size: Option<f32>,
+    pub override_chord_size: Option<f32>,
 }
 
 impl Default for NotationSettings {
@@ -29,6 +31,8 @@ impl Default for NotationSettings {
             melody_piano_mode: false,
             allow_panning: true,
             panning_line_size: 32.0,
+            override_beat_size: None,
+            override_chord_size: None,
         }
     }
 }

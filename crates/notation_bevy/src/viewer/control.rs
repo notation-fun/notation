@@ -243,7 +243,7 @@ impl ControlView {
                         state.hide_control = true;
                         window_resized_evts.send(WindowResizedEvent());
                     }
-                    ui.checkbox(&mut settings.allow_panning, "Allow Panning");
+                    ui.separator();
                     let play_title = if midi_state.play_control.play_state.is_playing() {
                         "Pause"
                     } else {
@@ -269,11 +269,6 @@ impl ControlView {
                             &mut play_control_evts,
                         )
                     }
-                    let hide_bar_number = settings.hide_bar_number;
-                    ui.checkbox(&mut settings.hide_bar_number, "Hide Bar Number");
-                    if hide_bar_number != settings.hide_bar_number {
-                        Self::reload_tab(&mut commands, &mut state, &viewer_query);
-                    }
                     if ui.button(format!("Begin: {}", midi_state.play_control.begin_bar_ordinal)).clicked() {
                         Self::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
                     }
@@ -288,11 +283,46 @@ impl ControlView {
                             &mut play_control_evts,
                         )
                     }
+                    ui.separator();
+                    let mut override_beat_size = settings.override_beat_size.is_some();
+                    ui.checkbox(&mut override_beat_size, "Override Beat Size");
+                    if override_beat_size {
+                        let mut beat_size = settings.override_beat_size.unwrap_or(80.0);
+                        let last_beat_size = beat_size;
+                        ui.add(Slider::new(&mut beat_size, 16.0..=512.0).text("Beat Size"));
+                        if settings.override_beat_size.is_none() || float_ne!(beat_size, last_beat_size, abs <= 1.0) {
+                            settings.override_beat_size = Some(beat_size);
+                            window_resized_evts.send(WindowResizedEvent());
+                        }
+                    } else if settings.override_beat_size.is_some() {
+                        settings.override_beat_size = None;
+                        window_resized_evts.send(WindowResizedEvent());
+                    }
+                    let mut override_chord_size = settings.override_chord_size.is_some();
+                    ui.checkbox(&mut override_chord_size, "Override Chord Size");
+                    if override_chord_size {
+                        let mut chord_size = settings.override_chord_size.unwrap_or(128.0);
+                        let last_chord_size = chord_size;
+                        ui.add(Slider::new(&mut chord_size, 48.0..=256.0).text("Chord Size"));
+                        if settings.override_chord_size.is_none() || float_ne!(chord_size, last_chord_size, abs <= 1.0) {
+                            settings.override_chord_size = Some(chord_size);
+                            window_resized_evts.send(WindowResizedEvent());
+                        }
+                    } else if settings.override_chord_size.is_some() {
+                        settings.override_chord_size = None;
+                        window_resized_evts.send(WindowResizedEvent());
+                    }
+                    let hide_bar_number = settings.hide_bar_number;
+                    ui.checkbox(&mut settings.hide_bar_number, "Hide Bar Number");
+                    if hide_bar_number != settings.hide_bar_number {
+                        Self::reload_tab(&mut commands, &mut state, &viewer_query);
+                    }
                     let always_show_fret = settings.always_show_fret;
                     ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
                     if always_show_fret != settings.always_show_fret {
                         Self::reload_tab(&mut commands, &mut state, &viewer_query);
                     }
+                    ui.separator();
                     let mode_text = if settings.layout.mode == LayoutMode::Grid {
                         "Line Mode"
                     } else {
@@ -301,6 +331,10 @@ impl ControlView {
                     if ui.button(mode_text).clicked() {
                         Self::toggle_layout_mode(&mut commands, &mut state, &mut settings, &viewer_query);
                     }
+                    if settings.layout.mode == LayoutMode::Grid {
+                        ui.checkbox(&mut settings.layout.try_show_last_row_in_grid_mode, "Try Show Last Row");
+                    }
+                    ui.separator();
                     if ui.button("Reload Tab").clicked() {
                         Self::reload_tab(&mut commands, &mut state, &viewer_query);
                     }

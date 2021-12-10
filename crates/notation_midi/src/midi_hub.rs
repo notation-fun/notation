@@ -74,6 +74,9 @@ impl MidiHub {
         }
     }
     pub fn send(&mut self, settings: &MidiSettings, speed: &PlaySpeed, msg: &MidiMessage) {
+        if settings.bypass_hub {
+            return;
+        }
         self.check_output(settings);
         if let Some(synth) = &self.output_synth {
             if let Err(err) = synth.send(speed, msg) {

@@ -7,6 +7,7 @@ use bevy_inspector_egui::Inspectable;
 #[derive(Copy, Clone, PartialEq, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MidiSettings {
+    pub bypass_hub: bool,
     pub use_internal_synth: bool,
     pub vocal_sound: u8,
     pub vocal_velocity: u8,
@@ -19,6 +20,7 @@ pub struct MidiSettings {
 impl Default for MidiSettings {
     fn default() -> Self {
         Self {
+            bypass_hub: false,
             use_internal_synth: Self::default_use_internal_synth(),
             vocal_sound: GMSoundSet::Cello as u8,
             vocal_velocity: 110,

@@ -47,11 +47,15 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
             return GridData::ZERO;
         }
         let bar_margin = engine.theme.sizes.layout.bar_margin;
-        let bar_sizes = engine.theme.sizes.bar;
+        let beat_size_range =
+            match engine.settings.override_beat_size {
+                Some(size) => (size, size * 2.0),
+                None => engine.theme.sizes.bar.beat_size_range,
+            };
         let bar_beats = self.tab.bar_beats() as f32;
         let bar_width_range = (
-            bar_sizes.beat_size_range.0 * bar_beats,
-            bar_sizes.beat_size_range.1 * bar_beats,
+            beat_size_range.0 * bar_beats,
+            beat_size_range.1 * bar_beats,
         );
         let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
             grid_size.width - bar_margin * 2.0,

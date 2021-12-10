@@ -122,8 +122,8 @@ impl NotationApp {
 fn insert_window_descriptor(app: &mut AppBuilder, title: String) {
     app.insert_resource(WindowDescriptor {
         title,
-        //width: 1920.,
-        //height: 1080.,
+        width: 1920.,
+        height: 1080.,
         ..WindowDescriptor::default()
     });
 }
