@@ -171,9 +171,9 @@ pub struct TabControlSizes {
 impl Default for TabControlSizes {
     fn default() -> Self {
         Self {
-            control_width: 240.0,
-            control_height: 80.0,
-            dock_top_width: 400.0,
+            control_width: 394.0,
+            control_height: 128.0,
+            dock_top_width: 800.0,
             rhythm_bar_radius_factor: 0.45,
             rhythm_bar_radius_extra: 2.0,
             rhythm_beat_radius_factor: 0.10,
@@ -201,7 +201,7 @@ impl Default for MiniMapSizes {
         Self {
             bar_height: 24.0,
             bar_width_range: (4.0, 1024.0),
-            bar_margin: (0.0, 2.0),
+            bar_margin: (2.0, 2.0),
             bar_outline: PlayingSize::new(0.5, 2.0, 1.0),
             section_separator: 2.0,
         }

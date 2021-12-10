@@ -60,7 +60,7 @@ impl ShapeOp<NotationTheme, StrokePath> for RhythmIndicatorData {
         );
         let color = theme
             .colors
-            .of_section(self.bar_props.section_index);
+            .rhythm.indicator;
         let line_width = theme.sizes.tab_control.rhythm_indicator_line_width;
         StrokePath {
             size: Vec2::new(radius * 2.0, radius * 2.0),
