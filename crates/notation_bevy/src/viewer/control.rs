@@ -9,7 +9,7 @@ use notation_bevy_utils::prelude::{
     BevyUtil, DockPanel, DockSide, LayoutAnchor, LayoutConstraint, LayoutSize, View, ViewBundle,
 };
 use float_eq::float_ne;
-use notation_midi::prelude::{MidiState, PlayControlEvent};
+use notation_midi::prelude::{MidiState, PlayControlEvent, MidiSettings};
 use notation_model::play::play_control::TickResult;
 use notation_model::prelude::{Tab, Units};
 
@@ -227,6 +227,7 @@ impl ControlView {
         mut settings: ResMut<NotationSettings>,
         viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
         tab_pathes: Res<TabPathes>,
+        mut midi_settings: ResMut<MidiSettings>,
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
@@ -244,6 +245,8 @@ impl ControlView {
                         state.hide_control = true;
                         window_resized_evts.send(WindowResizedEvent());
                     }
+                    ui.separator();
+                    ui.checkbox(&mut midi_settings.bypass_hub, "Bypass Midi Hub");
                     ui.separator();
                     let play_title = if midi_state.play_control.play_state.is_playing() {
                         "Pause"
