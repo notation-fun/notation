@@ -1,15 +1,16 @@
 use std::fmt::Display;
 use std::sync::Arc;
+use float_eq::float_ne;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, ColorBackground, DockPanel, DockSide, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutSize, ShapeOp, View, ViewBundle};
+use notation_bevy_utils::prelude::{BevyUtil, ColorBackground, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle};
 use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
     Tab, Units,
 };
 
-use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme};
+use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme, NotationSettings};
 use crate::ui::layout::NotationLayout;
 
 use super::fret_finger::{FretFingerData};
@@ -32,20 +33,9 @@ impl Display for GuitarView {
     }
 }
 
-impl<'a> DockPanel<NotationLayout<'a>> for GuitarView {
-    fn dock_side(&self, _engine: &NotationLayout<'a>, _size: LayoutSize) -> DockSide {
-        DockSide::Left
-    }
-}
-
 impl<'a> View<NotationLayout<'a>> for GuitarView {
     fn pivot(&self) -> LayoutAnchor {
-        LayoutAnchor::CENTER
-    }
-    fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        let width = constraint.max.height / engine.theme.guitar.image_size.1
-            * engine.theme.guitar.image_size.0;
-        LayoutSize::new(width, constraint.max.height)
+        LayoutAnchor::TOP
     }
 }
 
@@ -146,6 +136,8 @@ impl GuitarView {
         mut finger_query: Query<(&Parent, Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
         for (entity, _view, layout) in query.iter() {
+            let guitar_height = layout.size.width * theme.guitar.image_size.1 / theme.guitar.image_size.0;
+            let guitar_size = LayoutSize::new(layout.size.width, guitar_height);
             for (parent, mut transform) in sprite_query.iter_mut() {
                 if parent.0 == entity {
                     let scale = layout.size.width / theme.guitar.image_size.0;
@@ -155,20 +147,21 @@ impl GuitarView {
             }
             for (parent, string_entity, mut string_data) in string_query.iter_mut() {
                 if parent.0 == entity {
-                    string_data.guitar_size = layout.size;
+                    string_data.guitar_size = guitar_size;
                     string_data.update(&mut commands, &theme, string_entity);
-                }
-            }
-            for (parent, capo_entity, mut capo_data) in capo_query.iter_mut() {
-                if parent.0 == entity {
-                    capo_data.guitar_size = layout.size;
-                    capo_data.update(&mut commands, &theme, capo_entity);
                 }
             }
             for (parent, finger_entity, mut finger_data) in finger_query.iter_mut() {
                 if parent.0 == entity {
-                    finger_data.value.extra.guitar_size = layout.size;
+                    finger_data.value.extra.guitar_size = guitar_size;
                     finger_data.update(&mut commands, &theme, finger_entity);
+                }
+            }
+            for (parent, capo_entity, mut capo_data) in capo_query.iter_mut() {
+                if parent.0 == entity {
+                    capo_data.view_size = layout.size;
+                    capo_data.guitar_size = guitar_size;
+                    capo_data.update(&mut commands, &theme, capo_entity);
                 }
             }
         }
@@ -289,14 +282,51 @@ impl GuitarView {
                 string_data.update_value(shape, fretboard, pick, meta.clone());
                 string_data.update(&mut commands, &theme, string_entity);
             }
-            if let Some(fretboard) = fretboard {
-                for (capo_entity, mut capo_data) in capo_query.iter_mut() {
+            for (capo_entity, mut capo_data) in capo_query.iter_mut() {
+                if let Some(fretboard) = fretboard {
                     if fretboard.capo != capo_data.capo {
                         capo_data.capo = fretboard.capo;
                         capo_data.update(&mut commands, &theme, capo_entity);
                     }
                 }
             }
+        }
+    }
+    pub fn update_y(
+        guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
+        y: f32,
+    ) {
+        if let Ok(mut transform) = guitar_view_query.single_mut() {
+            let trans = transform.translation;
+            println!("GuitarView::update_y {} -> {}", trans.y, y);
+            if float_ne!(trans.y, y, abs <= 0.01) {
+                *transform = Transform::from_xyz(trans.x, y, trans.z);
+            }
+        }
+    }
+    pub fn adjust_y_by_capo(
+        theme: Res<NotationTheme>,
+        settings: Res<NotationSettings>,
+        capo_query: Query<&GuitarCapoData, Changed<GuitarCapoData>>,
+        mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
+    ) {
+        if settings.override_guitar_y.is_some() {
+            return;
+        }
+        for capo_data in capo_query.iter() {
+            if capo_data.view_size.height <= 0.0 {
+                return;
+            }
+            let y = if capo_data.view_size.height > capo_data.guitar_size.height {
+                -capo_data.guitar_size.height / 2.0
+            } else {
+                let capo_y = theme
+                        .guitar
+                        .calc_fret_y(capo_data.capo, capo_data.guitar_size.height);
+                -(capo_y + capo_data.guitar_size.height * theme.guitar.capo_height_factor)
+            };
+            println!("adjust_y_by_capo {} {} {} -> {}", capo_data.guitar_size, capo_data.view_size, capo_data.capo, y);
+            Self::update_y(&mut guitar_view_query, y);
         }
     }
 }

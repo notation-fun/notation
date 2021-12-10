@@ -55,11 +55,15 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for MiniBarData {
         let color = theme
             .colors
             .of_option_syllable(self.value.syllable);
-        let outline_color = theme
+        let outline_color = if self.value.playing_state.is_current() {
+            theme
             .colors
             .mini_map
             .bar_outline
-            .of_state(&self.value.playing_state);
+            .of_state(&self.value.playing_state)
+        } else {
+            theme.colors.of_section(self.bar_props.section_ordinal)
+        };
         let mut z = theme.core.mini_bar_z;
         if self.value.playing_state.is_current() {
             z += 1.0;
@@ -106,7 +110,7 @@ impl MiniBar {
         commands
             .entity(shape_entity)
             .insert(BarPlaying::new(bar, PlayingState::Idle));
-        if bar.props.bar_index == 0 {
+        if bar.props.bar_index == 0 && bar.props.section_ordinal > 0 {
             let section_separator_data =
                 MiniSectionSeparatorData::new(bar, MiniSectionSeparatorValue::new(0.0));
             section_separator_data.create(commands, theme, bar_entity);

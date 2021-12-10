@@ -37,14 +37,13 @@ impl ShapeOp<NotationTheme, StrokeLine> for MiniSectionSeparatorData {
         StrokeLine {
             from: Vec2::new(
                 0.0,
-                theme.sizes.mini_map.bar_height / 2.0
-                    + theme.sizes.mini_map.bar_margin().height * 2.0,
+                theme.sizes.mini_map.bar_height / 1.0,
             ),
             to: Vec2::new(0.0, -theme.sizes.mini_map.bar_height / 2.0),
             line_width: theme.sizes.mini_map.section_separator,
             color: theme
                 .colors
-                .of_section(self.bar_props.section_index),
+                .of_section(self.bar_props.section_ordinal),
             offset,
         }
     }

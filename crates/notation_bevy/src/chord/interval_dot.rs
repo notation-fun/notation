@@ -41,11 +41,11 @@ impl IntervalDotData {
     }
     fn offset(&self, theme: &NotationTheme) -> Vec3 {
         if self.total == 0 || self.note_radius <= 0.0 {
-            return Vec3::ZERO;
+            return Vec3::new(0.0, 0.0, 1.0);
         }
         if self.index == 0 {
             if self.total == 1 || self.total == 5 || self.total == 7 {
-                return Vec3::ZERO;
+                return Vec3::new(0.0, 0.0, 1.0);
             }
         }
         if self.total != 6 {

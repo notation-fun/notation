@@ -290,21 +290,21 @@ pub struct SectionColors {
 impl Default for SectionColors {
     fn default() -> Self {
         let saturation = 1.0;
-        let lightness = 0.5;
-        let alpha = 0.8;
+        let lightness = 0.4;
+        let alpha = 1.0;
         Self {
             sections: [
                 Color::hsla(0.0 * 30.0, saturation, lightness, alpha),
-                Color::hsla(1.0 * 30.0, saturation, lightness, alpha),
-                Color::hsla(2.0 * 30.0, saturation, lightness, alpha),
-                Color::hsla(3.0 * 30.0, saturation, lightness, alpha),
-                Color::hsla(4.0 * 30.0, saturation, lightness, alpha),
-                Color::hsla(5.0 * 30.0, saturation, lightness, alpha),
                 Color::hsla(6.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(1.0 * 30.0, saturation, lightness, alpha),
                 Color::hsla(7.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(2.0 * 30.0, saturation, lightness, alpha),
                 Color::hsla(8.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(3.0 * 30.0, saturation, lightness, alpha),
                 Color::hsla(9.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(4.0 * 30.0, saturation, lightness, alpha),
                 Color::hsla(10.0 * 30.0, saturation, lightness, alpha),
+                Color::hsla(5.0 * 30.0, saturation, lightness, alpha),
                 Color::hsla(11.0 * 30.0, saturation, lightness, alpha),
             ],
         }

@@ -156,9 +156,9 @@ impl Default for StringsSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct TabControlSizes {
-    pub control_width: f32,
-    pub control_height: f32,
-    pub dock_top_width: f32,
+    pub control_width_factor: f32,
+    pub max_control_width: f32,
+    pub button_size_range: (f32, f32),
     pub rhythm_bar_radius_factor: f32,
     pub rhythm_bar_radius_extra: f32,
     pub rhythm_beat_radius_factor: f32,
@@ -171,9 +171,9 @@ pub struct TabControlSizes {
 impl Default for TabControlSizes {
     fn default() -> Self {
         Self {
-            control_width: 394.0,
-            control_height: 128.0,
-            dock_top_width: 800.0,
+            control_width_factor: 0.25,
+            max_control_width: 400.0,
+            button_size_range: (32.0, 64.0),
             rhythm_bar_radius_factor: 0.45,
             rhythm_bar_radius_extra: 2.0,
             rhythm_beat_radius_factor: 0.10,
@@ -201,8 +201,8 @@ impl Default for MiniMapSizes {
         Self {
             bar_height: 24.0,
             bar_width_range: (4.0, 1024.0),
-            bar_margin: (2.0, 2.0),
-            bar_outline: PlayingSize::new(0.5, 2.0, 1.0),
+            bar_margin: (0.0, 2.0),
+            bar_outline: PlayingSize::new(1.0, 2.0, 1.0),
             section_separator: 2.0,
         }
     }

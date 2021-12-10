@@ -28,7 +28,7 @@ impl Tab {
                 .map(|(index, track)| Track::new_arc(weak_self.clone(), index, track))
                 .collect();
             let mut sections = Vec::new();
-            for (index, section) in proto.sections.into_iter().enumerate() {
+            let mut add_section = |index: usize, section : notation_proto::prelude::Section| {
                 let section_id = section.id.clone();
                 match Section::try_new(weak_self.clone(), index, section, &tracks).map(Arc::new) {
                     Ok(section) => sections.push(section),
@@ -37,6 +37,10 @@ impl Tab {
                         index, section_id, err
                     ),
                 }
+            };
+            add_section(0, notation_proto::prelude::Section::new_rest());
+            for (index, section) in proto.sections.into_iter().enumerate() {
+                add_section(index, section);
             }
             let form = Form::from((proto.form, &sections));
             let bars = Self::new_tab_bars(weak_self, &meta, &form);
@@ -52,8 +56,8 @@ impl Tab {
     }
     fn new_tab_bars(weak_self: &Weak<Tab>, meta: &TabMeta, form: &Form) -> Vec<Arc<TabBar>> {
         let mut section_rounds: HashMap<String, usize> = HashMap::new();
-        let mut section_ordinal: usize = 1;
-        let mut bar_ordinal: usize = 1;
+        let mut section_ordinal: usize = 0;
+        let mut bar_ordinal: usize = 0;
         let mut bars: Vec<Arc<TabBar>> = vec![];
         for section in form.sections.iter() {
             let section_round = match section_rounds.get(&section.id) {
@@ -71,6 +75,7 @@ impl Tab {
             ));
             section_ordinal += 1;
             bar_ordinal += section.bars.len();
+            println!("new_tab_bars() section: {} <{}> -> {:?} bars", section.id, section.kind, section.bars.len());
         }
         println!("new_tab_bars() -> {:?} bars", bars.len());
         bars

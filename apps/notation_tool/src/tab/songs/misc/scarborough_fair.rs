@@ -9,7 +9,7 @@ pub fn new_tab() -> Tab {
             {chord Chord [
                 $duration = D_1_2
                 "2sus4_7" Chord ( 2: 4 5 7- )
-                "5_9_11" Chord ( 5: 3 9 11 )
+                "2sus4_7/4" Chord ( 2: 4 5 7- /4 )
                 "1/4" Chord ( 1: 3 5 /4 )
                 "1" Chord ( 1: 3 5 )
                 "2sus2" Chord ( 2: 2 5 )
@@ -30,7 +30,7 @@ pub fn new_tab() -> Tab {
                 Fretboard capo: 7
                 $duration = D_1_2
                 "Asus4" Shape ( 0 0 4 0 3 0 )
-                "Dadd11" Shape ( 0 5 4 0 3 0 )
+                "Asus4/D" Shape ( 0 5 4 0 3 0 )
                 "G/C" Shape ( _ 3 0 0 0 _ )
                 "Asus2" Shape ( _ 0 2 2 0 0 )
                 "G'" Shape ( 3 _ 0 0 0 _ )
@@ -155,8 +155,8 @@ pub fn new_tab() -> Tab {
                     chord [ "2sus4_7" 1 ]
                     guitar [ "Asus4" 1 ; "i" | ]
                 } {
-                    chord [ "5_9_11" 1 ]
-                    guitar [ "Dadd11" 1 ; "i" | ]
+                    chord [ "2sus4_7/4" 1 ]
+                    guitar [ "Asus4/D" 1 ; "i" | ]
                 } {
                     chord [ "1/4" 1 ]
                     guitar [ "G/C" 1 ; "i:3" | ]
@@ -315,8 +315,8 @@ pub fn new_tab() -> Tab {
                     chord [ "2sus4_7" 1 ]
                     guitar [ "Asus4" 1 ; "i" | ]
                 } {
-                    chord [ "2_9_11" 1 ]
-                    guitar [ "Dadd11" 1 ; "i" | ]
+                    chord [ "2sus4_7/4" 1 ]
+                    guitar [ "Asus4/D" 1 ; "i" | ]
                 } {
                     chord [ "1/4" 1 ]
                     guitar [ "G/C" 1 ; "i:3" | ]

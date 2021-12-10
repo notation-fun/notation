@@ -42,28 +42,6 @@ impl Section {
     }
 }
 
-#[derive(Debug)]
-pub struct Form {
-    pub sections: Vec<Arc<Section>>,
-}
-impl Display for Form {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<Form>(S:{})", self.sections.len())
-    }
-}
-impl From<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
-    fn from(v: (notation_proto::prelude::Form, &Vec<Arc<Section>>)) -> Self {
-        let mut sections = Vec::new();
-        for section_id in v.0.sections {
-            match v.1.iter().find(|x| x.id == section_id).cloned() {
-                Some(section) => sections.push(section),
-                None => println!("Form::from(), bad setion: {}", section_id),
-            }
-        }
-        Self { sections }
-    }
-}
-
 impl Section {
     #[throws(ParseError)]
     pub fn try_new(

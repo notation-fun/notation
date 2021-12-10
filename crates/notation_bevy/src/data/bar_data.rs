@@ -32,7 +32,7 @@ impl<T: Send + Sync + 'static> BarData<T> {
     }
     pub fn tab_position(&self) -> TabPosition {
         TabPosition::new(Units(
-            (self.bar_props.bar_ordinal - 1) as f32 * self.bar_props.bar_units.0,
+            self.bar_props.bar_ordinal as f32 * self.bar_props.bar_units.0,
         ))
     }
 }

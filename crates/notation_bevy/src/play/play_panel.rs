@@ -1,7 +1,7 @@
 use std::{fmt::Display, sync::Arc};
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
+use notation_bevy_utils::prelude::{BevyUtil, GridData, GridView, LayoutAnchor, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery, DockPanel, DockSide, LayoutConstraint, ColorBackground};
 use notation_midi::prelude::PlayControlEvent;
 use notation_model::prelude::{PlayState, Tab};
 
@@ -27,18 +27,38 @@ impl Default for PlayPanel {
 }
 
 impl<'a> View<NotationLayout<'a>> for PlayPanel {
-    fn log_set_layout(&self) -> bool {
-        true
+    fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
+        let width = constraint.max.width;
+        if width >= engine.theme.sizes.tab_control.button_size_range.0 * 6.0 {
+            let mut height = width / 6.0;
+            if height > engine.theme.sizes.tab_control.button_size_range.1 {
+                height = engine.theme.sizes.tab_control.button_size_range.1;
+            }
+            LayoutSize::new(width, height)
+        } else {
+            LayoutSize::new(width, width / 3.0 * 2.0)
+        }
+    }
+}
+
+impl<'a> DockPanel<NotationLayout<'a>> for PlayPanel {
+    fn dock_side(&self, _engine: &NotationLayout<'a>, _size: LayoutSize) -> DockSide {
+        DockSide::Bottom
     }
 }
 
 impl<'a> GridView<NotationLayout<'a>, PlayButton> for PlayPanel {
-    fn calc_grid_data(&self, _engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
-        let size = LayoutSize::new(grid_size.width / 3.0, grid_size.height / 2.0);
+    fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
+        let one_row = grid_size.width >= engine.theme.sizes.tab_control.button_size_range.0 * 6.0;
+        let button_size = if one_row {
+            grid_size.height
+        } else {
+            grid_size.width / 3.0
+        };
         GridData::new_fixed(
-            2,
-            3,
-            size,
+            if one_row { 1 } else { 2 },
+            if one_row { 6 } else { 3 },
+            LayoutSize::new(button_size, button_size),
             LayoutSize::ZERO,
             LayoutAnchor::TOP_LEFT,
             grid_size,
@@ -58,6 +78,12 @@ impl PlayPanel {
         let panel = PlayPanel::default();
         let panel_entity =
             BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(panel));
+        ColorBackground::spawn(
+            commands,
+            panel_entity,
+            theme.core.mini_map_z + 5.0,
+            theme.colors.ui.control_background,
+        );
         for i in 0..=5 {
             PlayButton::spawn(commands, assets, theme, settings, panel_entity, tab, (i as usize).into());
         }

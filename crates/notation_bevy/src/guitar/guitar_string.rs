@@ -137,7 +137,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for GuitarStringData {
         let end_y = if self.upper {
             self.guitar_size.height * theme.guitar.string_y_factor
         } else {
-            -self.guitar_size.height / 2.0 - 10.0
+            -self.guitar_size.height / 2.0
         };
         let width = self.width(theme);
         let height = (end_y - fret_y).abs();

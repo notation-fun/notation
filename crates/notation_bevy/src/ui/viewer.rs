@@ -11,6 +11,7 @@ use crate::prelude::{
     GuitarView, NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings,
     NotationTheme,
 };
+use crate::tab::tab_control::TabControl;
 use crate::tab::tab_view::TabView;
 use crate::ui::layout::NotationLayout;
 
@@ -28,7 +29,7 @@ impl TabViewer {
     }
 }
 impl<'a> View<NotationLayout<'a>> for TabViewer {}
-impl<'a> DockView<NotationLayout<'a>, GuitarView, TabView> for TabViewer {}
+impl<'a> DockView<NotationLayout<'a>, TabControl, TabView> for TabViewer {}
 
 pub type TabViewerDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabViewer>;
 
@@ -43,6 +44,7 @@ impl Plugin for TabViewerPlugin {
                 .with_system(GuitarView::on_layout_changed.system())
                 .with_system(GuitarView::update_string_state.system())
                 .with_system(GuitarView::update_hand_shape6.system())
+                .with_system(GuitarView::adjust_y_by_capo.system())
                 .with_system(TabViewer::do_layout.system()),
         );
     }
@@ -60,7 +62,7 @@ impl TabViewer {
     ) -> Entity {
         let viewer_bundle = ViewBundle::from(TabViewer::new(tab.clone()));
         let viewer_entity = BevyUtil::spawn_child_bundle(commands, entity, viewer_bundle);
-        GuitarView::spawn(commands, materials, assets, theme, viewer_entity, tab);
+        TabControl::spawn(commands, materials, assets, theme, settings, viewer_entity, &tab);
         TabView::spawn(commands, assets, theme, settings, viewer_entity, tab);
         viewer_entity
     }
@@ -70,7 +72,7 @@ impl TabViewer {
         state: Res<NotationAppState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
-        panel_query: ViewQuery<GuitarView>,
+        panel_query: ViewQuery<TabControl>,
         content_query: ViewQuery<TabView>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);

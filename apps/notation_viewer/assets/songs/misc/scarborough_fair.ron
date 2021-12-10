@@ -31,16 +31,16 @@
                     ),
                     Dotted(Half),
                 )),// [2]
-                Mark("5_9_11"),// [3]
+                Mark("2sus4_7/4"),// [3]
                 Core(Chord(
                     (
-                        root: So,
+                        root: Re,
                         intervals: Tetrad(
-                            Major3nd,
-                            Major2nd,
                             Perfect4th,
+                            Perfect5th,
+                            Minor7th,
                         ),
-                        base: None,
+                        base: Some(Perfect4th),
                     ),
                     Dotted(Half),
                 )),// [4]
@@ -255,7 +255,7 @@
                     ),
                     Dotted(Half),
                 )),// [3]
-                Mark("Dadd11"),// [4]
+                Mark("Asus4/D"),// [4]
                 Fretted6(Shape(
                     (
                         frets: (
@@ -2968,7 +2968,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("5_9_11"),
+                                    begin: Mark("2sus4_7/4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -2978,7 +2978,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Dadd11"),
+                                    begin: Mark("Asus4/D"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]
@@ -4625,7 +4625,7 @@
                             track: "chord",
                             slices: [
                                 (
-                                    begin: Mark("2_9_11"),
+                                    begin: Mark("2sus4_7/4"),
                                     end: Count(1),
                                     rounds: None,
                                 ),
@@ -4635,7 +4635,7 @@
                             track: "guitar",
                             slices: [
                                 (
-                                    begin: Mark("Dadd11"),
+                                    begin: Mark("Asus4/D"),
                                     end: Count(1),
                                     rounds: None,
                                 ),// [0]

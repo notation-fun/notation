@@ -18,7 +18,7 @@ use crate::ui::layout::NotationLayout;
 
 use crate::prelude::{
     NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabPathes,
-    WindowResizedEvent,
+    WindowResizedEvent, GuitarView,
 };
 
 use super::app::NotationViewer;
@@ -59,7 +59,7 @@ impl<'a> View<NotationLayout<'a>> for ControlView {
 
 impl ControlView {
     pub const HUD_MODE: bool = true;
-    pub const WIDTH: f32 = 200.0;
+    pub const WIDTH: f32 = 256.0;
     pub fn spawn(
         commands: &mut Commands,
         _materials: &mut ResMut<Assets<ColorMaterial>>,
@@ -230,13 +230,14 @@ impl ControlView {
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
+        mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
     ) {
         if state.hide_control {
             return;
         }
         egui::SidePanel::right("control")
             .min_width(Self::WIDTH)
-            .max_width(Self::WIDTH)
+            .max_width(state.window_width)
             .show(egui_ctx.ctx(), |ui| {
                 ui.vertical(|ui| {
                     if ui.button("Hide Control\n(Press Tab to Show)").clicked() {
@@ -312,6 +313,21 @@ impl ControlView {
                         settings.override_chord_size = None;
                         window_resized_evts.send(WindowResizedEvent());
                     }
+                    let mut override_guitar_y = settings.override_guitar_y.is_some();
+                    ui.checkbox(&mut override_guitar_y, "Override Guitar Y");
+                    if override_guitar_y {
+                        let mut guitar_y = settings.override_guitar_y.unwrap_or(0.0);
+                        let last_guitar_y = guitar_y;
+                        ui.add(Slider::new(&mut guitar_y, -3000.0..=3000.0).text("Guitar Y"));
+                        if settings.override_guitar_y.is_none() || float_ne!(guitar_y, last_guitar_y, abs <= 1.0) {
+                            settings.override_guitar_y = Some(guitar_y);
+                            GuitarView::update_y(&mut guitar_view_query, guitar_y);
+                        }
+                    } else if settings.override_guitar_y.is_some() {
+                        settings.override_guitar_y = None;
+                        window_resized_evts.send(WindowResizedEvent());
+                    }
+
                     let hide_bar_number = settings.hide_bar_number;
                     ui.checkbox(&mut settings.hide_bar_number, "Hide Bar Number");
                     if hide_bar_number != settings.hide_bar_number {

@@ -110,7 +110,7 @@ impl PlayButtonShape {
             PlayButtonAction::SetBegin |
             PlayButtonAction::SetEnd |
             PlayButtonAction::Clear =>
-                theme.colors.ui.of_button(self.begin_bar_ordinal != 1 || self.end_bar_ordinal != self.bars),
+                theme.colors.ui.of_button(self.begin_bar_ordinal != 0 || self.end_bar_ordinal != self.bars),
         }
     }
 }
@@ -123,7 +123,7 @@ impl ShapeOp<NotationTheme, FillPath> for PlayButtonShape {
             path: self.action.path(self.play_state.is_playing()),
             color: self.get_color(theme),
             //line_width: theme.shapes.shape_line_width,
-            offset: Vec3::new(0.0, 0.0, theme.core.mini_map_z),
+            offset: Vec3::new(0.0, 0.0, theme.core.mini_map_z + 6.0),
             scale: scale,
             angle: 0.0,
         }
@@ -163,7 +163,7 @@ impl PlayButton {
             play_state: PlayState::Stopped,
             should_loop: settings.should_loop,
             bars: tab.bars.len(),
-            begin_bar_ordinal: 1,
+            begin_bar_ordinal: 0,
             end_bar_ordinal: tab.bars.len(),
         };
         button_shape.create(commands, theme, button_entity);

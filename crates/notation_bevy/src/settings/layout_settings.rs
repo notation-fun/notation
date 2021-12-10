@@ -58,7 +58,7 @@ impl LayoutSettings {
         //bar_layouts: &Arc<Vec<BarLayoutData>>,
         _pos: Position,
     ) -> Option<BarLayoutData> {
-        //bar_layouts.get(pos.bar.bar_ordinal - 1).map(|x| x.clone())
+        //bar_layouts.get(pos.bar.bar_ordinal).map(|x| x.clone())
         None
     }
     pub fn pan_tab_bars(
@@ -146,7 +146,7 @@ impl LayoutSettings {
         grid_data: &GridData,
         pos_data: &PosIndicatorData,
     ) -> f32 {
-        let (row, col) = grid_data.calc_row_col(pos_data.bar_position.bar_ordinal - 1);
+        let (row, col) = grid_data.calc_row_col(pos_data.bar_position.bar_ordinal);
         let mut y = pos_data.bar_layout.offset.y;
         let grid_size = layout.size;
         let content_size = grid_data.content_size;
@@ -175,14 +175,14 @@ impl LayoutSettings {
         let grid_size = layout.size;
         let bar_ordinal = pos_data.bar_position.bar_ordinal;
         let mut x = layout.offset.x + grid_data.offset.x;
-        if bar_ordinal == 1 {
+        if bar_ordinal == 0 {
             if pos_data.bar_layout.size.width > grid_size.width / 3.0 {
                 if pos_data.offset_x() > pos_data.bar_layout.size.width / 2.0 {
                     x = pos_data.offset_x() - pos_data.bar_layout.size.width / 2.0;
                 }
             }
         } else {
-            let last_cell_width = grid_data.calc_cell_size(0, bar_ordinal - 2).width;
+            let last_cell_width = grid_data.calc_cell_size(0, bar_ordinal - 1).width;
             if last_cell_width + pos_data.bar_layout.size.width <= grid_size.width * 2.0 / 3.0 {
                 x = pos_data.offset_x() - last_cell_width;
             } else {
@@ -212,9 +212,6 @@ impl LayoutSettings {
         )>,
         pos_data: &PosIndicatorData,
     ) {
-        if pos_data.bar_position.bar_ordinal == 0 {
-            return;
-        }
         if self.mode == LayoutMode::Grid
             && self.focusing_bar_ordinal == pos_data.bar_props.bar_ordinal
         {

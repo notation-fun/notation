@@ -4,6 +4,7 @@ pub use notation_proto;
 
 pub mod bar;
 pub mod bar_lane;
+pub mod form;
 pub mod lane_entry;
 pub mod lane_kind;
 pub mod model_entry;
@@ -22,6 +23,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar_lane::{BarLane, BarLaneProps};
     #[doc(hidden)]
+    pub use crate::form::{Form};
+    #[doc(hidden)]
     pub use crate::lane_entry::{LaneEntry, LaneEntryProps};
     #[doc(hidden)]
     pub use crate::lane_kind::LaneKind;
@@ -36,7 +39,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_state::{PlayState, PlayingState};
     #[doc(hidden)]
-    pub use crate::section::{Form, Section};
+    pub use crate::section::{Section};
     #[doc(hidden)]
     pub use crate::tab::Tab;
     #[doc(hidden)]

@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use notation_bevy_utils::prelude::{BevyUtil, FillCircle, ShapeOp};
+use notation_bevy_utils::prelude::{BevyUtil, ShapeOp, OutlineCircle};
 use notation_model::prelude::{Chord, Signature, Tab};
 
 use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState};
@@ -26,16 +26,23 @@ impl Display for RhythmBarValue {
 
 pub type RhythmBarData = BarData<RhythmBarValue>;
 
-impl ShapeOp<NotationTheme, FillCircle> for RhythmBarData {
-    fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
-        FillCircle {
-            radius: self.value.radius,
-            color: theme.colors.of_option_chord(self.value.chord),
-            offset: Vec3::new(
-                self.value.offset.x,
-                self.value.offset.y,
-                theme.core.mini_bar_z,
-            ),
+impl ShapeOp<NotationTheme, OutlineCircle> for RhythmBarData {
+    fn get_shape(&self, theme: &NotationTheme) -> OutlineCircle {
+        let color = theme.colors.of_option_chord(self.value.chord);
+        let offset = Vec3::new(
+            self.value.offset.x,
+            self.value.offset.y,
+            theme.core.mini_bar_z,
+        );
+        let outline_width = theme.sizes.chord.diagram_outline.current;
+        let outline_color = theme.colors.of_section(self.bar_props.section_ordinal);
+        let radius = self.value.radius + outline_width;
+        OutlineCircle {
+            radius,
+            color,
+            outline_width,
+            outline_color,
+            offset,
         }
     }
 }

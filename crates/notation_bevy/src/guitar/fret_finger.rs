@@ -72,6 +72,7 @@ impl FretFingerData {
             self.value.interval = Interval::from((chord.root, syllable_note.syllable));
             self.value.extra.in_chord = false;
         }
+        //println!("set_chord_note {}, {} -> {} {}", chord, note, self.value.interval, self.value.extra.in_chord);
     }
     fn set_note(&mut self, meta: &TabMeta, note: &Note) {
         self.value.extra.visible = true;

@@ -75,7 +75,7 @@ fn on_mouse_clicked(
     tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
     button_query: Query<(&Arc<PlayButton>, &LayoutData, &GlobalTransform)>,
-    control_query: Query<(&Arc<TabControl>, &LayoutData, &GlobalTransform)>,
+    rhythm_query: Query<(&Arc<RhythmView>, &LayoutData, &GlobalTransform)>,
     chord_query: Query<(&Arc<ChordView>, &LayoutData, &GlobalTransform)>,
     bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
     mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
@@ -120,7 +120,7 @@ fn on_mouse_clicked(
                     return;
                 }
             }
-            for (_control, layout, global_transform) in control_query.iter() {
+            for (_rhythm_view, layout, global_transform) in rhythm_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
                     if app_state.hide_control {
                         app_state.hide_control = false;

@@ -83,8 +83,8 @@ impl PlayControl {
         Self {
             position: Position::new(tab_meta.bar_units()),
             bars,
-            begin_bar_ordinal: 1,
-            end_bar_ordinal: bars,
+            begin_bar_ordinal: 0,
+            end_bar_ordinal: if bars > 0 { bars - 1 } else { bars },
             should_loop: false,
             play_state: PlayState::default(),
             play_speed: PlaySpeed::new(tab_meta),
@@ -106,8 +106,8 @@ impl PlayControl {
             false
         } else {
             self.play_state = PlayState::Paused;
-            self.position
-                .set_in_bar(self.position.bar.bar_ordinal, Units(0.0));
+            //self.position
+            //    .set_in_bar(self.position.bar.bar_ordinal, Units(0.0));
             true
         }
     }

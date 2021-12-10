@@ -7,6 +7,7 @@ use crate::prelude::{NotationTheme};
 #[derive(Clone, Debug)]
 pub struct GuitarCapoData {
     pub capo: u8,
+    pub view_size: LayoutSize,
     pub guitar_size: LayoutSize,
 }
 
@@ -14,6 +15,7 @@ impl GuitarCapoData {
     pub fn new(capo: u8) -> Self {
         Self {
             capo,
+            view_size: LayoutSize::ZERO,
             guitar_size: LayoutSize::ZERO,
         }
     }

@@ -99,7 +99,7 @@ impl TabBar {
     }
     pub fn tab_position(&self) -> TabPosition {
         TabPosition::new(Units(
-            (self.props.bar_ordinal - 1) as f32 * self.bar_units().0,
+            self.props.bar_ordinal as f32 * self.bar_units().0,
         ))
     }
     pub fn tab_meta(&self) -> Arc<TabMeta> {
