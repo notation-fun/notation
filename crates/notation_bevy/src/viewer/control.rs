@@ -179,8 +179,8 @@ impl ControlView {
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
-        midi_state.play_control.begin_bar_ordinal = 1;
-        midi_state.play_control.end_bar_ordinal = midi_state.play_control.bars;
+        midi_state.play_control.begin_bar_ordinal = 0;
+        midi_state.play_control.end_bar_ordinal = midi_state.play_control.get_last_car_ordinal();
         Self::send_begin_end_evt(midi_state, play_control_evts);
     }
     pub fn set_begin_bar_ordinal(

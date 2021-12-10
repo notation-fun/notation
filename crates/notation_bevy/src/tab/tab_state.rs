@@ -60,7 +60,7 @@ impl TabState {
         self.play_control.is_bar_in_range(bar_ordinal)
     }
     pub fn is_bar_selected(&self, bar_ordinal: usize) -> bool {
-        if self.play_control.begin_bar_ordinal != 0 || self.play_control.end_bar_ordinal != self.tab.bars.len() {
+        if self.play_control.begin_bar_ordinal != 0 || self.play_control.end_bar_ordinal + 1 != self.tab.bars.len() {
             self.play_control.is_bar_in_range(bar_ordinal)
         } else {
             false

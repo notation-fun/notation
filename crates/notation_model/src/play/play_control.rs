@@ -90,6 +90,9 @@ impl PlayControl {
             play_speed: PlaySpeed::new(tab_meta),
         }
     }
+    pub fn get_last_car_ordinal(&self) -> usize {
+        if self.bars > 0 { self.bars - 1 } else { 0 }
+    }
     pub fn new(tab: &Tab) -> Self {
         Self::_new(&tab.meta, tab.bars.len())
     }

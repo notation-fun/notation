@@ -110,7 +110,7 @@ impl PlayButtonShape {
             PlayButtonAction::SetBegin |
             PlayButtonAction::SetEnd |
             PlayButtonAction::Clear =>
-                theme.colors.ui.of_button(self.begin_bar_ordinal != 0 || self.end_bar_ordinal != self.bars),
+                theme.colors.ui.of_button(self.begin_bar_ordinal != 0 || self.end_bar_ordinal + 1 != self.bars),
         }
     }
 }
@@ -164,7 +164,7 @@ impl PlayButton {
             should_loop: settings.should_loop,
             bars: tab.bars.len(),
             begin_bar_ordinal: 0,
-            end_bar_ordinal: tab.bars.len(),
+            end_bar_ordinal: if tab.bars.len() > 0 { tab.bars.len() - 1 } else { 0 },
         };
         button_shape.create(commands, theme, button_entity);
         button_entity
