@@ -50,15 +50,16 @@ impl GuitarStringData {
     }
     fn width(&self, theme: &NotationTheme) -> f32 {
         let width = theme.guitar.get_string_width(self.string);
-        if !self.upper && self.state.is_current() {
+        let width_with_extra = if !self.upper && self.state.is_current() {
             width + theme.guitar.current_extra_width
         } else {
             width
-        }
+        };
+        width_with_extra * self.guitar_size.width / theme.guitar.guitar_width
     }
     fn outline(&self, theme: &NotationTheme) -> f32 {
         if !self.upper && self.hit {
-            theme.guitar.hit_outline
+            theme.guitar.hit_outline * self.guitar_size.width / theme.guitar.guitar_width
         } else {
             0.0
         }

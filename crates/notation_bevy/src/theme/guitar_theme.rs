@@ -18,6 +18,7 @@ pub struct GuitarTheme {
     pub fret_y_factors: [f32; 23],
     pub capo_width_factor: f32,
     pub capo_height_factor: f32,
+    pub guitar_width: f32,
 }
 
 impl Default for GuitarTheme {
@@ -39,6 +40,7 @@ impl Default for GuitarTheme {
             ],
             capo_width_factor: 0.78,
             capo_height_factor: 0.02,
+            guitar_width: 128.0,
         }
     }
 }
