@@ -122,7 +122,12 @@ impl Track {
                 }
             })
             .collect::<Vec<TabChord>>();
-        chords.sort_by(|a, b| a.chord.cmp(&b.chord));
+        let scale = self.tab().map(|t| t.meta.scale);
+        chords.sort_by(|a, b| {
+            let chord_a = scale.map(|s| s.calc_chord_for_sort(&a.chord)).unwrap_or(a.chord);
+            let chord_b = scale.map(|s| s.calc_chord_for_sort(&b.chord)).unwrap_or(b.chord);
+            chord_a.cmp(&chord_b)
+        });
         chords
     }
 }

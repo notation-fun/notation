@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use crate::prelude::{Key, Note, Pitch, Semitones, Syllable, SyllableNote};
+use crate::prelude::{Key, Note, Pitch, Semitones, Syllable, SyllableNote, Chord};
 
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -50,18 +50,35 @@ impl Scale {
 }
 
 impl Scale {
+    pub fn calc_do_offset(&self) -> i8 {
+        match self {
+            Scale::Ionian => 0,
+            Scale::Dorian => -2,
+            Scale::Phrygian => -4,
+            Scale::Lydian => -5,
+            Scale::Mixolydian => 5,
+            Scale::Aeolian => 3,
+            Scale::Locrian => 1,
+        }
+    }
     pub fn calc_do_semitones(&self, key: &Key) -> Semitones {
-        let semitones = Semitones::from(*key).0
-            + match self {
-                Scale::Ionian => 0,
-                Scale::Dorian => -2,
-                Scale::Phrygian => -4,
-                Scale::Lydian => -5,
-                Scale::Mixolydian => 5,
-                Scale::Aeolian => 3,
-                Scale::Locrian => 1,
-            };
+        let semitones = Semitones::from(*key).0 + self.calc_do_offset();
         Semitones(semitones)
+    }
+    pub fn calc_syllable_for_sort(&self, syllable: &Syllable) -> Syllable {
+        let semitones = Semitones::from(*syllable).0 + self.calc_do_offset();
+        Semitones(semitones).into()
+    }
+    pub fn calc_chord_for_sort(&self, chord: &Chord) -> Chord {
+        if *self == Scale::Ionian {
+            return chord.clone();
+        }
+        let root = self.calc_syllable_for_sort(&chord.root);
+        Chord {
+            root,
+            intervals: chord.intervals.clone(),
+            base: chord.base.clone(),
+        }
     }
     pub fn calc_syllable(&self, key: &Key, pitch: &Pitch) -> Syllable {
         (Semitones::from(*pitch) - self.calc_do_semitones(key)).into()
