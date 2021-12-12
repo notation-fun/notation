@@ -91,6 +91,9 @@ impl ControlView {
         state: &mut NotationAppState,
         viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
     ) {
+        if state.tab.is_none() {
+            return;
+        }
         for (entity, viewer) in viewer_query.iter() {
             if viewer.uuid == state.viewer_uuid {
                 commands.entity(entity).despawn_recursive();

@@ -134,10 +134,20 @@ fn setup_camera(mut commands: Commands) {
 
 fn load_tab(
     mut state: ResMut<NotationAppState>,
+    entities: Query<Entity, With<GlobalTransform>>,
     assets: ResMut<Assets<TabAsset>>,
     mut evts: EventWriter<AddTabEvent>,
 ) {
     if state.window_width > 0.0 && state.window_height > 0.0 && state.tab.is_none() && state.parse_error.is_none() {
+        let mut count = 0;
+        for _ in entities.iter() {
+            count += 1;
+        }
+        //A bit hacky to make sure despawning finished, otherwise might got panic with "Entity not exist"
+        if count > 1 {
+            println!("Waiting for entities to be despawned: {}", count);
+            return;
+        }
         if let Some(asset) = assets.get(&state.tab_asset) {
             match Tab::try_parse_arc(asset.tab.clone()) {
                 Ok(tab) => {

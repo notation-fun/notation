@@ -148,11 +148,15 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for GuitarStringData {
             shapes::RectangleOrigin::TopLeft
         };
         let color = if self.upper {
-            theme
-                .colors
-                .strings
-                .string
-                .of_state(&PlayingState::Idle)
+            if self.is_muted() {
+                theme.colors.strings.muted
+            } else {
+                theme
+                    .colors
+                    .strings
+                    .string
+                    .of_state(&PlayingState::Idle)
+            }
         } else if self.is_muted() {
             theme.colors.strings.muted
         } else if self.state.is_current() && self.note.is_some() {
