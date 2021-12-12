@@ -1,5 +1,5 @@
 use notation_bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::{LaneKind, PlayingState};
+use notation_model::prelude::{LaneKind, PlayingState, Octave, SyllableNote, Semitones};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -113,13 +113,29 @@ impl Default for ChordSizes {
 pub struct MelodySizes {
     pub note_height: f32,
     pub note_outline: PlayingSize,
+    pub semitone_height: f32,
+    pub semitones: usize,
 }
 impl Default for MelodySizes {
     fn default() -> Self {
         Self {
-            note_height: 3.0,
+            note_height: 4.0,
             note_outline: PlayingSize::new(1.0, 1.5, 1.0),
+            semitone_height: 2.0,
+            semitones: 24,
         }
+    }
+}
+impl MelodySizes {
+    pub fn calc_note_y(&self, syllable_note: SyllableNote) -> f32 {
+        let center_octave = Octave::default(); //TODO
+        let center_semitons = Semitones::from(center_octave);
+        let offset_semitones = Semitones::from(syllable_note) - center_semitons;
+        let center_y = self.semitones as f32 * self.semitone_height / 2.0;
+        -center_y + self.semitone_height * offset_semitones.0 as f32
+    }
+    pub fn layout_height(&self) -> f32 {
+        self.semitones as f32 * self.semitone_height + self.note_height
     }
 }
 
@@ -127,12 +143,19 @@ impl Default for MelodySizes {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LyricsSizes {
     pub line_height: PlayingSize,
+    pub word_gap: f32,
 }
 impl Default for LyricsSizes {
     fn default() -> Self {
         Self {
-            line_height: PlayingSize::new(2.0, 3.0, 2.0),
+            line_height: PlayingSize::new(20.0, 24.0, 20.0),
+            word_gap: 2.0,
         }
+    }
+}
+impl LyricsSizes {
+    pub fn layout_height(&self) -> f32 {
+        self.line_height.of_state(&PlayingState::Current)
     }
 }
 
@@ -146,10 +169,15 @@ pub struct StringsSizes {
 impl Default for StringsSizes {
     fn default() -> Self {
         Self {
-            string_space: 10.0,
-            note_height: 4.0,
+            string_space: 12.0,
+            note_height: 6.0,
             note_outline: PlayingSize::new(1.0, 1.5, 1.0),
         }
+    }
+}
+impl StringsSizes {
+    pub fn layout_height(&self) -> f32 {
+        self.string_space * 6.0 + self.note_height
     }
 }
 
@@ -220,9 +248,6 @@ pub struct LayoutSizes {
     pub bar_margin: f32,
     pub lane_margin: f32,
     pub shapes_height: f32,
-    pub strings_height: f32,
-    pub lyrics_height: f32,
-    pub melody_height: f32,
 }
 
 impl Default for LayoutSizes {
@@ -232,23 +257,22 @@ impl Default for LayoutSizes {
             bar_margin: 12.0,
             lane_margin: 2.0,
             shapes_height: 46.0,
-            strings_height: 60.0,
-            lyrics_height: 20.0,
-            melody_height: 36.0,
         }
     }
 }
 impl LayoutSizes {
-    pub fn calc_lane_height(&self, lane_kind: LaneKind) -> f32 {
-        match lane_kind {
-            LaneKind::Lyrics => self.lyrics_height,
-            LaneKind::Melody => self.melody_height,
-            LaneKind::Strings => self.strings_height,
-            LaneKind::Shapes => self.shapes_height,
-            _ => 0.0,
-        }
-    }
     pub fn bar_margin(&self) -> LayoutSize {
         LayoutSize::new(0.0, self.bar_margin)
+    }
+}
+impl ThemeSizes {
+    pub fn calc_lane_height(&self, lane_kind: LaneKind) -> f32 {
+        match lane_kind {
+            LaneKind::Lyrics => self.lyrics.layout_height(),
+            LaneKind::Melody => self.melody.layout_height(),
+            LaneKind::Strings => self.strings.layout_height(),
+            LaneKind::Shapes => self.layout.shapes_height,
+            _ => 0.0,
+        }
     }
 }

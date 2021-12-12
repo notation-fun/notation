@@ -232,20 +232,14 @@ impl Default for ChordColors {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LyricsColors {
     pub line: PlayingColors,
-    pub text: PlayingColors,
 }
 impl Default for LyricsColors {
     fn default() -> Self {
         Self {
             line: PlayingColors::new(
-                hex_linear("A68A73"),
-                hex_linear("804718"),
-                hex_linear("795641"),
-            ),
-            text: PlayingColors::new(
-                hex_linear("A68A73"),
-                hex_linear("804718"),
-                hex_linear("795641"),
+                hex_linear("00000033"),
+                hex_linear("FFFFFF88"),
+                hex_linear("FFFFFF33"),
             ),
         }
     }

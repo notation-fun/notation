@@ -3,7 +3,7 @@ use std::sync::Arc;
 use float_eq::float_ne;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, ColorBackground, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle};
+use notation_bevy_utils::prelude::{BevyUtil, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle};
 use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
@@ -53,12 +53,6 @@ impl GuitarView {
             commands,
             entity,
             ViewBundle::from(GuitarView::new(tab.clone(), Syllable::default())),
-        );
-        ColorBackground::spawn(
-            commands,
-            guitar_entity,
-            theme.core.mini_map_z,
-            theme.core.background_color,
         );
         let sprite_bundle = SpriteBundle {
             sprite: Sprite::new(Vec2::new(

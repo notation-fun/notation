@@ -466,6 +466,7 @@ impl ControlView {
                     ui.separator();
                     Self::layout_ui(ui, &mut commands, &mut state, &mut settings, &viewer_query);
                     Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
+                    ui.separator();
                 });
             });
     }

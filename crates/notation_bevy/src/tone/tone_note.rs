@@ -52,8 +52,8 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
                 * self.entry_props.in_bar_pos.0;
             let y = if self.value.mode.is_melody() {
                 theme
-                    .melody
-                    .calc_note_y(self.value.note, self.value.syllable_note)
+                    .sizes.melody
+                    .calc_note_y(self.value.syllable_note)
             } else {
                 0.0
             };
@@ -89,7 +89,7 @@ impl ToneNoteData {
         let outline = self.calc_outline(theme);
         let width = self.value.bar_size / self.bar_props.bar_units.0
             * self.entry_props.tied_units.0;
-        let mut height = theme.melody.note_height;
+        let mut height = theme.sizes.melody.note_height;
         if self.value.playing_state.is_current() {
             height += outline;
         }

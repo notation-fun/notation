@@ -3,8 +3,9 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
-use notation_model::prelude::Tab;
+use notation_model::prelude::{Tab};
 
+use crate::chord::chord_color_background::ChordColorBackground;
 use crate::play::play_panel::PlayPanel;
 use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme, GuitarView};
 use crate::ui::layout::NotationLayout;
@@ -53,6 +54,12 @@ impl TabControl {
         let control = TabControl::new(tab.clone());
         let control_entity =
             BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(control));
+        ChordColorBackground::spawn(
+            commands,
+            control_entity,
+            theme.core.mini_map_z,
+            theme.colors.of_syllable(tab.meta.scale.calc_root_syllable()),
+        );
         GuitarView::spawn(commands, materials, assets, theme, control_entity, tab);
         PlayPanel::spawn(
             commands,

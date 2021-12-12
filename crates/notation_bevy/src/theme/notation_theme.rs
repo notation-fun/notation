@@ -2,8 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use super::core_theme::CoreTheme;
 use super::guitar_theme::GuitarTheme;
-use super::lyrics_theme::LyricsTheme;
-use super::melody_theme::MelodyTheme;
 use super::shapes_theme::ShapesTheme;
 use super::strings_theme::StringsTheme;
 use super::theme_colors::ThemeColors;
@@ -20,8 +18,6 @@ pub struct NotationTheme {
     pub sizes: ThemeSizes,
     pub colors: ThemeColors,
     pub texts: ThemeTexts,
-    pub melody: MelodyTheme,
-    pub lyrics: LyricsTheme,
     pub shapes: ShapesTheme,
     pub strings: StringsTheme,
     pub guitar: GuitarTheme,

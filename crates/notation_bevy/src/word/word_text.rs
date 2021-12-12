@@ -34,7 +34,7 @@ impl ShapeOp<NotationTheme, StrokeLine> for WordTextData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
         let width = self.value.bar_size / self.bar_props.bar_units.0
             * self.entry_props.tied_units.0
-            - theme.lyrics.word_gap;
+            - theme.sizes.lyrics.word_gap;
         let line_width = theme
             .sizes
             .lyrics
@@ -52,17 +52,8 @@ impl ShapeOp<NotationTheme, StrokeLine> for WordTextData {
             from: Vec2::ZERO,
             to: Vec2::new(width, 0.0),
             line_width,
-            color: self.calc_text_color(theme),
+            color: theme.colors.lyrics.line.of_state(&self.value.playing_state),
             offset,
         }
-    }
-}
-
-impl WordTextData {
-    pub fn calc_text_color(&self, theme: &NotationTheme) -> Color {
-        theme.colors.lyrics.line.of_state(&self.value.playing_state)
-    }
-    pub fn calc_text_font_size(&self, theme: &NotationTheme) -> f32 {
-        theme.lyrics.word_font_size.of_state(&self.value.playing_state)
     }
 }

@@ -14,6 +14,7 @@ pub struct ThemeTexts {
     pub tab: TabTexts,
     pub chord: ChordTexts,
     pub rhythm: RhythmTexts,
+    pub lyrics: LyricsTexts,
     pub mini_map: MiniMapTexts,
 }
 
@@ -147,6 +148,51 @@ impl RhythmTexts {
             0.0,
             self.bar_y,
             3.0,
+        );
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct LyricsTexts {
+    pub text_x: f32,
+    pub text_y: f32,
+    pub text_z: f32,
+    pub word_font_size: f32,
+    pub word_font_color: Color,
+}
+impl Default for LyricsTexts {
+    fn default() -> Self {
+        Self {
+            text_x: 4.0,
+            text_y: 2.0,
+            text_z: 1.0,
+            word_font_size: 20.0,
+            word_font_color: Color::hex("000000").unwrap(),
+        }
+    }
+}
+impl LyricsTexts {
+    pub fn spawn_word_text(
+        &self,
+        commands: &mut Commands,
+        entity: Entity,
+        assets: &NotationAssets,
+        text: &str,
+    ) {
+        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
+        BevyUtil::spawn_text(
+            commands,
+            entity,
+            text,
+            assets.cn_font.clone(),
+            self.word_font_size,
+            self.word_font_color,
+            HorizontalAlign::Right,
+            VerticalAlign::Center,
+            self.text_x,
+            self.text_y,
+            self.text_z,
         );
     }
 }

@@ -1,7 +1,5 @@
 pub mod core_theme;
 pub mod guitar_theme;
-pub mod lyrics_theme;
-pub mod melody_theme;
 pub mod notation_theme;
 pub mod shapes_theme;
 pub mod strings_theme;

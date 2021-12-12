@@ -65,6 +65,9 @@ impl Scale {
         let semitones = Semitones::from(*key).0 + self.calc_do_offset();
         Semitones(semitones)
     }
+    pub fn calc_root_syllable(&self) -> Syllable {
+        Semitones(0 - self.calc_do_offset()).into()
+    }
     pub fn calc_syllable_for_sort(&self, syllable: &Syllable) -> Syllable {
         let semitones = Semitones::from(*syllable).0 + self.calc_do_offset();
         Semitones(semitones).into()
