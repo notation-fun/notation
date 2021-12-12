@@ -5,13 +5,13 @@ use std::sync::Arc;
 use notation_bevy_utils::prelude::{BevyUtil, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
 use notation_model::prelude::Tab;
 
-use crate::mini::mini_map::MiniMap;
 use crate::prelude::{
     NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabBars, TabBundle,
 };
 use crate::ui::layout::NotationLayout;
 
 use super::tab_content::TabContent;
+use super::tab_control::TabControl;
 use super::tab_events::TabViewDoLayoutEvent;
 use super::tab_header::TabHeader;
 
@@ -29,11 +29,12 @@ impl TabView {
     }
 }
 impl<'a> View<NotationLayout<'a>> for TabView {}
-impl<'a> DockView<NotationLayout<'a>, MiniMap, TabContent> for TabView {}
+impl<'a> DockView<NotationLayout<'a>, TabControl, TabContent> for TabView {}
 
 impl TabView {
     pub fn spawn(
         commands: &mut Commands,
+        materials: &mut ResMut<Assets<ColorMaterial>>,
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
@@ -43,7 +44,7 @@ impl TabView {
         let tab_bundle = TabBundle::new(tab.clone());
         //let tab_view = tab_bundle.view.clone();
         let tab_entity = BevyUtil::spawn_child_bundle(commands, entity, tab_bundle);
-        MiniMap::spawn(commands, assets, theme, tab_entity, &tab);
+        TabControl::spawn(commands, materials, assets, theme, settings, tab_entity, &tab);
         let content_entity = BevyUtil::spawn_child_bundle(
             commands,
             tab_entity,
@@ -59,7 +60,7 @@ impl TabView {
         state: Res<NotationAppState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
-        panel_query: ViewQuery<MiniMap>,
+        panel_query: ViewQuery<TabControl>,
         content_query: ViewQuery<TabContent>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);

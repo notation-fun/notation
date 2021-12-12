@@ -65,7 +65,7 @@ macro_rules! impl_pick_system {
                             let note_entity = data.create(commands, theme, entity);
                             if settings.always_show_fret || pick_note.fret.is_some() {
                                 theme
-                                    .strings
+                                    .texts.strings
                                     .spawn_fret_text(commands, note_entity, &assets, fret);
                             }
                         }

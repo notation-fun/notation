@@ -7,11 +7,11 @@ use notation_bevy_utils::prelude::{
     BevyUtil, ColorBackground, DoLayoutEvent, DockView, LayoutQuery, View, ViewBundle, ViewQuery,
 };
 
+use crate::mini::mini_map::MiniMap;
 use crate::prelude::{
     GuitarView, NotationAppState, NotationAssets, NotationAssetsStates, NotationSettings,
     NotationTheme,
 };
-use crate::tab::tab_control::TabControl;
 use crate::tab::tab_view::TabView;
 use crate::ui::layout::NotationLayout;
 
@@ -29,7 +29,7 @@ impl TabViewer {
     }
 }
 impl<'a> View<NotationLayout<'a>> for TabViewer {}
-impl<'a> DockView<NotationLayout<'a>, TabControl, TabView> for TabViewer {}
+impl<'a> DockView<NotationLayout<'a>, MiniMap, TabView> for TabViewer {}
 
 pub type TabViewerDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabViewer>;
 
@@ -62,8 +62,8 @@ impl TabViewer {
     ) -> Entity {
         let viewer_bundle = ViewBundle::from(TabViewer::new(tab.clone()));
         let viewer_entity = BevyUtil::spawn_child_bundle(commands, entity, viewer_bundle);
-        TabControl::spawn(commands, materials, assets, theme, settings, viewer_entity, &tab);
-        TabView::spawn(commands, assets, theme, settings, viewer_entity, tab);
+        MiniMap::spawn(commands, assets, theme, viewer_entity, &tab);
+        TabView::spawn(commands, materials, assets, theme, settings, viewer_entity, tab);
         viewer_entity
     }
     pub fn do_layout(
@@ -72,7 +72,7 @@ impl TabViewer {
         state: Res<NotationAppState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
-        panel_query: ViewQuery<TabControl>,
+        panel_query: ViewQuery<MiniMap>,
         content_query: ViewQuery<TabView>,
     ) {
         let engine = NotationLayout::new(&theme, &state, &settings);

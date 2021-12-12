@@ -49,7 +49,7 @@ impl ShapeOp<NotationTheme, FillRectangle> for BarBeatData {
             origin: shapes::RectangleOrigin::TopLeft,
             color,
             offset: Vec3::new(
-                x, theme.sizes.bar.bar_beat_extra, theme.core.beat_z,
+                x, theme.sizes.bar.bar_beat_extra, theme.z.beat,
             ),
         }
     }

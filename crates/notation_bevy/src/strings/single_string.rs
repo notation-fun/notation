@@ -18,8 +18,8 @@ impl ShapeOp<NotationTheme, StrokeLine> for SingleStringData {
             from: Vec2::ZERO,
             to: Vec2::new(self.value.bar_size, 0.0),
             line_width: theme.guitar.get_string_width(self.value.string),
-            color: theme.strings.string_color,
-            offset: Vec3::new(0.0, y, theme.strings.string_z),
+            color: theme.colors.strings.string.idle,
+            offset: Vec3::new(0.0, y, theme.z.string),
         }
     }
 }

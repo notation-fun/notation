@@ -7,6 +7,7 @@ use bevy::window::WindowResized;
 
 use bevy_asset_loader::AssetLoader;
 
+use crate::theme::theme_colors::UiColors;
 use crate::{prelude::*, settings::layout_settings::LayoutMode};
 use crate::ui::viewer::TabViewerPlugin;
 use crate::viewer::control::ControlView;
@@ -51,7 +52,7 @@ impl NotationApp {
 
         app.insert_resource(Msaa { samples: 1 });
         app.add_plugins(DefaultPlugins);
-        app.insert_resource(ClearColor(CoreTheme::default().background_color));
+        app.insert_resource(ClearColor(UiColors::default().app_background));
         app.add_plugin(bevy_easings::EasingsPlugin);
 
         app.init_resource::<NotationTheme>();

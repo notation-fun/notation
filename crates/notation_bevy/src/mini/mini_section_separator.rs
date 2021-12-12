@@ -32,7 +32,7 @@ impl ShapeOp<NotationTheme, StrokeLine> for MiniSectionSeparatorData {
         } else {
             let line_width = theme.sizes.mini_map.section_separator;
             let x_offset = -self.value.width / 2.0;
-            Vec3::new(line_width + x_offset, 0.0, theme.core.mini_bar_z + 2.0)
+            Vec3::new(line_width + x_offset, 0.0, theme.z.mini_bar + 2.0)
         };
         StrokeLine {
             from: Vec2::new(

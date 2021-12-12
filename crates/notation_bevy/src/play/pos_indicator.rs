@@ -48,7 +48,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for PosIndicatorData {
             Vec3::new(
                 self.offset_x(),
                 y + theme.sizes.bar.bar_separator_extra,
-                theme.core.pos_indicator_z,
+                theme.z.pos_indicator,
             )
         };
         OutlineRectangle {

@@ -1,9 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use super::core_theme::CoreTheme;
+use super::theme_z::ThemeZ;
 use super::guitar_theme::GuitarTheme;
 use super::shapes_theme::ShapesTheme;
-use super::strings_theme::StringsTheme;
 use super::theme_colors::ThemeColors;
 use super::theme_sizes::ThemeSizes;
 use super::theme_texts::ThemeTexts;
@@ -14,11 +13,10 @@ use bevy_inspector_egui::Inspectable;
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotationTheme {
-    pub core: CoreTheme,
+    pub z: ThemeZ,
     pub sizes: ThemeSizes,
     pub colors: ThemeColors,
     pub texts: ThemeTexts,
     pub shapes: ShapesTheme,
-    pub strings: StringsTheme,
     pub guitar: GuitarTheme,
 }

@@ -32,7 +32,7 @@ impl ShapeOp<NotationTheme, OutlineCircle> for RhythmBarData {
         let offset = Vec3::new(
             self.value.offset.x,
             self.value.offset.y,
-            theme.core.mini_bar_z,
+            theme.z.rhythm_bar,
         );
         let outline_width = theme.sizes.chord.diagram_outline.current;
         let outline_color = theme.colors.of_section(self.bar_props.section_ordinal);

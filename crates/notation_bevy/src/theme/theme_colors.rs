@@ -35,8 +35,8 @@ impl Default for PlayingColors {
     fn default() -> Self {
         Self::new(
             hex_linear("FFFFFF88"),
-            hex_linear("000000CC"),
             hex_linear("00000066"),
+            hex_linear("FFFFFF44"),
         )
     }
 }
@@ -212,7 +212,7 @@ impl Default for ChordColors {
             background: hex_linear("00000055"),
             diagram_outline: PlayingColors::new(
                 hex_linear("00000066"),
-                hex_linear("FFFFFFAA"),
+                hex_linear("FFFFFF"),
                 hex_linear("00000066"),
             ),
             dot: IntervalColors::default(),
@@ -417,6 +417,7 @@ impl ThemeColors {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct UiColors {
+    pub app_background: Color,
     pub control_background: Color,
     pub button_on: Color,
     pub button_off: Color,
@@ -424,7 +425,8 @@ pub struct UiColors {
 impl Default for UiColors {
     fn default() -> Self {
         Self {
-            control_background: hex_linear("FFF9F2"),
+            app_background: ThemeColors::hex_linear("FFF9F2"),
+            control_background: hex_linear("FFF1E2"),
             button_on: hex_linear("F27D7A"),
             button_off: hex_linear("888888"),
         }

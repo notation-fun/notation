@@ -78,7 +78,7 @@ impl MiniMap {
         let background_entity = ColorBackground::spawn(
             commands,
             map_entity,
-            theme.core.mini_map_z,
+            theme.z.mini_map,
             theme.colors.mini_map.back,
         );
         for bar in tab.bars.iter() {

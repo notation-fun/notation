@@ -1,4 +1,5 @@
 use notation_bevy_utils::prelude::{BevyUtil, LayoutData};
+use notation_model::prelude::Syllable;
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -6,7 +7,7 @@ use bevy::prelude::*;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::prelude::{NotationAssets, ThemeColors};
+use crate::prelude::{NotationAssets, ThemeColors, NotationSettings};
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -15,6 +16,8 @@ pub struct ThemeTexts {
     pub chord: ChordTexts,
     pub rhythm: RhythmTexts,
     pub lyrics: LyricsTexts,
+    pub melody: MelodyTexts,
+    pub strings: StringsTexts,
     pub mini_map: MiniMapTexts,
 }
 
@@ -188,6 +191,103 @@ impl LyricsTexts {
             assets.cn_font.clone(),
             self.word_font_size,
             self.word_font_color,
+            HorizontalAlign::Right,
+            VerticalAlign::Center,
+            self.text_x,
+            self.text_y,
+            self.text_z,
+        );
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct MelodyTexts {
+    pub text_x: f32,
+    pub text_y: f32,
+    pub text_z: f32,
+    pub syllable_font_size: f32,
+    pub syllable_font_color: Color,
+}
+impl Default for MelodyTexts {
+    fn default() -> Self {
+        Self {
+            text_x: 4.0,
+            text_y: -12.0,
+            text_z: 1.0,
+            syllable_font_size: 16.0,
+            syllable_font_color: Color::hex("000000").unwrap(),
+        }
+    }
+}
+impl MelodyTexts {
+    pub fn spawn_syllable_text(
+        &self,
+        commands: &mut Commands,
+        entity: Entity,
+        assets: &NotationAssets,
+        settings: &NotationSettings,
+        syllable: &Syllable,
+    ) {
+        let text = if settings.show_syllable_as_num {
+            syllable.to_text()
+        } else {
+            syllable.to_ident()
+        };
+        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
+        BevyUtil::spawn_text(
+            commands,
+            entity,
+            text.as_str(),
+            assets.en_font.clone(),
+            self.syllable_font_size,
+            self.syllable_font_color,
+            HorizontalAlign::Right,
+            VerticalAlign::Center,
+            self.text_x,
+            self.text_y,
+            self.text_z,
+        );
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
+#[cfg_attr(feature = "inspector", derive(Inspectable))]
+pub struct StringsTexts {
+    pub text_x: f32,
+    pub text_y: f32,
+    pub text_z: f32,
+    pub fret_font_size: f32,
+    pub fret_font_color: Color,
+}
+impl Default for StringsTexts {
+    fn default() -> Self {
+        Self {
+            text_x: 2.0,
+            text_y: -2.0,
+            text_z: 1.0,
+            fret_font_size: 18.0,
+            fret_font_color: Color::hex("000000").unwrap(),
+        }
+    }
+}
+impl StringsTexts {
+    pub fn spawn_fret_text(
+        &self,
+        commands: &mut Commands,
+        entity: Entity,
+        assets: &NotationAssets,
+        fret: u8,
+    ) {
+        let text = format!("{}", fret);
+        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
+        BevyUtil::spawn_text(
+            commands,
+            entity,
+            text.as_str(),
+            assets.en_font.clone(),
+            self.fret_font_size,
+            self.fret_font_color,
             HorizontalAlign::Right,
             VerticalAlign::Center,
             self.text_x,

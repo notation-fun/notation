@@ -26,13 +26,14 @@ pub struct GuitarStringData {
 }
 
 impl GuitarStringData {
-    pub fn new(string: u8, upper: bool) -> Self {
+    pub fn new(string: u8, upper: bool, fretboard: Option<Fretboard6>) -> Self {
+        let capo = fretboard.map(|x| x.capo).unwrap_or(0);
         Self {
             string,
             upper,
-            fret: None,
+            fret: Some(0),
             pick_fret: None,
-            capo: 0,
+            capo,
             note: None,
             state: PlayingState::Idle,
             hit: false,
@@ -41,6 +42,12 @@ impl GuitarStringData {
             hit_expired_seconds: 0.0,
             guitar_size: LayoutSize::ZERO,
         }
+    }
+    pub fn reset(&mut self) {
+        self.fret = Some(0);
+        self.note = None;
+        self.state = PlayingState::Idle;
+        self.hit = false;
     }
     fn is_muted(&self) -> bool {
         self.pick_fret.is_none() && self.fret.is_none()
@@ -179,7 +186,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for GuitarStringData {
             self.fret() + self.capo,
             self.guitar_size.height,
         );
-        let offset = Vec3::new(x - width / 2.0, fret_y, theme.core.mini_bar_z + 1.0);
+        let offset = Vec3::new(x - width / 2.0, fret_y, theme.z.guitar_string);
         OutlineRectangle {
             width,
             height,

@@ -62,7 +62,7 @@ impl TabHeader {
         ColorBackground::spawn(
             commands,
             header_entity,
-            theme.core.mini_map_z,
+            theme.z.tab_header,
             theme.colors.chord.background,
         );
         RhythmView::spawn(

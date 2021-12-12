@@ -271,12 +271,26 @@ impl ControlView {
                 settings.override_chord_size = None;
                 window_resized_evts.send(WindowResizedEvent());
             }
+            let mut override_guitar_width = settings.override_guitar_width.is_some();
+            ui.checkbox(&mut override_guitar_width, "Override Guitar Width");
+            if override_guitar_width {
+                let mut guitar_width = settings.override_guitar_width.unwrap_or(256.0);
+                let last_guitar_width = guitar_width;
+                ui.add(Slider::new(&mut guitar_width, 72.0..=1024.0).text("Guitar Width"));
+                if settings.override_guitar_width.is_none() || float_ne!(guitar_width, last_guitar_width, abs <= 1.0) {
+                    settings.override_guitar_width = Some(guitar_width);
+                    window_resized_evts.send(WindowResizedEvent());
+                }
+            } else if settings.override_guitar_width.is_some() {
+                settings.override_guitar_width = None;
+                window_resized_evts.send(WindowResizedEvent());
+            }
             let mut override_guitar_y = settings.override_guitar_y.is_some();
             ui.checkbox(&mut override_guitar_y, "Override Guitar Y");
             if override_guitar_y {
                 let mut guitar_y = settings.override_guitar_y.unwrap_or(0.0);
                 let last_guitar_y = guitar_y;
-                ui.add(Slider::new(&mut guitar_y, -3000.0..=3000.0).text("Guitar Y"));
+                ui.add(Slider::new(&mut guitar_y, -4096.0..=4096.0).text("Guitar Y"));
                 if settings.override_guitar_y.is_none() || float_ne!(guitar_y, last_guitar_y, abs <= 1.0) {
                     settings.override_guitar_y = Some(guitar_y);
                     GuitarView::update_y(guitar_view_query, guitar_y);
@@ -371,6 +385,16 @@ impl ControlView {
             if always_show_fret != settings.always_show_fret {
                 Self::reload_tab(commands, state, viewer_query);
             }
+            let show_melody_syllable = settings.show_melody_syllable;
+            ui.checkbox(&mut settings.show_melody_syllable, "Show Melody Syllable");
+            if show_melody_syllable != settings.show_melody_syllable {
+                Self::reload_tab(commands, state, viewer_query);
+            }
+            let show_syllable_as_num = settings.show_syllable_as_num;
+            ui.checkbox(&mut settings.show_syllable_as_num, "Show Syllable as Numbers");
+            if show_syllable_as_num != settings.show_syllable_as_num {
+                Self::reload_tab(commands, state, viewer_query);
+            }
         });
     }
     pub fn layout_ui(
@@ -429,12 +453,68 @@ impl ControlView {
             Self::reload_tab(commands, state, viewer_query);
         }
     }
+    pub fn guitar_tab_display_ui(
+        ui: &mut Ui,
+        theme: &mut NotationTheme,
+        window_resized_evts: &mut EventWriter<WindowResizedEvent>,
+    ) {
+        CollapsingHeader::new("Guitar Tab")
+        .default_open(true)
+        .show(ui, |ui| {
+            let last_string_space = theme.sizes.strings.string_space;
+            ui.add(Slider::new(&mut theme.sizes.strings.string_space, 6.0..=32.0).text("String Space"));
+            if float_ne!(theme.sizes.strings.string_space, last_string_space, abs <= 0.5) {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+            let last_note_height = theme.sizes.strings.note_height;
+            ui.add(Slider::new(&mut theme.sizes.strings.note_height, 6.0..=32.0).text("Note Height"));
+            if float_ne!(theme.sizes.strings.note_height, last_note_height, abs <= 0.5) {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+        });
+    }
+    pub fn lyrics_display_ui(
+        ui: &mut Ui,
+        theme: &mut NotationTheme,
+        window_resized_evts: &mut EventWriter<WindowResizedEvent>,
+    ) {
+        CollapsingHeader::new("Lyrics")
+        .default_open(true)
+        .show(ui, |ui| {
+            let last_line_height = theme.sizes.lyrics.line_height.idle;
+            ui.add(Slider::new(&mut theme.sizes.lyrics.line_height.idle, 2.0..=64.0).text("Line Height (Idle)"));
+            if float_ne!(theme.sizes.lyrics.line_height.idle, last_line_height, abs <= 0.5) {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+            let last_line_height = theme.sizes.lyrics.line_height.current;
+            ui.add(Slider::new(&mut theme.sizes.lyrics.line_height.current, 2.0..=64.0).text("Line Height (Current)"));
+            if float_ne!(theme.sizes.lyrics.line_height.current, last_line_height, abs <= 0.5) {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+            let last_line_height = theme.sizes.lyrics.line_height.played;
+            ui.add(Slider::new(&mut theme.sizes.lyrics.line_height.played, 2.0..=64.0).text("Line Height (Played)"));
+            if float_ne!(theme.sizes.lyrics.line_height.played, last_line_height, abs <= 0.5) {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+            let last_word_gap = theme.sizes.lyrics.word_gap;
+            ui.add(Slider::new(&mut theme.sizes.lyrics.word_gap, 0.0..=8.0).text("Word Gap"));
+            if float_ne!(theme.sizes.lyrics.word_gap, last_word_gap, abs <= 0.5) {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+            let last_word_font_size = theme.texts.lyrics.word_font_size;
+            ui.add(Slider::new(&mut theme.texts.lyrics.word_font_size, 6.0..=64.0).text("Word Font Size"));
+            if float_ne!(theme.texts.lyrics.word_font_size, last_word_font_size, abs <= 0.5) {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+        });
+    }
     pub fn control_ui(
         mut commands: Commands,
         egui_ctx: Res<EguiContext>,
         asset_server: Res<AssetServer>,
         mut state: ResMut<NotationAppState>,
         mut settings: ResMut<NotationSettings>,
+        mut theme: ResMut<NotationTheme>,
         viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
         tab_pathes: Res<TabPathes>,
         mut midi_settings: ResMut<MidiSettings>,
@@ -461,15 +541,21 @@ impl ControlView {
                      */
                     Self::tab_ui(ui, &mut commands, &asset_server, &mut state, &mut settings, &viewer_query, &tab_pathes);
                     ui.separator();
-                    Self::midi_settings_ui(ui, &mut midi_settings);
-                    ui.separator();
                     Self::play_control_ui(ui, &mut settings, &mut midi_state, &mut play_control_evts);
                     ui.separator();
-                    Self::display_ui(ui, &mut commands, &mut state, &mut settings, &viewer_query);
-                    ui.separator();
-                    Self::layout_ui(ui, &mut commands, &mut state, &mut settings, &viewer_query);
-                    Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
-                    ui.separator();
+                    egui::ScrollArea::auto_sized().show(ui, |ui| {
+                        ui.vertical(|ui| {
+                            Self::midi_settings_ui(ui, &mut midi_settings);
+                            Self::display_ui(ui, &mut commands, &mut state, &mut settings, &viewer_query);
+                            ui.separator();
+                            Self::layout_ui(ui, &mut commands, &mut state, &mut settings, &viewer_query);
+                            Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
+                            ui.separator();
+                            ui.label("Override Theme, May Need to Reset Tab");
+                            Self::guitar_tab_display_ui(ui, &mut theme, &mut window_resized_evts);
+                            Self::lyrics_display_ui(ui, &mut theme, &mut window_resized_evts);
+                        });
+                    });
                 });
             });
     }

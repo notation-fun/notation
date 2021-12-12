@@ -117,13 +117,13 @@ impl PlayButtonShape {
 
 impl ShapeOp<NotationTheme, FillPath> for PlayButtonShape {
     fn get_shape(&self, theme: &NotationTheme) -> FillPath {
-        let scale = self.height / 1792.0;
+        let scale = self.height / 1792.0 * theme.sizes.tab_control.button_scale_factor;
         FillPath {
             size: self.action.size(),
             path: self.action.path(self.play_state.is_playing()),
             color: self.get_color(theme),
             //line_width: theme.shapes.shape_line_width,
-            offset: Vec3::new(0.0, 0.0, theme.core.mini_map_z + 6.0),
+            offset: Vec3::new(0.0, 0.0, theme.z.play_button),
             scale: scale,
             angle: 0.0,
         }

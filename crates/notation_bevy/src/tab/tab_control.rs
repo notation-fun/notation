@@ -27,10 +27,18 @@ impl TabControl {
 }
 impl<'a> View<NotationLayout<'a>> for TabControl {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        let mut width = constraint.max.width * engine.theme.sizes.tab_control.control_width_factor;
-        if width > engine.theme.sizes.tab_control.max_control_width {
-            width = engine.theme.sizes.tab_control.max_control_width;
-        }
+        let width = match engine.settings.override_guitar_width {
+            Some(width) => width,
+            None => {
+                let mut width = constraint.max.width * engine.theme.sizes.tab_control.control_width_factor;
+                if width < engine.theme.sizes.tab_control.tab_control_range.0 {
+                    width = engine.theme.sizes.tab_control.tab_control_range.0;
+                } else if width > engine.theme.sizes.tab_control.tab_control_range.1 {
+                    width = engine.theme.sizes.tab_control.tab_control_range.1;
+                }
+                width
+            }
+        };
         LayoutSize::new(width, constraint.max.height)
     }
 }
@@ -57,7 +65,7 @@ impl TabControl {
         ChordColorBackground::spawn(
             commands,
             control_entity,
-            theme.core.mini_map_z,
+            theme.z.tab_control,
             theme.colors.of_syllable(tab.meta.scale.calc_root_syllable()),
         );
         GuitarView::spawn(commands, materials, assets, theme, control_entity, tab);

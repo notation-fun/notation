@@ -32,7 +32,7 @@ impl ShapeOp<NotationTheme, StrokeRectangle> for BarIndicatorData {
         } else {
             let x = self.bar_layout.offset.x - theme.sizes.bar.bar_separator_size;
             let y = self.bar_layout.offset.y + theme.sizes.bar.bar_separator_extra;
-            Vec3::new(x, y, theme.core.bar_indicator_z)
+            Vec3::new(x, y, theme.z.bar_indicator)
         };
         let color = theme
             .colors

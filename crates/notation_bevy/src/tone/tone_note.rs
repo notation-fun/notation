@@ -63,7 +63,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
             } else {
                 0.0
             };
-            Vec3::new(x, y + height / 2.0, theme.strings.pick_z + extra_z)
+            Vec3::new(x, y + height / 2.0, theme.z.tone + extra_z)
         };
         OutlineRectangle {
             width,

@@ -36,7 +36,7 @@ impl ShapeOp<NotationTheme, FillRectangle> for GuitarCapoData {
                 .calc_fret_y(self.capo, self.guitar_size.height)
                 + height * 0.5
                 - finger_radius;
-            Vec3::new(0.0, y, theme.core.mini_bar_z + 2.0)
+            Vec3::new(0.0, y, theme.z.guitar_capo)
         };
         FillRectangle {
             width,

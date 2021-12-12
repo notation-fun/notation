@@ -10,9 +10,9 @@ use super::tone_note::{ToneNoteData, ToneNoteValue};
 
 pub fn create_tone_notes(
     commands: &mut Commands,
-    _assets: &NotationAssets,
+    assets: &NotationAssets,
     theme: &NotationTheme,
-    _settings: &NotationSettings,
+    settings: &NotationSettings,
     entity: Entity,
     entry: &LaneEntry,
     tone: &Tone,
@@ -27,7 +27,10 @@ pub fn create_tone_notes(
         let bar = lane.bar().unwrap();
         for note in tone.get_notes() {
             let data = ToneNoteData::new(entry, ToneNoteValue::new(&bar, note, mode));
-            data.create(commands, theme, entity);
+            let note_entity = data.create(commands, theme, entity);
+            if settings.show_melody_syllable {
+                theme.texts.melody.spawn_syllable_text(commands, note_entity, assets, settings, &data.value.syllable())
+            }
         }
     }
 }

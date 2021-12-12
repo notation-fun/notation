@@ -46,7 +46,7 @@ impl ShapeOp<NotationTheme, StrokeLine> for WordTextData {
             let x = self.value.bar_size / self.bar_props.bar_units.0
                 * self.entry_props.in_bar_pos.0;
             let y = 0.0;
-            Vec3::new(x, y, theme.strings.pick_z)
+            Vec3::new(x, y, theme.z.word)
         };
         StrokeLine {
             from: Vec2::ZERO,

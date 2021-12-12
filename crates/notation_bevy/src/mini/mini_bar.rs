@@ -64,7 +64,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for MiniBarData {
         } else {
             theme.colors.of_section(self.bar_props.section_ordinal)
         };
-        let mut z = theme.core.mini_bar_z;
+        let mut z = theme.z.mini_bar;
         if self.value.playing_state.is_current() {
             z += 1.0;
         }

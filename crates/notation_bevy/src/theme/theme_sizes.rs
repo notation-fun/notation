@@ -185,8 +185,9 @@ impl StringsSizes {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct TabControlSizes {
     pub control_width_factor: f32,
-    pub max_control_width: f32,
+    pub tab_control_range: (f32, f32),
     pub button_size_range: (f32, f32),
+    pub button_scale_factor: f32,
     pub rhythm_bar_radius_factor: f32,
     pub rhythm_bar_radius_extra: f32,
     pub rhythm_beat_radius_factor: f32,
@@ -199,9 +200,10 @@ pub struct TabControlSizes {
 impl Default for TabControlSizes {
     fn default() -> Self {
         Self {
-            control_width_factor: 0.25,
-            max_control_width: 400.0,
+            control_width_factor: 0.20,
+            tab_control_range: (96.0, 512.0),
             button_size_range: (32.0, 64.0),
+            button_scale_factor: 0.75,
             rhythm_bar_radius_factor: 0.45,
             rhythm_bar_radius_extra: 2.0,
             rhythm_beat_radius_factor: 0.10,

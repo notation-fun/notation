@@ -54,7 +54,7 @@ impl FretFingerData {
             ChordNoteValue::<FretFingerExtra>::new(root, interval, extra),
         ))
     }
-    fn reset(&mut self) {
+    pub fn reset(&mut self) {
         self.value.extra.visible = false;
         self.value.extra.capo = 0;
         self.value.root = Syllable::Fi;
@@ -180,7 +180,7 @@ impl ChordNoteExtra for FretFingerExtra {
         }
     }
     fn get_z(&self, theme: &NotationTheme) -> f32 {
-        theme.core.mini_bar_z + 3.0
+        theme.z.chord_note
     }
     fn show_dots(&self) -> bool {
         self.in_chord

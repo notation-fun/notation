@@ -81,7 +81,7 @@ impl PlayPanel {
         ColorBackground::spawn(
             commands,
             panel_entity,
-            theme.core.mini_map_z + 5.0,
+            theme.z.play_panel,
             theme.colors.ui.control_background,
         );
         for i in 0..=5 {

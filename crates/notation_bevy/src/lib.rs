@@ -115,13 +115,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab::tab_state::TabState;
     #[doc(hidden)]
-    pub use crate::theme::core_theme::CoreTheme;
+    pub use crate::theme::theme_z::ThemeZ;
     #[doc(hidden)]
     pub use crate::theme::guitar_theme::GuitarTheme;
     #[doc(hidden)]
     pub use crate::theme::notation_theme::NotationTheme;
-    #[doc(hidden)]
-    pub use crate::theme::strings_theme::StringsTheme;
     #[doc(hidden)]
     pub use crate::theme::theme_colors::ThemeColors;
     #[doc(hidden)]

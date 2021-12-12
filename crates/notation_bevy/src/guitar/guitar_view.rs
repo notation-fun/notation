@@ -7,10 +7,10 @@ use notation_bevy_utils::prelude::{BevyUtil, LayoutAnchor, LayoutChangedQuery, L
 use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
-    Tab, Units,
+    Tab, Units, TrackKind,
 };
 
-use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme, NotationSettings};
+use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme, NotationSettings, TabState};
 use crate::ui::layout::NotationLayout;
 
 use super::fret_finger::{FretFingerData};
@@ -63,10 +63,14 @@ impl GuitarView {
             material: materials.add(assets.fretboard.clone().into()),
             ..Default::default()
         };
+        let fretboard = tab
+            .get_track_of_kind(TrackKind::Guitar)
+            .and_then(|x| x.get_fretboard6());
+
         BevyUtil::spawn_child_bundle(commands, guitar_entity, sprite_bundle);
         for string in 1..=6 {
             for upper in [true, false] {
-                let string_data = GuitarStringData::new(string as u8, upper);
+                let string_data = GuitarStringData::new(string as u8, upper, fretboard);
                 string_data.create(
                     commands,
                     theme,
@@ -80,7 +84,7 @@ impl GuitarView {
             let mut string = 1;
             let mut fret = 0;
             for _index in 0..=22 {
-                let finger_data = FretFingerData::new_data(
+                let mut finger_data = FretFingerData::new_data(
                     ModelEntryProps {
                         index: 0,
                         tied_units: Units(0.0),
@@ -92,6 +96,7 @@ impl GuitarView {
                     Some(fret as u8),
                     None,
                 );
+                finger_data.value.extra.visible = true;
                 finger_data.spawn(commands, theme, guitar_entity);
                 string = string + 1;
                 if string > 6 {
@@ -135,7 +140,7 @@ impl GuitarView {
             for (parent, mut transform) in sprite_query.iter_mut() {
                 if parent.0 == entity {
                     let scale = layout.size.width / theme.guitar.image_size.0;
-                    transform.translation = Vec3::new(0.0, 0.0, theme.core.mini_bar_z);
+                    transform.translation = Vec3::new(0.0, 0.0, theme.z.guitar_view);
                     transform.scale = Vec3::new(scale, scale, 1.0);
                 }
             }
@@ -170,6 +175,9 @@ impl GuitarView {
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         dot_query: Query<&Children>,
     ) {
+        if Self::CHECKING_FRETS {
+            return;
+        }
         let mut current_entry_pick = None;
         let mut string_states = [None; 6];
         let mut hit_strings = [(false, Duration::Zero); 6];
@@ -196,7 +204,7 @@ impl GuitarView {
                     hit,
                     hit_duration,
                     &time,
-                    theme.strings.hit_string_seconds_range,
+                    theme.guitar.hit_string_seconds_range,
                     midi_state.play_control.play_speed,
                 );
                 if let Some(state) = string_states[(string_data.string - 1) as usize] {
@@ -234,6 +242,7 @@ impl GuitarView {
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
         dot_query: Query<&Children>,
+        tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     ) {
         if Self::CHECKING_FRETS {
             return;
@@ -282,6 +291,19 @@ impl GuitarView {
                         capo_data.capo = fretboard.capo;
                         capo_data.update(&mut commands, &theme, capo_entity);
                     }
+                }
+            }
+        } else {
+            let position =
+                TabState::get_position(&tab_state_query, None);
+            if position.is_some() && position.unwrap().bar.bar_ordinal == 0 {
+                for (finger_entity, mut finger_data) in finger_query.iter_mut() {
+                    finger_data.reset();
+                    finger_data.update(&mut commands, &theme, finger_entity);
+                }
+                for (string_entity, mut string_data) in string_query.iter_mut() {
+                    string_data.reset();
+                    string_data.update(&mut commands, &theme, string_entity);
                 }
             }
         }

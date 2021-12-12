@@ -29,7 +29,7 @@ impl ShapeOp<NotationTheme, StrokeLine> for BarSeparatorData {
             } else {
                 self.value.bar_size.width
             };
-            Vec3::new(x, 0.0, theme.core.bar_separator_z)
+            Vec3::new(x, 0.0, theme.z.bar_separator)
         };
         StrokeLine {
             from: Vec2::new(0.0, theme.sizes.bar.bar_separator_extra),
