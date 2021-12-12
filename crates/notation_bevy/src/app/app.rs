@@ -163,7 +163,7 @@ fn handle_keyboard_inputs(
     mut window_resized_evts: EventWriter<WindowResizedEvent>,
     viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
 ) {
-    if keyboard_input.just_released(KeyCode::Tab) {
+    if keyboard_input.just_released(KeyCode::LControl) {
         state.hide_control = !state.hide_control;
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());

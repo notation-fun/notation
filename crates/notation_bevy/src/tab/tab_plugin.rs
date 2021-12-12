@@ -88,7 +88,7 @@ fn on_mouse_clicked(
     }
     if let Some(pos) = pos {
         if !app_state.hide_control {
-            if app_state.window_width / 2.0 - pos.x > ControlView::WIDTH {
+            if app_state.window_width / 2.0 - pos.x > ControlView::calc_width(app_state.window_width) {
                 app_state.hide_control = true;
             }
         } else {
