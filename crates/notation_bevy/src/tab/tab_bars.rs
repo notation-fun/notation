@@ -187,7 +187,7 @@ impl TabBars {
         let view_bundle = ViewBundle::from(TabBars::new(tab.clone(), Arc::new(bar_layouts)));
         let view = view_bundle.view.clone();
         let bars_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
-        PlayPlugin::spawn_indicators(commands, theme, bars_entity, &view.tab);
+        PlayPlugin::spawn_indicators(commands, theme, bars_entity, tab);
         let bar_bundles: Vec<(&Arc<TabBar>, &BarLayoutData)> = view
             .tab
             .bars

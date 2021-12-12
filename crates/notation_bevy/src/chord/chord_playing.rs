@@ -26,7 +26,8 @@ impl ChordPlaying {
         query: &mut Query<(Entity, &mut ChordPlaying), With<ChordPlaying>>,
         tab_state: &TabState,
         new_position: &Position,
-    ) {
+    ) -> usize {
+        let mut changed = 0;
         let is_current = |c: Chord| {
             if tab_state.play_control.play_state.is_playing() {
                 let chord = tab_state
@@ -51,12 +52,15 @@ impl ChordPlaying {
             if is_current(chord_playing.value.chord) {
                 if chord_playing.value.state != PlayingState::Current {
                     chord_playing.value.state = PlayingState::Current;
+                    changed += 1;
                 }
             } else {
                 if chord_playing.value.state != PlayingState::Idle {
                     chord_playing.value.state = PlayingState::Idle;
+                    changed += 1;
                 }
             }
         }
+        changed
     }
 }
