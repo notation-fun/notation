@@ -41,7 +41,7 @@ impl BarView {
         mut sep_query: Query<(Entity, &mut BarSeparatorData)>,
         mut beat_query: Query<(Entity, &mut BarBeatData)>,
     ) {
-        //if theme._bypass_systems { return; }
+        if theme._bypass_systems { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         let mut bars = Vec::new();
         for evt in evts.iter() {
