@@ -4326,7 +4326,8 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 [[package]]
 name = "winit"
 version = "0.24.0"
-source = "git+https://github.com/yjpark/winit/?branch=touch-input_0.24.0#288cc5ba849f27289198ab5e3c849ec8850b0783"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da4eda6fce0eb84bd0a33e3c8794eb902e1033d0a1d5a31bc4f19b1b4bbff597"
 dependencies = [
  "bitflags",
  "cocoa",
