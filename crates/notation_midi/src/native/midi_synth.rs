@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use helgoboss_midi::StructuredShortMessage;
 
 use crate::prelude::{MidiMessage, MidiSettings, MidiState};
@@ -10,16 +12,51 @@ pub struct MidiSynth {
     buffer: DoubleAudioBuffer,
 }
 impl MidiSynth {
+    pub const SOUND_FONT: &'static str = "sblive";
     fn new(synth: fluidlite::Synth) -> Self {
         Self {
             synth,
             buffer: DoubleAudioBuffer::new(),
         }
     }
+    fn check_path(root: PathBuf, name: &str) -> Option<PathBuf> {
+        let mut path = root.clone();
+        path.push("assets");
+        path.push(name);
+        path.set_extension("sf2");
+        if path.exists() {
+            Some(path)
+        } else {
+            println!("MidiSynth check_path() not exist: {:?} {} -> {:?}", root, name, path);
+            None
+        }
+    }
     pub fn try_new() -> Option<MidiSynth> {
         fluidlite::Settings::new()
             .and_then(fluidlite::Synth::new)
-            .and_then(|synth| synth.sfload("assets/sblive.sf2", true).map(|_| synth))
+            .and_then(|synth| {
+                let mut path = None;
+                if let Ok(root) = std::env::current_exe() {
+                    if let Some(root) = root.parent() {
+                        path = Self::check_path(root.to_path_buf(), Self::SOUND_FONT);
+                    }
+                }
+                if path.is_none() {
+                    if let Ok(root) = std::env::current_dir() {
+                        path = Self::check_path(root, Self::SOUND_FONT);
+                    }
+                }
+                match path {
+                    Some(path) => {
+                        println!("MidiSynth try_new() Loading: {:?}", path);
+                        synth.sfload(path, true).map(|_| synth)
+                    },
+                    None => {
+                        let path = format!("assets/{}.sf2", Self::SOUND_FONT);
+                        synth.sfload(path, true).map(|_| synth)
+                    }
+                }
+            })
             .map(Self::new)
             .map_err(|err| {
                 println!("MidiSynth try_new() failed: {:?}", err);

@@ -51,12 +51,13 @@ dependencies = ["build-web", "basic-http-server"]
 disabled = true
 
 [tasks.release-inspector]
-args = ["bundle", "--release", "--features", "inspector", "@@split(CARGO_RELEASE_ARGS, )"]
+args = ["bundle", "--features", "inspector", "@@split(CARGO_RELEASE_ARGS, )"]
 command = "cargo"
 
 [tasks.release-native]
-args = ["bundle", "--release", "--features", "native", "@@split(CARGO_RELEASE_ARGS, )"]
+args = ["bundle", "--features", "native", "@@split(CARGO_RELEASE_ARGS, )"]
 command = "cargo"
+dependencies = ["build-native"]
 
 [tasks.release-web]
 script_runner = "@shell"
