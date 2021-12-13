@@ -62,7 +62,7 @@ impl RhythmView {
         mut beat_query: Query<(Entity, &mut RhythmBeatData)>,
         mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         for evt in evts.iter() {
             if evt.layout.size.width > 0.0 && evt.layout.size.height > 0.0 {
                 for (parent, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {

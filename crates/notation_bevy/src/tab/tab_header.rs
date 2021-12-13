@@ -84,7 +84,7 @@ impl TabHeader {
         panel_query: ViewQuery<RhythmView>,
         content_query: ViewQuery<TabChords>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

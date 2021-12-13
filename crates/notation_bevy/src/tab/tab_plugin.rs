@@ -82,7 +82,7 @@ fn on_mouse_clicked(
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     let mut pos = None;
     for evt in evts.iter() {
         pos = Some(app_state.convert_pos(evt.cursor_position));
@@ -161,7 +161,7 @@ fn on_mouse_dragged(
             &Arc<GridData>,
         )>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     for evt in evts.iter() {
         if settings.allow_panning {
             settings

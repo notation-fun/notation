@@ -46,7 +46,7 @@ impl ChordView {
         mut dot_query: Query<(Entity, &mut IntervalDotData)>,
         mut text_query: Query<&mut Transform, With<Text>>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         for (_entity, _view, layout, children) in query.iter() {
             let radius = layout.size.width * theme.sizes.chord.diagram_factor;
             for child in children.iter() {
@@ -107,7 +107,7 @@ impl ChordView {
         >,
         mut diagram_query: Query<(Entity, &mut ChordDiagramData)>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         for (_entity, playing, _view, children) in query.iter_mut() {
             for child in children.iter() {
                 if let Ok((diagram_entity, mut diagram_data)) = diagram_query.get_mut(*child) {

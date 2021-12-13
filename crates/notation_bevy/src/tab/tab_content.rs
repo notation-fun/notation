@@ -37,7 +37,7 @@ impl TabContent {
         panel_query: ViewQuery<TabHeader>,
         content_query: ViewQuery<TabBars>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

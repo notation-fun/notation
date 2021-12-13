@@ -91,7 +91,7 @@ impl ControlView {
             return;
         }
         state.reset_tab();
-        theme.loaded = false;
+        theme._bypass_systems = true;
     }
     pub fn sync_speed_factor(
         settings: &NotationSettings,
@@ -428,7 +428,7 @@ impl ControlView {
                     for path in tab_pathes.0.iter() {
                         if ui.selectable_label(*path == state.tab_path, path).clicked()
                         {
-                            theme.loaded = false;
+                            theme._bypass_systems = true;
                             state.change_tab(asset_server, path.clone());
                         }
                     }

@@ -177,7 +177,7 @@ fn load_tab(
             match Tab::try_parse_arc(asset.tab.clone()) {
                 Ok(tab) => {
                     state.tab = Some(tab.clone());
-                    theme.loaded = true;
+                    theme._bypass_systems = false;
                     evts.send(AddTabEvent(tab));
                 }
                 Err(err) => {

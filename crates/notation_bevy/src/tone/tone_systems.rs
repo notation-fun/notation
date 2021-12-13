@@ -41,7 +41,7 @@ pub fn on_entry_playing_changed(
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
     mut note_query: Query<(Entity, &mut ToneNoteData)>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
             if let Ok((entity, mut data)) = note_query.get_mut(*child) {

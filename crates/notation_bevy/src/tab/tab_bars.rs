@@ -219,7 +219,7 @@ impl TabBars {
         cell_query: Query<(&Parent, &Arc<BarView>, &LayoutData)>,
         mut tab_resized_evts: EventWriter<TabBarsResizedEvent>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         for evt in evts.iter() {
             let mut bars = Vec::new();
             for (parent, bar_view, layout) in cell_query.iter() {
@@ -240,7 +240,7 @@ impl TabBars {
         cell_query: ViewQuery<BarView>,
         mut tab_resized_evts: EventWriter<TabBarsResizedPreEvent>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

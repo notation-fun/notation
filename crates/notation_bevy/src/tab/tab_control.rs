@@ -88,7 +88,7 @@ impl TabControl {
         panel_query: ViewQuery<PlayPanel>,
         content_query: ViewQuery<GuitarView>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

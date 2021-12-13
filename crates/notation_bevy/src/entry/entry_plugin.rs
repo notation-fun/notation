@@ -150,7 +150,7 @@ fn on_tab_bars_resized(
     mut shape_diagram_6_query: Query<(Entity, &mut ShapeDiagramData6), With<ShapeDiagramData6>>,
     mut shape_diagram_4_query: Query<(Entity, &mut ShapeDiagramData4), With<ShapeDiagramData4>>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     for evt in evts.iter() {
         let bars = &evt.0;
         for (entity, mut data) in tone_note_query.iter_mut() {

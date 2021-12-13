@@ -18,7 +18,7 @@ pub fn on_entry_playing_changed(
     )>,
     mut font_query: Query<&mut Text>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
             if let Ok((entity, mut data, note_children)) = note_query.q0_mut().get_mut(*child) {

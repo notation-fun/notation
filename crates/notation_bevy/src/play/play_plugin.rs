@@ -114,7 +114,7 @@ fn on_tab_resized(
         &Arc<GridData>,
     )>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     let mut bars = None;
     for evt in evts.iter() {
         bars = Some(&evt.0);
@@ -168,7 +168,7 @@ fn on_bar_playing_changed(
         &Arc<GridData>,
     )>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     for (_entity, playing, _view, layout) in query.iter_mut() {
         if playing.value == PlayingState::Current {
             update_indicators(
@@ -206,7 +206,7 @@ fn on_tab_play_state_changed(
         &Arc<GridData>,
     )>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     for (state_entity, tab_state) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
         if let Some(pos_data) = PosIndicatorData::update_pos(
@@ -313,7 +313,7 @@ fn on_play_control_evt(
     )>,
     mut beat_query: Query<(Entity, &mut BarBeatData)>,
 ) {
-    if !theme.loaded { return; }
+    if theme._bypass_systems { return; }
     for evt in evts.iter() {
         for (state_entity, mut tab_state) in tab_state_query.iter_mut() {
             if !tab_state.under_control {

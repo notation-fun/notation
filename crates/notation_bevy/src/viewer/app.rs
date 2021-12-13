@@ -90,7 +90,7 @@ impl NotationViewer {
         entity: Entity,
         view: &Arc<NotationViewer>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         let constraint =
             LayoutConstraint::from((engine.state.window_width, engine.state.window_height));

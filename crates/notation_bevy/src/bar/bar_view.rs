@@ -41,7 +41,7 @@ impl BarView {
         mut sep_query: Query<(Entity, &mut BarSeparatorData)>,
         mut beat_query: Query<(Entity, &mut BarBeatData)>,
     ) {
-        if !theme.loaded { return; }
+        //if theme._bypass_systems { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         let mut bars = Vec::new();
         for evt in evts.iter() {
@@ -78,7 +78,7 @@ impl BarView {
         mut evts: EventReader<BarViewDoLayoutEvent>,
         mut text_query: Query<(&Parent, &mut Transform), With<Text>>,
     ) {
-        if !theme.loaded { return; }
+        if theme._bypass_systems { return; }
         if !settings.hide_bar_number {
             for evt in evts.iter() {
                 for (parent, mut transform) in text_query.iter_mut() {
