@@ -364,16 +364,6 @@ impl ControlView {
         CollapsingHeader::new("Display Options")
         .default_open(true)
         .show(ui, |ui| {
-            let hide_bar_number = settings.hide_bar_number;
-            ui.checkbox(&mut settings.hide_bar_number, "Hide Bar Number");
-            if hide_bar_number != settings.hide_bar_number {
-                Self::reload_tab(state, theme);
-            }
-            let always_show_fret = settings.always_show_fret;
-            ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
-            if always_show_fret != settings.always_show_fret {
-                Self::reload_tab(state, theme);
-            }
             let show_melody_syllable = settings.show_melody_syllable;
             ui.checkbox(&mut settings.show_melody_syllable, "Show Melody Syllable");
             if show_melody_syllable != settings.show_melody_syllable {
@@ -385,6 +375,16 @@ impl ControlView {
                 if show_syllable_as_num {
                     settings.show_melody_syllable = true;
                 }
+                Self::reload_tab(state, theme);
+            }
+            let hide_bar_number = settings.hide_bar_number;
+            ui.checkbox(&mut settings.hide_bar_number, "Hide Bar Number");
+            if hide_bar_number != settings.hide_bar_number {
+                Self::reload_tab(state, theme);
+            }
+            let always_show_fret = settings.always_show_fret;
+            ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
+            if always_show_fret != settings.always_show_fret {
                 Self::reload_tab(state, theme);
             }
         });
@@ -435,11 +435,12 @@ impl ControlView {
                 });
         }
         if ui.button("Reset Tab").clicked() {
-            Self::reload_tab( state, theme);
+            Self::reload_tab(state, theme);
         }
     }
     pub fn guitar_tab_display_ui(
         ui: &mut Ui,
+        state: &mut NotationAppState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
     ) {
@@ -456,10 +457,30 @@ impl ControlView {
             if float_ne!(theme.sizes.strings.note_height, last_note_height, abs <= 0.5) {
                 window_resized_evts.send(WindowResizedEvent());
             }
+            let mut changed = false;
+            let last_word_font_size = theme.texts.strings.fret_font_size;
+            ui.add(Slider::new(&mut theme.texts.strings.fret_font_size, 6.0..=64.0).text("Fret Font Size"));
+            if float_ne!(theme.texts.strings.fret_font_size, last_word_font_size, abs <= 0.5) {
+                changed = true;
+            }
+            let last_word_text_x = theme.texts.strings.text_x;
+            ui.add(Slider::new(&mut theme.texts.strings.text_x, -24.0..=24.0).text("Fret Offset X"));
+            if float_ne!(theme.texts.strings.text_x, last_word_text_x, abs <= 0.5) {
+                changed = true;
+            }
+            let last_word_text_y = theme.texts.strings.text_y;
+            ui.add(Slider::new(&mut theme.texts.strings.text_y, -24.0..=24.0).text("Fret Offset Y"));
+            if float_ne!(theme.texts.strings.text_y, last_word_text_y, abs <= 0.5) {
+                changed = true;
+            }
+            if changed {
+                Self::reload_tab( state, theme);
+            }
         });
     }
     pub fn lyrics_display_ui(
         ui: &mut Ui,
+        state: &mut NotationAppState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
     ) {
@@ -486,10 +507,64 @@ impl ControlView {
             if float_ne!(theme.sizes.lyrics.word_gap, last_word_gap, abs <= 0.5) {
                 window_resized_evts.send(WindowResizedEvent());
             }
+            let mut changed = false;
             let last_word_font_size = theme.texts.lyrics.word_font_size;
             ui.add(Slider::new(&mut theme.texts.lyrics.word_font_size, 6.0..=64.0).text("Word Font Size"));
             if float_ne!(theme.texts.lyrics.word_font_size, last_word_font_size, abs <= 0.5) {
+                changed = true;
+            }
+            let last_word_text_x = theme.texts.lyrics.text_x;
+            ui.add(Slider::new(&mut theme.texts.lyrics.text_x, -24.0..=24.0).text("Word Offset X"));
+            if float_ne!(theme.texts.lyrics.text_x, last_word_text_x, abs <= 0.5) {
+                changed = true;
+            }
+            let last_word_text_y = theme.texts.lyrics.text_y;
+            ui.add(Slider::new(&mut theme.texts.lyrics.text_y, -24.0..=24.0).text("Word Offset Y"));
+            if float_ne!(theme.texts.lyrics.text_y, last_word_text_y, abs <= 0.5) {
+                changed = true;
+            }
+            if changed {
+                Self::reload_tab( state, theme);
+            }
+        });
+    }
+    pub fn melody_display_ui(
+        ui: &mut Ui,
+        state: &mut NotationAppState,
+        theme: &mut NotationTheme,
+        window_resized_evts: &mut EventWriter<WindowResizedEvent>,
+    ) {
+        CollapsingHeader::new("Melody")
+        .default_open(true)
+        .show(ui, |ui| {
+            let last_note_height = theme.sizes.melody.note_height;
+            ui.add(Slider::new(&mut theme.sizes.melody.note_height, 1.0..=32.0).text("Note Height"));
+            if float_ne!(theme.sizes.melody.note_height, last_note_height, abs <= 0.5) {
                 window_resized_evts.send(WindowResizedEvent());
+            }
+            let last_semitones = theme.sizes.melody.semitones;
+            ui.add(Slider::new(&mut theme.sizes.melody.semitones, 12..=60).text("Semitones"));
+            if theme.sizes.melody.semitones != last_semitones {
+                window_resized_evts.send(WindowResizedEvent());
+            }
+            let mut changed = false;
+            let last_syllable_font_size = theme.texts.melody.syllable_font_size;
+            ui.add(Slider::new(&mut theme.texts.melody.syllable_font_size, 6.0..=64.0).text("Syllable Font Size"));
+            if float_ne!(theme.texts.melody.syllable_font_size, last_syllable_font_size, abs <= 0.5) {
+                changed = true;
+            }
+            let last_syllable_text_x = theme.texts.melody.text_x;
+            ui.add(Slider::new(&mut theme.texts.melody.text_x, -24.0..=24.0).text("Syllable Offset X"));
+            if float_ne!(theme.texts.melody.text_x, last_syllable_text_x, abs <= 0.5) {
+                changed = true;
+            }
+            let last_syllable_text_y = theme.texts.melody.text_y;
+            ui.add(Slider::new(&mut theme.texts.melody.text_y, -24.0..=24.0).text("Syllable Offset Y"));
+            if float_ne!(theme.texts.melody.text_y, last_syllable_text_y, abs <= 0.5) {
+                changed = true;
+            }
+            if changed {
+                Self::reload_tab( state, theme);
             }
         });
     }
@@ -534,9 +609,15 @@ impl ControlView {
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
                             ui.separator();
-                            ui.label("Override Theme, May Need to Reset Tab");
-                            Self::guitar_tab_display_ui(ui, &mut theme, &mut window_resized_evts);
-                            Self::lyrics_display_ui(ui, &mut theme, &mut window_resized_evts);
+                            ui.label("Override Theme");
+                            Self::guitar_tab_display_ui(ui, &mut state, &mut theme, &mut window_resized_evts);
+                            Self::lyrics_display_ui(ui, &mut state, &mut theme, &mut window_resized_evts);
+                            Self::melody_display_ui(ui, &mut state, &mut theme, &mut window_resized_evts);
+                            ui.separator();
+                            if ui.button("Reset Theme").clicked() {
+                                *theme = NotationTheme::default();
+                                Self::reload_tab(&mut state, &mut theme);
+                            }
                         });
                     });
                 });
