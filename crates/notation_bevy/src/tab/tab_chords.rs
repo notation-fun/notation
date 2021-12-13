@@ -101,6 +101,7 @@ impl TabChords {
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<ChordView>,
     ) {
+        if !theme.loaded { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

@@ -98,6 +98,7 @@ impl PlayPanel {
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<PlayButton>,
     ) {
+        if !theme.loaded { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(
@@ -116,6 +117,7 @@ impl PlayPanel {
         mut evts: EventReader<PlayControlEvent>,
         mut shape_query: Query<(Entity, &mut PlayButtonShape)>,
     ) {
+        if !theme.loaded { return; }
         for evt in evts.iter() {
             match evt {
                 PlayControlEvent::OnTick {position: _, tick_result} => {

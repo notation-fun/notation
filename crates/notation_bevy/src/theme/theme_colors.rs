@@ -355,13 +355,13 @@ impl RhythmColors {
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MiniMapColors {
     pub back: Color,
-    pub bar_outline: PlayingColors,
+    pub bar_outline_current: Color,
 }
 impl Default for MiniMapColors {
     fn default() -> Self {
         Self {
             back: hex_linear("AAAAAA"),
-            bar_outline: PlayingColors::default(),
+            bar_outline_current: hex_linear("FFFFFF"),
         }
     }
 }

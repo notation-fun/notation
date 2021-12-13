@@ -69,7 +69,7 @@ fn jump_to_bar(
 
 fn on_mouse_clicked(
     mut evts: EventReader<MouseClickedEvent>,
-    _theme: Res<NotationTheme>,
+    theme: Res<NotationTheme>,
     mut app_state: ResMut<NotationAppState>,
     mut settings: ResMut<NotationSettings>,
     tab_state_query: Query<(Entity, &TabState), With<TabState>>,
@@ -82,6 +82,7 @@ fn on_mouse_clicked(
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
+    if !theme.loaded { return; }
     let mut pos = None;
     for evt in evts.iter() {
         pos = Some(app_state.convert_pos(evt.cursor_position));
@@ -160,6 +161,7 @@ fn on_mouse_dragged(
             &Arc<GridData>,
         )>,
 ) {
+    if !theme.loaded { return; }
     for evt in evts.iter() {
         if settings.allow_panning {
             settings

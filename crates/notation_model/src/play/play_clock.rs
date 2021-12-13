@@ -30,4 +30,7 @@ impl PlayClock {
     pub fn delta_seconds(&self) -> f32 {
         self.delta.as_secs_f32()
     }
+    pub fn get_now() {
+        StdInstant::now();
+    }
 }

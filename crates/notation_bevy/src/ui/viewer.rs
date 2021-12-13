@@ -75,6 +75,7 @@ impl TabViewer {
         panel_query: ViewQuery<MiniMap>,
         content_query: ViewQuery<TabView>,
     ) {
+        if !theme.loaded { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

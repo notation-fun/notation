@@ -175,6 +175,7 @@ impl PlayButton {
         query: LayoutChangedWithChildrenQuery<PlayButton>,
         mut shape_query: Query<(Entity, &mut PlayButtonShape)>,
     ) {
+        if !theme.loaded { return; }
         for (_entity, _view, layout, children) in query.iter() {
             for child in children.iter() {
                 if let Ok((entity, mut data)) = shape_query.get_mut(*child) {

@@ -2,7 +2,6 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use bevy::utils::Uuid;
 use bevy_egui::egui::{self, Ui, Slider, CollapsingHeader};
 use bevy_egui::EguiContext;
 use notation_bevy_utils::prelude::{
@@ -20,8 +19,6 @@ use crate::prelude::{
     NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabPathes,
     WindowResizedEvent, GuitarView,
 };
-
-use super::app::NotationViewer;
 
 #[derive(Clone, Debug)]
 pub struct ControlView {
@@ -87,20 +84,14 @@ impl ControlView {
         }
     }
     pub fn reload_tab(
-        commands: &mut Commands,
         state: &mut NotationAppState,
-        viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
+        theme: &mut NotationTheme,
     ) {
         if state.tab.is_none() {
             return;
         }
-        for (entity, viewer) in viewer_query.iter() {
-            if viewer.uuid == state.viewer_uuid {
-                commands.entity(entity).despawn_recursive();
-            }
-        }
-        state.tab = None;
-        state.viewer_uuid = Uuid::new_v4();
+        state.reset_tab();
+        theme.loaded = false;
     }
     pub fn sync_speed_factor(
         settings: &NotationSettings,
@@ -222,17 +213,16 @@ impl ControlView {
         Self::send_begin_end_evt(midi_state, play_control_evts);
     }
     pub fn toggle_layout_mode(
-        commands: &mut Commands,
         state: &mut NotationAppState,
         settings: &mut NotationSettings,
-        viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
+        theme: &mut NotationTheme,
     ) {
         if settings.layout.mode == LayoutMode::Grid {
             settings.layout.mode = LayoutMode::Line;
         } else {
             settings.layout.mode = LayoutMode::Grid;
         }
-        Self::reload_tab(commands, state, viewer_query);
+        Self::reload_tab(state, theme);
     }
     pub fn overrides_ui(
         ui: &mut Ui,
@@ -367,10 +357,9 @@ impl ControlView {
     }
     pub fn display_ui(
         ui: &mut Ui,
-        commands: &mut Commands,
         state: &mut NotationAppState,
         settings: &mut NotationSettings,
-        viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
+        theme: &mut NotationTheme,
     ) {
         CollapsingHeader::new("Display Options")
         .default_open(true)
@@ -378,31 +367,33 @@ impl ControlView {
             let hide_bar_number = settings.hide_bar_number;
             ui.checkbox(&mut settings.hide_bar_number, "Hide Bar Number");
             if hide_bar_number != settings.hide_bar_number {
-                Self::reload_tab(commands, state, viewer_query);
+                Self::reload_tab(state, theme);
             }
             let always_show_fret = settings.always_show_fret;
             ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
             if always_show_fret != settings.always_show_fret {
-                Self::reload_tab(commands, state, viewer_query);
+                Self::reload_tab(state, theme);
             }
             let show_melody_syllable = settings.show_melody_syllable;
             ui.checkbox(&mut settings.show_melody_syllable, "Show Melody Syllable");
             if show_melody_syllable != settings.show_melody_syllable {
-                Self::reload_tab(commands, state, viewer_query);
+                Self::reload_tab(state, theme);
             }
             let show_syllable_as_num = settings.show_syllable_as_num;
             ui.checkbox(&mut settings.show_syllable_as_num, "Show Syllable as Numbers");
             if show_syllable_as_num != settings.show_syllable_as_num {
-                Self::reload_tab(commands, state, viewer_query);
+                if show_syllable_as_num {
+                    settings.show_melody_syllable = true;
+                }
+                Self::reload_tab(state, theme);
             }
         });
     }
     pub fn layout_ui(
         ui: &mut Ui,
-        commands: &mut Commands,
         state: &mut NotationAppState,
         settings: &mut NotationSettings,
-        viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
+        theme: &mut NotationTheme,
     ) {
         CollapsingHeader::new("Layout Options")
         .default_open(true)
@@ -413,23 +404,19 @@ impl ControlView {
                 "Switch to Grid Mode"
             };
             if ui.button(mode_text).clicked() {
-                Self::toggle_layout_mode(commands, state, settings, viewer_query);
+                Self::toggle_layout_mode(state, settings, theme);
             }
             if settings.layout.mode == LayoutMode::Grid {
                 ui.checkbox(&mut settings.layout.try_show_last_row_in_grid_mode, "Try Show Last Row");
-            }
-            if ui.button("Reset Tab").clicked() {
-                Self::reload_tab(commands, state, viewer_query);
             }
         });
     }
     pub fn tab_ui(
         ui: &mut Ui,
-        commands: &mut Commands,
         asset_server: &AssetServer,
         state: &mut NotationAppState,
         _settings: &mut NotationSettings,
-        viewer_query: &Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
+        theme: &mut NotationTheme,
         tab_pathes: &TabPathes,
     ) {
         if tab_pathes.0.len() > 1 {
@@ -441,16 +428,14 @@ impl ControlView {
                     for path in tab_pathes.0.iter() {
                         if ui.selectable_label(*path == state.tab_path, path).clicked()
                         {
-                            for (entity, _viewer) in viewer_query.iter() {
-                                commands.entity(entity).despawn_recursive();
-                            }
+                            theme.loaded = false;
                             state.change_tab(asset_server, path.clone());
                         }
                     }
                 });
         }
         if ui.button("Reset Tab").clicked() {
-            Self::reload_tab(commands, state, viewer_query);
+            Self::reload_tab( state, theme);
         }
     }
     pub fn guitar_tab_display_ui(
@@ -509,13 +494,11 @@ impl ControlView {
         });
     }
     pub fn control_ui(
-        mut commands: Commands,
         egui_ctx: Res<EguiContext>,
         asset_server: Res<AssetServer>,
         mut state: ResMut<NotationAppState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
-        viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
         tab_pathes: Res<TabPathes>,
         mut midi_settings: ResMut<MidiSettings>,
         mut midi_state: ResMut<MidiState>,
@@ -539,16 +522,16 @@ impl ControlView {
                     }
                     ui.separator();
                      */
-                    Self::tab_ui(ui, &mut commands, &asset_server, &mut state, &mut settings, &viewer_query, &tab_pathes);
+                    Self::tab_ui(ui, &asset_server, &mut state, &mut settings, &mut theme, &tab_pathes);
                     ui.separator();
                     Self::play_control_ui(ui, &mut settings, &mut midi_state, &mut play_control_evts);
                     ui.separator();
                     egui::ScrollArea::auto_sized().show(ui, |ui| {
                         ui.vertical(|ui| {
                             Self::midi_settings_ui(ui, &mut midi_settings);
-                            Self::display_ui(ui, &mut commands, &mut state, &mut settings, &viewer_query);
+                            Self::display_ui(ui, &mut state, &mut settings, &mut theme);
                             ui.separator();
-                            Self::layout_ui(ui, &mut commands, &mut state, &mut settings, &viewer_query);
+                            Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
                             ui.separator();
                             ui.label("Override Theme, May Need to Reset Tab");

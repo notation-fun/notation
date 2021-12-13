@@ -13,6 +13,7 @@ use bevy_inspector_egui::Inspectable;
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotationTheme {
+    pub loaded: bool,
     pub z: ThemeZ,
     pub sizes: ThemeSizes,
     pub colors: ThemeColors,

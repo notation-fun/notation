@@ -134,10 +134,14 @@ fn setup_camera(mut commands: Commands) {
 }
 
 fn load_tab(
+    mut commands: Commands,
+    time: Res<Time>,
     mut state: ResMut<NotationAppState>,
+    mut theme: ResMut<NotationTheme>,
     entities: Query<Entity, With<GlobalTransform>>,
     assets: ResMut<Assets<TabAsset>>,
     mut evts: EventWriter<AddTabEvent>,
+    viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
 ) {
     if state.window_width > 0.0 && state.window_height > 0.0 && state.tab.is_none() && state.parse_error.is_none() {
         let mut count = 0;
@@ -146,13 +150,34 @@ fn load_tab(
         }
         //A bit hacky to make sure despawning finished, otherwise might got panic with "Entity not exist"
         if count > 1 {
-            println!("Waiting for entities to be despawned: {}", count);
+            if state._despawn_delay_seconds > 0.0 {
+                state._despawn_delay_seconds -= time.delta_seconds();
+                println!("load_tab(): Waiting to despawn: {} -> {}", count, state._despawn_delay_seconds);
+                return;
+            }
+            let mut despawn_count = 0;
+            for (entity, _viewer) in viewer_query.iter() {
+                commands.entity(entity).despawn_recursive();
+                despawn_count += 1;
+            }
+            if despawn_count > 0 {
+                println!("load_tab(): Despawning viewers: {} {}", despawn_count, count);
+            } else {
+                println!("load_tab(): Waiting for entities to be despawned: {}", count);
+            }
             return;
         }
+        if state._load_tab_delay_seconds > 0.0 {
+            state._load_tab_delay_seconds -= time.delta_seconds();
+            println!("load_tab(): Waiting to Load tab: -> {}", state._load_tab_delay_seconds);
+            return;
+        }
+        println!("\nload_tab(): Loading: {}", state.tab_path);
         if let Some(asset) = assets.get(&state.tab_asset) {
             match Tab::try_parse_arc(asset.tab.clone()) {
                 Ok(tab) => {
                     state.tab = Some(tab.clone());
+                    theme.loaded = true;
                     evts.send(AddTabEvent(tab));
                 }
                 Err(err) => {
@@ -165,17 +190,19 @@ fn load_tab(
 }
 
 fn handle_keyboard_inputs(
-    mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
-    mut state: ResMut<NotationAppState>,
+    mut app_state: ResMut<NotationAppState>,
     mut settings: ResMut<NotationSettings>,
+    mut theme: ResMut<NotationTheme>,
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
     mut window_resized_evts: EventWriter<WindowResizedEvent>,
-    viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
 ) {
+    if app_state.tab.is_none() {
+        return;
+    }
     if keyboard_input.just_released(KeyCode::LControl) {
-        state.hide_control = !state.hide_control;
+        app_state.hide_control = !app_state.hide_control;
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());
         }
@@ -184,19 +211,23 @@ fn handle_keyboard_inputs(
     } else if keyboard_input.just_released(KeyCode::Return) {
         crate::viewer::control::ControlView::play_or_stop(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Backslash) {
-        crate::viewer::control::ControlView::toggle_layout_mode(&mut commands, &mut state, &mut settings, &viewer_query);
+        crate::viewer::control::ControlView::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
     }
 }
 
 fn handle_mouse_inputs(
     windows: Res<Windows>,
     mouse_input: Res<Input<MouseButton>>,
+    app_state: Res<NotationAppState>,
     settings: Res<NotationSettings>,
     mut mouse_motion_events: EventReader<MouseMotion>,
     mut mouse_wheel_input: EventReader<bevy::input::mouse::MouseWheel>,
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
     mut mouse_dragged: EventWriter<MouseDraggedEvent>,
 ) {
+    if app_state.tab.is_none() {
+        return;
+    }
     if mouse_input.just_released(MouseButton::Left) {
         windows
             .get_primary()
@@ -235,6 +266,9 @@ fn handle_touch_inputs(
     mut mouse_clicked: EventWriter<MouseClickedEvent>,
     //mut mouse_dragged: EventWriter<MouseDraggedEvent>,
 ) {
+    if app_state.tab.is_none() {
+        return;
+    }
     for (_index, finger) in touch_input.iter().enumerate() {
         if touch_input.just_pressed(finger.id()) {
             windows
@@ -288,6 +322,9 @@ fn on_window_resized(
     mut app_state: ResMut<NotationAppState>,
     mut window_resized_evts: EventWriter<WindowResizedEvent>,
 ) {
+    if app_state.tab.is_none() {
+        return;
+    }
     for evt in evts.iter() {
         if evt.width as usize != window.width as usize
             || evt.height as usize != window.height as usize

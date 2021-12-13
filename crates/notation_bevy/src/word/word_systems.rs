@@ -68,6 +68,7 @@ pub fn on_entry_playing_changed(
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
     mut text_query: Query<(Entity, &mut WordTextData)>,
 ) {
+    if !theme.loaded { return; }
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
             if let Ok((entity, mut data)) = text_query.get_mut(*child) {

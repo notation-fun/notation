@@ -59,8 +59,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for MiniBarData {
             theme
             .colors
             .mini_map
-            .bar_outline
-            .of_state(&self.value.playing_state)
+            .bar_outline_current
         } else {
             theme.colors.of_section(self.bar_props.section_ordinal)
         };

@@ -49,7 +49,6 @@ impl NotationViewer {
         mut materials: ResMut<Assets<ColorMaterial>>,
         assets: Res<NotationAssets>,
         theme: Res<NotationTheme>,
-        mut state: ResMut<NotationAppState>,
         settings: Res<NotationSettings>,
         mut switch_tab_evts: EventWriter<SwitchTabEvent>,
     ) {
@@ -59,7 +58,6 @@ impl NotationViewer {
         }
         if let Some(tab) = tab {
             let viewer_bundle = ViewBundle::from(NotationViewer::new(tab.clone()));
-            state.viewer_uuid = viewer_bundle.view.uuid.clone();
             let entity = commands.spawn_bundle(viewer_bundle).id();
             ControlView::spawn(
                 &mut commands,
@@ -92,6 +90,7 @@ impl NotationViewer {
         entity: Entity,
         view: &Arc<NotationViewer>,
     ) {
+        if !theme.loaded { return; }
         let engine = NotationLayout::new(&theme, &state, &settings);
         let constraint =
             LayoutConstraint::from((engine.state.window_width, engine.state.window_height));

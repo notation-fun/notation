@@ -134,6 +134,7 @@ impl GuitarView {
         mut capo_query: Query<(&Parent, Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
         mut finger_query: Query<(&Parent, Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
+        if !theme.loaded { return; }
         for (entity, _view, layout) in query.iter() {
             let guitar_height = layout.size.width * theme.guitar.image_size.1 / theme.guitar.image_size.0;
             let guitar_size = LayoutSize::new(layout.size.width, guitar_height);
@@ -178,6 +179,7 @@ impl GuitarView {
         if Self::CHECKING_FRETS {
             return;
         }
+        if !theme.loaded { return; }
         let mut current_entry_pick = None;
         let mut string_states = [None; 6];
         let mut hit_strings = [(false, Duration::Zero); 6];
@@ -247,6 +249,7 @@ impl GuitarView {
         if Self::CHECKING_FRETS {
             return;
         }
+        if !theme.loaded { return; }
         let mut current_shape = None;
         for (entry, shape, playing) in query.iter() {
             if playing.value.is_current() {
@@ -326,6 +329,7 @@ impl GuitarView {
         capo_query: Query<&GuitarCapoData, Changed<GuitarCapoData>>,
         mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
     ) {
+        if !theme.loaded { return; }
         if settings.override_guitar_y.is_some() {
             return;
         }

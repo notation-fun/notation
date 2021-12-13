@@ -3,4 +3,6 @@
 cd `dirname $(readlink -f "$0")`
 cd ../apps/notation_viewer
 
+Set-Item -Path Env:RUST_BACKTRACE -Value 1
+
 cargo run --features native

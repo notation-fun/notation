@@ -121,6 +121,7 @@ impl RhythmBarData {
         mut font_query: Query<&mut Text>,
         mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
     ) {
+        if !theme.loaded { return; }
         let mut current_position = None;
         let mut current_bar = None;
         let mut current_chord = None;
