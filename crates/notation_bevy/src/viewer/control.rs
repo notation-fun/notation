@@ -224,6 +224,22 @@ impl ControlView {
         }
         Self::reload_tab(state, theme);
     }
+    pub fn toggle_show_melody_syllable(
+        state: &mut NotationAppState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.show_melody_syllable = !settings.show_melody_syllable;
+        Self::reload_tab(state, theme);
+    }
+    pub fn toggle_always_show_fret(
+        state: &mut NotationAppState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.always_show_fret = !settings.always_show_fret;
+        Self::reload_tab(state, theme);
+    }
     pub fn overrides_ui(
         ui: &mut Ui,
         settings: &mut NotationSettings,

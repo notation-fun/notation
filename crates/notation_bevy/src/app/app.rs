@@ -212,6 +212,10 @@ fn handle_keyboard_inputs(
         crate::viewer::control::ControlView::play_or_stop(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Backslash) {
         crate::viewer::control::ControlView::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
+    } else if keyboard_input.just_released(KeyCode::M) {
+        crate::viewer::control::ControlView::toggle_show_melody_syllable(&mut app_state, &mut settings, &mut theme);
+    } else if keyboard_input.just_released(KeyCode::F) {
+        crate::viewer::control::ControlView::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
     }
 }
 
