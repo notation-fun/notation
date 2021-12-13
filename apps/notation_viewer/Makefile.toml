@@ -58,7 +58,7 @@ command = "cargo"
 args = ["bundle", "--release", "--features", "native", "@@split(CARGO_RELEASE_ARGS, )"]
 command = "cargo"
 
-[tasks.release-to-amateurguitar-www]
+[tasks.release-web]
 script_runner = "@shell"
 script = ["""
 cp ./target/wasm.js ../../public/notation/
