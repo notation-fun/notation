@@ -587,8 +587,47 @@ impl ControlView {
             }
         });
     }
+    pub fn set_window_size(
+        window: &mut Window,
+        width: usize,
+        height: usize,
+    ) {
+        /* Bevy is using the requested width and height for a check, so if the window got resized after
+         * set_resolution(), set same value won't trigger update, use a quick hack here for now.
+         */
+        if window.requested_width() == width as f32 && window.requested_height() == height as f32 {
+            window.set_resolution(width as f32, (height / 2) as f32);
+        }
+        window.set_resolution(width as f32, height as f32);
+    }
+    pub fn window_size_ui(
+        ui: &mut Ui,
+        window: &mut Window,
+    ) {
+        CollapsingHeader::new(format!("Window: {} x {}", window.width() as i32, window.height() as i32))
+        .default_open(true)
+        .show(ui, |ui| {
+            ui.horizontal(|ui| {
+                if ui.button("1280 x 720").clicked() {
+                    Self::set_window_size(window, 1280, 720);
+                }
+                if ui.button("720 x 1280").clicked() {
+                    Self::set_window_size(window, 720, 1280);
+                }
+            });
+            ui.horizontal(|ui| {
+                if ui.button("1920 x 1080").clicked() {
+                    Self::set_window_size(window, 1920, 1080);
+                }
+                if ui.button("1080 x 1920").clicked() {
+                    Self::set_window_size(window, 1080, 1920);
+                }
+            });
+        });
+    }
     pub fn control_ui(
         egui_ctx: Res<EguiContext>,
+        mut windows: ResMut<Windows>,
         asset_server: Res<AssetServer>,
         mut state: ResMut<NotationAppState>,
         mut settings: ResMut<NotationSettings>,
@@ -628,6 +667,10 @@ impl ControlView {
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
                             ui.separator();
+                            if let Some(window) = windows.get_primary_mut() {
+                                Self::window_size_ui(ui, window);
+                                ui.separator();
+                            }
                             ui.label("Override Theme");
                             Self::guitar_tab_display_ui(ui, &mut state, &mut theme, &mut window_resized_evts);
                             Self::lyrics_display_ui(ui, &mut state, &mut theme, &mut window_resized_evts);
