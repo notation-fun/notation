@@ -1,6 +1,6 @@
 [package]
 name = "notation_viewer"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "Notation Viewer"
 
@@ -22,4 +22,4 @@ inspector = [
 ]
 
 [dependencies]
-notation_bevy = { path = "../../crates/notation_bevy" }
+notation_bevy = { version = "0.2.1", path = "../../crates/notation_bevy" }

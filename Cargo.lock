@@ -2806,7 +2806,7 @@ dependencies = [
 
 [[package]]
 name = "notation_bevy"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2890,7 +2890,7 @@ dependencies = [
 
 [[package]]
 name = "notation_midi"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "bevy",
  "bevy-inspector-egui",
@@ -2939,7 +2939,7 @@ dependencies = [
 
 [[package]]
 name = "notation_viewer"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "notation_bevy",
 ]
