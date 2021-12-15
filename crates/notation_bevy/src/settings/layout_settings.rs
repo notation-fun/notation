@@ -79,11 +79,11 @@ impl LayoutSettings {
             let (x, y) = match self.mode {
                 LayoutMode::Grid => {
                     let mut y = trans.y + delta_y;
-                    let min_y = layout.offset.y + grid_data.offset.y - theme.sizes.layout.margin;
+                    let min_y = layout.offset.y + grid_data.offset.y - theme.sizes.layout.page_margin;
                     if y < min_y {
                         y = min_y;
                     } else {
-                        let max_y = layout.offset.y + theme.sizes.layout.margin + grid_data.content_size.height - grid_data.grid_size.height;
+                        let max_y = layout.offset.y + theme.sizes.layout.page_margin + grid_data.content_size.height - grid_data.grid_size.height;
                         if y > max_y {
                             y = max_y;
                         }
@@ -158,13 +158,13 @@ impl LayoutSettings {
                 if last_row_height + pos_data.bar_layout.size.height <= grid_size.height / 2.0 {
                     y = grid_data.calc_cell_offset(row - 1, col).y;
                 }
-                let min_y = grid_size.height - content_size.height - theme.sizes.layout.margin * 2.0;
+                let min_y = grid_size.height - content_size.height - theme.sizes.layout.page_margin * 2.0;
                 if y < min_y {
                     y = min_y;
                 }
             }
         }
-        y - layout.offset.y - grid_data.offset.y + theme.sizes.layout.margin
+        y - layout.offset.y - grid_data.offset.y + theme.sizes.layout.page_margin
     }
     fn calc_line_focus_xy(
         &self,
@@ -195,7 +195,7 @@ impl LayoutSettings {
         let content_size = grid_data.content_size;
         let y = pos_data.bar_layout.offset.y + grid_size.height
             - content_size.height
-            - theme.sizes.layout.margin;
+            - theme.sizes.layout.page_margin;
         (
             x - layout.offset.x - grid_data.offset.x,
             y - layout.offset.y,
