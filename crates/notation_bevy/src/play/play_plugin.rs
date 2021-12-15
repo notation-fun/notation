@@ -123,7 +123,7 @@ fn on_tab_resized(
         let mut first_playing_layout = None;
         let mut current_playing_layout = None;
         for (_entity, playing, view, layout) in query.iter_mut() {
-            if view.bar_props.bar_ordinal == 1 {
+            if view.bar_props.bar_ordinal == 0 {
                 first_playing_layout = Some((playing, layout.clone()));
             }
             if playing.value == PlayingState::Current {
