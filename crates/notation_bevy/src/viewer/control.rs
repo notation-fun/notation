@@ -425,8 +425,10 @@ impl ControlView {
             if ui.button(mode_text).clicked() {
                 Self::toggle_layout_mode(state, settings, theme);
             }
-            if settings.layout.mode == LayoutMode::Grid {
-                ui.checkbox(&mut settings.layout.try_show_last_row_in_grid_mode, "Try Show Last Row");
+            let last_video_recording_mode = settings.layout.video_recording_mode;
+            ui.checkbox(&mut settings.layout.video_recording_mode, "Video Recording Mode");
+            if settings.layout.video_recording_mode != last_video_recording_mode {
+                Self::reload_tab(state, theme);
             }
         });
     }

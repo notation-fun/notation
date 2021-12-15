@@ -258,7 +258,7 @@ impl Default for LayoutSizes {
             margin: 20.0,
             bar_margin: 12.0,
             lane_margin: 2.0,
-            shapes_height: 46.0,
+            shapes_height: 52.0,
         }
     }
 }

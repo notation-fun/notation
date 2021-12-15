@@ -94,7 +94,7 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 for col in 0..cols {
                     if let Some(bar_layout) = self.bar_layouts.get(row * cols + col) {
                         for lane_layout in bar_layout.lane_layouts.iter() {
-                            if !lane_layout.is_ghost() {
+                            if engine.settings.layout.video_recording_mode || !lane_layout.is_ghost() {
                                 non_ghost_lanes.insert(lane_layout.id());
                             }
                         }
