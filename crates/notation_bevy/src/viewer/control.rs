@@ -360,6 +360,9 @@ impl ControlView {
                 if ui.button(format!("End: {}", midi_state.play_control.end_bar_ordinal)).clicked() {
                     Self::set_end_bar_ordinal(midi_state, play_control_evts);
                 }
+                if ui.button("Clear").clicked() {
+                    Self::clear_begin_end(midi_state, play_control_evts);
+                }
             });
             ui.add(Slider::new(&mut settings.speed_factor, 0.1..=2.0).text("Speed"));
             if float_ne!(play_speed, settings.speed_factor, abs <= 0.01) {

@@ -125,6 +125,11 @@ impl PlayControl {
     }
     pub fn tick(&mut self, jumped: bool, delta_seconds: f32) -> TickResult {
         if self.play_state.is_playing() {
+            let mut jumped = jumped;
+            if self.position.bar.bar_ordinal < self.begin_bar_ordinal || self.position.bar.bar_ordinal > self.end_bar_ordinal {
+                self.position.set_in_bar(self.begin_bar_ordinal, Units(0.0));
+                jumped = true;
+            }
             let delta_units = self.play_speed.calc_units(delta_seconds);
             self.position.tick(delta_units);
             let end_passed = self.position.bar.bar_ordinal > self.end_bar_ordinal;

@@ -7,6 +7,8 @@ use notation_model::prelude::{Entry, PlaySpeed};
 pub struct MidiSynth {}
 
 impl MidiSynth {
+    pub const VOLUME_FACTOR: f32 = 0.8; //The sound in browser is a bit too loud
+
     pub fn try_new() -> Option<MidiSynth> {
         Some(MidiSynth {})
     }
@@ -33,7 +35,7 @@ impl MidiSynth {
                 channel.into(),
                 key_number.into(),
                 speed.calc_seconds(msg.entry.tied_units()),
-                u8::from(velocity) as f32 / 128.0,
+                u8::from(velocity) as f32 / 128.0 * Self::VOLUME_FACTOR,
             )),
             _ => Err("NOT_IMPLEMENTED".to_owned()),
         }

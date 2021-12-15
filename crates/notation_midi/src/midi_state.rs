@@ -66,8 +66,9 @@ impl MidiChannel {
         }
     }
     pub fn calc_next_index(&mut self, position: &BarPosition) {
+        let pos_units = Units::from(*position);
         for (index, value) in self.messages.iter().enumerate() {
-            if Units::from(value.bar_position()) >= Units::from(*position) {
+            if Units::from(value.bar_position()) >= pos_units {
                 self.next_index = index;
                 return;
             }
@@ -82,13 +83,18 @@ impl MidiChannel {
         old_position: &Position,
         play_control: &PlayControl,
         end_passed: bool,
+        jumped: bool,
     ) -> usize {
         if self.messages.len() == 0 {
             return 0;
         }
-        if end_passed {
+        if end_passed || jumped {
             self.init_channel(settings, hub, speed);
-            self.calc_next_index(&play_control.begin_bar_position());
+            if end_passed {
+                self.calc_next_index(&play_control.begin_bar_position());
+            } else {
+                self.calc_next_index(&play_control.position.bar);
+            }
         } else if self.ensure_sorted() {
             self.calc_next_index(&old_position.bar);
         }
@@ -104,7 +110,11 @@ impl MidiChannel {
                     count += 1;
                     hub.send(settings, speed, next);
                 } else {
-                    break;
+                    if next.bar_position().bar_ordinal < play_control.begin_bar_ordinal {
+                        self.next_index += 1;
+                    } else {
+                        break;
+                    }
                 }
             } else {
                 break;
@@ -261,6 +271,7 @@ impl MidiState {
                     &old_position,
                     &self.play_control,
                     tick_result.end_passed,
+                    tick_result.jumped,
                 );
             }
         }

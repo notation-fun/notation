@@ -79,12 +79,13 @@ impl MidiHub {
         }
         self.check_output(settings);
         if let Some(synth) = &self.output_synth {
+            //println!("send to synth: {:?}", msg);
             if let Err(err) = synth.send(speed, msg) {
                 println!("send to synth failed: {:?} -> {:?}", msg, err);
             }
         }
         if let Some(conn) = &self.output_conn {
-            //println!("send midi: {:?}", msg);
+            //println!("send to midi: {:?}", msg);
             if let Err(err) = conn.lock().unwrap().send(&msg.to_midi()) {
                 println!("send to midi failed: {:?} -> {:?}", msg, err);
             }
