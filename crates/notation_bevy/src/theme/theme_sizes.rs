@@ -56,7 +56,7 @@ pub struct BarSizes {
 impl Default for BarSizes {
     fn default() -> Self {
         Self {
-            beat_size_range: (64.0, 256.0),
+            beat_size_range: (80.0, 256.0),
             bar_separator_extra: 3.0,
             bar_separator_size: 3.0,
             bar_beat_extra: 0.0,
