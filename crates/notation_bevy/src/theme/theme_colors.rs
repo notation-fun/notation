@@ -209,7 +209,7 @@ pub struct ChordColors {
 impl Default for ChordColors {
     fn default() -> Self {
         Self {
-            background: hex_linear("00000055"),
+            background: hex_linear("00000088"),
             diagram_outline: PlayingColors::new(
                 hex_linear("00000066"),
                 hex_linear("FFFFFF"),

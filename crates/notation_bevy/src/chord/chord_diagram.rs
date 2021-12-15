@@ -48,7 +48,7 @@ impl ShapeOp<NotationTheme, OutlineCircle> for ChordDiagramData {
             color,
             outline_width,
             outline_color,
-            offset: Vec3::new(0.0, 0.0, theme.z.mini_bar),
+            offset: Vec3::new(0.0, 0.0, theme.z.chord_diagram),
         }
     }
 }

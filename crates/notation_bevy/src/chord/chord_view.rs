@@ -94,6 +94,7 @@ impl ChordView {
                 assets,
                 chord_entity,
                 chord.bars.len().to_string().as_str(),
+                theme.z.chord_text
             );
         }
         chord_entity

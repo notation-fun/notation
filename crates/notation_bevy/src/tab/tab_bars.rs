@@ -63,7 +63,7 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
             0.0,
             self.tab.bars.len(),
         );
-        let margin = engine.theme.sizes.bar_margin(&engine.settings);
+        let cell_margin = engine.theme.sizes.cell_margin(&engine.settings);
         if engine.settings.layout.mode == LayoutMode::Line {
             let height = self
                 .bar_layouts
@@ -79,7 +79,7 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 1,
                 self.tab.bars.len(),
                 size,
-                margin,
+                cell_margin,
                 LayoutAnchor::TOP_LEFT,
                 grid_size,
             );
@@ -117,7 +117,7 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 rows,
                 cols,
                 row_sizes,
-                margin,
+                cell_margin,
                 LayoutAnchor::TOP_LEFT,
                 grid_size,
             )

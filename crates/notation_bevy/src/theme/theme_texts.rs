@@ -79,7 +79,7 @@ impl Default for ChordTexts {
     fn default() -> Self {
         Self {
             bars_font_size: 16.0,
-            bars_font_color: ThemeColors::hex_linear("333333"),
+            bars_font_color: ThemeColors::hex_linear("FFFFFF"),
             bars_x: 6.0,
             bars_y: -6.0,
         }
@@ -92,6 +92,7 @@ impl ChordTexts {
         assets: &NotationAssets,
         entity: Entity,
         text: &str,
+        z: f32,
     ) {
         //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
@@ -105,7 +106,7 @@ impl ChordTexts {
             VerticalAlign::Bottom,
             self.bars_x,
             self.bars_y,
-            30.0,
+            z,
         );
     }
     pub fn update_bars_xy(&self, transform: &mut Transform, layout: &LayoutData) {

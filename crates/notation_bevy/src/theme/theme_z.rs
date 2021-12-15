@@ -22,7 +22,9 @@ pub struct ThemeZ {
     pub guitar_capo: f32,
     pub tab_header: f32,
     pub rhythm_bar: f32,
+    pub chord_diagram: f32,
     pub chord_note: f32,
+    pub chord_text: f32,
     pub mini_map: f32,
     pub mini_bar: f32,
 }
@@ -46,7 +48,9 @@ impl Default for ThemeZ {
             guitar_capo: 24.0,
             tab_header: 20.0,
             rhythm_bar: 22.0,
+            chord_diagram: 22.0,
             chord_note: 24.0,
+            chord_text: 26.0,
             mini_map: 40.0,
             mini_bar: 42.0,
         }

@@ -248,7 +248,7 @@ impl MiniMapSizes {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutSizes {
-    pub margin: f32,
+    pub page_margin: f32,
     pub bar_margin: f32,
     pub lane_margin: f32,
     pub shapes_height: f32,
@@ -257,7 +257,7 @@ pub struct LayoutSizes {
 impl Default for LayoutSizes {
     fn default() -> Self {
         Self {
-            margin: 20.0,
+            page_margin: 12.0,
             bar_margin: 16.0,
             lane_margin: 2.0,
             shapes_height: 52.0,
@@ -265,9 +265,9 @@ impl Default for LayoutSizes {
     }
 }
 impl ThemeSizes {
-    pub fn bar_margin(&self, setting: &NotationSettings) -> LayoutSize {
+    pub fn cell_margin(&self, setting: &NotationSettings) -> LayoutSize {
         let height = if setting.layout.video_recording_mode {
-            self.layout.bar_margin * 3.0
+            self.layout.bar_margin * 4.0
         } else {
             self.layout.bar_margin
         };
