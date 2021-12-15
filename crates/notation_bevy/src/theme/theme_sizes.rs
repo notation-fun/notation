@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
+use crate::prelude::NotationSettings;
+
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct PlayingSize {
@@ -256,18 +258,21 @@ impl Default for LayoutSizes {
     fn default() -> Self {
         Self {
             margin: 20.0,
-            bar_margin: 12.0,
+            bar_margin: 16.0,
             lane_margin: 2.0,
             shapes_height: 52.0,
         }
     }
 }
-impl LayoutSizes {
-    pub fn bar_margin(&self) -> LayoutSize {
-        LayoutSize::new(0.0, self.bar_margin)
-    }
-}
 impl ThemeSizes {
+    pub fn bar_margin(&self, setting: &NotationSettings) -> LayoutSize {
+        let height = if setting.layout.video_recording_mode {
+            self.layout.bar_margin * 3.0
+        } else {
+            self.layout.bar_margin
+        };
+        LayoutSize::new(0.0, height)
+    }
     pub fn calc_lane_height(&self, lane_kind: LaneKind) -> f32 {
         match lane_kind {
             LaneKind::Lyrics => self.lyrics.layout_height(),
