@@ -2,6 +2,8 @@ use std::sync::{Arc, Mutex};
 
 use bevy_kira_audio::{AudioStream, Frame};
 
+use super::midi_synth::MidiSynth;
+
 pub const AUDIO_BUFFER_SIZE: usize = 2048 * 2;
 
 pub type AudioBuffer = [f32; AUDIO_BUFFER_SIZE];
@@ -97,8 +99,8 @@ impl AudioStream for MidiAudioStream {
         if self.index + 1 >= AUDIO_BUFFER_SIZE {
             return Frame::new(0.0, 0.0);
         }
-        let left = self.buffer[self.index];
-        let right = self.buffer[self.index + 1];
+        let left = self.buffer[self.index] * MidiSynth::VOLUME_FACTOR;
+        let right = self.buffer[self.index + 1] * MidiSynth::VOLUME_FACTOR;
         self.index += 2;
         Frame::new(left, right)
     }
