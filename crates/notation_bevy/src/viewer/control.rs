@@ -625,6 +625,15 @@ impl ControlView {
             });
         });
     }
+    pub fn window_sizes_ui(
+        ui: &mut Ui,
+        windows: &mut Windows,
+    ) {
+        if let Some(window) = windows.get_primary_mut() {
+            Self::window_size_ui(ui, window);
+            ui.separator();
+        }
+    }
     pub fn control_ui(
         egui_ctx: Res<EguiContext>,
         mut windows: ResMut<Windows>,
@@ -667,10 +676,8 @@ impl ControlView {
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
                             ui.separator();
-                            if let Some(window) = windows.get_primary_mut() {
-                                Self::window_size_ui(ui, window);
-                                ui.separator();
-                            }
+                            #[cfg(not(target_arch = "wasm32"))]
+                            Self::window_sizes_ui(ui, &mut windows);
                             ui.label("Override Theme");
                             Self::guitar_tab_display_ui(ui, &mut state, &mut theme, &mut window_resized_evts);
                             Self::lyrics_display_ui(ui, &mut state, &mut theme, &mut window_resized_evts);
