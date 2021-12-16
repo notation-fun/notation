@@ -12,7 +12,7 @@ rm -rf release/osx/notation_viewer.app
 cp -vr target/release/bundle/osx/notation_viewer.app/ release/osx/
 cd release/osx/notation_viewer.app/Contents/MacOS
 ln -s ../Resources/assets .
-cd ../../
+cd ../../../
 
 rm -rf ~/Applications/notation_viewer.app
-cp -vr release/osx/notation_viewer.app ~/Applications/
+cp -vr notation_viewer.app ~/Applications/
