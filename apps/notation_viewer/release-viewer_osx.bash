@@ -14,3 +14,5 @@ cd release/osx/notation_viewer.app/Contents/MacOS
 ln -s ../Resources/assets .
 cd ../../
 
+rm -rf ~/Applications/notation_viewer.app
+cp -vr release/osx/notation_viewer.app ~/Applications/
