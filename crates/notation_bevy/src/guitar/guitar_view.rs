@@ -20,11 +20,10 @@ use super::guitar_string::{GuitarStringData};
 #[derive(Clone, Debug)]
 pub struct GuitarView {
     pub tab: Arc<Tab>,
-    pub syllable: Syllable,
 }
 impl GuitarView {
-    pub fn new(tab: Arc<Tab>, syllable: Syllable) -> Self {
-        Self { tab, syllable }
+    pub fn new(tab: Arc<Tab>) -> Self {
+        Self { tab }
     }
 }
 impl Display for GuitarView {
@@ -52,7 +51,7 @@ impl GuitarView {
         let guitar_entity = BevyUtil::spawn_child_bundle(
             commands,
             entity,
-            ViewBundle::from(GuitarView::new(tab.clone(), Syllable::default())),
+            ViewBundle::from(GuitarView::new(tab.clone())),
         );
         let sprite_bundle = SpriteBundle {
             sprite: Sprite::new(Vec2::new(
@@ -238,7 +237,9 @@ impl GuitarView {
     }
     pub fn update_hand_shape6(
         mut commands: Commands,
+        assets: Res<NotationAssets>,
         theme: Res<NotationTheme>,
+        settings: Res<NotationSettings>,
         query: Query<(&Arc<LaneEntry>, &HandShape6, &EntryPlaying), Changed<EntryPlaying>>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
@@ -283,6 +284,10 @@ impl GuitarView {
                     finger_entity,
                 );
                 finger_data.update(&mut commands, &theme, finger_entity);
+                let scale = theme.guitar.calc_scale(finger_data.value.extra.guitar_size.width);
+                if settings.show_guitar_syllable {
+                    theme.guitar.syllable_text.spawn_scaled_syllable_text(&mut commands, finger_entity, &assets, &settings, &finger_data.value.calc_syllable(), scale)
+                }
             }
             for (string_entity, mut string_data) in string_query.iter_mut() {
                 string_data.update_value(shape, fretboard, pick, meta.clone());

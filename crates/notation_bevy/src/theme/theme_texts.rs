@@ -207,6 +207,7 @@ pub struct MelodyTexts {
     pub text_x: f32,
     pub text_y: f32,
     pub text_z: f32,
+    pub horizontal_center: bool,
     pub syllable_font_size: f32,
     pub syllable_font_color: Color,
 }
@@ -216,6 +217,7 @@ impl Default for MelodyTexts {
             text_x: 4.0,
             text_y: -12.0,
             text_z: 1.0,
+            horizontal_center: false,
             syllable_font_size: 16.0,
             syllable_font_color: Color::hex("000000").unwrap(),
         }
@@ -230,6 +232,17 @@ impl MelodyTexts {
         settings: &NotationSettings,
         syllable: &Syllable,
     ) {
+        self.spawn_scaled_syllable_text(commands, entity, assets, settings, syllable, 1.0);
+    }
+    pub fn spawn_scaled_syllable_text(
+        &self,
+        commands: &mut Commands,
+        entity: Entity,
+        assets: &NotationAssets,
+        settings: &NotationSettings,
+        syllable: &Syllable,
+        scale: f32,
+    ) {
         let text = if settings.show_syllable_as_num {
             syllable.to_text()
         } else {
@@ -241,12 +254,12 @@ impl MelodyTexts {
             entity,
             text.as_str(),
             assets.en_font.clone(),
-            self.syllable_font_size,
+            self.syllable_font_size * scale,
             self.syllable_font_color,
-            HorizontalAlign::Right,
+            if self.horizontal_center { HorizontalAlign::Center } else { HorizontalAlign::Right } ,
             VerticalAlign::Center,
-            self.text_x,
-            self.text_y,
+            self.text_x * scale,
+            self.text_y * scale,
             self.text_z,
         );
     }

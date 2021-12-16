@@ -1,9 +1,12 @@
 use serde::{Deserialize, Serialize};
 
+use bevy::prelude::*;
 use notation_model::prelude::GUITAR_STRING_NUM;
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
+
+use super::theme_texts::MelodyTexts;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -20,6 +23,8 @@ pub struct GuitarTheme {
     pub capo_height_factor: f32,
     pub guitar_width: f32,
     pub hit_string_seconds_range: (f32, f32),
+    pub syllable_text: MelodyTexts,
+    pub syllable_base_width: f32,
 }
 
 impl Default for GuitarTheme {
@@ -47,6 +52,15 @@ impl Default for GuitarTheme {
             capo_height_factor: 0.02,
             guitar_width: 128.0,
             hit_string_seconds_range: (0.05, 0.15),
+            syllable_text: MelodyTexts {
+                text_x: 0.0,
+                text_y: 24.0,
+                text_z: 1.0,
+                horizontal_center: true,
+                syllable_font_size: 18.0,
+                syllable_font_color: Color::hex("FFFFFF").unwrap(),
+            },
+            syllable_base_width: 256.0,
         }
     }
 }
@@ -61,6 +75,9 @@ impl GuitarTheme {
             (string - 1) as usize
         };
         self.string_widthes[index]
+    }
+    pub fn calc_scale(&self, guitar_width: f32) -> f32 {
+        guitar_width / self.syllable_base_width
     }
     pub fn calc_string_x(&self, string: u8, guitar_width: f32) -> f32 {
         -1.0 * (string as f32 - 3.5) * guitar_width * self.string_x_factor

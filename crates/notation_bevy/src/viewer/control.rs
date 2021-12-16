@@ -224,6 +224,14 @@ impl ControlView {
         }
         Self::reload_tab(state, theme);
     }
+    pub fn toggle_show_guitar_syllable(
+        state: &mut NotationAppState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.show_guitar_syllable = !settings.show_guitar_syllable;
+        Self::reload_tab(state, theme);
+    }
     pub fn toggle_show_melody_syllable(
         state: &mut NotationAppState,
         settings: &mut NotationSettings,
@@ -383,6 +391,11 @@ impl ControlView {
         CollapsingHeader::new("Display Options")
         .default_open(true)
         .show(ui, |ui| {
+            let show_guitar_syllable = settings.show_guitar_syllable;
+            ui.checkbox(&mut settings.show_guitar_syllable, "Show Guitar Syllable");
+            if show_guitar_syllable != settings.show_guitar_syllable {
+                Self::reload_tab(state, theme);
+            }
             let show_melody_syllable = settings.show_melody_syllable;
             ui.checkbox(&mut settings.show_melody_syllable, "Show Melody Syllable");
             if show_melody_syllable != settings.show_melody_syllable {

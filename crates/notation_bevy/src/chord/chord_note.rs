@@ -24,6 +24,11 @@ pub trait ChordNoteExtra: Send + Sync + Clone {
     fn show_dots(&self) -> bool {
         true
     }
+    /* not sure whether want to add this here
+    fn show_syllable(&self) -> bool {
+        true
+    }
+     */
 }
 
 #[derive(Clone, Debug)]
