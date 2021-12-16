@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::{LayoutData, GridData};
-use notation_midi::prelude::{JumpToBarEvent, MidiState, PlayControlEvent};
+use notation_midi::prelude::{JumpToBarEvent, MidiState, PlayControlEvent, MidiSettings};
 use notation_model::prelude::TabBarProps;
 
 use crate::bar::bar_view::BarView;
@@ -12,7 +12,7 @@ use crate::mini::mini_bar::MiniBar;
 use crate::play::play_button::PlayButton;
 use crate::prelude::{
     AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates,
-    NotationSettings, NotationTheme, TabAsset, TabBars, TabState,
+    NotationSettings, NotationTheme, TabAsset, TabBars, TabState, GuitarView,
 };
 use crate::rhythm::rhythm_bar::{RhythmBarData};
 use crate::rhythm::rhythm_view::RhythmView;
@@ -78,7 +78,9 @@ fn on_mouse_clicked(
     rhythm_query: Query<(&Arc<RhythmView>, &LayoutData, &GlobalTransform)>,
     chord_query: Query<(&Arc<ChordView>, &LayoutData, &GlobalTransform)>,
     bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
+    tab_control_query: Query<(&Arc<TabControl>, &LayoutData, &GlobalTransform)>,
     mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
+    midi_settings: Res<MidiSettings>,
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
@@ -142,6 +144,12 @@ fn on_mouse_clicked(
             for (bar, layout, global_transform) in bar_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
                     jump_to_bar(&mut jump_to_bar_evts, bar.bar_props);
+                    return;
+                }
+            }
+            for (_tab_control, layout, global_transform) in tab_control_query.iter() {
+                if layout.is_pos_inside(pos, global_transform) {
+                    crate::viewer::control::ControlView::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
                     return;
                 }
             }
