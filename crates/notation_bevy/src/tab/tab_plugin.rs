@@ -147,6 +147,7 @@ fn on_mouse_clicked(
                     return;
                 }
             }
+            // Not using GuitarView here, since it 's y position been changed to adjust with capo position
             for (_tab_control, layout, global_transform) in tab_control_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
                     crate::viewer::control::ControlView::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
