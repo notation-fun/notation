@@ -1,13 +1,13 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutSize};
+use notation_bevy_utils::prelude::{BevyUtil, LayoutSize, ShapeOp};
 use notation_model::prelude::{
     Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Note, Pick, Syllable, TabMeta,
 };
 
 use crate::chord::chord_note::{ChordNoteData, ChordNoteExtra, ChordNoteValue};
-use crate::prelude::NotationTheme;
+use crate::prelude::{NotationTheme, NotationAssets, NotationSettings};
 
 #[derive(Clone, Debug)]
 pub struct FretFingerExtra {
@@ -150,6 +150,20 @@ impl FretFingerData {
                 fretboard.shape_note(shape, self.value.extra.string)
             };
             self.set_chord_meta_note(chord, meta, note);
+        }
+    }
+    pub fn update_with_syllable(
+        &self,
+        commands: &mut Commands,
+        assets: &NotationAssets,
+        theme: &NotationTheme,
+        settings: &NotationSettings,
+        entity: Entity,
+    ) {
+        self.update(commands, theme, entity);
+        let scale = theme.guitar.calc_scale(self.value.extra.guitar_size.width);
+        if settings.show_guitar_syllable {
+            theme.guitar.syllable_text.spawn_scaled_syllable_text(commands, entity, assets, settings, &self.value.calc_syllable(), scale)
         }
     }
 }

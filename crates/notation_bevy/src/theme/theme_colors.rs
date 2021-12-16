@@ -262,9 +262,9 @@ impl Default for StringsColors {
             hit: hex_linear("FFFFFF"),
             muted: hex_linear("333333"),
             string: PlayingColors::new(
-                hex_linear("D3B59C"),
+                hex_linear("D3B59C88"),
                 hex_linear("FFFFFF"),
-                hex_linear("D3B59C"),
+                hex_linear("D3B59C88"),
             ),
             fret: PlayingColors::new(
                 hex_linear("000000"),

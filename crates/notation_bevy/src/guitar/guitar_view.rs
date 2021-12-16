@@ -167,6 +167,8 @@ impl GuitarView {
     }
     pub fn update_string_state(
         mut commands: Commands,
+        assets: Res<NotationAssets>,
+        settings: Res<NotationSettings>,
         midi_state: Res<MidiState>,
         time: Res<Time>,
         theme: Res<NotationTheme>,
@@ -230,7 +232,7 @@ impl GuitarView {
                             finger_entity,
                         );
                     }
-                    finger_data.update(&mut commands, &theme, finger_entity);
+                    finger_data.update_with_syllable(&mut commands, &assets, &theme, &settings, finger_entity);
                 }
             }
         }
@@ -283,11 +285,7 @@ impl GuitarView {
                     Some(&dot_query),
                     finger_entity,
                 );
-                finger_data.update(&mut commands, &theme, finger_entity);
-                let scale = theme.guitar.calc_scale(finger_data.value.extra.guitar_size.width);
-                if settings.show_guitar_syllable {
-                    theme.guitar.syllable_text.spawn_scaled_syllable_text(&mut commands, finger_entity, &assets, &settings, &finger_data.value.calc_syllable(), scale)
-                }
+                finger_data.update_with_syllable(&mut commands, &assets, &theme, &settings, finger_entity);
             }
             for (string_entity, mut string_data) in string_query.iter_mut() {
                 string_data.update_value(shape, fretboard, pick, meta.clone());
