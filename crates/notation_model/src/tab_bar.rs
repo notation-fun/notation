@@ -148,6 +148,50 @@ impl TabBar {
         }
         None
     }
+    pub fn get_next_entries<T, F: Fn(&LaneEntry) -> Option<T>>(
+        &self,
+        in_bar_pos: Units,
+        predicate: &F,
+    ) -> Vec<T> {
+        self.lanes.iter().filter_map(|lane| {
+            lane.get_entry(
+                &|x: &LaneEntry| {
+                    if x.props.in_bar_pos.is_bigger_than(&in_bar_pos) {
+                        predicate(x)
+                    } else {
+                        None
+                    }
+            })
+        }).collect()
+    }
+    pub fn get_next_entry<T, F: Fn(&LaneEntry) -> Option<T>>(
+        &self,
+        in_bar_pos: Units,
+        predicate: &F,
+    ) -> Option<T> {
+        let mut result_in_bar_pos = Units(f32::MAX);
+        let mut result = None;
+        for lane in self.lanes.iter() {
+            if let Some((in_bar_pos, entry)) = lane.get_entry(
+                &|x: &LaneEntry| {
+                    if result_in_bar_pos < x.props.in_bar_pos {
+                        None
+                    } else if x.props.in_bar_pos.is_bigger_than(&in_bar_pos) {
+                        if let Some(t) = predicate(x) {
+                            Some((x.props.in_bar_pos, t))
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+            }) {
+                result_in_bar_pos = in_bar_pos;
+                result = Some(entry)
+            }
+        }
+        result
+    }
     pub fn get_entry_in_other_lane<T, F: Fn(&LaneEntry) -> Option<T>>(
         &self,
         lane_kind: LaneKind,
@@ -156,23 +200,13 @@ impl TabBar {
         predicate: &F,
     ) -> Option<T> {
         if let Some(lane) = self.get_lane_of_kind(lane_kind, track_index) {
-            for entry in lane.entries.iter() {
-                let mut in_range = in_bar_pos.is_none();
-                if let Some(in_bar_pos) = in_bar_pos {
-                    if in_bar_pos < entry.props.in_bar_pos {
-                        break;
-                    } else {
-                        in_range = in_bar_pos < entry.props.in_bar_pos + entry.model().props.tied_units
-                    }
-                }
-                if in_range {
-                    if let Some(result) = predicate(entry.as_ref()) {
-                        return Some(result);
-                    }
-                }
+            match in_bar_pos {
+                None => lane.get_entry(predicate),
+                Some(in_bar_pos) => lane.get_entry_at(in_bar_pos, predicate),
             }
+        } else {
+            None
         }
-        None
     }
     pub fn get_chords(&self) -> Vec<Chord> {
         let mut chords = Vec::new();

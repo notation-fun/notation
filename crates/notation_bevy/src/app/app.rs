@@ -12,7 +12,7 @@ use crate::{prelude::*, settings::layout_settings::LayoutMode};
 use crate::ui::viewer::TabViewerPlugin;
 use crate::viewer::control::ControlView;
 
-use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent};
+use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent, MidiSettings, JumpToBarEvent};
 use notation_model::prelude::*;
 
 use super::app_state::{NotationAppState, TabPathes};
@@ -194,9 +194,11 @@ fn handle_keyboard_inputs(
     mut app_state: ResMut<NotationAppState>,
     mut settings: ResMut<NotationSettings>,
     mut theme: ResMut<NotationTheme>,
+    midi_settings: Res<MidiSettings>,
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
     mut window_resized_evts: EventWriter<WindowResizedEvent>,
+    mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
 ) {
     if app_state.tab.is_none() {
         return;
@@ -210,6 +212,12 @@ fn handle_keyboard_inputs(
         crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Return) {
         crate::viewer::control::ControlView::stop(&mut midi_state, &mut play_control_evts);
+    } else if keyboard_input.just_released(KeyCode::Left) {
+        crate::viewer::control::ControlView::jump_to_last_bar(&midi_state, &mut jump_to_bar_evts);
+    } else if keyboard_input.just_released(KeyCode::Right) {
+        crate::viewer::control::ControlView::jump_to_next_bar(&midi_state, &mut jump_to_bar_evts);
+    } else if keyboard_input.just_released(KeyCode::Down) {
+        crate::viewer::control::ControlView::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Backslash) {
         crate::viewer::control::ControlView::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
     } else if keyboard_input.just_released(KeyCode::G) {
@@ -231,6 +239,9 @@ fn handle_keyboard_inputs(
         crate::viewer::control::ControlView::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::C) {
         crate::viewer::control::ControlView::clear_begin_end(&mut midi_state, &mut play_control_evts);
+    } else if keyboard_input.just_released(KeyCode::D) {
+        crate::viewer::control::ControlView::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
+        crate::viewer::control::ControlView::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
     }
 }
 

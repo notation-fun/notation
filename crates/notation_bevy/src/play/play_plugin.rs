@@ -261,29 +261,28 @@ fn on_tick(
     } = tick_result;
     if *stopped {
         tab_state.set_play_state(commands, state_entity, PlayState::Stopped);
-    } else {
-        let playing_bar_ordinal = new_position.bar.bar_ordinal;
-        BarPlaying::update(bar_playing_query, tab_state, playing_bar_ordinal);
-        EntryPlaying::update_with_pos(
-            entry_playing_query,
-            tab_state,
-            new_position,
-            *end_passed,
-            *jumped,
-        );
-        let chord_changed = ChordPlaying::update(chord_playing_query, tab_state, new_position);
-        if let Some(pos_data) =
-            PosIndicatorData::update_pos(commands, theme, pos_indicator_query, *new_position)
-        {
-            if settings.layout.mode == LayoutMode::Line && pos_data.is_synced() {
-                settings
-                    .layout
-                    .focus_bar(commands, theme, tab_bars_query, &pos_data);
-            }
-            if chord_changed > 0 {
-                if let Some(bar_data) = BarIndicatorData::update_pos(commands, theme, bar_indicator_query, pos_data.bar_props, pos_data.bar_position.in_bar_pos) {
-                    ChordColorBackground::update_color(commands, theme, chord_color_background_query, bar_data.chord);
-                }
+    }
+    let playing_bar_ordinal = new_position.bar.bar_ordinal;
+    BarPlaying::update(bar_playing_query, tab_state, playing_bar_ordinal);
+    EntryPlaying::update_with_pos(
+        entry_playing_query,
+        tab_state,
+        new_position,
+        *end_passed,
+        *jumped,
+    );
+    let chord_changed = ChordPlaying::update(chord_playing_query, tab_state, new_position);
+    if let Some(pos_data) =
+        PosIndicatorData::update_pos(commands, theme, pos_indicator_query, *new_position)
+    {
+        if settings.layout.mode == LayoutMode::Line && pos_data.is_synced() {
+            settings
+                .layout
+                .focus_bar(commands, theme, tab_bars_query, &pos_data);
+        }
+        if chord_changed > 0 {
+            if let Some(bar_data) = BarIndicatorData::update_pos(commands, theme, bar_indicator_query, pos_data.bar_props, pos_data.bar_position.in_bar_pos) {
+                ChordColorBackground::update_color(commands, theme, chord_color_background_query, bar_data.chord);
             }
         }
     }

@@ -15,6 +15,8 @@ pub struct MidiSettings {
     pub guitar_velocity: u8,
     pub piano_sound: u8,
     pub piano_velocity: u8,
+    pub seeking_track: TrackKind,
+    pub seeking_init_channel: bool,
 }
 
 impl Default for MidiSettings {
@@ -28,6 +30,8 @@ impl Default for MidiSettings {
             guitar_velocity: 120,
             piano_sound: GMSoundSet::AcousticGrandPiano as u8,
             piano_velocity: 110,
+            seeking_track: TrackKind::Guitar,
+            seeking_init_channel: true,
         }
     }
 }

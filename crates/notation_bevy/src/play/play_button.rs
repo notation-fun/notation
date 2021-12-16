@@ -101,10 +101,9 @@ impl Display for PlayButtonShape {
 impl PlayButtonShape {
     pub fn get_color(&self, theme: &NotationTheme) -> Color {
         match self.action {
-            PlayButtonAction::PlayPause =>
-                theme.colors.ui.button_on,
+            PlayButtonAction::PlayPause |
             PlayButtonAction::Stop =>
-                theme.colors.ui.of_button(!self.play_state.is_stopped()),
+                theme.colors.ui.button_on,
             PlayButtonAction::LoopMode =>
                 theme.colors.ui.of_button(self.should_loop),
             PlayButtonAction::SetBegin |
@@ -194,8 +193,7 @@ impl PlayButton {
     ) {
         for (entity, mut shape) in shape_query.iter_mut() {
             shape.play_state = play_state.clone();
-            if shape.action == PlayButtonAction::PlayPause
-                || shape.action == PlayButtonAction::Stop {
+            if shape.action == PlayButtonAction::PlayPause {
                 shape.update(commands, theme, entity);
             }
         }

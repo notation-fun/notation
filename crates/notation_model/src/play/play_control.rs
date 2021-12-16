@@ -1,3 +1,5 @@
+use notation_proto::prelude::TabPosition;
+
 use crate::prelude::{BarPosition, Bpm, PlayState, Position, Tab, TabMeta, Units};
 
 #[derive(Debug)]
@@ -115,40 +117,44 @@ impl PlayControl {
         }
     }
     pub fn stop(&mut self) -> bool {
-        if self.play_state.is_stopped() {
-            false
-        } else {
+        if !self.play_state.is_stopped() {
             self.play_state = PlayState::Stopped;
-            self.position.set_in_bar(self.begin_bar_ordinal, Units(0.0));
-            true
         }
+        self.position.set_in_bar(self.begin_bar_ordinal, Units(0.0));
+        true
+    }
+    pub fn _tick_to_position(&mut self, jumped: bool, pos: TabPosition) -> TickResult {
+        self.position.set_in_tab(pos.in_tab_pos);
+        let end_passed = self.position.bar.bar_ordinal > self.end_bar_ordinal;
+        let stopped = if end_passed {
+            if self.should_loop {
+                self.position
+                    .set_in_bar(self.begin_bar_ordinal, self.position.bar.in_bar_pos);
+                if self.position.bar.bar_ordinal > self.end_bar_ordinal {
+                    self.stop() //Corner case for too small range
+                } else {
+                    false
+                }
+            } else {
+                self.stop()
+            }
+        } else {
+            false
+        };
+        TickResult::new(true, end_passed, stopped, jumped)
     }
     pub fn tick(&mut self, jumped: bool, delta_seconds: f32) -> TickResult {
         if self.play_state.is_playing() {
             let mut jumped = jumped;
-            if self.position.bar.bar_ordinal < self.begin_bar_ordinal || self.position.bar.bar_ordinal > self.end_bar_ordinal {
+            let delta_units = if self.position.bar.bar_ordinal < self.begin_bar_ordinal
+                    || self.position.bar.bar_ordinal > self.end_bar_ordinal {
                 self.position.set_in_bar(self.begin_bar_ordinal, Units(0.0));
                 jumped = true;
-            }
-            let delta_units = self.play_speed.calc_units(delta_seconds);
-            self.position.tick(delta_units);
-            let end_passed = self.position.bar.bar_ordinal > self.end_bar_ordinal;
-            let stopped = if end_passed {
-                if self.should_loop {
-                    self.position
-                        .set_in_bar(self.begin_bar_ordinal, self.position.bar.in_bar_pos);
-                    if self.position.bar.bar_ordinal > self.end_bar_ordinal {
-                        self.stop() //Corner case for too small range
-                    } else {
-                        false
-                    }
-                } else {
-                    self.stop()
-                }
+                Units(0.0)
             } else {
-                false
+                self.play_speed.calc_units(delta_seconds)
             };
-            TickResult::new(true, end_passed, stopped, jumped)
+            self._tick_to_position(jumped, TabPosition::new(self.position.tab.in_tab_pos + delta_units)) 
         } else {
             TickResult::new(false, false, false, jumped)
         }

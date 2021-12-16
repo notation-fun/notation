@@ -60,7 +60,7 @@ impl Plugin for TabPlugin {
     }
 }
 
-fn jump_to_bar(
+pub fn jump_to_bar(
     jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     bar_props: TabBarProps,
 ) {
@@ -96,7 +96,7 @@ fn on_mouse_clicked(
             println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
             for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
-                    jump_to_bar( &mut jump_to_bar_evts, mini_bar.bar_props);
+                    jump_to_bar(&mut jump_to_bar_evts, mini_bar.bar_props);
                     return;
                 }
             }

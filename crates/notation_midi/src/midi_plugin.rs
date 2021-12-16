@@ -84,6 +84,7 @@ fn on_play_control_evt(
     for evt in evts.iter() {
         match evt {
             PlayControlEvent::OnPlayState(play_state) => {
+                state.seek_position = None;
                 if !play_state.is_playing() {
                     state.init_channels(&settings, &mut hub);
                 }

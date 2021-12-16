@@ -129,7 +129,7 @@ impl ModelEntry {
         if let Some(track) = self.track.upgrade() {
             track.kind.clone()
         } else {
-            TrackKind::Custom("".to_owned())
+            TrackKind::Unsupported
         }
     }
     pub fn track_index(&self) -> Option<usize> {

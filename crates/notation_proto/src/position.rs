@@ -61,6 +61,9 @@ impl BarPosition {
             in_bar_pos,
         }
     }
+    pub fn with_in_bar_pos(&self, in_bar_pos: Units) -> Self {
+        Self::new(self.bar_units, self.bar_ordinal, in_bar_pos)
+    }
     pub fn with_delay(&self, delay: Units) -> Self {
         Self::new(self.bar_units, self.bar_ordinal, self.in_bar_pos + delay)
     }
@@ -102,9 +105,6 @@ impl Position {
     }
     pub fn cal_bar_pos(&self, bar_ordinal: usize) -> Units {
         Units(bar_ordinal as f32 * self.bar.bar_units.0)
-    }
-    pub fn tick(&mut self, delta_units: Units) {
-        self.set_in_tab(self.tab.in_tab_pos + delta_units);
     }
     pub fn set_in_tab(&mut self, pos: Units) {
         self.tab = TabPosition::new(pos);

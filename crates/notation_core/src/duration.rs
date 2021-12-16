@@ -58,6 +58,21 @@ impl Unit {
 #[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug, Default)]
 pub struct Units(pub f32);
 
+impl Units {
+    pub const _MIN_ACCURACY: f32 = 0.00001;
+    pub const MIN_ACCURACY: Units = Units(Self::_MIN_ACCURACY);
+
+    pub fn is_bigger_than(&self, other: &Units) -> bool {
+        self.0 > other.0 + Self::_MIN_ACCURACY
+    }
+}
+
+impl Display for Units {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<Units>({})", self.0)
+    }
+}
+
 impl Add for Units {
     type Output = Self;
 

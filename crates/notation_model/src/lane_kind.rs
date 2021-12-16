@@ -44,6 +44,7 @@ impl LaneKind {
     }
     pub fn of_entry(track_kind: &TrackKind, entry: &ProtoEntry) -> Self {
         match track_kind {
+            TrackKind::Unsupported => Self::None,
             TrackKind::Meta => Self::Meta,
             TrackKind::Chord => Self::Chord,
             TrackKind::Lyrics => Self::Lyrics,
@@ -61,7 +62,6 @@ impl LaneKind {
             TrackKind::Piano => Self::Keyboard,
             TrackKind::Drums => Self::None,
             TrackKind::Bass => Self::None,
-            TrackKind::Custom(_) => Self::Harmany,
         }
     }
     pub fn of_entries(track_kind: &TrackKind, entries: &Vec<Arc<ModelEntry>>) -> LaneKind {

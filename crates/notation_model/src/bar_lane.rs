@@ -1,6 +1,8 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
 
+use notation_proto::prelude::Units;
+
 use crate::prelude::{LaneEntry, LaneKind, Slice, Tab, TabBar, TabBarProps, Track, TrackProps};
 
 #[derive(Copy, Clone, Debug, Default)]
@@ -73,5 +75,37 @@ impl BarLane {
     }
     pub fn bar_props(&self) -> TabBarProps {
         self.bar().map(|x| x.props).unwrap_or_default()
+    }
+    pub fn get_entry_at<T, F: Fn(&LaneEntry) -> Option<T>>(
+        &self,
+        in_bar_pos: Units,
+        predicate: &F,
+    ) -> Option<T> {
+        for entry in self.entries.iter() {
+            if in_bar_pos < entry.props.in_bar_pos {
+                break;
+            } else {
+                if in_bar_pos < entry.props.in_bar_pos + entry.model().props.tied_units {
+                    if let Some(result) = predicate(entry.as_ref()) {
+                        return Some(result);
+                    }
+                }
+            }
+        }
+        None
+    }
+    pub fn get_next_entry<T, F: Fn(&LaneEntry) -> Option<T>>(
+        &self,
+        in_bar_pos: Units,
+        predicate: &F,
+    ) -> Option<T> {
+        self.get_entry(
+            &|x: &LaneEntry| {
+                if x.props.in_bar_pos.is_bigger_than(&in_bar_pos) {
+                    predicate(x)
+                } else {
+                    None
+                }
+        })
     }
 }

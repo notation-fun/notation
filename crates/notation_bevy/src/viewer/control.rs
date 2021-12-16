@@ -8,11 +8,12 @@ use notation_bevy_utils::prelude::{
     BevyUtil, DockPanel, DockSide, LayoutAnchor, LayoutConstraint, LayoutSize, View, ViewBundle,
 };
 use float_eq::float_ne;
-use notation_midi::prelude::{MidiState, PlayControlEvent, MidiSettings};
+use notation_midi::prelude::{MidiState, PlayControlEvent, MidiSettings, JumpToBarEvent};
 use notation_model::play::play_control::TickResult;
 use notation_model::prelude::{Tab, Units};
 
 use crate::settings::layout_settings::LayoutMode;
+use crate::tab::tab_plugin;
 use crate::ui::layout::NotationLayout;
 
 use crate::prelude::{
@@ -171,6 +172,52 @@ impl ControlView {
             midi_state.play_control.position.bar.bar_ordinal = midi_state.play_control.begin_bar_ordinal;
             midi_state.play_control.position.bar.in_bar_pos = Units(0.0);
             Self::send_play_state_evt(midi_state, play_control_evts);
+        }
+    }
+    pub fn seek_forward(
+        midi_settings: &MidiSettings,
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+    ) {
+        if midi_state.play_control.play_state.is_playing() {
+            if midi_state.play_control.pause() {
+                Self::send_play_state_evt(midi_state, play_control_evts);
+            }
+        } else if midi_state.seek_forward(midi_settings) {
+        }
+    }
+    pub fn jump_to_last_bar(
+        midi_state: &MidiState,
+        jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
+    ) {
+        if let Some(tab) = &midi_state.tab {
+            let pos = midi_state.play_control.position.bar;
+            let bar = if pos.in_bar_pos.0 > 0.0 {
+                tab.get_bar_of_ordinal(pos.bar_ordinal)
+            } else if pos.bar_ordinal > 0 {
+                tab.get_bar_of_ordinal(pos.bar_ordinal - 1)
+            } else {
+                None
+            };
+            if let Some(bar) = bar {
+                tab_plugin::jump_to_bar(jump_to_bar_evts, bar.props);
+            }
+        }
+    }
+    pub fn jump_to_next_bar(
+        midi_state: &MidiState,
+        jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
+    ) {
+        if let Some(tab) = &midi_state.tab {
+            let pos = midi_state.play_control.position.bar;
+            let bar = if pos.bar_ordinal < tab.bars.len() - 1 {
+                tab.get_bar_of_ordinal(pos.bar_ordinal + 1)
+            } else {
+                None
+            };
+            if let Some(bar) = bar {
+                tab_plugin::jump_to_bar(jump_to_bar_evts, bar.props);
+            }
         }
     }
     pub fn send_begin_end_evt(

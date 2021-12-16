@@ -37,7 +37,7 @@ impl MidiChannel {
     pub fn reset(&mut self) {
         self.track = None;
         self.program = U7::new(DEFAULT_PROGRAM);
-        self.program = U7::new(DEFAULT_VELOCITY);
+        self.velocity = U7::new(DEFAULT_VELOCITY);
         self.messages.clear();
         self.need_sort = false;
         self.next_index = 0;
@@ -80,6 +80,7 @@ impl MidiChannel {
         settings: &MidiSettings,
         hub: &mut MidiHub,
         speed: &PlaySpeed,
+        is_seeking: bool,
         old_position: &Position,
         play_control: &PlayControl,
         end_passed: bool,
@@ -98,6 +99,11 @@ impl MidiChannel {
         } else if self.ensure_sorted() {
             self.calc_next_index(&old_position.bar);
         }
+        let bypass = if is_seeking {
+            self.track.as_ref().map(|x| x.kind != settings.seeking_track).unwrap_or(true)
+        } else {
+            false
+        };
         let mut count = 0;
         loop {
             if let Some(next) = self.messages.get(self.next_index) {
@@ -108,7 +114,9 @@ impl MidiChannel {
                 {
                     self.next_index += 1;
                     count += 1;
-                    hub.send(settings, speed, next);
+                    if !bypass {
+                        hub.send(settings, speed, next);
+                    }
                 } else {
                     if next.bar_position().bar_ordinal < play_control.begin_bar_ordinal {
                         self.next_index += 1;
@@ -159,15 +167,19 @@ impl MidiChannel {
 }
 
 pub struct MidiState {
+    pub tab: Option<Arc<Tab>>,
     pub channels: [MidiChannel; 16],
     pub play_control: PlayControl,
+    pub seek_position: Option<BarPosition>,
 }
 
 impl Default for MidiState {
     fn default() -> Self {
         Self {
+            tab: None,
             channels: Self::new_channels(),
             play_control: PlayControl::default(),
+            seek_position: None,
         }
     }
 }
@@ -211,6 +223,7 @@ impl MidiState {
         None
     }
     pub fn switch_tab(&mut self, settings: &MidiSettings, hub: &mut MidiHub, tab: Arc<Tab>) {
+        self.tab = Some(tab.clone());
         self.reset_channels();
         let mut index: usize = 0;
         for track in tab.tracks.iter() {
@@ -220,6 +233,7 @@ impl MidiState {
             if let Some(params) = settings.get_track_channel_params(&track.kind) {
                 if let Some(channel) = self.channels.get_mut(index) {
                     channel.setup(settings, hub, params, track);
+                    println!("switch_tab(), setup channel: [{}] -> {}, {} - {}", index, params.0, params.1, track);
                     index += 1;
                 }
             }
@@ -260,20 +274,42 @@ impl MidiState {
         jumped: bool,
         delta_seconds: f32,
     ) -> TickResult {
+        let is_seeking = self.seek_position.is_some();
         let old_position = self.play_control.position;
-        let tick_result = self.play_control.tick(jumped, delta_seconds);
+        if self.seek_position.is_some() {
+            let pos = self.play_control.position.bar;
+            if Units::from(pos) >= Units::from(self.seek_position.unwrap()) {
+                if !self.seek_passed(settings) {
+                    self.seek_position = None;
+                }
+            }
+        }
+        let tick_result = match self.seek_position {
+            Some(pos) => {
+                self.play_control._tick_to_position(jumped, pos.into())
+            },
+            None => self.play_control.tick(jumped, delta_seconds),
+        };
         if tick_result.changed {
             for channel in self.channels.iter_mut() {
+                if is_seeking && settings.seeking_init_channel {
+                    channel.init_channel(settings, hub, &self.play_control.play_speed);
+                }
                 channel.send_passed_msgs(
                     settings,
                     hub,
                     &self.play_control.play_speed,
+                    is_seeking,
                     &old_position,
                     &self.play_control,
                     tick_result.end_passed,
                     tick_result.jumped,
                 );
             }
+        }
+        self.seek_position = None;
+        if is_seeking {
+            self.play_control.pause();
         }
         tick_result
     }
@@ -284,5 +320,71 @@ impl MidiState {
                 channel.calc_next_index(&self.play_control.position.bar);
             }
         }
+    }
+    fn setup_seek(
+        &mut self,
+        seek_position: BarPosition,
+    ) {
+        println!("MidiState::setup_seek() {} -> {}", self.play_control.position.bar, seek_position);
+        self.seek_position = Some(seek_position);
+        self.play_control.play();
+    }
+    pub fn seek_forward(
+        &mut self,
+        settings: &MidiSettings,
+    ) -> bool {
+        if self.tab.is_some() {
+            let pos = self.play_control.position.bar;
+            if let Some(bar) = self.tab.as_ref().unwrap().get_bar(pos) {
+                if let Some(props) = bar.get_next_entry(pos.in_bar_pos, &|x| {
+                    if x.track_kind() != settings.seeking_track {
+                        None
+                    } else if x.prev_is_tie() {
+                        None
+                    } else {
+                        Some(x.props)
+                    }
+                }) {
+                    self.setup_seek(pos.with_in_bar_pos(props.in_bar_pos));
+                    return true;
+                } else {
+                    self.setup_seek(BarPosition::new(pos.bar_units, pos.bar_ordinal, pos.bar_units - Units::MIN_ACCURACY));
+                    return true;
+                }
+            }
+        }
+        false
+    }
+    /*
+     * The reason for this logic is to show the guitar view's string animation properly, can't seek to
+     *  next bar directly, that will make the guitar view changed all in a sudden, so did a seek to
+     *  almost end of the bar, then the next time pass the first note on next bar.
+     * A bit hacky, but works fine.
+     */
+    fn seek_passed(
+        &mut self,
+        settings: &MidiSettings,
+    ) -> bool {
+        if self.tab.is_some() {
+            let mut pos = self.play_control.position.bar;
+            if pos.in_bar_pos >= pos.bar_units - Units::MIN_ACCURACY {
+                pos = BarPosition::new(pos.bar_units, pos.bar_ordinal + 1, Units::MIN_ACCURACY);
+                if let Some(bar) = self.tab.as_ref().unwrap().get_bar(pos) {
+                    if let Some(props) = bar.get_next_entry(pos.in_bar_pos, &|x| {
+                        if x.track_kind() != settings.seeking_track {
+                            None
+                        } else if x.prev_is_tie() {
+                            None
+                        } else {
+                            Some(x.props)
+                        }
+                    }) {
+                        self.setup_seek(pos.with_in_bar_pos(props.in_bar_pos));
+                        return true;
+                    }
+                }
+            }
+        }
+        false
     }
 }

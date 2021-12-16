@@ -4,8 +4,9 @@ use std::fmt::Display;
 
 use crate::prelude::ProtoEntry;
 
-#[derive(Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum TrackKind {
+    Unsupported,
     Meta,
     Chord,
     Lyrics,
@@ -15,7 +16,6 @@ pub enum TrackKind {
     Piano,
     Drums,
     Bass,
-    Custom(String),
 }
 impl Display for TrackKind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -34,7 +34,10 @@ impl TrackKind {
             "Piano" => Self::Piano,
             "Drums" => Self::Drums,
             "Bass" => Self::Bass,
-            _ => Self::Custom(ident.to_string()),
+            _ => {
+                println!("TrackKind::from_ident() Unsupported ident: {}", ident);
+                Self::Unsupported
+            }
         }
     }
 }
