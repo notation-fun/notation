@@ -32,7 +32,7 @@ impl Default for NotationSettings {
             should_loop: false,
             speed_factor: 1.0,
             hide_bar_number: false,
-            show_guitar_syllable: false,
+            show_guitar_syllable: true,
             show_melody_syllable: false,
             show_syllable_as_num: false,
             always_show_fret: false,
