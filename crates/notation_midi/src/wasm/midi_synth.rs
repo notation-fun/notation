@@ -20,7 +20,7 @@ impl MidiSynth {
         }
         load_instruments();
     }
-    pub fn send(&self, speed: &PlaySpeed, msg: &MidiMessage) -> Result<(), String> {
+    pub fn send(&self, speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) -> Result<(), String> {
         match msg.midi {
             StructuredShortMessage::NoteOff {
                 channel,
@@ -30,13 +30,19 @@ impl MidiSynth {
             StructuredShortMessage::NoteOn {
                 channel,
                 key_number,
-                velocity,
-            } => Ok(play_note(
-                channel.into(),
-                key_number.into(),
-                speed.calc_seconds(msg.entry.tied_units()),
-                u8::from(velocity) as f32 / 128.0 * Self::VOLUME_FACTOR,
-            )),
+                velocity: _,
+            } => {
+                let mut volume = velocity as f32 / 128.0;
+                if volume > 1.0 {
+                    volume = 1.0;
+                }
+                Ok(play_note(
+                    channel.into(),
+                    key_number.into(),
+                    speed.calc_seconds(msg.entry.tied_units()),
+                    volume * Self::VOLUME_FACTOR,
+                ))
+            },
             _ => Err("NOT_IMPLEMENTED".to_owned()),
         }
     }

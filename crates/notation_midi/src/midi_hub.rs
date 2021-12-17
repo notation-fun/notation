@@ -73,14 +73,14 @@ impl MidiHub {
             synth.init_channels(settings, state);
         }
     }
-    pub fn send(&mut self, settings: &MidiSettings, speed: &PlaySpeed, msg: &MidiMessage) {
+    pub fn send(&mut self, settings: &MidiSettings, speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) {
         if settings.bypass_hub {
             return;
         }
         self.check_output(settings);
         if let Some(synth) = &self.output_synth {
             //println!("send to synth: {:?}", msg);
-            if let Err(err) = synth.send(speed, msg) {
+            if let Err(err) = synth.send(speed, msg, velocity) {
                 println!("send to synth failed: {:?} -> {:?}", msg, err);
             }
         }

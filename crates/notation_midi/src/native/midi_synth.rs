@@ -88,7 +88,7 @@ impl MidiSynth {
     }
     pub fn init_channels(&self, _settings: &MidiSettings, _state: &MidiState) {
     }
-    pub fn send(&self, _speed: &PlaySpeed, msg: &MidiMessage) -> Result<(), String> {
+    pub fn send(&self, _speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) -> Result<(), String> {
         match msg.midi {
             StructuredShortMessage::NoteOff {
                 channel,
@@ -98,10 +98,13 @@ impl MidiSynth {
             StructuredShortMessage::NoteOn {
                 channel,
                 key_number,
-                velocity,
-            } => self
+                velocity: _,
+            } => {
+                let velocity = if velocity > 127 { 127 } else { velocity };
+                self
                 .synth
-                .note_on(channel.into(), key_number.into(), velocity.into()),
+                .note_on(channel.into(), key_number.into(), velocity.into())
+            },
             StructuredShortMessage::PolyphonicKeyPressure {
                 channel: _,
                 key_number: _,

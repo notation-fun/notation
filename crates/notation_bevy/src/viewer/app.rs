@@ -17,7 +17,7 @@ use crate::prelude::{
 use crate::ui::layout::NotationLayout;
 use crate::ui::viewer::TabViewer;
 
-use super::control::ControlView;
+use super::control_view::ControlView;
 
 pub struct NotationViewer {
     pub uuid: Uuid,

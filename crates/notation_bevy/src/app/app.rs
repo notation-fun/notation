@@ -10,7 +10,8 @@ use bevy_asset_loader::AssetLoader;
 use crate::theme::theme_colors::UiColors;
 use crate::{prelude::*, settings::layout_settings::LayoutMode};
 use crate::ui::viewer::TabViewerPlugin;
-use crate::viewer::control::ControlView;
+use crate::viewer::control::Control;
+use crate::viewer::control_view::ControlView;
 
 use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent, MidiSettings, JumpToBarEvent};
 use notation_model::prelude::*;
@@ -209,47 +210,50 @@ fn handle_keyboard_inputs(
             window_resized_evts.send(WindowResizedEvent());
         }
     } else if keyboard_input.just_released(KeyCode::Space) {
-        ControlView::play_or_pause(&mut midi_state, &mut play_control_evts);
+        Control::play_or_pause(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Return) {
-        ControlView::stop(&mut midi_state, &mut play_control_evts);
+        Control::stop(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Home) {
-        ControlView::jump_to_section_start(&midi_state, &mut jump_to_bar_evts);
+        Control::jump_to_section_start(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::End) {
-        ControlView::jump_to_section_end(&midi_state, &mut jump_to_bar_evts);
+        Control::jump_to_section_end(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::PageUp) {
-        ControlView::jump_to_prev_section(&midi_state, &mut jump_to_bar_evts);
+        Control::jump_to_prev_section(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::PageDown) {
-        ControlView::jump_to_next_section(&midi_state, &mut jump_to_bar_evts);
+        Control::jump_to_next_section(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::Left) {
-        ControlView::jump_to_prev_bar(&midi_state, &mut jump_to_bar_evts);
+        Control::jump_to_prev_bar(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::Right) {
-        ControlView::jump_to_next_bar(&midi_state, &mut jump_to_bar_evts);
+        Control::jump_to_next_bar(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::Down) {
-        ControlView::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
+        Control::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Backslash) {
-        ControlView::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
+        Control::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
     } else if keyboard_input.just_released(KeyCode::G) {
-        ControlView::toggle_show_guitar_syllable(&mut app_state, &mut settings, &mut theme);
+        Control::toggle_show_guitar_syllable(&mut app_state, &mut settings, &mut theme);
     } else if keyboard_input.just_released(KeyCode::M) {
-        ControlView::toggle_show_melody_syllable(&mut app_state, &mut settings, &mut theme);
+        Control::toggle_show_melody_syllable(&mut app_state, &mut settings, &mut theme);
     } else if keyboard_input.just_released(KeyCode::F) {
-        ControlView::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
+        Control::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
     } else if keyboard_input.just_released(KeyCode::L) {
         settings.should_loop = !settings.should_loop;
-        ControlView::sync_should_loop(
+        Control::sync_should_loop(
             &settings,
             &mut midi_state,
             &mut play_control_evts,
         );
     } else if keyboard_input.just_released(KeyCode::A) {
-        ControlView::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
+        Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::B) {
-        ControlView::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
+        Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::C) {
-        ControlView::clear_begin_end(&mut midi_state, &mut play_control_evts);
+        Control::clear_begin_end(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::D) {
-        ControlView::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
-        ControlView::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
+        Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
+        Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
+    } else if keyboard_input.just_released(KeyCode::E) {
+        Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
+        Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
     }
 }
 

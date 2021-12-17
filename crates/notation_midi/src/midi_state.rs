@@ -104,6 +104,23 @@ impl MidiChannel {
         } else {
             false
         };
+        let mut velocity = self.velocity.into();
+        if !bypass {
+            self.track.as_ref().map(|x| {
+                match x.kind {
+                    TrackKind::Vocal => {
+                        velocity = if settings.vocal_mute { 0 } else { settings.vocal_velocity };
+                    },
+                    TrackKind::Guitar => {
+                        velocity = if settings.guitar_mute { 0 } else { settings.guitar_velocity };
+                    },
+                    TrackKind::Piano => {
+                        velocity = if settings.piano_mute { 0 } else { settings.piano_velocity };
+                    },
+                    _ => (),
+                }
+            });
+        }
         let mut count = 0;
         loop {
             if let Some(next) = self.messages.get(self.next_index) {
@@ -115,7 +132,7 @@ impl MidiChannel {
                     self.next_index += 1;
                     count += 1;
                     if !bypass {
-                        hub.send(settings, speed, next);
+                        hub.send(settings, speed, next, velocity);
                     }
                 } else {
                     if next.bar_position().bar_ordinal < play_control.begin_bar_ordinal {
@@ -140,6 +157,7 @@ impl MidiChannel {
                 settings,
                 speed,
                 &MidiMessage::new(&first_msg.entry, None, msg),
+                self.velocity.into(),
             );
             let msg = StructuredShortMessage::ControlChange {
                 channel: self.channel,
@@ -150,6 +168,7 @@ impl MidiChannel {
                 settings,
                 speed,
                 &MidiMessage::new(&first_msg.entry, None, msg),
+                self.velocity.into(),
             );
         }
     }

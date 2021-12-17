@@ -16,7 +16,8 @@ use crate::prelude::{
 };
 use crate::rhythm::rhythm_bar::{RhythmBarData};
 use crate::rhythm::rhythm_view::RhythmView;
-use crate::viewer::control::ControlView;
+use crate::viewer::control::Control;
+use crate::viewer::control_view::ControlView;
 
 use super::tab_asset::TabAssetLoader;
 
@@ -106,19 +107,19 @@ fn on_mouse_clicked(
                 if layout.is_pos_inside(pos, global_transform) {
                     match button.action {
                         crate::play::play_button::PlayButtonAction::PlayPause =>
-                            crate::viewer::control::ControlView::play_or_pause(&mut midi_state, &mut play_control_evts),
+                            Control::play_or_pause(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::Stop =>
-                            crate::viewer::control::ControlView::stop(&mut midi_state, &mut play_control_evts),
+                            Control::stop(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::LoopMode => {
                             settings.should_loop = !settings.should_loop;
-                            crate::viewer::control::ControlView::sync_should_loop(&settings, &mut midi_state, &mut play_control_evts)
+                            Control::sync_should_loop(&settings, &mut midi_state, &mut play_control_evts)
                         }
                         crate::play::play_button::PlayButtonAction::SetBegin =>
-                            crate::viewer::control::ControlView::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts),
+                            Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::SetEnd =>
-                            crate::viewer::control::ControlView::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts),
+                            Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts),
                         crate::play::play_button::PlayButtonAction::Clear =>
-                            crate::viewer::control::ControlView::clear_begin_end(&mut midi_state, &mut play_control_evts),
+                            Control::clear_begin_end(&mut midi_state, &mut play_control_evts),
                     }
                     return;
                 }
@@ -150,7 +151,7 @@ fn on_mouse_clicked(
             // Not using GuitarView here, since it 's y position been changed to adjust with capo position
             for (_tab_control, layout, global_transform) in tab_control_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
-                    crate::viewer::control::ControlView::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
+                    Control::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
                     return;
                 }
             }
