@@ -15,10 +15,10 @@ impl MidiSynth {
     pub const SOUND_FONT: &'static str = "sblive";
 
     #[cfg(target_os = "windows")]
-    pub const VOLUME_FACTOR: f32 = 7.0; //Not sure why the volume is really low on windows.
+    pub const VOLUME_FACTOR: f32 = 5.0; //Not sure why the volume is really low on windows.
 
     #[cfg(not(target_os = "windows"))]
-    pub const VOLUME_FACTOR: f32 = 2.0;
+    pub const VOLUME_FACTOR: f32 = 1.5;
 
     fn new(synth: fluidlite::Synth) -> Self {
         Self {
