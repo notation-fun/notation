@@ -136,7 +136,7 @@ impl RhythmBarData {
         if current_bar.is_some() {
             let bar_props = current_bar.unwrap().props;
             for (bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
-                if bar_data.value.chord != current_chord {
+                if bar_data.bar_props.bar_ordinal != bar_props.bar_ordinal || bar_data.value.chord != current_chord {
                     bar_data.bar_props = bar_props;
                     bar_data.value.chord = current_chord;
                     bar_data.update(&mut commands, &theme, bar_entity);
