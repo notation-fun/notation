@@ -199,6 +199,15 @@ impl ControlView {
             }
         }
     }
+    pub fn jump_to_center_bar(
+        midi_state: &MidiState,
+        jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
+    ) {
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+            let center = tab.bars.len() / 2;
+            tab.get_bar_of_ordinal(if center == pos.bar_ordinal { center + 1 } else { center })
+        });
+    }
     pub fn jump_to_prev_bar(
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
@@ -354,6 +363,8 @@ impl ControlView {
         settings: &mut NotationSettings,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
         guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
+        midi_state: &MidiState,
+        jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
         CollapsingHeader::new("Override Sizes")
         .default_open(true)
@@ -399,6 +410,20 @@ impl ControlView {
             } else if settings.override_guitar_width.is_some() {
                 settings.override_guitar_width = None;
                 window_resized_evts.send(WindowResizedEvent());
+            }
+            let mut override_focus_offset_y = settings.layout.override_focus_offset_y.is_some();
+            ui.checkbox(&mut override_focus_offset_y, "Override Focus Offset Y");
+            if override_focus_offset_y {
+                let mut offset_y = settings.layout.override_focus_offset_y.unwrap_or(0.0);
+                let last_offset_y = offset_y;
+                ui.add(Slider::new(&mut offset_y, -512.0..=512.0).text("Focus Offset Y"));
+                if settings.layout.override_focus_offset_y.is_none() || float_ne!(offset_y, last_offset_y, abs <= 1.0) {
+                    settings.layout.override_focus_offset_y = Some(offset_y);
+                    Self::jump_to_center_bar(midi_state, jump_to_bar_evts);
+                }
+            } else if settings.layout.override_focus_offset_y.is_some() {
+                settings.layout.override_focus_offset_y = None;
+                Self::jump_to_center_bar(midi_state, jump_to_bar_evts);
             }
             let mut override_guitar_y = settings.override_guitar_y.is_some();
             ui.checkbox(&mut override_guitar_y, "Override Guitar Y");
@@ -763,6 +788,7 @@ impl ControlView {
         mut play_control_evts: EventWriter<PlayControlEvent>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
         mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
+        mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
     ) {
         if state.hide_control {
             return;
@@ -790,7 +816,7 @@ impl ControlView {
                             Self::display_ui(ui, &mut state, &mut settings, &mut theme);
                             ui.separator();
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
-                            Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query);
+                            Self::overrides_ui(ui, &mut settings, &mut window_resized_evts, &mut guitar_view_query, &midi_state, &mut jump_to_bar_evts);
                             ui.separator();
                             #[cfg(not(target_arch = "wasm32"))]
                             Self::window_sizes_ui(ui, &mut windows);
