@@ -12,7 +12,7 @@ use crate::mini::mini_bar::MiniBar;
 use crate::play::play_button::PlayButton;
 use crate::prelude::{
     AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates,
-    NotationSettings, NotationTheme, TabAsset, TabBars, TabState, GuitarView,
+    NotationSettings, NotationTheme, TabAsset, TabBars, TabState,
 };
 use crate::rhythm::rhythm_bar::{RhythmBarData};
 use crate::rhythm::rhythm_view::RhythmView;

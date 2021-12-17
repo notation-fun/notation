@@ -33,10 +33,16 @@ impl EntryPlaying {
         jumped: bool,
     ) {
         let playing_bar_ordinal = new_position.bar.bar_ordinal;
+        if end_passed || jumped {
+            for (_entity, _entry, mut entry_playing) in query.iter_mut() {
+                if entry_playing.value != PlayingState::Idle {
+                    entry_playing.value = PlayingState::Idle;
+                }
+            }
+        }
         for (_entity, entry, mut entry_playing) in query.iter_mut() {
             let bar_ordinal = entry_playing.bar_props.bar_ordinal;
-            // Hacky way to allow click on not selected bar, might do proper fix in the future
-            if true || tab_state.is_bar_in_range(bar_ordinal) {
+            if tab_state.is_bar_in_range(bar_ordinal) {
                 if entry_playing.value.is_current()
                     && new_position.is_passed_with(
                         entry.pass_mode(),
@@ -48,19 +54,12 @@ impl EntryPlaying {
                         entry_playing.value = PlayingState::Played;
                     }
                 }
-                if entry_playing.bar_props.bar_ordinal == playing_bar_ordinal
+                if bar_ordinal == playing_bar_ordinal
                     && entry_playing.value.is_idle()
                     && new_position.is_passed(entry.pass_mode(), &entry_playing.bar_position())
                 {
                     if entry_playing.value != PlayingState::Current {
                         entry_playing.value = PlayingState::Current;
-                    }
-                }
-                if end_passed || jumped {
-                    if entry_playing.value.is_played() || bar_ordinal > playing_bar_ordinal {
-                        if entry_playing.value != PlayingState::Idle {
-                            entry_playing.value = PlayingState::Idle;
-                        }
                     }
                 }
             }
