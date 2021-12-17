@@ -35,6 +35,8 @@ impl MidiSynth {
                 let mut volume = velocity as f32 / 128.0;
                 if volume > 1.0 {
                     volume = 1.0;
+                } else if volume < 0.0 {
+                    volume = 0.0;
                 }
                 Ok(play_note(
                     channel.into(),
