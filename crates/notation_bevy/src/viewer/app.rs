@@ -49,7 +49,7 @@ impl NotationViewer {
         mut materials: ResMut<Assets<ColorMaterial>>,
         assets: Res<NotationAssets>,
         theme: Res<NotationTheme>,
-        settings: Res<NotationSettings>,
+        mut settings: ResMut<NotationSettings>,
         mut switch_tab_evts: EventWriter<SwitchTabEvent>,
     ) {
         let mut tab = None;
@@ -77,6 +77,7 @@ impl NotationViewer {
                 entity,
                 &tab,
             );
+            settings.layout.focusing_bar_ordinal = usize::MAX;
             switch_tab_evts.send(SwitchTabEvent::new(tab));
         }
     }
