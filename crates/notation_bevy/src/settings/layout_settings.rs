@@ -34,6 +34,7 @@ pub struct LayoutSettings {
     pub focus_bar_ease_ms: u64,
     pub focusing_bar_ordinal: usize,
     pub video_recording_mode: bool,
+    pub grid_force_centered: bool,
     pub override_focus_offset_y: Option<f32>,
 }
 
@@ -44,6 +45,7 @@ impl Default for LayoutSettings {
             focus_bar_ease_ms: 250,
             focusing_bar_ordinal: usize::MAX,
             video_recording_mode: false,
+            grid_force_centered: false,
             override_focus_offset_y: None,
         }
     }
@@ -148,7 +150,7 @@ impl LayoutSettings {
         grid_data: &GridData,
         pos_data: &PosIndicatorData,
     ) -> f32 {
-        let (row, col) = grid_data.calc_row_col(pos_data.bar_position.bar_ordinal);
+        let (_row, col) = grid_data.calc_row_col(pos_data.bar_position.bar_ordinal);
         let mut y = pos_data.bar_layout.offset.y;
         let grid_size = layout.size;
         let content_size = grid_data.content_size;
@@ -157,7 +159,7 @@ impl LayoutSettings {
         } else {
             if grid_size.height > content_size.height {
                 y = -(grid_size.height - content_size.height);
-            } else if row > 0 {
+            } else {
                 /* try to show as 2nd row
                 let last_row_height = grid_data.calc_cell_size(row - 1, col).height;
                 if last_row_height + pos_data.bar_layout.size.height <= grid_size.height / 2.0 {
@@ -166,13 +168,15 @@ impl LayoutSettings {
                  */
                 y += (grid_size.height - grid_data.margin.height * 2.0 - pos_data.bar_layout.size.height) / 2.0 + self.override_focus_offset_y.unwrap_or(0.0);
 
-                let min_y = grid_size.height - content_size.height - theme.sizes.layout.page_margin * 2.0;
-                if y < min_y {
-                    y = min_y;
-                } else {
-                    let max_y = grid_data.calc_cell_offset(0, col).y;
-                    if y > max_y {
-                        y = max_y;
+                if !self.grid_force_centered {
+                    let min_y = grid_size.height - content_size.height - theme.sizes.layout.page_margin * 2.0;
+                    if y < min_y {
+                        y = min_y;
+                    } else {
+                        let max_y = grid_data.calc_cell_offset(0, col).y;
+                        if y > max_y {
+                            y = max_y;
+                        }
                     }
                 }
             }

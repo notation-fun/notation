@@ -556,6 +556,12 @@ impl ControlView {
         CollapsingHeader::new("Layout Options")
         .default_open(true)
         .show(ui, |ui| {
+            let last_video_recording_mode = settings.layout.video_recording_mode;
+            ui.checkbox(&mut settings.layout.video_recording_mode, "Video Recording Mode");
+            if settings.layout.video_recording_mode != last_video_recording_mode {
+                Self::reload_tab(state, theme);
+            }
+            ui.separator();
             let mode_text = if settings.layout.mode == LayoutMode::Grid {
                 "Switch to Line Mode"
             } else {
@@ -564,10 +570,12 @@ impl ControlView {
             if ui.button(mode_text).clicked() {
                 Self::toggle_layout_mode(state, settings, theme);
             }
-            let last_video_recording_mode = settings.layout.video_recording_mode;
-            ui.checkbox(&mut settings.layout.video_recording_mode, "Video Recording Mode");
-            if settings.layout.video_recording_mode != last_video_recording_mode {
-                Self::reload_tab(state, theme);
+            if !settings.layout.video_recording_mode && settings.layout.mode == LayoutMode::Grid {
+                let last_force_centered = settings.layout.grid_force_centered;
+                ui.checkbox(&mut settings.layout.grid_force_centered, "Force Centered");
+                if settings.layout.grid_force_centered != last_force_centered {
+                    Self::reload_tab(state, theme);
+                }
             }
         });
     }
