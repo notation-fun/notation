@@ -212,8 +212,16 @@ fn handle_keyboard_inputs(
         ControlView::play_or_pause(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Return) {
         ControlView::stop(&mut midi_state, &mut play_control_evts);
+    } else if keyboard_input.just_released(KeyCode::Home) {
+        ControlView::jump_to_section_start(&midi_state, &mut jump_to_bar_evts);
+    } else if keyboard_input.just_released(KeyCode::End) {
+        ControlView::jump_to_section_end(&midi_state, &mut jump_to_bar_evts);
+    } else if keyboard_input.just_released(KeyCode::PageUp) {
+        ControlView::jump_to_prev_section(&midi_state, &mut jump_to_bar_evts);
+    } else if keyboard_input.just_released(KeyCode::PageDown) {
+        ControlView::jump_to_next_section(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::Left) {
-        ControlView::jump_to_last_bar(&midi_state, &mut jump_to_bar_evts);
+        ControlView::jump_to_prev_bar(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::Right) {
         ControlView::jump_to_next_bar(&midi_state, &mut jump_to_bar_evts);
     } else if keyboard_input.just_released(KeyCode::Down) {

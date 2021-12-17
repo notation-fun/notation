@@ -30,6 +30,12 @@ impl From<TabBarProps> for Position {
     }
 }
 
+impl TabBarProps {
+    pub fn get_section_first_bar_ordinal(&self) -> usize {
+        self.bar_ordinal - self.bar_index
+    }
+}
+
 #[derive(Debug)]
 pub struct TabBar {
     pub tab: Weak<Tab>,
