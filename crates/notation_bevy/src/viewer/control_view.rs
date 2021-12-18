@@ -503,6 +503,14 @@ impl ControlView {
                 }
             });
             ui.horizontal(|ui| {
+                if ui.button("1440 x 810").clicked() {
+                    Control::set_window_size(window, 1280, 720);
+                }
+                if ui.button("810 x 1440").clicked() {
+                    Control::set_window_size(window, 720, 1280);
+                }
+            });
+            ui.horizontal(|ui| {
                 if ui.button("1920 x 1080").clicked() {
                     Control::set_window_size(window, 1920, 1080);
                 }
