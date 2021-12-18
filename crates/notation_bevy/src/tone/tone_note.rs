@@ -50,13 +50,18 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
         } else {
             let x = self.value.bar_size / self.bar_props.bar_units.0
                 * self.entry_props.in_bar_pos.0;
-            let y = if self.value.mode.is_melody() {
+            let mut y = if self.value.mode.is_melody() {
                 theme
                     .sizes.melody
                     .calc_note_y(self.value.note)
             } else {
                 0.0
             };
+            if self.value.playing_state.is_current() {
+                let outline = self.calc_outline(theme);
+                y -= outline / 2.0;
+            }
+
             let (_width, height) = self.calc_width_height(theme);
             let extra_z = if self.value.playing_state.is_current() {
                 1.0
