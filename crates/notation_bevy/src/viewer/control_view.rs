@@ -56,7 +56,7 @@ impl<'a> View<NotationLayout<'a>> for ControlView {
 
 impl ControlView {
     pub const HUD_MODE: bool = true;
-    pub const MIN_WIDTH: f32 = 300.0;
+    pub const MIN_WIDTH: f32 = 320.0;
     pub const MAX_WIDTH: f32 = 512.0;
     pub fn spawn(
         commands: &mut Commands,
