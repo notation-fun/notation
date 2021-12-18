@@ -23,8 +23,8 @@ impl MidiSynth {
     pub fn send(&self, speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) -> Result<(), String> {
         match msg.midi {
             StructuredShortMessage::NoteOff {
-                channel,
-                key_number,
+                channel: _,
+                key_number: _,
                 velocity: _,
             } => Ok(()),
             StructuredShortMessage::NoteOn {
