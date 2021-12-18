@@ -215,7 +215,7 @@ impl Default for MelodyTexts {
     fn default() -> Self {
         Self {
             text_x: 4.0,
-            text_y: -12.0,
+            text_y: -14.0,
             text_z: 1.0,
             horizontal_center: false,
             syllable_font_size: 16.0,

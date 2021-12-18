@@ -118,6 +118,7 @@ pub struct MelodySizes {
     pub semitone_height: f32,
     pub lowest: Semitones,
     pub highest: Semitones,
+    pub syllable_height: f32
 }
 impl Default for MelodySizes {
     fn default() -> Self {
@@ -127,6 +128,7 @@ impl Default for MelodySizes {
             semitone_height: 2.0,
             lowest: Semitones(i8::MAX),
             highest: Semitones(i8::MIN),
+            syllable_height: 16.0,
         }
     }
 }
@@ -158,13 +160,18 @@ impl MelodySizes {
         let offset_semitones = self.highest - Semitones::from(note);
         -1.0 * self.semitone_height * offset_semitones.0 as f32 - self.note_height
     }
-    pub fn layout_height(&self) -> f32 {
+    pub fn layout_height(&self, settings: &NotationSettings) -> f32 {
         let range = if self.highest > self.lowest {
             self.highest.0 - self.lowest.0 + 1
         } else {
             1
         };
-        range as f32 * self.semitone_height + self.note_height
+        let height = range as f32 * self.semitone_height + self.note_height;
+        if settings.show_melody_syllable {
+            height + self.syllable_height
+        } else {
+            height
+        }
     }
 }
 
@@ -310,7 +317,7 @@ impl ThemeSizes {
     pub fn calc_lane_height(&self, settings: &NotationSettings, lane_kind: LaneKind) -> f32 {
         match lane_kind {
             LaneKind::Lyrics => if settings.hide_lyrics_lane { 0.0 } else { self.lyrics.layout_height() },
-            LaneKind::Melody => if settings.hide_melody_lane { 0.0 } else { self.melody.layout_height() },
+            LaneKind::Melody => if settings.hide_melody_lane { 0.0 } else { self.melody.layout_height(settings) },
             LaneKind::Strings => if settings.hide_strings_lane { 0.0 } else { self.strings.layout_height() },
             LaneKind::Shapes => if settings.hide_shapes_lane { 0.0 } else { self.layout.shapes_height },
             _ => 0.0,
