@@ -228,7 +228,6 @@ impl ControlView {
                     }
                 }
             });
-            let play_speed = settings.speed_factor;
             let should_loop = settings.should_loop;
             ui.horizontal(|ui| {
                 ui.checkbox(&mut settings.should_loop, "Loop");
@@ -249,8 +248,25 @@ impl ControlView {
                     Control::clear_begin_end(midi_state, play_control_evts);
                 }
             });
-            ui.add(Slider::new(&mut settings.speed_factor, 0.1..=2.0).text("Speed"));
-            if float_ne!(play_speed, settings.speed_factor, abs <= 0.01) {
+            ui.separator();
+            let mut speed_factor = settings.speed_factor;
+            ui.add(Slider::new(&mut speed_factor, 0.1..=2.0).text("Speed"));
+            ui.horizontal(|ui| {
+                if ui.button("1/4").clicked() {
+                    speed_factor = 0.25;
+                }
+                if ui.button("1/2").clicked() {
+                    speed_factor = 0.5;
+                }
+                if ui.button("3/4").clicked() {
+                    speed_factor = 0.75;
+                }
+                if ui.button("1").clicked() {
+                    speed_factor = 1.0;
+                }
+            });
+            if float_ne!(speed_factor, settings.speed_factor, abs <= 0.01) {
+                settings.speed_factor = speed_factor;
                 Control::sync_speed_factor(
                     settings,
                     midi_state,
