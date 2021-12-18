@@ -53,7 +53,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
             let y = if self.value.mode.is_melody() {
                 theme
                     .sizes.melody
-                    .calc_note_y(self.value.syllable_note)
+                    .calc_note_y(self.value.note)
             } else {
                 0.0
             };

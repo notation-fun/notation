@@ -169,7 +169,7 @@ impl Default for LyricsTexts {
     fn default() -> Self {
         Self {
             text_x: 4.0,
-            text_y: 2.0,
+            text_y: -8.0,
             text_z: 1.0,
             word_font_size: 20.0,
             word_font_color: Color::hex("000000").unwrap(),

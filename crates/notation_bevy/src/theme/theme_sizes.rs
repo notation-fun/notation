@@ -1,5 +1,5 @@
 use notation_bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::{LaneKind, PlayingState, Octave, SyllableNote, Semitones};
+use notation_model::prelude::{LaneKind, PlayingState, Semitones, TrackKind, Tab, Note};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -116,7 +116,8 @@ pub struct MelodySizes {
     pub note_height: f32,
     pub note_outline: PlayingSize,
     pub semitone_height: f32,
-    pub semitones: usize,
+    pub lowest: Semitones,
+    pub highest: Semitones,
 }
 impl Default for MelodySizes {
     fn default() -> Self {
@@ -124,20 +125,46 @@ impl Default for MelodySizes {
             note_height: 4.0,
             note_outline: PlayingSize::new(1.0, 1.5, 1.0),
             semitone_height: 2.0,
-            semitones: 24,
+            lowest: Semitones(i8::MAX),
+            highest: Semitones(i8::MIN),
         }
     }
 }
 impl MelodySizes {
-    pub fn calc_note_y(&self, syllable_note: SyllableNote) -> f32 {
-        let center_octave = Octave::default(); //TODO
-        let center_semitons = Semitones::from(center_octave);
-        let offset_semitones = Semitones::from(syllable_note) - center_semitons;
-        let center_y = self.semitones as f32 * self.semitone_height / 2.0;
-        -center_y + self.semitone_height * offset_semitones.0 as f32
+    pub fn update_with_tab(&mut self, tab: &Tab) {
+        let default = Self::default();
+        self.lowest = default.lowest;
+        self.highest = default.highest;
+        if let Some (track) = tab.get_track_of_kind(TrackKind::Vocal) {
+            for entry in track.entries.iter() {
+                if let Some(entry) = entry.proto.as_core() {
+                    if let Some(tone) = entry.as_tone() {
+                        for note in tone.get_notes() {
+                            let v = Semitones::from(note);
+                            if v < self.lowest {
+                                self.lowest = v
+                            }
+                            if v > self.highest {
+                                self.highest = v
+                            }
+                        }
+                    }
+                }
+            }
+            println!("MelodySizes::update_with_tab: {} - {}", self.lowest.0, self.highest.0);
+        }
+    }
+    pub fn calc_note_y(&self, note: Note) -> f32 {
+        let offset_semitones = self.highest - Semitones::from(note);
+        -1.0 * self.semitone_height * offset_semitones.0 as f32 - self.note_height
     }
     pub fn layout_height(&self) -> f32 {
-        self.semitones as f32 * self.semitone_height + self.note_height
+        let range = if self.highest > self.lowest {
+            self.highest.0 - self.lowest.0 + 1
+        } else {
+            1
+        };
+        range as f32 * self.semitone_height + self.note_height
     }
 }
 
@@ -179,7 +206,12 @@ impl Default for StringsSizes {
 }
 impl StringsSizes {
     pub fn layout_height(&self) -> f32 {
-        self.string_space * 6.0 + self.note_height
+        self.string_space * 6.0
+    }
+    pub fn calc_string_y(&self, string: u8) -> f32 {
+        -1.0
+            * self.string_space
+            * (string as f32 - 0.5)
     }
 }
 
@@ -259,7 +291,7 @@ impl Default for LayoutSizes {
         Self {
             page_margin: 12.0,
             bar_margin: 16.0,
-            lane_margin: 2.0,
+            lane_margin: 3.0,
             shapes_height: 52.0,
         }
     }

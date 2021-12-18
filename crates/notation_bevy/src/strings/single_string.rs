@@ -13,7 +13,7 @@ pub type SingleStringData = LaneData<SingleStringValue>;
 
 impl ShapeOp<NotationTheme, StrokeLine> for SingleStringData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
-        let y = -1.0 * (self.value.string as f32 - 1.0) * theme.sizes.strings.string_space;
+        let y = theme.sizes.strings.calc_string_y(self.value.string);
         StrokeLine {
             from: Vec2::ZERO,
             to: Vec2::new(self.value.bar_size, 0.0),

@@ -351,6 +351,7 @@ impl ControlView {
             let mut video_recording_mode = settings.layout.video_recording_mode;
             ui.checkbox(&mut video_recording_mode, "Video Recording Mode");
             if settings.layout.video_recording_mode != video_recording_mode {
+                settings.layout.video_recording_mode = video_recording_mode;
                 Control::reload_tab(state, theme);
             }
             ui.separator();
@@ -500,11 +501,6 @@ impl ControlView {
             let last_note_height = theme.sizes.melody.note_height;
             ui.add(Slider::new(&mut theme.sizes.melody.note_height, 1.0..=32.0).text("Note Height"));
             if float_ne!(theme.sizes.melody.note_height, last_note_height, abs <= 0.5) {
-                window_resized_evts.send(WindowResizedEvent());
-            }
-            let last_semitones = theme.sizes.melody.semitones;
-            ui.add(Slider::new(&mut theme.sizes.melody.semitones, 12..=60).text("Semitones"));
-            if theme.sizes.melody.semitones != last_semitones {
                 window_resized_evts.send(WindowResizedEvent());
             }
             let mut changed = false;

@@ -142,6 +142,7 @@ fn insert_core_entry_extra(
 fn on_tab_bars_resized(
     mut evts: EventReader<TabBarsResizedEvent>,
     mut commands: Commands,
+    settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut tone_note_query: Query<(Entity, &mut ToneNoteData), With<ToneNoteData>>,
     mut pick_note_query: Query<(Entity, &mut PickNoteData), With<PickNoteData>>,
@@ -161,22 +162,6 @@ fn on_tab_bars_resized(
                 }
             }
         }
-        for (entity, mut data) in pick_note_query.iter_mut() {
-            for (view, layout) in bars.iter() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
-                    data.update(&mut commands, &theme, entity);
-                }
-            }
-        }
-        for (entity, mut data) in single_string_query.iter_mut() {
-            for (view, layout) in bars.iter() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
-                    data.update(&mut commands, &theme, entity);
-                }
-            }
-        }
         for (entity, mut data) in word_text_query.iter_mut() {
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
@@ -185,19 +170,39 @@ fn on_tab_bars_resized(
                 }
             }
         }
-        for (entity, mut data) in shape_diagram_6_query.iter_mut() {
-            for (view, layout) in bars.iter() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
-                    data.update(&mut commands, &theme, entity);
+        if !settings.hide_shapes_lane {
+            for (entity, mut data) in shape_diagram_6_query.iter_mut() {
+                for (view, layout) in bars.iter() {
+                    if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                        data.value.bar_size = layout.size.width;
+                        data.update(&mut commands, &theme, entity);
+                    }
+                }
+            }
+            for (entity, mut data) in shape_diagram_4_query.iter_mut() {
+                for (view, layout) in bars.iter() {
+                    if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                        data.value.bar_size = layout.size.width;
+                        data.update(&mut commands, &theme, entity);
+                    }
                 }
             }
         }
-        for (entity, mut data) in shape_diagram_4_query.iter_mut() {
-            for (view, layout) in bars.iter() {
-                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
-                    data.value.bar_size = layout.size.width;
-                    data.update(&mut commands, &theme, entity);
+        if !settings.hide_strings_lane {
+            for (entity, mut data) in single_string_query.iter_mut() {
+                for (view, layout) in bars.iter() {
+                    if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                        data.value.bar_size = layout.size.width;
+                        data.update(&mut commands, &theme, entity);
+                    }
+                }
+            }
+            for (entity, mut data) in pick_note_query.iter_mut() {
+                for (view, layout) in bars.iter() {
+                    if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                        data.value.bar_size = layout.size.width;
+                        data.update(&mut commands, &theme, entity);
+                    }
                 }
             }
         }

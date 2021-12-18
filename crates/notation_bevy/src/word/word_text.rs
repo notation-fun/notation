@@ -48,9 +48,10 @@ impl ShapeOp<NotationTheme, StrokeLine> for WordTextData {
             let y = 0.0;
             Vec3::new(x, y, theme.z.word)
         };
+        let y = -1.0 * theme.sizes.lyrics.layout_height() / 2.0;
         StrokeLine {
-            from: Vec2::ZERO,
-            to: Vec2::new(width, 0.0),
+            from: Vec2::new(0.0, y),
+            to: Vec2::new(width, y),
             line_width,
             color: theme.colors.lyrics.line.of_state(&self.value.playing_state),
             offset,

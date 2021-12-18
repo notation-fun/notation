@@ -48,7 +48,7 @@ impl NotationViewer {
         mut commands: Commands,
         mut materials: ResMut<Assets<ColorMaterial>>,
         assets: Res<NotationAssets>,
-        theme: Res<NotationTheme>,
+        mut theme: ResMut<NotationTheme>,
         mut settings: ResMut<NotationSettings>,
         mut switch_tab_evts: EventWriter<SwitchTabEvent>,
     ) {
@@ -57,6 +57,7 @@ impl NotationViewer {
             tab = Some(evt.0.clone());
         }
         if let Some(tab) = tab {
+            theme.sizes.melody.update_with_tab(&tab);
             let viewer_bundle = ViewBundle::from(NotationViewer::new(tab.clone()));
             let entity = commands.spawn_bundle(viewer_bundle).id();
             ControlView::spawn(
