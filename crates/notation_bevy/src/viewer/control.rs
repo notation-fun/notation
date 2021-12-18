@@ -333,4 +333,17 @@ impl Control {
         }
         window.set_resolution(width as f32, height as f32);
     }
+    pub fn set_speed_factor(
+        settings: &mut NotationSettings,
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
+        speed_factor: f32,
+    ) {
+        settings.speed_factor = speed_factor;
+        Self::sync_speed_factor(
+            settings,
+            midi_state,
+            play_control_evts,
+        )
+    }
 }

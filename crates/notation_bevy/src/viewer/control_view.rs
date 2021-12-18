@@ -255,22 +255,22 @@ impl ControlView {
                 if ui.button("1/4").clicked() {
                     speed_factor = 0.25;
                 }
-                if ui.button("1/2").clicked() {
+                if ui.button("2/4").clicked() {
                     speed_factor = 0.5;
                 }
                 if ui.button("3/4").clicked() {
                     speed_factor = 0.75;
                 }
-                if ui.button("1").clicked() {
+                if ui.button("4/4").clicked() {
                     speed_factor = 1.0;
                 }
             });
             if float_ne!(speed_factor, settings.speed_factor, abs <= 0.01) {
-                settings.speed_factor = speed_factor;
-                Control::sync_speed_factor(
+                Control::set_speed_factor(
                     settings,
                     midi_state,
                     play_control_evts,
+                    speed_factor,
                 )
             }
         });

@@ -254,6 +254,14 @@ fn handle_keyboard_inputs(
     } else if keyboard_input.just_released(KeyCode::E) {
         Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
         Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
+    } else if keyboard_input.just_released(KeyCode::Key1) {
+        Control::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 0.25);
+    } else if keyboard_input.just_released(KeyCode::Key2) {
+        Control::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 0.5);
+    } else if keyboard_input.just_released(KeyCode::Key3) {
+        Control::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 0.75);
+    } else if keyboard_input.just_released(KeyCode::Key4) {
+        Control::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 1.0);
     }
 }
 
