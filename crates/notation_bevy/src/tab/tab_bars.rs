@@ -148,7 +148,11 @@ impl TabBars {
             .collect::<Vec<LaneLayoutData>>();
         settings.layout.sort_lane_layouts(&result)
     }
-    fn calc_bar_layout_data(all_lane_layouts: &Vec<LaneLayoutData>, bar: &TabBar) -> BarLayoutData {
+    fn calc_bar_layout_data(
+        theme: &NotationTheme,
+        all_lane_layouts: &Vec<LaneLayoutData>,
+        bar: &TabBar
+    ) -> BarLayoutData {
         let mut lane_layouts = Vec::new();
         for lane_layout in all_lane_layouts.iter() {
             let lane =
@@ -159,7 +163,7 @@ impl TabBars {
                 ..lane_layout.clone()
             }));
         }
-        BarLayoutData::new(bar.props, lane_layouts)
+        BarLayoutData::new(theme.sizes.layout.bar_min_height, bar.props, lane_layouts)
     }
     pub fn calc_bar_layouts(
         theme: &NotationTheme,
@@ -169,7 +173,7 @@ impl TabBars {
         let all_lane_layouts = Self::calc_all_lane_layouts(theme, settings, tab);
         tab.bars
             .iter()
-            .map(|bar| Self::calc_bar_layout_data(&all_lane_layouts, bar))
+            .map(|bar| Self::calc_bar_layout_data(theme, &all_lane_layouts, bar))
             .collect()
     }
 }

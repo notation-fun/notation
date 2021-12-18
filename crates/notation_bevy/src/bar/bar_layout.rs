@@ -7,6 +7,7 @@ use crate::prelude::LaneLayoutData;
 
 #[derive(Clone, Debug)]
 pub struct BarLayoutData {
+    pub min_height: f32,
     pub bar_props: TabBarProps,
     pub lane_layouts: Vec<Arc<LaneLayoutData>>,
 }
@@ -16,16 +17,17 @@ impl Display for BarLayoutData {
     }
 }
 impl BarLayoutData {
-    pub fn new(bar_props: TabBarProps, lane_layouts: Vec<Arc<LaneLayoutData>>) -> Self {
+    pub fn new(min_height: f32, bar_props: TabBarProps, lane_layouts: Vec<Arc<LaneLayoutData>>) -> Self {
         Self {
+            min_height,
             bar_props,
             lane_layouts: lane_layouts,
         }
     }
     pub fn height(&self) -> f32 {
-        Self::calc_height(&self.lane_layouts)
+        Self::calc_height(self.min_height, &self.lane_layouts)
     }
-    pub fn calc_height(lane_layouts: &Vec<Arc<LaneLayoutData>>) -> f32 {
+    pub fn calc_height(min_height: f32, lane_layouts: &Vec<Arc<LaneLayoutData>>) -> f32 {
         let mut height = 0.0;
         let len = lane_layouts.len();
         for (index, lane_layout) in lane_layouts.iter().enumerate() {
@@ -36,6 +38,10 @@ impl BarLayoutData {
                 }
             }
         }
-        height
+        if height > min_height {
+            height
+        } else {
+            min_height
+        }
     }
 }

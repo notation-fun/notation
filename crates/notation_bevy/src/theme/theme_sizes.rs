@@ -283,6 +283,7 @@ pub struct LayoutSizes {
     pub page_margin: f32,
     pub bar_margin: f32,
     pub lane_margin: f32,
+    pub bar_min_height: f32,
     pub shapes_height: f32,
 }
 
@@ -292,6 +293,7 @@ impl Default for LayoutSizes {
             page_margin: 12.0,
             bar_margin: 16.0,
             lane_margin: 3.0,
+            bar_min_height: 24.0,
             shapes_height: 52.0,
         }
     }
