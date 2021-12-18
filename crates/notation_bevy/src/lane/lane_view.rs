@@ -42,30 +42,48 @@ impl LaneView {
         if let Some(lane) = &lane_layout.lane {
             let lane_bundle = LaneBundle::new(lane.clone(), lane_layout.clone());
             let lane_entity = BevyUtil::spawn_child_bundle(commands, bar_entity, lane_bundle);
-            Self::setup_lane(commands, lane, lane_entity);
-            for entry in lane.entries.iter() {
-                entry_plugin::create_entry(commands, assets, theme, settings, lane_entity, entry);
+            if Self::setup_lane(commands, settings, lane, lane_entity) {
+                for entry in lane.entries.iter() {
+                    entry_plugin::create_entry(commands, assets, theme, settings, lane_entity, entry);
+                }
             }
         } else {
             let view_bundle = ViewBundle::from(lane_layout.clone());
             BevyUtil::spawn_child_bundle(commands, bar_entity, view_bundle);
         }
     }
-    pub fn setup_lane(commands: &mut Commands, lane: &BarLane, lane_entity: Entity) {
+    pub fn setup_lane(
+        commands: &mut Commands,
+        settings: &NotationSettings,
+        lane: &BarLane,
+        lane_entity: Entity
+    ) -> bool {
         match lane.kind {
             LaneKind::Lyrics => {
-                LyricsPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                if !settings.hide_lyrics_lane {
+                    LyricsPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                }
+                !settings.hide_lyrics_lane
             }
             LaneKind::Melody => {
-                MelodyPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                if !settings.hide_melody_lane {
+                    MelodyPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                }
+                !settings.hide_melody_lane
             }
             LaneKind::Strings => {
-                StringsPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                if !settings.hide_strings_lane {
+                    StringsPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                }
+                !settings.hide_strings_lane
             }
             LaneKind::Shapes => {
-                ShapesPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                if !settings.hide_shapes_lane {
+                    ShapesPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                }
+                !settings.hide_shapes_lane
             }
-            _ => (),
+            _ => false,
         }
     }
 }

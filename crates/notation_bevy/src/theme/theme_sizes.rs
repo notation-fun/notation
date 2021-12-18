@@ -273,12 +273,12 @@ impl ThemeSizes {
         };
         LayoutSize::new(0.0, height)
     }
-    pub fn calc_lane_height(&self, lane_kind: LaneKind) -> f32 {
+    pub fn calc_lane_height(&self, settings: &NotationSettings, lane_kind: LaneKind) -> f32 {
         match lane_kind {
-            LaneKind::Lyrics => self.lyrics.layout_height(),
-            LaneKind::Melody => self.melody.layout_height(),
-            LaneKind::Strings => self.strings.layout_height(),
-            LaneKind::Shapes => self.layout.shapes_height,
+            LaneKind::Lyrics => if settings.hide_lyrics_lane { 0.0 } else { self.lyrics.layout_height() },
+            LaneKind::Melody => if settings.hide_melody_lane { 0.0 } else { self.melody.layout_height() },
+            LaneKind::Strings => if settings.hide_strings_lane { 0.0 } else { self.strings.layout_height() },
+            LaneKind::Shapes => if settings.hide_shapes_lane { 0.0 } else { self.layout.shapes_height },
             _ => 0.0,
         }
     }

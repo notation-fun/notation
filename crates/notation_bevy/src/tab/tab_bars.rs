@@ -136,7 +136,7 @@ impl TabBars {
             for lane in bar.lanes.iter() {
                 let lane_id = lane.id();
                 if !lane_layouts.contains_key(&lane_id) {
-                    let height = theme.sizes.calc_lane_height(lane.kind);
+                    let height = theme.sizes.calc_lane_height(settings, lane.kind);
                     let margin = theme.sizes.layout.lane_margin;
                     lane_layouts.insert(lane_id, LaneLayoutData::new(&lane, height, margin));
                 }

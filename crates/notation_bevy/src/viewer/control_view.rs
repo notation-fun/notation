@@ -284,6 +284,31 @@ impl ControlView {
         CollapsingHeader::new("Display Options")
         .default_open(true)
         .show(ui, |ui| {
+            let mut hide_shapes_lane = settings.hide_shapes_lane;
+            ui.checkbox(&mut hide_shapes_lane, "Hide Guitar Chords");
+            if settings.hide_shapes_lane != hide_shapes_lane {
+                settings.hide_shapes_lane = hide_shapes_lane;
+                Control::reload_tab(state, theme);
+            }
+            let mut hide_strings_lane = settings.hide_strings_lane;
+            ui.checkbox(&mut hide_strings_lane, "Hide Guitar Strings");
+            if settings.hide_strings_lane != hide_strings_lane {
+                settings.hide_strings_lane = hide_strings_lane;
+                Control::reload_tab(state, theme);
+            }
+            let mut hide_lyrics_lane = settings.hide_lyrics_lane;
+            ui.checkbox(&mut hide_lyrics_lane, "Hide Lyrics ");
+            if settings.hide_lyrics_lane != hide_lyrics_lane {
+                settings.hide_lyrics_lane = hide_lyrics_lane;
+                Control::reload_tab(state, theme);
+            }
+            let mut hide_melody_lane = settings.hide_melody_lane;
+            ui.checkbox(&mut hide_melody_lane, "Hide Melody");
+            if settings.hide_melody_lane != hide_melody_lane {
+                settings.hide_melody_lane = hide_melody_lane;
+                Control::reload_tab(state, theme);
+            }
+            ui.separator();
             let show_guitar_syllable = settings.show_guitar_syllable;
             ui.checkbox(&mut settings.show_guitar_syllable, "Show Guitar Syllable");
             if show_guitar_syllable != settings.show_guitar_syllable {
@@ -323,9 +348,9 @@ impl ControlView {
         CollapsingHeader::new("Layout Options")
         .default_open(true)
         .show(ui, |ui| {
-            let last_video_recording_mode = settings.layout.video_recording_mode;
-            ui.checkbox(&mut settings.layout.video_recording_mode, "Video Recording Mode");
-            if settings.layout.video_recording_mode != last_video_recording_mode {
+            let mut video_recording_mode = settings.layout.video_recording_mode;
+            ui.checkbox(&mut video_recording_mode, "Video Recording Mode");
+            if settings.layout.video_recording_mode != video_recording_mode {
                 Control::reload_tab(state, theme);
             }
             ui.separator();
