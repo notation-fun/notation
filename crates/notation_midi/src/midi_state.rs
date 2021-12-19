@@ -108,17 +108,19 @@ impl MidiChannel {
         if !bypass {
             match &self.track {
                 Some(track) => {
-                    match track.kind {
-                        TrackKind::Vocal => {
-                            velocity = if settings.vocal_mute { 0 } else { settings.vocal_velocity };
-                        },
-                        TrackKind::Guitar => {
-                            velocity = if settings.guitar_mute { 0 } else { settings.guitar_velocity };
-                        },
-                        TrackKind::Piano => {
-                            velocity = if settings.piano_mute { 0 } else { settings.piano_velocity };
-                        },
-                        _ => (),
+                    if !is_seeking || track.kind != settings.seeking_track {
+                        match track.kind {
+                            TrackKind::Vocal => {
+                                velocity = if settings.vocal_mute { 0 } else { settings.vocal_velocity };
+                            },
+                            TrackKind::Guitar => {
+                                velocity = if settings.guitar_mute { 0 } else { settings.guitar_velocity };
+                            },
+                            TrackKind::Piano => {
+                                velocity = if settings.piano_mute { 0 } else { settings.piano_velocity };
+                            },
+                            _ => (),
+                        }
                     }
                 },
                 None => {
@@ -265,7 +267,7 @@ impl MidiState {
             let scale_root = tab.meta.scale.calc_root_syllable();
             let signature = tab.signature();
             let bar_units = tab.bar_units();
-            let beat_delay = Some(Units::from(signature.beat_unit));
+            let beat_delay = Some(Units::from(signature.beat_unit) - Units::MIN_ACCURACY);
             for bar in tab.bars.iter() {
                 for beat in 0..signature.bar_beats {
                     let in_bar_pos = Units(beat as f32 * Units::from(signature.beat_unit).0);
