@@ -47,6 +47,8 @@ Note that the web version is only working properly in desktop browser, the audio
 [Desktop versions](https://github.com/notation-fun/notation/releases) can be downloaded from releases.
 
 You can also build it by yourself, make sure follow the [Bevy Engine Setup](https://bevyengine.org/learn/book/getting-started/setup/) first.
+
+sccache is required for building notation from source. To install sccache, follow the installation instructions from the crate [website](https://github.com/mozilla/sccache/blob/HEAD/#installation).
 ```
 cd app/notation_viewer
 cargo run --features native
