@@ -108,23 +108,23 @@ impl MidiChannel {
         if !bypass {
             match &self.track {
                 Some(track) => {
-                    if !is_seeking || track.kind != settings.seeking_track {
-                        match track.kind {
-                            TrackKind::Vocal => {
-                                velocity = if settings.vocal_mute { 0 } else { settings.vocal_velocity };
-                            },
-                            TrackKind::Guitar => {
-                                velocity = if settings.guitar_mute { 0 } else { settings.guitar_velocity };
-                            },
-                            TrackKind::Piano => {
-                                velocity = if settings.piano_mute { 0 } else { settings.piano_velocity };
-                            },
-                            _ => (),
-                        }
+                    let seeking = is_seeking && track.kind == settings.seeking_track;
+                    match track.kind {
+                        TrackKind::Vocal => {
+                            velocity = if !seeking && settings.vocal_mute { 0 } else { settings.vocal_velocity };
+                        },
+                        TrackKind::Guitar => {
+                            velocity = if !seeking && settings.guitar_mute { 0 } else { settings.guitar_velocity };
+                        },
+                        TrackKind::Piano => {
+                            velocity = if !seeking && settings.piano_mute { 0 } else { settings.piano_velocity };
+                        },
+                        _ => (),
                     }
                 },
                 None => {
-                    velocity = if settings.click_mute { 0 } else { settings.click_velocity };
+                    let is_rest = play_control.position.bar.bar_ordinal == 0;
+                    velocity = if !is_rest && settings.click_mute { 0 } else { settings.click_velocity };
                 }
             }
         }

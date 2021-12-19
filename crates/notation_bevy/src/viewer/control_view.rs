@@ -200,6 +200,8 @@ impl ControlView {
                 });
                 if ui.button("Reset Audio").clicked() {
                     let default = MidiSettings::default();
+                    midi_settings.click_mute = default.click_mute;
+                    midi_settings.click_velocity = default.click_velocity;
                     midi_settings.vocal_mute = default.vocal_mute;
                     midi_settings.vocal_velocity = default.vocal_velocity;
                     midi_settings.guitar_mute = default.guitar_mute;

@@ -30,8 +30,8 @@ impl Default for MidiSettings {
     fn default() -> Self {
         Self {
             bypass_hub: false,
-            click_mute: false,
-            click_velocity: 50,
+            click_mute: true,
+            click_velocity: 100,
             click_octave: Octave::P7,
             vocal_mute: false,
             vocal_velocity: 110,
