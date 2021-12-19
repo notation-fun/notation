@@ -19,6 +19,8 @@ impl Default for MidiHub {
 }
 
 impl MidiHub {
+    pub const PRINT_SYNTH_ERROR: bool = false;
+    pub const PRINT_MIDI_ERROR: bool = false;
     pub fn new_output() -> Option<MidiOutput> {
         if let Ok(output) = MidiOutput::new("MidiHub") {
             let ports = output.ports();
@@ -81,13 +83,17 @@ impl MidiHub {
         if let Some(synth) = &self.output_synth {
             //println!("send to synth: {:?}", msg);
             if let Err(err) = synth.send(speed, msg, velocity) {
-                println!("send to synth failed: {:?} -> {:?}", msg, err);
+                if Self::PRINT_SYNTH_ERROR {
+                    println!("send to synth failed: {:?} -> {:?}", msg, err);
+                }
             }
         }
         if let Some(conn) = &self.output_conn {
             //println!("send to midi: {:?}", msg);
             if let Err(err) = conn.lock().unwrap().send(&msg.to_midi()) {
-                println!("send to midi failed: {:?} -> {:?}", msg, err);
+                if Self::PRINT_MIDI_ERROR {
+                    println!("send to midi failed: {:?} -> {:?}", msg, err);
+                }
             }
         }
     }

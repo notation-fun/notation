@@ -187,12 +187,16 @@ impl ControlView {
             if !midi_settings.bypass_hub {
                 ui.separator();
                 ui.horizontal(|ui| {
+                    ui.checkbox(&mut midi_settings.click_mute, "Mute");
+                    ui.add(Slider::new(&mut midi_settings.click_velocity, 0..=127).text("Click"));
+                });
+                ui.horizontal(|ui| {
                     ui.checkbox(&mut midi_settings.vocal_mute, "Mute");
-                    ui.add(Slider::new(&mut midi_settings.vocal_velocity, 0..=128).text("Vocal"));
+                    ui.add(Slider::new(&mut midi_settings.vocal_velocity, 0..=127).text("Vocal"));
                 });
                 ui.horizontal(|ui| {
                     ui.checkbox(&mut midi_settings.guitar_mute, "Mute");
-                    ui.add(Slider::new(&mut midi_settings.guitar_velocity, 0..=128).text("Guitar"));
+                    ui.add(Slider::new(&mut midi_settings.guitar_velocity, 0..=127).text("Guitar"));
                 });
                 if ui.button("Reset Audio").clicked() {
                     let default = MidiSettings::default();

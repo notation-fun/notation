@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use crate::prelude::{Key, Note, Pitch, Semitones, Syllable, SyllableNote, Chord};
+use crate::{prelude::{Key, Note, Pitch, Semitones, Syllable, SyllableNote, Chord, Octave}, tone::Tone};
 
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -94,5 +94,12 @@ impl Scale {
     }
     pub fn calc_note(&self, key: &Key, syllable_note: &SyllableNote) -> Note {
         (Semitones::from(*syllable_note) + self.calc_do_semitones(key)).into()
+    }
+    pub fn calc_click_note(&self, key: &Key, octave: &Octave, syllable: &Syllable) -> Note {
+        let pitch = self.calc_pitch(key, syllable);
+        Note::new(*octave, pitch)
+    }
+    pub fn calc_click_tone(&self, key: &Key, octave: &Octave, syllable: &Syllable) -> Tone {
+        Tone::Single(self.calc_click_note(key, octave, syllable))
     }
 }

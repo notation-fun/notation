@@ -1,5 +1,6 @@
 use crate::prelude::{Duration, Units};
 
+#[derive(Copy, Clone, Debug)]
 pub enum EntryPassMode {
     Immediate,
     Delayed,
