@@ -14,7 +14,7 @@ impl MidiSynth {
     }
     pub fn init_channels(&self, _settings: &MidiSettings, state: &MidiState) {
         for channel in state.channels.iter() {
-            if channel.track.is_some() {
+            if channel.messages.len() > 0 {
                 init_channel(channel.channel.into(), channel.program.into());
             }
         }
