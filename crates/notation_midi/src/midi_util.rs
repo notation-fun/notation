@@ -3,7 +3,6 @@ use std::convert::TryFrom;
 use helgoboss_midi::{Channel, KeyNumber, StructuredShortMessage, U7};
 use notation_model::prelude::{
     CoreEntry, Entry, FrettedEntry4, FrettedEntry6, LaneEntry, Note, Pick, Semitones, TabBar, Tone,
-    Units,
 };
 
 use crate::prelude::MidiChannel;
@@ -47,22 +46,21 @@ impl MidiUtil {
         _bar: &TabBar,
         entry: &LaneEntry,
         tone: &Tone,
-    ) -> Option<Vec<(Option<Units>, StructuredShortMessage)>> {
+    ) -> Option<Vec<(bool, StructuredShortMessage)>> {
         if tone.is_none() || entry.prev_is_tie() {
             return None;
         }
-        let mut play_msgs: Vec<(Option<Units>, StructuredShortMessage)> = tone
+        let mut play_msgs: Vec<(bool, StructuredShortMessage)> = tone
             .get_notes()
             .iter()
             .flat_map(|x| MidiUtil::note_midi_on_msg(x, channel.channel, channel.velocity))
-            .map(|x| (None, x))
+            .map(|x| (false, x))
             .collect();
-        let delay = entry.tied_units();
-        let mut stop_msgs: Vec<(Option<Units>, StructuredShortMessage)> = tone
+        let mut stop_msgs: Vec<(bool, StructuredShortMessage)> = tone
             .get_notes()
             .iter()
             .flat_map(|x| MidiUtil::note_midi_off_msg(x, channel.channel, channel.velocity))
-            .map(|x| (Some(delay), x))
+            .map(|x| (true, x))
             .collect();
         play_msgs.append(&mut stop_msgs);
         if play_msgs.len() > 0 {
@@ -76,7 +74,7 @@ impl MidiUtil {
         bar: &TabBar,
         entry: &LaneEntry,
         core_entry: &CoreEntry,
-    ) -> Option<Vec<(Option<Units>, StructuredShortMessage)>> {
+    ) -> Option<Vec<(bool, StructuredShortMessage)>> {
         match core_entry {
             CoreEntry::Tone(tone, _) => Self::get_tone_midi_msgs(channel, bar, entry, tone),
             _ => None,
@@ -86,7 +84,7 @@ impl MidiUtil {
         channel: &MidiChannel,
         bar: &TabBar,
         entry: &LaneEntry,
-    ) -> Option<Vec<(Option<Units>, StructuredShortMessage)>> {
+    ) -> Option<Vec<(bool, StructuredShortMessage)>> {
         match entry.proto() {
             notation_model::prelude::ProtoEntry::Core(core_entry) => {
                 Self::get_core_midi_msgs(channel, bar, entry, core_entry)
@@ -110,7 +108,7 @@ macro_rules! impl_get_pick_midi_msgs {
                 bar: &TabBar,
                 entry: &LaneEntry,
                 pick: &Pick,
-            ) -> Option<Vec<(Option<Units>, StructuredShortMessage)>> {
+            ) -> Option<Vec<(bool, StructuredShortMessage)>> {
                 if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
                     let tone = fretboard.pick_tone(&shape, pick);
                     Self::get_tone_midi_msgs(channel, bar, entry, &tone)
@@ -130,7 +128,7 @@ macro_rules! impl_get_fretted_midi_msgs {
                 bar: &TabBar,
                 entry: &LaneEntry,
                 fretted_entry: &$fretted_entry,
-            ) -> Option<Vec<(Option<Units>, StructuredShortMessage)>> {
+            ) -> Option<Vec<(bool, StructuredShortMessage)>> {
                 match fretted_entry {
                     $fretted_entry::Pick(pick, _) => {
                         Self::$get_pick_midi_msgs(channel, bar, entry, pick)

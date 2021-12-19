@@ -49,8 +49,8 @@ impl MidiChannel {
     fn ensure_sorted(&mut self) -> bool {
         if self.need_sort {
             dmsort::sort_by(&mut self.messages, |a, b| {
-                let units_a = a.units_position().0;
-                let units_b = b.units_position().0;
+                let units_a = a.effect_units().0;
+                let units_b = b.effect_units().0;
                 if units_a == units_b {
                     Ordering::Equal
                 } else if units_a < units_b {
@@ -68,7 +68,7 @@ impl MidiChannel {
     pub fn calc_next_index(&mut self, position: &BarPosition) {
         let pos_units = Units::from(*position);
         for (index, value) in self.messages.iter().enumerate() {
-            if Units::from(value.bar_position()) >= pos_units {
+            if Units::from(value.effect_position()) >= pos_units {
                 self.next_index = index;
                 return;
             }
@@ -134,7 +134,7 @@ impl MidiChannel {
                 if play_control.is_bar_in_range(next.bar_ordinal())
                     && play_control
                         .position
-                        .is_passed(next.pass_mode, &next.bar_position())
+                        .is_passed(next.pass_mode, &next.effect_position())
                 {
                     self.next_index += 1;
                     count += 1;
@@ -142,7 +142,7 @@ impl MidiChannel {
                         hub.send(settings, speed, next, velocity);
                     }
                 } else {
-                    if next.bar_position().bar_ordinal < play_control.begin_bar_ordinal {
+                    if next.effect_position().bar_ordinal < play_control.begin_bar_ordinal {
                         self.next_index += 1;
                     } else {
                         break;
@@ -163,7 +163,7 @@ impl MidiChannel {
             hub.send(
                 settings,
                 speed,
-                &MidiMessage::new(first_msg.pass_mode, first_msg.bar_position(), None, msg),
+                &MidiMessage::new(first_msg.pass_mode, first_msg.pos, first_msg.duration, false, msg),
                 self.velocity.into(),
             );
             let msg = StructuredShortMessage::ControlChange {
@@ -174,7 +174,7 @@ impl MidiChannel {
             hub.send(
                 settings,
                 speed,
-                &MidiMessage::new(first_msg.pass_mode, first_msg.bar_position(), None, msg),
+                &MidiMessage::new(first_msg.pass_mode, first_msg.pos, first_msg.duration, false, msg),
                 self.velocity.into(),
             );
         }
@@ -267,7 +267,7 @@ impl MidiState {
             let scale_root = tab.meta.scale.calc_root_syllable();
             let signature = tab.signature();
             let bar_units = tab.bar_units();
-            let beat_delay = Some(Units::from(signature.beat_unit) - Units::MIN_ACCURACY);
+            let beat_duration = Units::from(signature.beat_unit);
             for bar in tab.bars.iter() {
                 for beat in 0..signature.bar_beats {
                     let in_bar_pos = Units(beat as f32 * Units::from(signature.beat_unit).0);
@@ -275,10 +275,10 @@ impl MidiState {
                     let note = tab.meta.scale.calc_click_note(&tab.meta.key, &settings.click_octave, &root);
                     let pos = BarPosition::new(bar_units, bar.props.bar_ordinal, in_bar_pos);
                     if let Some(midi_msg) = MidiUtil::note_midi_on_msg(&note, channel.channel, channel.velocity) {
-                        channel.add_message(MidiMessage::new(EntryPassMode::Immediate, pos, None, midi_msg));
+                        channel.add_message(MidiMessage::new(EntryPassMode::Immediate, pos, beat_duration, false, midi_msg));
                     }
                     if let Some(midi_msg) = MidiUtil::note_midi_off_msg(&note, channel.channel, channel.velocity) {
-                        channel.add_message(MidiMessage::new(EntryPassMode::Immediate, pos, beat_delay, midi_msg));
+                        channel.add_message(MidiMessage::new(EntryPassMode::Immediate, pos, beat_duration, true, midi_msg));
                     }
                 }
             }
@@ -378,7 +378,7 @@ impl MidiState {
     }
     pub fn init_channels(&mut self, settings: &MidiSettings, hub: &mut MidiHub) {
         for channel in self.channels.iter_mut() {
-            if channel.track.is_some() {
+            if channel.messages.len() > 0 {
                 channel.init_channel(settings, hub, &self.play_control.play_speed);
                 channel.calc_next_index(&self.play_control.position.bar);
             }

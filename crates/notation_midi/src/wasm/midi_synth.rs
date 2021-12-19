@@ -26,7 +26,9 @@ impl MidiSynth {
                 channel: _,
                 key_number: _,
                 velocity: _,
-            } => Ok(()),
+            } => {
+                Ok(())
+            },
             StructuredShortMessage::NoteOn {
                 channel,
                 key_number,
@@ -40,7 +42,7 @@ impl MidiSynth {
                     Ok(play_note(
                         channel.into(),
                         key_number.into(),
-                        speed.calc_seconds(msg.entry.tied_units()),
+                        speed.calc_seconds(msg.duration),
                         volume * Self::VOLUME_FACTOR,
                     ))
                 } else {
