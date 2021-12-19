@@ -70,6 +70,12 @@ impl Octave {
             _ => Self::N1,
         }
     }
+    pub fn get_higher(&self) -> Self {
+        (Semitones::from(*self) + Semitones(12)).into()
+    }
+    pub fn get_lower(&self) -> Self {
+        (Semitones::from(*self) - Semitones(12)).into()
+    }
 }
 
 impl From<Octave> for Semitones {

@@ -9,7 +9,7 @@ use notation_bevy_utils::prelude::{
 };
 use float_eq::float_ne;
 use notation_midi::prelude::{MidiState, PlayControlEvent, MidiSettings, JumpToBarEvent};
-use notation_model::prelude::{Tab};
+use notation_model::prelude::{Tab, Octave};
 
 use crate::settings::layout_settings::LayoutMode;
 use crate::ui::layout::NotationLayout;
@@ -168,6 +168,8 @@ impl ControlView {
     }
     pub fn midi_settings_ui(
         ui: &mut Ui,
+        state: &mut NotationAppState,
+        theme: &mut NotationTheme,
         midi_settings: &mut MidiSettings,
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
@@ -186,6 +188,18 @@ impl ControlView {
             }
             if !midi_settings.bypass_hub {
                 ui.separator();
+                ui.horizontal(|ui| {
+                    ui.label(format!("Click Octave: {}", midi_settings.click_octave));
+                    ui.separator();
+                    if midi_settings.click_octave > Octave::P1 && ui.button("lower").clicked() {
+                        midi_settings.click_octave = midi_settings.click_octave.get_lower();
+                        Control::reload_tab(state, theme);
+                    }
+                    if midi_settings.click_octave < Octave::P7 && ui.button("higher").clicked() {
+                        midi_settings.click_octave = midi_settings.click_octave.get_higher();
+                        Control::reload_tab(state, theme);
+                    }
+                });
                 ui.horizontal(|ui| {
                     ui.checkbox(&mut midi_settings.click_mute, "Mute");
                     ui.add(Slider::new(&mut midi_settings.click_velocity, 0..=127).text("Click"));
@@ -609,7 +623,7 @@ impl ControlView {
                     ui.separator();
                     egui::ScrollArea::auto_sized().show(ui, |ui| {
                         ui.vertical(|ui| {
-                            Self::midi_settings_ui(ui, &mut midi_settings, &mut midi_state, &mut play_control_evts);
+                            Self::midi_settings_ui(ui, &mut state, &mut theme, &mut midi_settings, &mut midi_state, &mut play_control_evts);
                             Self::display_ui(ui, &mut state, &mut settings, &mut theme);
                             ui.separator();
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
