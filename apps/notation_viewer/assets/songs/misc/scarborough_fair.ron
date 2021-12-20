@@ -1685,365 +1685,365 @@
                 Mark("v2:3"),// [81]
                 Lyric(Word(
                     (
-                        text: "cam-",
+                        text: "ca-",
                     ),
-                    Simple(Half),
+                    Simple(Quarter),
                 )),// [82]
+                Lyric(Word(
+                    (
+                        text: "m-",
+                    ),
+                    Simple(Quarter),
+                )),// [83]
                 Lyric(Word(
                     (
                         text: "bric",
                     ),
                     Simple(Quarter),
-                )),// [83]
-                Mark("|"),// [84]
-                Mark("v2:4"),// [85]
+                )),// [84]
+                Mark("|"),// [85]
+                Mark("v2:4"),// [86]
                 Lyric(Word(
                     (
                         text: "shirt",
                     ),
                     Dotted(Half),
-                )),// [86]
-                Mark("|"),// [87]
-                Mark("v2:12"),// [88]
-                Core(Rest(Simple(Half))),// [89]
+                )),// [87]
+                Mark("|"),// [88]
+                Mark("v2:12"),// [89]
+                Core(Rest(Simple(Half))),// [90]
                 Lyric(Word(
                     (
                         text: "with-",
                     ),
                     Simple(Quarter),
-                )),// [90]
-                Mark("|"),// [91]
-                Mark("v2:13"),// [92]
+                )),// [91]
+                Mark("|"),// [92]
+                Mark("v2:13"),// [93]
                 Lyric(Word(
                     (
                         text: "out",
                     ),
                     Simple(Half),
-                )),// [93]
+                )),// [94]
                 Lyric(Word(
                     (
                         text: "no",
                     ),
                     Simple(Quarter),
-                )),// [94]
-                Mark("|"),// [95]
-                Mark("v2:14"),// [96]
+                )),// [95]
+                Mark("|"),// [96]
+                Mark("v2:14"),// [97]
                 Lyric(Word(
                     (
                         text: "seams",
                     ),
                     Simple(Half),
-                )),// [97]
+                )),// [98]
                 Lyric(Word(
                     (
                         text: "nor",
                     ),
                     Simple(Quarter),
-                )),// [98]
-                Mark("|"),// [99]
-                Mark("v2:15"),// [100]
+                )),// [99]
+                Mark("|"),// [100]
+                Mark("v2:15"),// [101]
                 Lyric(Word(
                     (
                         text: "needle",
                     ),
                     Dotted(Half),
-                )),// [101]
-                Mark("|"),// [102]
-                Mark("v2:16"),// [103]
+                )),// [102]
+                Mark("|"),// [103]
+                Mark("v2:16"),// [104]
                 Lyric(Word(
                     (
                         text: "work",
                     ),
                     Dotted(Half),
-                )),// [104]
-                Mark("|"),// [105]
-                Mark("v2:18"),// [106]
+                )),// [105]
+                Mark("|"),// [106]
+                Mark("v2:18"),// [107]
                 Lyric(Word(
                     (
                         text: "then",
                     ),
                     Simple(Half),
-                )),// [107]
+                )),// [108]
                 Lyric(Word(
                     (
                         text: "she\'ll",
                     ),
                     Simple(Quarter),
-                )),// [108]
-                Mark("|"),// [109]
-                Mark("v2:19"),// [110]
+                )),// [109]
+                Mark("|"),// [110]
+                Mark("v2:19"),// [111]
                 Lyric(Word(
                     (
                         text: "be",
                     ),
                     Simple(Half),
-                )),// [111]
+                )),// [112]
                 Lyric(Word(
                     (
                         text: "a",
                     ),
                     Simple(Quarter),
-                )),// [112]
-                Mark("|"),// [113]
-                Mark("v2:20"),// [114]
+                )),// [113]
+                Mark("|"),// [114]
+                Mark("v2:20"),// [115]
                 Lyric(Word(
                     (
                         text: "true",
                     ),
                     Simple(Quarter),
-                )),// [115]
+                )),// [116]
                 Lyric(Word(
                     (
                         text: "love",
                     ),
                     Simple(Quarter),
-                )),// [116]
+                )),// [117]
                 Lyric(Word(
                     (
                         text: "of",
                     ),
                     Simple(Quarter),
-                )),// [117]
-                Mark("|"),// [118]
-                Mark("v2:21"),// [119]
+                )),// [118]
+                Mark("|"),// [119]
+                Mark("v2:21"),// [120]
                 Lyric(Word(
                     (
                         text: "mine",
                     ),
                     Dotted(Half),
-                )),// [120]
-                Mark("|"),// [121]
-                Mark("v3:1"),// [122]
+                )),// [121]
+                Mark("|"),// [122]
+                Mark("v3:1"),// [123]
                 Lyric(Word(
                     (
                         text: "tell",
                     ),
                     Simple(Eighth),
-                )),// [123]
+                )),// [124]
                 Lyric(Word(
                     (
                         text: "her",
                     ),
                     Dotted(Quarter),
-                )),// [124]
+                )),// [125]
                 Lyric(Word(
                     (
                         text: "to",
                     ),
                     Simple(Quarter),
-                )),// [125]
-                Mark("|"),// [126]
-                Mark("v3:2"),// [127]
+                )),// [126]
+                Mark("|"),// [127]
+                Mark("v3:2"),// [128]
                 Lyric(Word(
                     (
                         text: "find",
                     ),
                     Simple(Quarter),
-                )),// [128]
+                )),// [129]
                 Lyric(Word(
                     (
                         text: "me",
                     ),
                     Simple(Quarter),
-                )),// [129]
+                )),// [130]
                 Lyric(Word(
                     (
                         text: "an",
                     ),
                     Simple(Quarter),
-                )),// [130]
-                Mark("|"),// [131]
-                Mark("v3:3"),// [132]
+                )),// [131]
+                Mark("|"),// [132]
+                Mark("v3:3"),// [133]
                 Lyric(Word(
                     (
                         text: "acre",
                     ),
                     Simple(Half),
-                )),// [133]
+                )),// [134]
                 Lyric(Word(
                     (
                         text: "of",
                     ),
                     Simple(Quarter),
-                )),// [134]
-                Mark("|"),// [135]
-                Mark("v3:4"),// [136]
+                )),// [135]
+                Mark("|"),// [136]
+                Mark("v3:4"),// [137]
                 Lyric(Word(
                     (
                         text: "land",
                     ),
                     Dotted(Half),
-                )),// [137]
-                Mark("|"),// [138]
-                Mark("v3:12"),// [139]
-                Core(Rest(Simple(Half))),// [140]
+                )),// [138]
+                Mark("|"),// [139]
+                Mark("v3:12"),// [140]
+                Core(Rest(Simple(Half))),// [141]
                 Lyric(Word(
                     (
                         text: "bet-",
                     ),
                     Simple(Quarter),
-                )),// [141]
-                Mark("|"),// [142]
-                Mark("v3:13"),// [143]
+                )),// [142]
+                Mark("|"),// [143]
+                Mark("v3:13"),// [144]
                 Lyric(Word(
                     (
                         text: "ween",
                     ),
                     Simple(Quarter),
-                )),// [144]
+                )),// [145]
                 Lyric(Word(
                     (
                         text: "the",
                     ),
                     Simple(Quarter),
-                )),// [145]
+                )),// [146]
                 Lyric(Word(
                     (
                         text: "salt",
                     ),
                     Simple(Quarter),
-                )),// [146]
-                Mark("|"),// [147]
-                Mark("v3:14"),// [148]
+                )),// [147]
+                Mark("|"),// [148]
+                Mark("v3:14"),// [149]
                 Lyric(Word(
                     (
                         text: "wa-",
                     ),
                     Simple(Half),
-                )),// [149]
+                )),// [150]
                 Lyric(Word(
                     (
                         text: "ter",
                     ),
                     Simple(Quarter),
-                )),// [150]
-                Mark("|"),// [151]
-                Mark("v3:15"),// [152]
+                )),// [151]
+                Mark("|"),// [152]
+                Mark("v3:15"),// [153]
                 Lyric(Word(
                     (
                         text: "and",
-                    ),
-                    Simple(Quarter),
-                )),// [153]
-                Lyric(Word(
-                    (
-                        text: "the",
                     ),
                     Simple(Quarter),
                 )),// [154]
                 Lyric(Word(
                     (
-                        text: "sea",
+                        text: "the",
                     ),
                     Simple(Quarter),
                 )),// [155]
-                Mark("|"),// [156]
-                Mark("v3:16"),// [157]
+                Lyric(Word(
+                    (
+                        text: "sea",
+                    ),
+                    Simple(Quarter),
+                )),// [156]
+                Mark("|"),// [157]
+                Mark("v3:16"),// [158]
                 Lyric(Word(
                     (
                         text: "strand",
                     ),
                     Dotted(Half),
-                )),// [158]
-                Mark("|"),// [159]
-                Mark("v4:1"),// [160]
+                )),// [159]
+                Mark("|"),// [160]
+                Mark("v4:1"),// [161]
                 Lyric(Word(
                     (
                         text: "tell",
                     ),
                     Simple(Eighth),
-                )),// [161]
+                )),// [162]
                 Lyric(Word(
                     (
                         text: "her",
                     ),
                     Dotted(Quarter),
-                )),// [162]
+                )),// [163]
                 Lyric(Word(
                     (
                         text: "to",
                     ),
                     Simple(Quarter),
-                )),// [163]
-                Mark("|"),// [164]
-                Mark("v4:2"),// [165]
+                )),// [164]
+                Mark("|"),// [165]
+                Mark("v4:2"),// [166]
                 Lyric(Word(
                     (
                         text: "reap",
                     ),
                     Simple(Eighth),
-                )),// [166]
+                )),// [167]
                 Lyric(Word(
                     (
                         text: "it",
                     ),
                     Dotted(Quarter),
-                )),// [167]
+                )),// [168]
                 Lyric(Word(
                     (
                         text: "in",
                     ),
                     Simple(Eighth),
-                )),// [168]
+                )),// [169]
                 Lyric(Word(
                     (
                         text: "a",
                     ),
                     Simple(Eighth),
-                )),// [169]
-                Mark("|"),// [170]
-                Mark("v4:3"),// [171]
+                )),// [170]
+                Mark("|"),// [171]
+                Mark("v4:3"),// [172]
                 Lyric(Word(
                     (
                         text: "si-",
                     ),
                     Simple(Eighth),
-                )),// [172]
+                )),// [173]
                 Lyric(Word(
                     (
                         text: "ckle",
                     ),
                     Dotted(Quarter),
-                )),// [173]
+                )),// [174]
                 Lyric(Word(
                     (
                         text: "of",
                     ),
                     Simple(Quarter),
-                )),// [174]
-                Mark("|"),// [175]
-                Mark("v4:4"),// [176]
+                )),// [175]
+                Mark("|"),// [176]
+                Mark("v4:4"),// [177]
                 Lyric(Word(
                     (
                         text: "lea-",
                     ),
                     Simple(Eighth),
-                )),// [177]
+                )),// [178]
                 Lyric(Word(
                     (
                         text: "ther",
                     ),
                     Simple(Eighth),
-                )),// [178]
-                Core(Tie),// [179]
+                )),// [179]
+                Core(Tie),// [180]
                 Lyric(Word(
                     (
                         text: "",
                     ),
                     Simple(Half),
-                )),// [180]
-                Mark("|"),// [181]
-                Mark("v4:12"),// [182]
-                Core(Rest(Simple(Half))),// [183]
+                )),// [181]
+                Mark("|"),// [182]
+                Mark("v4:12"),// [183]
+                Core(Rest(Simple(Half))),// [184]
                 Lyric(Word(
                     (
                         text: "and",
-                    ),
-                    Simple(Eighth),
-                )),// [184]
-                Lyric(Word(
-                    (
-                        text: "to-",
                     ),
                     Simple(Quarter),
                 )),// [185]

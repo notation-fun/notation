@@ -84,7 +84,7 @@ pub fn new_tab() -> Tab {
                 "v1:21" Word [ "mine"*+ ] |
                 "v2:1" Word [ "tell", "her"+ "to" ] |
                 "v2:2" Word [ "make" "me" "a" ] |
-                "v2:3" Word [ "cam-"* "bric" ] |
+                "v2:3" Word [ "ca-" "m-" "bric" ] |
                 "v2:4" Word [ "shirt"*+ ] |
                 "v2:12" Word [ _* "with-" ] |
                 "v2:13" Word [ "out"* "no" ] |
@@ -108,7 +108,7 @@ pub fn new_tab() -> Tab {
                 "v4:2" Word [ "reap", "it"+ "in", "a", ] |
                 "v4:3" Word [ "si-", "ckle"+ "of" ] |
                 "v4:4" Word [ "lea-", "ther", @ ""* ] |
-                "v4:12" Word [ _* "and", "to-" ] |
+                "v4:12" Word [ _* "and" ] |
                 "v4:13" Word [ "ga-" "ther" "it" ] |
                 "v4:14" Word [ "all"* "in", "a", ] |
                 "v4:15" Word [ "bunch"* "of" ] |
