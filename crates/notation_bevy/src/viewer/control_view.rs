@@ -11,7 +11,7 @@ use float_eq::float_ne;
 use notation_midi::prelude::{MidiState, PlayControlEvent, MidiSettings, JumpToBarEvent};
 use notation_model::prelude::{Tab, Octave};
 
-use crate::settings::layout_settings::LayoutMode;
+use crate::settings::layout_settings::{LayoutMode, GridAlignMode};
 use crate::ui::layout::NotationLayout;
 use crate::viewer::control::Control;
 
@@ -384,11 +384,43 @@ impl ControlView {
                 Control::toggle_layout_mode(state, settings, theme);
             }
             if !settings.layout.video_recording_mode && settings.layout.mode == LayoutMode::Grid {
-                let last_force_centered = settings.layout.grid_force_centered;
-                ui.checkbox(&mut settings.layout.grid_force_centered, "Force Centered");
-                if settings.layout.grid_force_centered != last_force_centered {
-                    Control::reload_tab(state, theme);
-                }
+                ui.label("Switch Align Mode");
+                ui.horizontal(|ui| {
+                    if settings.layout.grid_align_mode != GridAlignMode::Top {
+                        if ui.button("Top").clicked() {
+                            settings.layout.grid_align_mode = GridAlignMode::Top;
+                            Control::reload_tab(state, theme);
+                        }
+                    } else {
+                        ui.label("Top");
+                    }
+                    if settings.layout.grid_align_mode != GridAlignMode::ForceTop {
+                        if ui.button("Force Top").clicked() {
+                            settings.layout.grid_align_mode = GridAlignMode::ForceTop;
+                            Control::reload_tab(state, theme);
+                        }
+                    } else {
+                        ui.label("Force Top");
+                    }
+                });
+                ui.horizontal(|ui| {
+                    if settings.layout.grid_align_mode != GridAlignMode::Center {
+                        if ui.button("Center").clicked() {
+                            settings.layout.grid_align_mode = GridAlignMode::Center;
+                            Control::reload_tab(state, theme);
+                        }
+                    } else {
+                        ui.label("Center");
+                    }
+                    if settings.layout.grid_align_mode != GridAlignMode::ForceCenter {
+                        if ui.button("Force Center").clicked() {
+                            settings.layout.grid_align_mode = GridAlignMode::ForceCenter;
+                            Control::reload_tab(state, theme);
+                        }
+                    } else {
+                        ui.label("Force Center");
+                    }
+                });
             }
         });
     }
