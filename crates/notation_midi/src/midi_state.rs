@@ -275,10 +275,10 @@ impl MidiState {
                     let note = tab.meta.scale.calc_click_note(&tab.meta.key, &settings.click_octave, &root);
                     let pos = BarPosition::new(bar_units, bar.props.bar_ordinal, in_bar_pos);
                     if let Some(midi_msg) = MidiUtil::note_midi_on_msg(&note, channel.channel, channel.velocity) {
-                        channel.add_message(MidiMessage::new(EntryPassMode::Immediate, pos, beat_duration, false, midi_msg));
+                        channel.add_message(MidiMessage::new(EntryPassMode::Delayed, pos, beat_duration, false, midi_msg));
                     }
                     if let Some(midi_msg) = MidiUtil::note_midi_off_msg(&note, channel.channel, channel.velocity) {
-                        channel.add_message(MidiMessage::new(EntryPassMode::Immediate, pos, beat_duration, true, midi_msg));
+                        channel.add_message(MidiMessage::new(EntryPassMode::Delayed, pos, beat_duration, true, midi_msg));
                     }
                 }
             }
