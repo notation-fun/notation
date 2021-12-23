@@ -1,6 +1,6 @@
 [package]
 name = "notation_bevy"
-version = "0.2.3"
+version = "0.3.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -37,8 +37,8 @@ native = [
 [dependencies]
 notation_bevy_utils = { version = "0.2.0", path = "../notation_bevy_utils" }
 
-notation_model = { version = "0.2.3", path = "../notation_model" }
-notation_midi = { version = "0.2.3", path = "../notation_midi" }
+notation_model = { version = "0.3.0", path = "../notation_model" }
+notation_midi = { version = "0.3.0", path = "../notation_midi" }
 
 serde = {version = "1.0.126", features = ["derive"]}
 # https://github.com/serde-rs/serde/issues/1937

@@ -1,6 +1,6 @@
 [package]
 name = "notation_proto"
-version = "0.2.3"
+version = "0.3.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -15,6 +15,6 @@ description = "Fun notation - protocol for storage"
 serde = { version = "1.0.126", features = ["derive", "alloc"] }
 uuid = { version = "0.8", features = ["serde", "v4"] }
 
-notation_core = { version = "0.2.3", path = "../notation_core" }
-notation_fretted = { version = "0.2.3", path = "../notation_fretted" }
-notation_guitar = { version = "0.2.3", path = "../notation_guitar" }
+notation_core = { version = "0.3.0", path = "../notation_core" }
+notation_fretted = { version = "0.3.0", path = "../notation_fretted" }
+notation_guitar = { version = "0.3.0", path = "../notation_guitar" }
