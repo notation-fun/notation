@@ -1,3 +1,6 @@
+Note: there is a delay between publish and download, so can't just run this automatically, currently do it manually, the order of packages is important.
+
+```
 cd notation_core
 cargo publish
 
@@ -24,4 +27,4 @@ cargo publish
 
 cd ../notation_bevy
 cargo publish
-
+```
