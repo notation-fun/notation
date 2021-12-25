@@ -256,6 +256,7 @@ impl GuitarView {
         let mut current_shape = None;
         for (entry, shape, playing) in query.iter() {
             if playing.value.is_current() {
+                //println!("GuitarView::update_hand_shape6(): found changed playing shape: {}", shape);
                 current_shape = Some((entry, shape));
             }
         }
