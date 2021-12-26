@@ -10,7 +10,7 @@ members = [
     "crates/notation_model",
     "crates/notation_bevy",
     "apps/notation_viewer",
-    "apps/notation_tool",
+    "apps/notation_tabs",
 ]
 
 # https://rustwasm.github.io/book/reference/code-size.html

@@ -1,5 +1,14 @@
-use notation_dsl::tab;
-use notation_proto::prelude::*;
+#!/usr/bin/env rust-script
+//! ```cargo
+//! [dependencies]
+//! notation_tab = { version = "0.3.0", path = "crates/notation_tab" }
+//! ```
+
+use notation_tab::prelude::*;
+
+pub fn main() {
+    print_tab(&new_tab());
+}
 
 pub fn new_tab() -> Tab {
     tab! {
