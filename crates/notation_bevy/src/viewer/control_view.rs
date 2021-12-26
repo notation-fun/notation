@@ -426,7 +426,6 @@ impl ControlView {
     }
     pub fn tab_ui(
         ui: &mut Ui,
-        asset_server: &AssetServer,
         pathes: &mut TabPathes,
         state: &mut NotationAppState,
         _settings: &mut NotationSettings,
@@ -437,9 +436,10 @@ impl ControlView {
             return;
         }
         ui.horizontal(|ui| {
-            if ui.button("Reset Tab").clicked() {
+            if ui.button("Reload Tab").clicked() {
                 Control::reload_tab(state, theme);
             }
+            ui.separator();
             #[cfg(not(target_arch = "wasm32"))]
             if ui.button("Open Tab").clicked() {
                 if let Some(path) = rfd::FileDialog::new()
@@ -448,7 +448,7 @@ impl ControlView {
                     let path_str = path.clone().into_os_string().into_string();
                     if let Ok(path_str) = path_str {
                         pathes.0.insert(0, path_str.clone());
-                        state.change_tab(asset_server, theme, path_str.clone());
+                        state.change_tab(theme, path_str.clone());
                     } else {
                         println!("Failed to convert path to string: {:?} -> {:?}", path, path_str);
                     }
@@ -464,7 +464,7 @@ impl ControlView {
                     for path in pathes.0.iter() {
                         if ui.selectable_label(*path == state.tab_path, path).clicked()
                         {
-                            state.change_tab(asset_server, theme, path.clone());
+                            state.change_tab(theme, path.clone());
                         }
                     }
                 });
@@ -640,7 +640,6 @@ impl ControlView {
     pub fn control_ui(
         egui_ctx: Res<EguiContext>,
         mut windows: ResMut<Windows>,
-        asset_server: Res<AssetServer>,
         mut pathes: ResMut<TabPathes>,
         mut state: ResMut<NotationAppState>,
         mut settings: ResMut<NotationSettings>,
@@ -668,7 +667,7 @@ impl ControlView {
                     }
                     ui.separator();
                      */
-                    Self::tab_ui(ui, &asset_server, &mut pathes, &mut state, &mut settings, &mut theme);
+                    Self::tab_ui(ui, &mut pathes, &mut state, &mut settings, &mut theme);
                     ui.separator();
                     Self::play_control_ui(ui, &mut settings, &mut midi_state, &mut play_control_evts);
                     ui.separator();

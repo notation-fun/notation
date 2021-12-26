@@ -11,7 +11,6 @@ pub struct NotationAppState {
     pub window_height: f32,
     pub scale_factor_override: Option<f64>,
     pub tab_path: String,
-    pub tab_asset: Handle<TabAsset>,
     pub tab: Option<Arc<Tab>>,
     pub hide_control: bool,
     pub parse_error: Option<ParseError>,
@@ -21,14 +20,12 @@ pub struct NotationAppState {
 }
 
 impl NotationAppState {
-    pub fn new(asset_server: &AssetServer, tab_path: String) -> Self {
-        let tab_asset = asset_server.load(tab_path.as_str());
+    pub fn new(tab_path: String) -> Self {
         Self {
             window_width: 0.0,
             window_height: 0.0,
             scale_factor_override: None,
             tab_path,
-            tab_asset,
             tab: None,
             hide_control: true,
             parse_error: None,
@@ -39,17 +36,15 @@ impl NotationAppState {
     }
     pub fn change_tab(
         &mut self,
-        asset_server: &AssetServer,
         theme: &mut NotationTheme,
         tab_path: String
     ) {
         theme._bypass_systems = true;
         self.tab_path = tab_path;
-        self.tab_asset = asset_server.load(self.tab_path.as_str());
         self.parse_error = None;
-        self.reset_tab()
+        self.reload_tab()
     }
-    pub fn reset_tab(&mut self) {
+    pub fn reload_tab(&mut self) {
         self.tab = None;
         self._despawn_delay_seconds = 0.1;
         self._load_tab_delay_seconds = 0.2;
@@ -64,8 +59,7 @@ impl NotationAppState {
 
 impl FromWorld for NotationAppState {
     fn from_world(world: &mut World) -> Self {
-        let server = world.get_resource::<AssetServer>().unwrap();
         let tab_pathes = world.get_resource::<TabPathes>().unwrap();
-        Self::new(server, tab_pathes.0[0].clone())
+        Self::new(tab_pathes.0[0].clone())
     }
 }

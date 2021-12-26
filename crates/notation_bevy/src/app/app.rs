@@ -104,6 +104,7 @@ impl NotationApp {
         app.init_resource::<NotationAppState>();
 
         app.add_startup_system(setup_camera.system());
+        //app.add_startup_system(setup_hot_reloading.system());
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
@@ -116,6 +117,7 @@ impl NotationApp {
                 .with_system(handle_mouse_inputs.system())
                 .with_system(handle_touch_inputs.system())
                 .with_system(load_tab.system())
+                .with_system(on_tab_asset.system())
         );
 
         extra(&mut app);
@@ -136,9 +138,34 @@ fn setup_camera(mut commands: Commands) {
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 }
 
+/*
+ * The open tab logic is using some trick in the asset server, which can load from absolute path
+ * (outside assets folder), but the hot reloading is not working this way.
+ * Ideally can use hot-reloading to update tabs automatically, but that means need to patch bevy
+ * to bypass the assumption with asset path under assets folder in reloading.
+ * Leave the codes here in case that want to revisit this feature in the future.
+ *
+ * The crash error is:
+ *
+ * thread 'Compute Task Pool (2)' panicked at 'called `Result::unwrap()` on an `Err` value: StripPrefixError(())', C:\Users\yjpark\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\bevy_asset-0.5.1\src\io\file_asset_io.rs:135:84
+ *
+fn setup_hot_reloading(asset_server: Res<AssetServer>) {
+    asset_server.watch_for_changes().unwrap();
+}
+ */
+
+fn on_tab_asset(
+    mut evts: EventReader<AssetEvent<TabAsset>>,
+) {
+    for evt in evts.iter() {
+        println!("AssetEvent<TabAsset> {:?}", evt);
+    }
+}
+
 fn load_tab(
     mut commands: Commands,
     time: Res<Time>,
+    asset_server: Res<AssetServer>,
     mut windows: ResMut<Windows>,
     mut state: ResMut<NotationAppState>,
     mut theme: ResMut<NotationTheme>,
@@ -171,13 +198,15 @@ fn load_tab(
             }
             return;
         }
+        asset_server.free_unused_assets();
         if state._load_tab_delay_seconds > 0.0 {
             state._load_tab_delay_seconds -= time.delta_seconds();
             println!("load_tab(): Waiting to Load tab: -> {}", state._load_tab_delay_seconds);
             return;
         }
         println!("\nload_tab(): Loading: {}", state.tab_path);
-        if let Some(asset) = assets.get(&state.tab_asset) {
+        let tab_asset: Handle<TabAsset> = asset_server.load(state.tab_path.as_str());
+        if let Some(asset) = assets.get(&tab_asset) {
             match Tab::try_parse_arc(asset.tab.clone()) {
                 Ok(tab) => {
                     state.tab = Some(tab.clone());
@@ -216,6 +245,8 @@ fn handle_keyboard_inputs(
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());
         }
+    } else if keyboard_input.just_released(KeyCode::F5) {
+        Control::reload_tab(&mut app_state, &mut theme);
     } else if keyboard_input.just_released(KeyCode::Space) {
         Control::play_or_pause(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::Return) {

@@ -23,7 +23,7 @@ impl Control {
         if state.tab.is_none() {
             return;
         }
-        state.reset_tab();
+        state.reload_tab();
         theme._bypass_systems = true;
     }
     pub fn sync_speed_factor(
