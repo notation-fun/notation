@@ -42,6 +42,8 @@ impl PluginGroup for NotationPlugins {
 pub struct NotationApp;
 
 impl NotationApp {
+    pub const TITLE:&'static str = "Notation Viewer";
+
     pub fn new_builder(title: &str) -> AppBuilder {
         let mut app = App::build();
         AssetLoader::new(NotationAssetsStates::Loading, NotationAssetsStates::Loaded)
@@ -137,6 +139,7 @@ fn setup_camera(mut commands: Commands) {
 fn load_tab(
     mut commands: Commands,
     time: Res<Time>,
+    mut windows: ResMut<Windows>,
     mut state: ResMut<NotationAppState>,
     mut theme: ResMut<NotationTheme>,
     entities: Query<Entity, With<GlobalTransform>>,
@@ -178,6 +181,10 @@ fn load_tab(
             match Tab::try_parse_arc(asset.tab.clone()) {
                 Ok(tab) => {
                     state.tab = Some(tab.clone());
+                    if let Some(window) = windows.get_primary_mut() {
+                        let title = format!("{} - {}", NotationApp::TITLE, state.tab_path);
+                        window.set_title(title);
+                    }
                     theme._bypass_systems = false;
                     evts.send(AddTabEvent(tab));
                 }

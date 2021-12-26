@@ -159,7 +159,7 @@ impl NotationViewer {
         }
     }
     pub fn run(tab_pathes: Vec<String>) {
-        NotationApp::run("Notation Viewer", tab_pathes, |app| {
+        NotationApp::run(NotationApp::TITLE, tab_pathes, |app| {
             app.add_system_set(
                 SystemSet::on_update(NotationAssetsStates::Loaded)
                     .with_system(ControlView::control_ui.system())

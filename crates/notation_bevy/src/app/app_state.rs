@@ -37,7 +37,13 @@ impl NotationAppState {
             _load_tab_delay_seconds: 0.0,
         }
     }
-    pub fn change_tab(&mut self, asset_server: &AssetServer, tab_path: String) {
+    pub fn change_tab(
+        &mut self,
+        asset_server: &AssetServer,
+        theme: &mut NotationTheme,
+        tab_path: String
+    ) {
+        theme._bypass_systems = true;
         self.tab_path = tab_path;
         self.tab_asset = asset_server.load(self.tab_path.as_str());
         self.parse_error = None;

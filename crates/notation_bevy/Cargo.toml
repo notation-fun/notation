@@ -60,6 +60,7 @@ bevy_easings = "0.4.1"
 # bevy_svg_map = "0.2"
 
 bevy-inspector-egui = { version = "0.5.1", optional = true }
+rfd = "0.6.2"
 
 #[target."cfg(not(target_arch = "wasm32"))".dependencies]
 # Can not enable bevy_wgpu in this way, so the actually binary crate

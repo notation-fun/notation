@@ -427,28 +427,47 @@ impl ControlView {
     pub fn tab_ui(
         ui: &mut Ui,
         asset_server: &AssetServer,
+        pathes: &mut TabPathes,
         state: &mut NotationAppState,
         _settings: &mut NotationSettings,
         theme: &mut NotationTheme,
-        tab_pathes: &TabPathes,
     ) {
-        if tab_pathes.0.len() > 1 {
+        if theme._bypass_systems {
+            ui.label("Loading Tab ...");
+            return;
+        }
+        ui.horizontal(|ui| {
+            if ui.button("Reset Tab").clicked() {
+                Control::reload_tab(state, theme);
+            }
+            #[cfg(not(target_arch = "wasm32"))]
+            if ui.button("Open Tab").clicked() {
+                if let Some(path) = rfd::FileDialog::new()
+                        .add_filter("Fun Notation", &["ron"])
+                        .pick_file() {
+                    let path_str = path.clone().into_os_string().into_string();
+                    if let Ok(path_str) = path_str {
+                        pathes.0.insert(0, path_str.clone());
+                        state.change_tab(asset_server, theme, path_str.clone());
+                    } else {
+                        println!("Failed to convert path to string: {:?} -> {:?}", path, path_str);
+                    }
+                }
+            }
+        });
+        if pathes.0.len() > 1 {
             let width = Self::calc_width(state.window_width);
             egui::ComboBox::from_label("")
                 .selected_text(state.tab_path.clone())
                 .width(width - 24.0)
                 .show_ui(ui, |ui| {
-                    for path in tab_pathes.0.iter() {
+                    for path in pathes.0.iter() {
                         if ui.selectable_label(*path == state.tab_path, path).clicked()
                         {
-                            theme._bypass_systems = true;
-                            state.change_tab(asset_server, path.clone());
+                            state.change_tab(asset_server, theme, path.clone());
                         }
                     }
                 });
-        }
-        if ui.button("Reset Tab").clicked() {
-            Control::reload_tab(state, theme);
         }
     }
     pub fn guitar_tab_display_ui(
@@ -622,10 +641,10 @@ impl ControlView {
         egui_ctx: Res<EguiContext>,
         mut windows: ResMut<Windows>,
         asset_server: Res<AssetServer>,
+        mut pathes: ResMut<TabPathes>,
         mut state: ResMut<NotationAppState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
-        tab_pathes: Res<TabPathes>,
         mut midi_settings: ResMut<MidiSettings>,
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
@@ -649,7 +668,7 @@ impl ControlView {
                     }
                     ui.separator();
                      */
-                    Self::tab_ui(ui, &asset_server, &mut state, &mut settings, &mut theme, &tab_pathes);
+                    Self::tab_ui(ui, &asset_server, &mut pathes, &mut state, &mut settings, &mut theme);
                     ui.separator();
                     Self::play_control_ui(ui, &mut settings, &mut midi_state, &mut play_control_evts);
                     ui.separator();
