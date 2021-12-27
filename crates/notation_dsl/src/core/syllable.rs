@@ -21,7 +21,7 @@ impl SyllableDsl {
             4 => Syllable::Fa,
             5 => Syllable::So,
             6 => Syllable::La,
-            7 => Syllable::Si,
+            7 => Syllable::Ti,
             _ => throw!(Error::new(input.span(), "Invalid Syllable")),
         })
     }
