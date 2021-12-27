@@ -78,9 +78,9 @@ impl GuitarView {
                 );
             }
         }
-        let capo_data = GuitarCapoData::new(0);
+        let capo_data = GuitarCapoData::default();
         capo_data.create(commands, theme, guitar_entity);
-        let barre_data = GuitarBarreData::new(0, 0);
+        let barre_data = GuitarBarreData::default();
         barre_data.create(commands, theme, guitar_entity);
         if Self::CHECKING_FRETS {
             let mut string = 1;
@@ -186,6 +186,7 @@ impl GuitarView {
         query: Query<(&Arc<LaneEntry>, &Pick, &EntryPlaying), Changed<EntryPlaying>>,
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
+        mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         dot_query: Query<&Children>,
     ) {
         if Self::CHECKING_FRETS {
@@ -245,6 +246,9 @@ impl GuitarView {
                     }
                     finger_data.update_with_syllable(&mut commands, &assets, &theme, &settings, finger_entity);
                 }
+            }
+            for (_barre_entity, mut barre_data) in barre_query.iter_mut() {
+                barre_data.update_pick(pick);
             }
         }
     }
@@ -311,19 +315,15 @@ impl GuitarView {
                         capo_data.update(&mut commands, &theme, capo_entity);
                     }
                 }
-                let barre = shape.barre.unwrap_or(0);
                 for (barre_entity, mut barre_data) in barre_query.iter_mut() {
-                    if fretboard.capo != barre_data.capo ||
-                            barre != barre_data.barre {
-                        barre_data.capo = fretboard.capo;
-                        barre_data.barre = barre;
-                        barre_data.update(&mut commands, &theme, barre_entity);
-                    }
+                    barre_data.capo = fretboard.capo;
+                    barre_data.shape = Some(shape.clone());
+                    barre_data.pick = None;
+                    barre_data.update(&mut commands, &theme, barre_entity);
                 }
             }
         } else {
-            let position =
-                TabState::get_position(&tab_state_query, None);
+            let position = TabState::get_position(&tab_state_query, None);
             if position.is_some() && position.unwrap().bar.bar_ordinal == 0 {
                 for (finger_entity, mut finger_data) in finger_query.iter_mut() {
                     finger_data.reset();
@@ -332,6 +332,13 @@ impl GuitarView {
                 for (string_entity, mut string_data) in string_query.iter_mut() {
                     string_data.reset();
                     string_data.update(&mut commands, &theme, string_entity);
+                }
+                for (barre_entity, mut barre_data) in barre_query.iter_mut() {
+                    if barre_data.shape.is_some() {
+                        barre_data.shape = None;
+                        barre_data.pick = None;
+                        barre_data.update(&mut commands, &theme, barre_entity);
+                    }
                 }
             }
         }
@@ -342,36 +349,57 @@ impl GuitarView {
     ) {
         if let Ok(mut transform) = guitar_view_query.single_mut() {
             let trans = transform.translation;
-            println!("GuitarView::update_y {} -> {}", trans.y, y);
             if float_ne!(trans.y, y, abs <= 0.01) {
+                println!("GuitarView::update_y {} -> {}", trans.y, y);
                 *transform = Transform::from_xyz(trans.x, y, trans.z);
             }
         }
     }
-    pub fn adjust_y_by_capo(
+    pub fn adjust_y_by_frets(
+        theme: &NotationTheme,
+        guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
+        view_size: LayoutSize,
+        guitar_size: LayoutSize,
+        min_fret: u8,
+        max_fret: u8,
+    ) {
+        let calc_y = |fret:u8| {
+            let fret_y = theme
+                    .guitar
+                    .calc_fret_y(fret, guitar_size.height);
+            -(fret_y + guitar_size.height * theme.guitar.capo_height_factor)
+        };
+        let top_y = calc_y(min_fret);
+        let bottom_y = calc_y(max_fret + 1);
+        let y = if bottom_y - top_y > view_size.height {
+            bottom_y - view_size.height
+        } else {
+            top_y
+        };
+        println!("GuitarView::adjust_y_by_frets {} {} [{} - {}] -> {} {} -> {}", view_size, guitar_size, min_fret, max_fret, top_y, bottom_y, y);
+        Self::update_y(guitar_view_query, y);
+    }
+    pub fn adjust_y_by_barre(
         theme: Res<NotationTheme>,
         settings: Res<NotationSettings>,
-        capo_query: Query<&GuitarCapoData, Changed<GuitarCapoData>>,
+        barre_query: Query<&GuitarBarreData, Changed<GuitarBarreData>>,
         mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
     ) {
+        if Self::CHECKING_FRETS {
+            return;
+        }
         if theme._bypass_systems { return; }
         if settings.override_guitar_y.is_some() {
             return;
         }
-        for capo_data in capo_query.iter() {
-            if capo_data.view_size.height <= 0.0 {
-                return;
-            }
-            let y = if capo_data.view_size.height > capo_data.guitar_size.height {
-                -capo_data.guitar_size.height / 2.0
+        for barre_data in barre_query.iter() {
+            if barre_data.view_size.height > barre_data.guitar_size.height {
+                Self::update_y(&mut guitar_view_query, -barre_data.guitar_size.height / 2.0);
             } else {
-                let capo_y = theme
-                        .guitar
-                        .calc_fret_y(capo_data.capo, capo_data.guitar_size.height);
-                -(capo_y + capo_data.guitar_size.height * theme.guitar.capo_height_factor)
-            };
-            println!("adjust_y_by_capo {} {} {} -> {}", capo_data.guitar_size, capo_data.view_size, capo_data.capo, y);
-            Self::update_y(&mut guitar_view_query, y);
+                let min_fret = barre_data.capo;
+                let max_fret = barre_data.max_fret();
+                Self::adjust_y_by_frets(&theme, &mut guitar_view_query, barre_data.view_size, barre_data.guitar_size, min_fret, max_fret);
+            }
         }
     }
 }

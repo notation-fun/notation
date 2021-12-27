@@ -126,7 +126,7 @@ impl GuitarStringData {
     ) {
         let pick_note = pick.and_then(|x| x.get_pick_note(self.string));
         self.pick_fret = pick_note.and_then(|x| x.fret);
-        self.fret = shape.string_fret(self.string);
+        self.fret = shape.string_fret_with_barre(self.string);
         if let Some(fretboard) = fretboard {
             self.capo = fretboard.capo;
         } else {

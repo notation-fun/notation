@@ -59,12 +59,32 @@ macro_rules! impl_hand_shape {
             pub fn new(frets: [Option<u8>; $strings], fingers: [Option<Finger>; $strings]) -> Self {
                 Self { barre: None, frets, fingers }
             }
+            pub fn barre(&self) -> u8 {
+                self.barre.unwrap_or(0)
+            }
             pub fn string_fret(&self, string: u8) -> Option<u8> {
                 if string == 0 || string as usize > self.frets.len() {
                     None
                 } else {
                     self.frets[string as usize - 1]
                 }
+            }
+            pub fn string_fret_with_barre(&self, string:u8) -> Option<u8> {
+                self.string_fret(string).map(|x| x + self.barre())
+            }
+            pub fn max_fret(&self) -> u8 {
+                let mut max = 0;
+                for index in 0..self.frets.len() {
+                    if let Some(fret) = self.frets[index] {
+                        if fret > max {
+                            max = fret
+                        }
+                    }
+                }
+                max
+            }
+            pub fn max_fret_with_barre(&self) -> u8 {
+                self.max_fret() + self.barre()
             }
         }
 

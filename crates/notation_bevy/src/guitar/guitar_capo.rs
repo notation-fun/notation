@@ -11,10 +11,10 @@ pub struct GuitarCapoData {
     pub guitar_size: LayoutSize,
 }
 
-impl GuitarCapoData {
-    pub fn new(capo: u8) -> Self {
+impl Default for GuitarCapoData {
+    fn default() -> Self {
         Self {
-            capo,
+            capo: 0,
             view_size: LayoutSize::ZERO,
             guitar_size: LayoutSize::ZERO,
         }

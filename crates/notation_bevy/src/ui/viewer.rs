@@ -44,7 +44,7 @@ impl Plugin for TabViewerPlugin {
                 .with_system(GuitarView::on_layout_changed.system())
                 .with_system(GuitarView::update_hand_shape6.system().label("GuitarView::update_hand_shape6"))
                 .with_system(GuitarView::update_string_state.system().label("GuitarView::update_string_state").after("GuitarView::update_hand_shape6"))
-                .with_system(GuitarView::adjust_y_by_capo.system())
+                .with_system(GuitarView::adjust_y_by_barre.system())
                 .with_system(TabViewer::do_layout.system()),
         );
     }

@@ -169,6 +169,18 @@ impl Pick {
         }
         None
     }
+    pub fn max_fret(&self) -> u8 {
+        let mut max = 0;
+        for note in self.get_notes().iter() {
+            if note.fret.is_some() {
+                let fret = note.fret.unwrap();
+                if fret > max {
+                    max = fret;
+                }
+            }
+        }
+        max
+    }
 }
 
 impl From<Pick> for Vec<PickNote> {

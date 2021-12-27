@@ -72,12 +72,12 @@ macro_rules! impl_fretboard {
             }
             pub fn shape_note(&self, shape: &$hand_shape, string: u8) -> Option<Note> {
                 shape
-                    .string_fret(string)
+                    .string_fret_with_barre(string)
                     .and_then(|fret| self.fretted_note(string, fret))
             }
             pub fn shape_fret_note(&self, shape: &$hand_shape, string: u8) -> Option<(u8, Note)> {
                 shape
-                    .string_fret(string)
+                    .string_fret_with_barre(string)
                     .and_then(|fret| self.fretted_note(string, fret).map(|n| (fret, n)))
             }
             pub fn shape_pick_note(

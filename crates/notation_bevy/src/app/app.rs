@@ -240,7 +240,7 @@ fn handle_keyboard_inputs(
     if app_state.tab.is_none() {
         return;
     }
-    if keyboard_input.just_released(KeyCode::LControl) {
+    if keyboard_input.just_released(KeyCode::Tab) {
         app_state.hide_control = !app_state.hide_control;
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());

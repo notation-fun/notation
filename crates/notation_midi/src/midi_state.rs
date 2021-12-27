@@ -408,10 +408,10 @@ impl MidiState {
                         Some(x.props)
                     }
                 }) {
-                    self.setup_seek(pos.with_in_bar_pos(props.in_bar_pos - Units::MIN_ACCURACY));
+                    self.setup_seek(pos.with_in_bar_pos(props.in_bar_pos - Units::HALF_MIN_ACCURACY));
                     return true;
                 } else {
-                    self.setup_seek(BarPosition::new(pos.bar_units, pos.bar_ordinal, pos.bar_units - Units::MIN_ACCURACY));
+                    self.setup_seek(BarPosition::new(pos.bar_units, pos.bar_ordinal, pos.bar_units - Units::HALF_MIN_ACCURACY));
                     return true;
                 }
             }
