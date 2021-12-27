@@ -25,7 +25,7 @@ pub enum EntryDsl {
     Chord(MultibleDsl<ChordDsl>),
     Word(MultibleDsl<WordDsl>),
     Pick(MultibleDsl<PickDsl>),
-    Shape(MultibleDsl<ShapeDsl>),
+    Shape(ShapeDsl),
     Fretboard(FretboardDsl),
 }
 

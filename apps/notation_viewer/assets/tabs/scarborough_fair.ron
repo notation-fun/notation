@@ -236,6 +236,7 @@
                 Mark("Asus4"),// [2]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(3),
@@ -258,6 +259,7 @@
                 Mark("Asus4/D"),// [4]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(3),
@@ -280,6 +282,7 @@
                 Mark("G/C"),// [6]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             None,
                             Some(0),
@@ -302,6 +305,7 @@
                 Mark("Asus2"),// [8]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(0),
@@ -324,6 +328,7 @@
                 Mark("G\'"),// [10]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             None,
                             Some(0),
@@ -346,6 +351,7 @@
                 Mark("G"),// [12]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(3),
                             Some(0),
@@ -368,6 +374,7 @@
                 Mark("C"),// [14]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(1),
@@ -390,6 +397,7 @@
                 Mark("Am"),// [16]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(1),
@@ -417,6 +425,7 @@
                 Mark("C"),// [20]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(1),
@@ -443,6 +452,7 @@
                 Mark("D"),// [23]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(2),
                             Some(3),
@@ -471,6 +481,7 @@
                 Mark("C"),// [28]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(1),
@@ -493,6 +504,7 @@
                 Mark("G/B"),// [30]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(3),
@@ -515,6 +527,7 @@
                 Mark("Am"),// [32]
                 Fretted6(Shape(
                     (
+                        barre: None,
                         frets: (
                             Some(0),
                             Some(1),

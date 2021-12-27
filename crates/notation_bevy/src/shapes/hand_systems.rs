@@ -5,6 +5,7 @@ use notation_model::prelude::LaneEntry;
 use notation_bevy_utils::prelude::ShapeOp;
 
 use super::shape_diagram::{ShapeDiagramData4, ShapeDiagramData6};
+use super::shape_barre::{ShapeBarreData};
 use super::shape_finger::{ShapeFingerData};
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
 use notation_model::prelude::{HandShape4, HandShape6};
@@ -26,6 +27,14 @@ macro_rules! impl_hand_system {
                 theme
                     .shapes
                     .insert_shape_text(commands, &assets, diagram_entity, &mark);
+            }
+            let barre = shape.barre.unwrap_or(0);
+            if barre > 0 {
+                let barre_data = ShapeBarreData::new(barre);
+                barre_data.create(commands, theme, diagram_entity);
+                theme
+                    .shapes
+                    .insert_barre_text(commands, &assets, diagram_entity, barre);
             }
             for (string, fret) in shape.frets.iter().enumerate() {
                 if fret.is_none() || fret.unwrap() > 0 {

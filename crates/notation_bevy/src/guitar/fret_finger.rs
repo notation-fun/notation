@@ -17,6 +17,7 @@ pub struct FretFingerExtra {
     pub fret: Option<u8>,
     pub finger: Option<Finger>,
     pub capo: u8,
+    pub barre: u8,
     pub in_chord: bool,
     pub guitar_size: LayoutSize,
 }
@@ -32,6 +33,7 @@ impl FretFingerExtra {
             fret,
             finger,
             capo: 0,
+            barre: 0,
             in_chord: false,
             guitar_size: LayoutSize::ZERO,
         }
@@ -151,6 +153,7 @@ impl FretFingerData {
             };
             self.set_chord_meta_note(chord, meta, note);
         }
+        self.value.extra.barre = shape.barre.unwrap_or(0);
     }
     pub fn update_with_syllable(
         &self,
@@ -183,7 +186,7 @@ impl ChordNoteExtra for FretFingerExtra {
         let fret = self.fret.unwrap_or(0);
         let y = theme
             .guitar
-            .calc_fret_y(fret + self.capo, self.guitar_size.height);
+            .calc_fret_y(fret + self.capo + self.barre, self.guitar_size.height);
         Vec2::new(x, y)
     }
     fn get_color(&self, theme: &NotationTheme, color: Color) -> Color {

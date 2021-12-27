@@ -1,35 +1,45 @@
-use fehler::{throw, throws};
+use fehler::{throws};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Error, ParseStream};
+use syn::parse::{Error, Parse, ParseStream};
+use syn::{parenthesized, token};
 use syn::{LitInt, Token};
 
 use crate::context::Context;
 use crate::core::duration::DurationTweakDsl;
 
 pub struct ShapeDsl {
+    pub barre: Option<u8>,
     pub frets: Vec<Option<u8>>,
     pub duration_tweak: Option<DurationTweakDsl>,
 }
 
-impl ShapeDsl {
+impl Parse for ShapeDsl {
     #[throws(Error)]
-    pub fn parse_without_paren(input: ParseStream, multied: bool, with_paren: bool) -> Self {
-        if multied && !with_paren {
-            throw!(Error::new(input.span(), "paren required in multied mode"));
-        }
+    fn parse(input: ParseStream) -> Self {
         let mut frets = vec![];
-        while input.peek(LitInt) || input.peek(Token![_]) {
-            if input.peek(LitInt) {
-                frets.push(Some(input.parse::<LitInt>()?.base10_parse::<u8>()?));
-            } else {
-                input.parse::<Token![_]>()?;
-                frets.push(None);
+        if input.peek(token::Paren) {
+            let content;
+            parenthesized!(content in input);
+            while content.peek(LitInt) || content.peek(Token![_]) {
+                if content.peek(LitInt) {
+                    frets.push(Some(content.parse::<LitInt>()?.base10_parse::<u8>()?));
+                } else {
+                    content.parse::<Token![_]>()?;
+                    frets.push(None);
+                }
             }
+            frets.reverse();
         }
-        frets.reverse();
+        let mut barre = None;
+        if input.peek(Token![+]) {
+            input.parse::<Token![+]>()?;
+            barre = Some(input.parse::<LitInt>()?.base10_parse::<u8>()?);
+        }
+
         let duration_tweak = DurationTweakDsl::try_parse(input);
         ShapeDsl {
+            barre,
             frets,
             duration_tweak,
         }
@@ -39,6 +49,7 @@ impl ShapeDsl {
 impl ToTokens for ShapeDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let ShapeDsl {
+            barre,
             frets,
             duration_tweak,
         } = self;
@@ -55,14 +66,30 @@ impl ToTokens for ShapeDsl {
         let duration_quote = Context::duration_quote(duration_tweak);
         let fretted_entry_quote = Context::fretted().fretted_entry_quote();
         let hand_shape_quote = Context::fretted().hand_shape_quote();
-        tokens.extend(quote! {
-            ProtoEntry::from(#fretted_entry_quote::from(
-                (#hand_shape_quote::new([
-                    #(#frets_quote),*
-                ], [
-                    #(#fingers_quote),*
-                ]), #duration_quote)
-            ))
-        });
+        match barre {
+            Some(barre) => {
+                tokens.extend(quote! {
+                    ProtoEntry::from(#fretted_entry_quote::from(
+                        (#hand_shape_quote::new_barre(
+                            #barre, [
+                            #(#frets_quote),*
+                        ], [
+                            #(#fingers_quote),*
+                        ]), #duration_quote)
+                    ))
+                });
+            }
+            None => {
+                tokens.extend(quote! {
+                    ProtoEntry::from(#fretted_entry_quote::from(
+                        (#hand_shape_quote::new([
+                            #(#frets_quote),*
+                        ], [
+                            #(#fingers_quote),*
+                        ]), #duration_quote)
+                    ))
+                });
+            }
+        }
     }
 }

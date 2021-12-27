@@ -23,22 +23,22 @@ impl ShapeFingerData {
 
 impl ShapeOp<NotationTheme, FillCircle> for ShapeFingerData {
     fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
-        let color = if self.fret.is_none() {
-            theme.shapes.shape_finger_mute_color
-        } else {
-            theme.shapes.shape_finger_color
-        };
         let shapes = theme.shapes;
+        let color = if self.fret.is_none() {
+            shapes.shape_finger_mute_color
+        } else {
+            shapes.shape_finger_color
+        };
         let x = shapes.shape_finger_offset_x - shapes.shape_string_space * self.string as f32;
         let y = shapes.shape_finger_offset_y
             - shapes.shape_fret_space * self.fret.unwrap_or(0) as f32;
         FillCircle {
-            radius: theme.shapes.shape_finger_radius,
+            radius: shapes.shape_finger_radius,
             color,
             offset: Vec3::new(
                 x,
                 y,
-                theme.shapes.shape_text_z,
+                shapes.shape_text_z,
             ),
         }
     }

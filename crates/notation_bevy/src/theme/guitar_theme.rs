@@ -21,6 +21,8 @@ pub struct GuitarTheme {
     pub fret_y_factors: [f32; 23],
     pub capo_width_factor: f32,
     pub capo_height_factor: f32,
+    pub barre_width_factor: f32,
+    pub barre_height_factor: f32,
     pub guitar_width: f32,
     pub hit_string_seconds_range: (f32, f32),
     pub syllable_text: MelodyTexts,
@@ -50,6 +52,8 @@ impl Default for GuitarTheme {
             ],
             capo_width_factor: 0.78,
             capo_height_factor: 0.02,
+            barre_width_factor: 0.72,
+            barre_height_factor: 0.016,
             guitar_width: 128.0,
             hit_string_seconds_range: (0.05, 0.15),
             syllable_text: MelodyTexts {

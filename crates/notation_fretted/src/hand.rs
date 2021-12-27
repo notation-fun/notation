@@ -25,6 +25,7 @@ macro_rules! impl_hand_shape {
     ($type:ident, $strings:literal) => {
         #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
         pub struct $type {
+            pub barre: Option<u8>,
             #[serde(with = "serde_arrays")]
             pub frets: [Option<u8>; $strings],
             #[serde(with = "serde_arrays")]
@@ -52,8 +53,11 @@ macro_rules! impl_hand_shape {
             }
         }
         impl $type {
+            pub fn new_barre(barre: u8, frets: [Option<u8>; $strings], fingers: [Option<Finger>; $strings]) -> Self {
+                Self { barre: Some(barre), frets, fingers }
+            }
             pub fn new(frets: [Option<u8>; $strings], fingers: [Option<Finger>; $strings]) -> Self {
-                Self { frets, fingers }
+                Self { barre: None, frets, fingers }
             }
             pub fn string_fret(&self, string: u8) -> Option<u8> {
                 if string == 0 || string as usize > self.frets.len() {
@@ -73,6 +77,18 @@ macro_rules! impl_hand_shape {
         impl From<[Option<u8>; $strings]> for $type {
             fn from(v: [Option<u8>; $strings]) -> Self {
                 Self::new(v, [None; $strings])
+            }
+        }
+
+        impl From<(u8, [Option<u8>; $strings], [Option<Finger>; $strings])> for $type {
+            fn from(v: (u8, [Option<u8>; $strings], [Option<Finger>; $strings])) -> Self {
+                Self::new_barre(v.0, v.1, v.2)
+            }
+        }
+
+        impl From<(u8, [Option<u8>; $strings])> for $type {
+            fn from(v: (u8, [Option<u8>; $strings])) -> Self {
+                Self::new_barre(v.0, v.1, [None; $strings])
             }
         }
     };

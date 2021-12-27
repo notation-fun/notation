@@ -254,6 +254,7 @@ pub struct StringsColors {
     pub string: PlayingColors,
     pub fret: PlayingColors,
     pub capo: Color,
+    pub barre: Color,
 }
 impl Default for StringsColors {
     fn default() -> Self {
@@ -272,6 +273,7 @@ impl Default for StringsColors {
                 hex_linear("555555"),
             ),
             capo: hex_linear("333333"),
+            barre: hex_linear("442211"),
         }
     }
 }

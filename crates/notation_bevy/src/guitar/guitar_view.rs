@@ -15,6 +15,7 @@ use crate::ui::layout::NotationLayout;
 
 use super::fret_finger::{FretFingerData};
 use super::guitar_capo::{GuitarCapoData};
+use super::guitar_barre::{GuitarBarreData};
 use super::guitar_string::{GuitarStringData};
 
 #[derive(Clone, Debug)]
@@ -79,6 +80,8 @@ impl GuitarView {
         }
         let capo_data = GuitarCapoData::new(0);
         capo_data.create(commands, theme, guitar_entity);
+        let barre_data = GuitarBarreData::new(0, 0);
+        barre_data.create(commands, theme, guitar_entity);
         if Self::CHECKING_FRETS {
             let mut string = 1;
             let mut fret = 0;
@@ -131,6 +134,7 @@ impl GuitarView {
         mut sprite_query: Query<(&Parent, &mut Transform), With<Sprite>>,
         mut string_query: Query<(&Parent, Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut capo_query: Query<(&Parent, Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
+        mut barre_query: Query<(&Parent, Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut finger_query: Query<(&Parent, Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
         if theme._bypass_systems { return; }
@@ -161,6 +165,13 @@ impl GuitarView {
                     capo_data.view_size = layout.size;
                     capo_data.guitar_size = guitar_size;
                     capo_data.update(&mut commands, &theme, capo_entity);
+                }
+            }
+            for (parent, barre_entity, mut barre_data) in barre_query.iter_mut() {
+                if parent.0 == entity {
+                    barre_data.view_size = layout.size;
+                    barre_data.guitar_size = guitar_size;
+                    barre_data.update(&mut commands, &theme, barre_entity);
                 }
             }
         }
@@ -246,6 +257,7 @@ impl GuitarView {
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
+        mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         dot_query: Query<&Children>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     ) {
@@ -292,11 +304,20 @@ impl GuitarView {
                 string_data.update_value(shape, fretboard, pick, meta.clone());
                 string_data.update(&mut commands, &theme, string_entity);
             }
-            for (capo_entity, mut capo_data) in capo_query.iter_mut() {
-                if let Some(fretboard) = fretboard {
+            if let Some(fretboard) = fretboard {
+                for (capo_entity, mut capo_data) in capo_query.iter_mut() {
                     if fretboard.capo != capo_data.capo {
                         capo_data.capo = fretboard.capo;
                         capo_data.update(&mut commands, &theme, capo_entity);
+                    }
+                }
+                let barre = shape.barre.unwrap_or(0);
+                for (barre_entity, mut barre_data) in barre_query.iter_mut() {
+                    if fretboard.capo != barre_data.capo ||
+                            barre != barre_data.barre {
+                        barre_data.capo = fretboard.capo;
+                        barre_data.barre = barre;
+                        barre_data.update(&mut commands, &theme, barre_entity);
                     }
                 }
             }

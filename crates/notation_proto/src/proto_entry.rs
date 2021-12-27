@@ -149,8 +149,15 @@ impl ProtoEntry {
     }
 }
 impl ProtoEntry {
+    pub const COMMENT_CHAR: char = ';';
     pub fn is_core_tie(&self) -> bool {
         self.as_core().map(|x| x.is_tie()).unwrap_or(false)
+    }
+    pub fn trim_comments(mark: &String) -> String {
+        if let Some(index) = mark.find(Self::COMMENT_CHAR) {
+            return mark[..index].to_string();
+        }
+        mark.clone()
     }
 }
 impl Entry for ProtoEntry {
