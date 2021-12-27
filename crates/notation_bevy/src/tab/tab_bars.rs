@@ -57,8 +57,12 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
             beat_size_range.0 * bar_beats,
             beat_size_range.1 * bar_beats,
         );
+        let tab_width = match engine.settings.layout.override_tab_width {
+            Some(width) => width,
+            None => grid_size.width,
+        };
         let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
-            grid_size.width - bar_margin * 2.0,
+            tab_width - bar_margin * 2.0,
             bar_width_range,
             0.0,
             self.tab.bars.len(),
@@ -113,14 +117,24 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 let bar_layout = self.bar_layouts.get(row * cols).unwrap();
                 row_sizes.push(LayoutSize::new(cell_width, bar_layout.height()));
             }
-            GridData::new_rows(
+            let grid_data = GridData::new_rows(
                 rows,
                 cols,
                 row_sizes,
                 cell_margin,
                 LayoutAnchor::TOP_LEFT,
                 grid_size,
-            )
+            );
+            match engine.settings.layout.override_tab_width {
+                None => grid_data,
+                Some(_) => {
+                    let offset = grid_data.content_size.calc_offset(LayoutAnchor::TOP_LEFT, LayoutAnchor::TOP_LEFT) + Vec2::new(bar_margin, 0.0);
+                    GridData {
+                        offset,
+                        ..grid_data
+                    }
+                }
+            }
         }
     }
 }

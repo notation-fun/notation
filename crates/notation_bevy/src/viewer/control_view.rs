@@ -94,6 +94,20 @@ impl ControlView {
         CollapsingHeader::new("Override Sizes")
         .default_open(true)
         .show(ui, |ui| {
+            let mut override_tab_width = settings.layout.override_tab_width.is_some();
+            ui.checkbox(&mut override_tab_width, "Override Tab Width");
+            if override_tab_width {
+                let mut tab_width = settings.layout.override_tab_width.unwrap_or(512.0);
+                let last_tab_width = tab_width;
+                ui.add(Slider::new(&mut tab_width, 256.0..=1024.0).text("Tab Width"));
+                if settings.layout.override_tab_width.is_none() || float_ne!(tab_width, last_tab_width, abs <= 1.0) {
+                    settings.layout.override_tab_width = Some(tab_width);
+                    window_resized_evts.send(WindowResizedEvent());
+                }
+            } else if settings.layout.override_tab_width.is_some() {
+                settings.layout.override_tab_width = None;
+                window_resized_evts.send(WindowResizedEvent());
+            }
             let mut override_beat_size = settings.override_beat_size.is_some();
             ui.checkbox(&mut override_beat_size, "Override Beat Size");
             if override_beat_size {

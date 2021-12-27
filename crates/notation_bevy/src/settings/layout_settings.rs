@@ -49,6 +49,7 @@ pub struct LayoutSettings {
     pub focus_bar_ease_ms: u64,
     pub focusing_bar_ordinal: usize,
     pub video_recording_mode: bool,
+    pub override_tab_width: Option<f32>,
     pub override_focus_offset_y: Option<f32>,
 }
 
@@ -60,6 +61,7 @@ impl Default for LayoutSettings {
             focus_bar_ease_ms: 250,
             focusing_bar_ordinal: usize::MAX,
             video_recording_mode: false,
+            override_tab_width: None,
             override_focus_offset_y: None,
         }
     }
