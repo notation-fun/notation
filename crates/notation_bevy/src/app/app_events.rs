@@ -10,6 +10,7 @@ pub struct MouseClickedEvent {
 
 #[derive(Clone, Debug)]
 pub struct MouseDraggedEvent {
+    pub cursor_position: Vec2,
     pub delta: Vec2,
 }
 

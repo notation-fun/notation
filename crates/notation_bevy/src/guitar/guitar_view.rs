@@ -376,7 +376,7 @@ impl GuitarView {
         } else {
             top_y
         };
-        println!("GuitarView::adjust_y_by_frets {} {} [{} - {}] -> {} {} -> {}", view_size, guitar_size, min_fret, max_fret, top_y, bottom_y, y);
+        //println!("GuitarView::adjust_y_by_frets {} {} [{} - {}] -> {} {} -> {}", view_size, guitar_size, min_fret, max_fret, top_y, bottom_y, y);
         Self::update_y(guitar_view_query, y);
     }
     pub fn adjust_y_by_barre(

@@ -133,7 +133,7 @@ impl ChordDiagramData {
             );
             interval_data.spawn(commands, theme, diagram_entity);
         }
-        if let Some(base) = chord.base {
+        if let Some(base) = chord.bass {
             let base_data = ChordBaseData::new_data(entry_props, chord.root, base.clone(), radius);
             base_data.spawn(commands, theme, diagram_entity);
         }

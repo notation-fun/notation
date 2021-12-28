@@ -10,6 +10,7 @@ use notation_bevy_utils::prelude::{
     ViewRootQuery,
 };
 
+use crate::help::help_panel::HelpPanel;
 use crate::prelude::{
     AddTabEvent, NotationApp, NotationAppState, NotationAssets, NotationAssetsStates,
     NotationSettings, NotationTheme, WindowResizedEvent,
@@ -163,6 +164,7 @@ impl NotationViewer {
             app.add_system_set(
                 SystemSet::on_update(NotationAssetsStates::Loaded)
                     .with_system(ControlView::control_ui.system())
+                    .with_system(HelpPanel::help_ui.system())
                     .with_system(Self::on_add_tab.system())
                     .with_system(Self::on_window_resized.system())
                     .with_system(Self::on_added.system()),

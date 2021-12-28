@@ -7,6 +7,7 @@ use bevy::window::WindowResized;
 
 use bevy_asset_loader::AssetLoader;
 
+use crate::help::help_panel::HelpPanel;
 use crate::theme::theme_colors::UiColors;
 use crate::{prelude::*, settings::layout_settings::LayoutMode};
 use crate::ui::viewer::TabViewerPlugin;
@@ -58,8 +59,11 @@ impl NotationApp {
         app.insert_resource(ClearColor(UiColors::default().app_background));
         app.add_plugin(bevy_easings::EasingsPlugin);
 
+        app.add_plugin(UtilsPlugin);
+
         app.init_resource::<NotationTheme>();
         app.init_resource::<NotationSettings>();
+        app.init_resource::<HelpPanel>();
         app.add_plugins(NotationPlugins);
 
         #[cfg(target_arch = "wasm32")]
@@ -104,7 +108,7 @@ impl NotationApp {
         app.init_resource::<NotationAppState>();
 
         app.add_startup_system(setup_camera.system());
-        //app.add_startup_system(setup_hot_reloading.system());
+        app.add_startup_system(setup_hot_reloading.system());
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
@@ -144,15 +148,15 @@ fn setup_camera(mut commands: Commands) {
  * Ideally can use hot-reloading to update tabs automatically, but that means need to patch bevy
  * to bypass the assumption with asset path under assets folder in reloading.
  * Leave the codes here in case that want to revisit this feature in the future.
+ * Also the hot reloading works really nice for the markdown assets.
  *
  * The crash error is:
  *
  * thread 'Compute Task Pool (2)' panicked at 'called `Result::unwrap()` on an `Err` value: StripPrefixError(())', C:\Users\yjpark\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\bevy_asset-0.5.1\src\io\file_asset_io.rs:135:84
- *
-fn setup_hot_reloading(asset_server: Res<AssetServer>) {
-    asset_server.watch_for_changes().unwrap();
-}
  */
+fn setup_hot_reloading(asset_server: Res<AssetServer>) {
+    //asset_server.watch_for_changes().unwrap();
+}
 
 fn on_tab_asset(
     mut evts: EventReader<AssetEvent<TabAsset>>,
@@ -241,10 +245,12 @@ fn handle_keyboard_inputs(
         return;
     }
     if keyboard_input.just_released(KeyCode::Tab) {
-        app_state.hide_control = !app_state.hide_control;
+        app_state.show_control = !app_state.show_control;
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());
         }
+    } else if keyboard_input.just_released(KeyCode::F1) {
+        app_state.show_help = !app_state.show_help;
     } else if keyboard_input.just_released(KeyCode::F5) {
         Control::reload_tab(&mut app_state, &mut theme);
     } else if keyboard_input.just_released(KeyCode::Space) {
@@ -316,20 +322,22 @@ fn handle_mouse_inputs(
     if app_state.tab.is_none() {
         return;
     }
-    if mouse_input.just_released(MouseButton::Left) {
+    let cursor_position =
         windows
             .get_primary()
-            .and_then(|x| x.cursor_position())
-            .map(|cursor_position| {
-                //println!("handle_inputs() -> MouseClickedEvent({:?})", cursor_position);
-                mouse_clicked.send(MouseClickedEvent { cursor_position });
-            });
+            .and_then(|x| x.cursor_position());
+    if cursor_position.is_none() {
+        return;
+    }
+    let cursor_position = cursor_position.unwrap();
+    if mouse_input.just_released(MouseButton::Left) {
+        mouse_clicked.send(MouseClickedEvent { cursor_position });
     } else if mouse_input.just_pressed(MouseButton::Right) {
     } else if mouse_input.just_released(MouseButton::Right) {
     } else if mouse_input.pressed(MouseButton::Right) {
         for event in mouse_motion_events.iter() {
             //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
-            mouse_dragged.send(MouseDraggedEvent { delta: event.delta });
+            mouse_dragged.send(MouseDraggedEvent { cursor_position, delta: event.delta });
         }
     } else {
         for event in mouse_wheel_input.iter() {
@@ -342,7 +350,7 @@ fn handle_mouse_inputs(
             if settings.layout.mode == LayoutMode::Line {
                 delta = Vec2::new(delta.y, delta.x);
             }
-            mouse_dragged.send(MouseDraggedEvent { delta: delta });
+            mouse_dragged.send(MouseDraggedEvent { cursor_position, delta: delta });
         }
     }
 }

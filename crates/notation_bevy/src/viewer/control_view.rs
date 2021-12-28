@@ -46,7 +46,7 @@ impl<'a> View<NotationLayout<'a>> for ControlView {
         LayoutAnchor::CENTER
     }
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        if Self::HUD_MODE || engine.state.hide_control {
+        if Self::HUD_MODE || !engine.state.show_control {
             LayoutSize::ZERO
         } else {
             LayoutSize::new(Self::MIN_WIDTH, constraint.max.height)
@@ -82,6 +82,12 @@ impl ControlView {
         } else {
             width
         }
+    }
+    pub fn is_pos_inside(
+        window_width: f32,
+        pos: Vec2,
+    ) -> bool {
+        window_width / 2.0 - pos.x <= ControlView::calc_width(window_width)
     }
     pub fn overrides_ui(
         ui: &mut Ui,
@@ -453,21 +459,26 @@ impl ControlView {
             if ui.button("Reload Tab").clicked() {
                 Control::reload_tab(state, theme);
             }
-            ui.separator();
-            #[cfg(not(target_arch = "wasm32"))]
-            if ui.button("Open Tab").clicked() {
-                if let Some(path) = rfd::FileDialog::new()
-                        .add_filter("Fun Notation", &["ron"])
-                        .pick_file() {
-                    let path_str = path.clone().into_os_string().into_string();
-                    if let Ok(path_str) = path_str {
-                        pathes.0.insert(0, path_str.clone());
-                        state.change_tab(theme, path_str.clone());
-                    } else {
-                        println!("Failed to convert path to string: {:?} -> {:?}", path, path_str);
+            egui::warn_if_debug_build(ui);
+            ui.with_layout(egui::Layout::right_to_left(), |ui| {
+                #[cfg(not(target_arch = "wasm32"))]
+                if ui.button("Open Tab").clicked() {
+                    if let Some(path) = rfd::FileDialog::new()
+                            .add_filter("Fun Notation", &["ron"])
+                            .pick_file() {
+                        let path_str = path.clone().into_os_string().into_string();
+                        if let Ok(path_str) = path_str {
+                            pathes.0.insert(0, path_str.clone());
+                            state.change_tab(theme, path_str.clone());
+                        } else {
+                            println!("Failed to convert path to string: {:?} -> {:?}", path, path_str);
+                        }
                     }
                 }
-            }
+                if ui.button("Help").clicked() {
+                    state.show_help = true;
+                }
+            });
         });
         if pathes.0.len() > 1 {
             let width = Self::calc_width(state.window_width);
@@ -665,7 +676,7 @@ impl ControlView {
         mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
     ) {
-        if state.hide_control {
+        if !state.show_control {
             return;
         }
         let width = Self::calc_width(state.window_width);

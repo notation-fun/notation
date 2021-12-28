@@ -10,23 +10,23 @@ use crate::prelude::{Intervals, Semitones, Syllable};
 pub struct Chord {
     pub root: Syllable,
     pub intervals: Intervals,
-    pub base: Option<Interval>,
+    pub bass: Option<Interval>,
 }
 impl Display for Chord {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let base = match self.base {
+        let bass = match self.bass {
             Some(base) => format!(" /{}", base),
             None => "".to_owned(),
         };
-        write!(f, "<Chord>({}: {}{})", self.root, self.intervals, base)
+        write!(f, "<Chord>({}: {}{})", self.root, self.intervals, bass)
     }
 }
 impl Chord {
-    pub fn new(root: Syllable, intervals: Intervals, base: Option<Interval>) -> Self {
+    pub fn new(root: Syllable, intervals: Intervals, bass: Option<Interval>) -> Self {
         Self {
             root,
             intervals,
-            base,
+            bass,
         }
     }
     pub fn calc_interval(&self, syllable: Syllable) -> Option<Interval> {
@@ -38,7 +38,7 @@ impl Chord {
                 return Some(interval.clone());
             }
         }
-        if let Some(base) = self.base {
+        if let Some(base) = self.bass {
             if base.is_matched(self.root, syllable) {
                 return Some(base);
             }

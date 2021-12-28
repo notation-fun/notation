@@ -15,7 +15,7 @@ pub struct ChordDsl {
     pub empty: Option<EmptyDsl>,
     pub root: Option<SyllableDsl>,
     pub intervals: Vec<IntervalDsl>,
-    pub base: Option<IntervalDsl>,
+    pub bass: Option<IntervalDsl>,
     pub duration_tweak: Option<DurationTweakDsl>,
 }
 impl ChordDsl {
@@ -24,21 +24,21 @@ impl ChordDsl {
             empty: Some(empty),
             root: None,
             intervals: vec![],
-            base: None,
+            bass: None,
             duration_tweak: None,
         }
     }
     pub fn chord(
         root: SyllableDsl,
         intervals: Vec<IntervalDsl>,
-        base: Option<IntervalDsl>,
+        bass: Option<IntervalDsl>,
         duration_tweak: Option<DurationTweakDsl>,
     ) -> Self {
         Self {
             empty: None,
             root: Some(root),
             intervals,
-            base,
+            bass,
             duration_tweak,
         }
     }
@@ -76,7 +76,7 @@ impl ToTokens for ChordDsl {
             empty,
             root,
             intervals,
-            base,
+            bass: base,
             duration_tweak,
         } = self;
         let duration_quote = Context::duration_quote(duration_tweak);

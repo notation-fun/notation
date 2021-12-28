@@ -91,9 +91,9 @@ fn on_mouse_clicked(
         pos = Some(app_state.convert_pos(evt.cursor_position));
     }
     if let Some(pos) = pos {
-        if !app_state.hide_control {
-            if app_state.window_width / 2.0 - pos.x > ControlView::calc_width(app_state.window_width) {
-                app_state.hide_control = true;
+        if app_state.show_control {
+            if !ControlView::is_pos_inside(app_state.window_width, pos) {
+                app_state.show_control = false;
             }
         } else {
             println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
@@ -126,8 +126,8 @@ fn on_mouse_clicked(
             }
             for (_rhythm_view, layout, global_transform) in rhythm_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
-                    if app_state.hide_control {
-                        app_state.hide_control = false;
+                    if !app_state.show_control {
+                        app_state.show_control = true;
                     }
                     return;
                 }
@@ -161,6 +161,7 @@ fn on_mouse_clicked(
 
 fn on_mouse_dragged(
     mut evts: EventReader<MouseDraggedEvent>,
+    app_state: Res<NotationAppState>,
     theme: Res<NotationTheme>,
     settings: Res<NotationSettings>,
     mut tab_bars_query: Query<(
@@ -173,6 +174,11 @@ fn on_mouse_dragged(
 ) {
     if theme._bypass_systems { return; }
     for evt in evts.iter() {
+        let pos = app_state.convert_pos(evt.cursor_position);
+        if app_state.show_control && ControlView::is_pos_inside(app_state.window_width, pos) {
+            return;
+        }
+
         if settings.allow_panning {
             settings
                 .layout

@@ -27,7 +27,7 @@
                             Perfect5th,
                             Minor7th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Dotted(Half),
                 )),// [2]
@@ -40,7 +40,7 @@
                             Perfect5th,
                             Minor7th,
                         ),
-                        base: Some(Perfect4th),
+                        bass: Some(Perfect4th),
                     ),
                     Dotted(Half),
                 )),// [4]
@@ -52,7 +52,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: Some(Perfect4th),
+                        bass: Some(Perfect4th),
                     ),
                     Dotted(Half),
                 )),// [6]
@@ -64,7 +64,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Dotted(Half),
                 )),// [8]
@@ -76,7 +76,7 @@
                             Major2nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Dotted(Half),
                 )),// [10]
@@ -88,7 +88,7 @@
                             Minor3nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Dotted(Half),
                 )),// [12]
@@ -100,7 +100,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Dotted(Half),
                 )),// [14]
@@ -116,7 +116,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Simple(Quarter),
                 )),// [17]
@@ -131,7 +131,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Simple(Half),
                 )),// [19]
@@ -148,7 +148,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Simple(Quarter),
                 )),// [23]
@@ -159,7 +159,7 @@
                             Major3nd,
                             Perfect5th,
                         ),
-                        base: Some(Major3nd),
+                        bass: Some(Major3nd),
                     ),
                     Simple(Quarter),
                 )),// [24]
@@ -170,7 +170,7 @@
                             Minor3nd,
                             Perfect5th,
                         ),
-                        base: None,
+                        bass: None,
                     ),
                     Simple(Quarter),
                 )),// [25]

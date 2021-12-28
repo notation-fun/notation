@@ -227,4 +227,10 @@ impl Interval {
             _ => Self::Tritone,
         }
     }
+    pub fn to_ident(&self) -> String {
+        format!("{:?}", self)
+    }
+    pub fn syllable_on_root(&self, root: &Syllable) -> Syllable {
+        (Semitones::from(*root) + Semitones::from(*self)).into()
+    }
 }

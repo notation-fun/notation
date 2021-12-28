@@ -3,9 +3,13 @@ pub mod layout;
 pub mod shape;
 pub mod util;
 pub mod view;
+pub mod asset;
+pub mod plugin;
 
 //#[cfg(feature = "dev")]
 pub mod dev;
+
+pub mod easy_mark;
 
 pub mod prelude {
     #[doc(hidden)]
@@ -41,4 +45,6 @@ pub mod prelude {
     pub use crate::util::BevyUtil;
     #[doc(hidden)]
     pub use crate::view::color_background::ColorBackground;
+    #[doc(hidden)]
+    pub use crate::plugin::UtilsPlugin;
 }
