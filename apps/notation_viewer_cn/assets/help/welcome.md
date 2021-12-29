@@ -1,4 +1,4 @@
-非常感谢试用 /Fun Notation/, 一个使用颜色、动效来帮助理解音乐的新鲜的乐谱系统，顶端的一系列页面会提供更多的信息，您也可以访问[网站](https://www.notation.fun)，
+非常感谢试用 /Fun Notation/, 一个使用颜色、动效来帮助理解音乐的新鲜的乐谱系统，顶端的一系列页面会提供更多的信息，您也可以访问[网站](https://www.notation.fun)
 
 系统中使用[简谱](https://baike.baidu.com/item/%E7%B0%A1%E8%AD%9C/392380/)来表示每一个音符，并非 *C D E F G A B* 这样的固定音高，而是 *Do Re Mi Fa So La Ti* 或 *1 2 3 4 5 6 7* 这样的相对音高，优点是便于记忆和移调，当前乐曲中与固定唱名的对应关系可以在 Notes 页面中看到。
 
