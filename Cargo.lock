@@ -2952,7 +2952,7 @@ dependencies = [
 
 [[package]]
 name = "notation_core"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "fehler",
  "serde",
@@ -2972,7 +2972,7 @@ dependencies = [
 
 [[package]]
 name = "notation_fretted"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "notation_core",
  "serde",
@@ -2981,7 +2981,7 @@ dependencies = [
 
 [[package]]
 name = "notation_guitar"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "notation_core",
  "notation_fretted",
@@ -2990,7 +2990,7 @@ dependencies = [
 
 [[package]]
 name = "notation_midi"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "bevy",
  "bevy-inspector-egui",
@@ -3006,7 +3006,7 @@ dependencies = [
 
 [[package]]
 name = "notation_model"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "fehler",
  "instant",
@@ -3017,7 +3017,7 @@ dependencies = [
 
 [[package]]
 name = "notation_proto"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "notation_core",
  "notation_fretted",
