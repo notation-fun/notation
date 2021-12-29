@@ -55,7 +55,7 @@ impl NotationApp {
         insert_window_descriptor(&mut app, String::from(title));
         super::app_events::add_notation_app_events(&mut app);
 
-        app.insert_resource(Msaa { samples: 1 });
+        app.insert_resource(Msaa { samples: 4 });
         app.add_plugins(DefaultPlugins);
         app.insert_resource(ClearColor(UiColors::default().app_background));
         app.add_plugin(bevy_easings::EasingsPlugin);
