@@ -32,7 +32,13 @@ impl NotationAppState {
             tab_path,
             tab: None,
             show_control: false,
+
+            #[cfg(debug_assertions)]
             show_help: false,
+
+            #[cfg(not(debug_assertions))]
+            show_help: true,
+
             parse_error: None,
             debug_str: None,
             _despawn_delay_seconds: 0.0,

@@ -9,9 +9,11 @@ identifier = "fun.notation.viewer_cn"
 resources = ["assets"]
 
 [features]
+default = [
+    "notation_bevy/chinese",
+]
 native = [
     "notation_bevy/native",
-    "notation_bevy/chinese",
 ]
 dev = [
     "notation_bevy/dev",
