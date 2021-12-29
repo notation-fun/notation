@@ -461,6 +461,7 @@ impl ControlView {
             }
             egui::warn_if_debug_build(ui);
             ui.with_layout(egui::Layout::right_to_left(), |ui| {
+                ui.separator();
                 #[cfg(not(target_arch = "wasm32"))]
                 if ui.button("Open Tab").clicked() {
                     if let Some(path) = rfd::FileDialog::new()
@@ -676,7 +677,7 @@ impl ControlView {
         mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
     ) {
-        if !state.show_control || state._egui_needs_set_fonts {
+        if !state.show_control {
             return;
         }
         let width = Self::calc_width(state.window_width);
@@ -696,7 +697,7 @@ impl ControlView {
                     ui.separator();
                     Self::play_control_ui(ui, &mut settings, &mut midi_state, &mut play_control_evts);
                     ui.separator();
-                    egui::ScrollArea::auto_sized().show(ui, |ui| {
+                    egui::ScrollArea::vertical().show(ui, |ui| {
                         ui.vertical(|ui| {
                             Self::midi_settings_ui(ui, &mut state, &mut theme, &mut midi_settings, &mut midi_state, &mut play_control_evts);
                             Self::display_ui(ui, &mut state, &mut settings, &mut theme);

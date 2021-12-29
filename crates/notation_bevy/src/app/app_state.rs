@@ -19,7 +19,6 @@ pub struct NotationAppState {
     pub debug_str: Option<String>,
     pub _despawn_delay_seconds: f32,
     pub _load_tab_delay_seconds: f32,
-    pub _egui_needs_set_fonts: bool,
 }
 
 impl NotationAppState {
@@ -43,7 +42,6 @@ impl NotationAppState {
             debug_str: None,
             _despawn_delay_seconds: 0.0,
             _load_tab_delay_seconds: 0.0,
-            _egui_needs_set_fonts: true,
         }
     }
     pub fn change_tab(

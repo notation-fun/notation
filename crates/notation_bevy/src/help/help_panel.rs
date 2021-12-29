@@ -95,7 +95,7 @@ impl HelpPanel {
             });
         });
         ui.separator();
-        egui::ScrollArea::auto_sized().show(ui, |ui| {
+        egui::ScrollArea::vertical().show(ui, |ui| {
             self.get_current_page().page_ui(ui, texts, assets, state, theme);
         });
     }
@@ -107,7 +107,7 @@ impl HelpPanel {
         theme: Res<NotationTheme>,
         mut help: ResMut<HelpPanel>,
     ) {
-        if !state.show_help || state._egui_needs_set_fonts {
+        if !state.show_help {
             return;
         }
         let mut window_open = true;
