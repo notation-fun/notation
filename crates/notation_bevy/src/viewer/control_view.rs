@@ -74,7 +74,7 @@ impl ControlView {
     pub fn calc_width(
         window_width: f32,
     ) -> f32 {
-        let width = window_width * 0.25;
+        let width = window_width * 0.30;
         if width < Self::MIN_WIDTH {
             Self::MIN_WIDTH
         } else if width > Self::MAX_WIDTH {
@@ -676,7 +676,7 @@ impl ControlView {
         mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
     ) {
-        if !state.show_control {
+        if !state.show_control || state._egui_needs_set_fonts {
             return;
         }
         let width = Self::calc_width(state.window_width);

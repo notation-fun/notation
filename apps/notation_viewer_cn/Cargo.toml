@@ -1,0 +1,26 @@
+[package]
+name = "notation_viewer_cn"
+version = "0.3.0"
+edition = "2021"
+description = "Notation Viewer (Chinese)"
+
+[package.metadata.bundle]
+identifier = "fun.notation.viewer_cn"
+resources = ["assets"]
+
+[features]
+native = [
+    "notation_bevy/native",
+    "notation_bevy/chinese",
+]
+dev = [
+    "notation_bevy/dev",
+    "native",
+]
+inspector = [
+    "notation_bevy/inspector",
+    "native",
+]
+
+[dependencies]
+notation_bevy = { version = "0.3.0", path = "../../crates/notation_bevy" }

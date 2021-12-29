@@ -34,6 +34,9 @@ native = [
     "bevy/bevy_wgpu",
 ]
 
+chinese = [
+]
+
 [dependencies]
 notation_bevy_utils = { version = "0.3.0", path = "../notation_bevy_utils" }
 

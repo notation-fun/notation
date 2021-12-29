@@ -3051,6 +3051,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "notation_viewer_cn"
+version = "0.3.0"
+dependencies = [
+ "notation_bevy",
+]
+
+[[package]]
 name = "notify"
 version = "5.0.0-pre.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"

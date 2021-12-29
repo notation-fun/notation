@@ -1,7 +1,7 @@
 # Keyboard Shortcuts - GUI
-- *F1* toggle help dialog
+- *F1, H* toggle help dialog
 - *Tab* toggle control gui
-- *F5* reload current tab
+- *F5, R* reload current tab
 
 # Keyboard Shortcuts - Move Around
 - *Home* jump to the first bar of current section

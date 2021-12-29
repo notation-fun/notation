@@ -107,11 +107,11 @@ impl HelpPanel {
         theme: Res<NotationTheme>,
         mut help: ResMut<HelpPanel>,
     ) {
-        if !state.show_help {
+        if !state.show_help || state._egui_needs_set_fonts {
             return;
         }
         let mut window_open = true;
-        let mut window = egui::Window::new("Help (F1)")
+        let mut window = egui::Window::new("Help (F1, H)")
             .collapsible(false)
             .id(Self::window_id());
         window = window.open(&mut window_open);

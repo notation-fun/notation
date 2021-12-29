@@ -95,6 +95,8 @@ fn on_mouse_clicked(
             if !ControlView::is_pos_inside(app_state.window_width, pos) {
                 app_state.show_control = false;
             }
+        } else if app_state.show_help {
+            //TODO: after #125 done, can pass click event in case of not inside help panel
         } else {
             println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
             for (mini_bar, layout, global_transform) in mini_bar_query.iter() {
@@ -148,7 +150,7 @@ fn on_mouse_clicked(
                     return;
                 }
             }
-            // Not using GuitarView here, since it 's y position been changed to adjust with capo position
+            // Not using GuitarView here, since it's y position been changed to adjust with capo position
             for (_tab_control, layout, global_transform) in tab_control_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
                     Control::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
@@ -178,7 +180,10 @@ fn on_mouse_dragged(
         if app_state.show_control && ControlView::is_pos_inside(app_state.window_width, pos) {
             return;
         }
-
+        if app_state.show_help {
+            //TODO: after #125 done, can pass drag event in case of not inside help panel
+            return;
+        }
         if settings.allow_panning {
             settings
                 .layout

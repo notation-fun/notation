@@ -4,10 +4,17 @@ use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 
 #[derive(AssetCollection)]
 pub struct NotationAssets {
-    #[asset(path = "fonts/FiraMono-Medium.ttf")]
-    pub en_font: Handle<Font>,
-    #[asset(path = "fonts/NotoSansSC-Medium.otf")]
-    pub cn_font: Handle<Font>,
+    #[asset(path = "fonts/FiraMono-Medium.font")]
+    pub latin_font: Handle<Font>,
+
+    #[cfg(feature = "chinese")]
+    #[asset(path = "fonts/NotoSansSC-Medium.font")]
+    pub lyrics_font: Handle<Font>,
+
+    #[cfg(not(feature = "chinese"))]
+    #[asset(path = "fonts/FiraMono-Medium.font")]
+    pub lyrics_font: Handle<Font>,
+
     //#[asset(path = "gltf/guitar.gltf#Scene0")]
     //pub guitar: Handle<Scene>,
     #[asset(path = "png/fretboard.png")]

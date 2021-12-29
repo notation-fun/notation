@@ -22,6 +22,7 @@ use super::app_state::{NotationAppState, TabPathes};
 pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
     fn build(&mut self, group: &mut PluginGroupBuilder) {
+        group.add(FontPlugin);
         group.add(EntryPlugin);
         group.add(MelodyPlugin);
         group.add(LyricsPlugin);
@@ -108,6 +109,8 @@ impl NotationApp {
         app.init_resource::<NotationAppState>();
 
         app.add_startup_system(setup_camera.system());
+
+        #[cfg(debug_assertions)]
         app.add_startup_system(setup_hot_reloading.system());
 
         app.add_system_set(
@@ -147,15 +150,15 @@ fn setup_camera(mut commands: Commands) {
  * (outside assets folder), but the hot reloading is not working this way.
  * Ideally can use hot-reloading to update tabs automatically, but that means need to patch bevy
  * to bypass the assumption with asset path under assets folder in reloading.
- * Leave the codes here in case that want to revisit this feature in the future.
- * Also the hot reloading works really nice for the markdown assets.
+ *
+ * Only enabling for debug build, the hot reloading works really nice for help pages.
  *
  * The crash error is:
  *
  * thread 'Compute Task Pool (2)' panicked at 'called `Result::unwrap()` on an `Err` value: StripPrefixError(())', C:\Users\yjpark\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\bevy_asset-0.5.1\src\io\file_asset_io.rs:135:84
  */
 fn setup_hot_reloading(asset_server: Res<AssetServer>) {
-    //asset_server.watch_for_changes().unwrap();
+    asset_server.watch_for_changes().unwrap();
 }
 
 fn on_tab_asset(
@@ -249,9 +252,11 @@ fn handle_keyboard_inputs(
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());
         }
-    } else if keyboard_input.just_released(KeyCode::F1) {
+    } else if keyboard_input.just_released(KeyCode::F1)
+            || keyboard_input.just_released(KeyCode::H) {
         app_state.show_help = !app_state.show_help;
-    } else if keyboard_input.just_released(KeyCode::F5) {
+    } else if keyboard_input.just_released(KeyCode::F5)
+            || keyboard_input.just_released(KeyCode::R) {
         Control::reload_tab(&mut app_state, &mut theme);
     } else if keyboard_input.just_released(KeyCode::Space) {
         Control::play_or_pause(&mut midi_state, &mut play_control_evts);

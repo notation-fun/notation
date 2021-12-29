@@ -83,7 +83,7 @@ impl ShapesTheme {
         text: &String,
     ) {
         let mut entity_commands = commands.spawn();
-        let font = assets.en_font.clone();
+        let font = assets.latin_font.clone();
         let style = TextStyle {
             font,
             font_size: self.shape_font_size,
@@ -110,7 +110,7 @@ impl ShapesTheme {
         barre: u8,
     ) {
         let mut entity_commands = commands.spawn();
-        let font = assets.en_font.clone();
+        let font = assets.latin_font.clone();
         let style = TextStyle {
             font,
             font_size: self.barre_font_size,

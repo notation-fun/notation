@@ -9,6 +9,7 @@ pub struct TabPathes(pub Vec<String>);
 pub struct NotationAppState {
     pub window_width: f32,
     pub window_height: f32,
+    pub window_scale_factor: f64,
     pub scale_factor_override: Option<f64>,
     pub tab_path: String,
     pub tab: Option<Arc<Tab>>,
@@ -18,6 +19,7 @@ pub struct NotationAppState {
     pub debug_str: Option<String>,
     pub _despawn_delay_seconds: f32,
     pub _load_tab_delay_seconds: f32,
+    pub _egui_needs_set_fonts: bool,
 }
 
 impl NotationAppState {
@@ -25,6 +27,7 @@ impl NotationAppState {
         Self {
             window_width: 0.0,
             window_height: 0.0,
+            window_scale_factor: 1.0,
             scale_factor_override: None,
             tab_path,
             tab: None,
@@ -34,6 +37,7 @@ impl NotationAppState {
             debug_str: None,
             _despawn_delay_seconds: 0.0,
             _load_tab_delay_seconds: 0.0,
+            _egui_needs_set_fonts: true,
         }
     }
     pub fn change_tab(

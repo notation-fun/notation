@@ -30,6 +30,7 @@ pub mod help;
 pub mod data;
 pub mod settings;
 pub mod theme;
+pub mod font;
 
 pub mod app;
 pub mod ui;
@@ -45,6 +46,8 @@ pub mod inspector;
 pub mod dev;
 
 pub mod prelude {
+    #[doc(hidden)]
+    pub use crate::font::font_plugin::{FontPlugin};
     #[doc(hidden)]
     pub use crate::app::app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
