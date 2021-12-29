@@ -2905,7 +2905,7 @@ dependencies = [
 
 [[package]]
 name = "notation_bevy"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2934,7 +2934,7 @@ dependencies = [
 
 [[package]]
 name = "notation_bevy_utils"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "anyhow",
  "bevy",
@@ -3045,14 +3045,14 @@ dependencies = [
 
 [[package]]
 name = "notation_viewer"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "notation_bevy",
 ]
 
 [[package]]
 name = "notation_viewer_cn"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "notation_bevy",
 ]
