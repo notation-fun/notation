@@ -459,10 +459,14 @@ impl ControlView {
             if ui.button("Reload Tab").clicked() {
                 Control::reload_tab(state, theme);
             }
+            ui.separator();
+            if ui.button("Help").clicked() {
+                state.show_help = true;
+            }
             egui::warn_if_debug_build(ui);
+            #[cfg(not(target_arch = "wasm32"))]
             ui.with_layout(egui::Layout::right_to_left(), |ui| {
                 ui.separator();
-                #[cfg(not(target_arch = "wasm32"))]
                 if ui.button("Open Tab").clicked() {
                     if let Some(path) = rfd::FileDialog::new()
                             .add_filter("Fun Notation", &["ron"])
@@ -475,9 +479,6 @@ impl ControlView {
                             println!("Failed to convert path to string: {:?} -> {:?}", path, path_str);
                         }
                     }
-                }
-                if ui.button("Help").clicked() {
-                    state.show_help = true;
                 }
             });
         });
