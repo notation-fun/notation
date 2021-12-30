@@ -8,7 +8,7 @@ fn main() {
 
     #[cfg(not(target_arch = "wasm32"))]
     let tabs = vec![
-        "tabs/test.rs".to_owned(),
+        "tabs/test.ron".to_owned(),
         "tabs/scarborough_fair.ron".to_owned(),
     ];
     notation_bevy::prelude::NotationViewer::run(tabs);
