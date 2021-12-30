@@ -3,15 +3,16 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View, ViewBundle};
+use notation_bevy_utils::prelude::{
+    BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View,
+    ViewBundle,
+};
 use notation_model::prelude::{PlayingState, Syllable, TabBar};
 
 use crate::prelude::{BarData, BarPlaying, NotationAssets, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
-use super::mini_section_separator::{
-    MiniSectionSeparatorData, MiniSectionSeparatorValue,
-};
+use super::mini_section_separator::{MiniSectionSeparatorData, MiniSectionSeparatorValue};
 
 pub type MiniBar = BarData<Arc<TabBar>>;
 
@@ -52,14 +53,9 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for MiniBarData {
             width -= outline_width;
             height -= outline_width;
         }
-        let color = theme
-            .colors
-            .of_option_syllable(self.value.syllable);
+        let color = theme.colors.of_option_syllable(self.value.syllable);
         let outline_color = if self.value.playing_state.is_current() {
-            theme
-            .colors
-            .mini_map
-            .bar_outline_current
+            theme.colors.mini_map.bar_outline_current
         } else {
             theme.colors.of_section(self.bar_props.section_ordinal)
         };

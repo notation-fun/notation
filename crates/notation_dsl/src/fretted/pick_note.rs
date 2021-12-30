@@ -1,4 +1,5 @@
 use fehler::throws;
+use notation_proto::prelude::PickNote;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
@@ -30,5 +31,11 @@ impl ToTokens for PickNoteDsl {
         tokens.extend(quote! {
             PickNote::new(#string, #fret_quote, None, None, None)
         });
+    }
+}
+
+impl PickNoteDsl {
+    pub fn to_proto(&self) -> PickNote {
+        PickNote::new(self.string, self.fret, None, None, None)
     }
 }

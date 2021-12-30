@@ -4,6 +4,8 @@ use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream, Result};
 use syn::{braced, bracketed, parenthesized, token};
 
+use notation_proto::prelude::ProtoEntry;
+
 use crate::core::chord::ChordDsl;
 use crate::core::tone::ToneDsl;
 use crate::core::word::WordDsl;
@@ -125,6 +127,13 @@ macro_rules! impl_multible_dsl {
                 tokens.extend(quote! {
                     #(#item_quotes),*
                 });
+            }
+        }
+        impl MultibleDsl<$dsl_type> {
+            pub fn add_proto(&self, entries: &mut Vec<ProtoEntry>) {
+                for item in self.items.iter() {
+                    entries.push(item.to_proto());
+                }
             }
         }
     }

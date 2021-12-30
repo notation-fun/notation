@@ -20,17 +20,17 @@ pub mod play;
 pub mod tab;
 
 pub mod guitar;
+pub mod help;
 pub mod lyrics;
 pub mod melody;
 pub mod rhythm;
 pub mod shapes;
 pub mod strings;
-pub mod help;
 
 pub mod data;
+pub mod font;
 pub mod settings;
 pub mod theme;
-pub mod font;
 
 pub mod app;
 pub mod ui;
@@ -45,9 +45,10 @@ pub mod inspector;
 #[cfg(feature = "dev")]
 pub mod dev;
 
+#[cfg(feature = "dsl")]
+pub mod dsl;
+
 pub mod prelude {
-    #[doc(hidden)]
-    pub use crate::font::font_plugin::{FontPlugin};
     #[doc(hidden)]
     pub use crate::app::app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
@@ -80,6 +81,8 @@ pub mod prelude {
     pub use crate::entry::entry_playing::EntryPlaying;
     #[doc(hidden)]
     pub use crate::entry::entry_plugin::EntryPlugin;
+    #[doc(hidden)]
+    pub use crate::font::font_plugin::FontPlugin;
     #[doc(hidden)]
     pub use crate::guitar::guitar_view::GuitarView;
     #[doc(hidden)]
@@ -119,13 +122,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tab::tab_state::TabState;
     #[doc(hidden)]
-    pub use crate::theme::theme_z::ThemeZ;
-    #[doc(hidden)]
     pub use crate::theme::guitar_theme::GuitarTheme;
     #[doc(hidden)]
     pub use crate::theme::notation_theme::NotationTheme;
     #[doc(hidden)]
     pub use crate::theme::theme_colors::ThemeColors;
+    #[doc(hidden)]
+    pub use crate::theme::theme_z::ThemeZ;
     #[doc(hidden)]
     pub use crate::tone::tone_bundle::ToneBundle;
     #[doc(hidden)]

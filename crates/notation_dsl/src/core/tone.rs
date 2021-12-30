@@ -1,4 +1,6 @@
 use fehler::throws;
+use notation_proto::prelude::{CoreEntry, Note, Tone};
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -59,5 +61,19 @@ impl ToTokens for ToneDsl {
                 ))
             });
         }
+    }
+}
+
+impl ToneDsl {
+    pub fn to_proto(&self) -> ProtoEntry {
+        let notes = self
+            .notes
+            .iter()
+            .map(|x| x.to_proto())
+            .collect::<Vec<Note>>();
+        ProtoEntry::from(CoreEntry::from((
+            Tone::from(notes),
+            Context::tweaked_duration(&self.duration_tweak),
+        )))
     }
 }

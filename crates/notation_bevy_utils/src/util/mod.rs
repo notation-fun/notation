@@ -1,6 +1,6 @@
-pub mod misc;
-pub mod text;
-pub mod path;
 pub mod color;
+pub mod misc;
+pub mod path;
+pub mod text;
 
 pub struct BevyUtil();

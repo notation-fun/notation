@@ -1,5 +1,6 @@
 use fehler::throws;
 
+use notation_proto::prelude::{Section, SectionKind};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -33,5 +34,16 @@ impl ToTokens for SectionDsl {
         tokens.extend(quote! {
             Section::new(#id.into(), SectionKind::from_ident(#kind_quote), #bars_quote)
         });
+    }
+}
+
+impl SectionDsl {
+    pub fn to_proto(&self) -> Section {
+        let bars = self.bars.iter().map(|x| x.to_proto()).collect();
+        Section::new(
+            self.id.id.clone(),
+            SectionKind::from_ident(self.kind.to_string().as_str()),
+            bars,
+        )
     }
 }

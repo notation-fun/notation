@@ -1,20 +1,23 @@
 use fehler::throws;
+use notation_proto::prelude::Tab;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
-use syn::{Expr, LitStr, Token};
+use syn::{LitStr, Token};
 
 use crate::proto::form::FormDsl;
 
 use crate::proto::section::SectionDsl;
 use crate::proto::track::TrackDsl;
 
+use super::meta::MetaDsl;
+
 pub struct TabDsl {
-    uuid: String,
-    meta: Expr,
-    tracks: Vec<TrackDsl>,
-    sections: Vec<SectionDsl>,
-    form: FormDsl,
+    pub uuid: String,
+    pub meta: MetaDsl,
+    pub tracks: Vec<TrackDsl>,
+    pub sections: Vec<SectionDsl>,
+    pub form: FormDsl,
 }
 
 mod kw {
@@ -64,16 +67,26 @@ impl ToTokens for TabDsl {
             sections,
             form,
         } = self;
+        let mata_quote = meta.to_token_stream();
         let tracks_quote = TrackDsl::quote_vec(tracks);
         let sections_quote = SectionDsl::quote_vec(sections);
         tokens.extend(quote! {
             Tab::new(
                 #uuid,
-                #meta,
+                #mata_quote,
                 #tracks_quote,
                 #sections_quote,
                 #form
             )
         });
+    }
+}
+
+impl TabDsl {
+    pub fn to_proto(&self) -> Tab {
+        let meta = self.meta.to_proto();
+        let tracks = self.tracks.iter().map(|x| x.to_proto()).collect();
+        let sections = self.sections.iter().map(|x| x.to_proto()).collect();
+        Tab::new(&self.uuid, meta, tracks, sections, self.form.to_proto())
     }
 }

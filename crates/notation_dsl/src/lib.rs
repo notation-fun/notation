@@ -3,62 +3,35 @@
 #[macro_use]
 extern crate lazy_static;
 
-use proc_macro::TokenStream;
+pub use {proc_macro2, quote, syn};
 
-use quote::ToTokens;
-use syn::parse_macro_input;
+pub mod context;
+pub mod core;
+pub mod fretted;
+pub mod get_tab;
+pub mod helper;
+pub mod proto;
+pub mod util;
 
-mod context;
-mod core;
-mod fretted;
-mod proto;
-mod util;
-
-#[proc_macro]
-pub fn entry(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::entry::EntryDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
-pub fn slice(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::slice::SliceDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
-pub fn track(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::track::TrackDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
-pub fn bar(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::bar::BarDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
-pub fn section(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::section::SectionDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
-pub fn form(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::form::FormDsl)
-        .into_token_stream()
-        .into()
-}
-
-#[proc_macro]
-pub fn tab(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as proto::tab::TabDsl)
-        .into_token_stream()
-        .into()
+pub mod prelude {
+    #[doc(hidden)]
+    pub use crate::get_tab::GetTabDsl;
+    #[doc(hidden)]
+    pub use crate::helper::*;
+    #[doc(hidden)]
+    pub use crate::proto::bar::BarDsl;
+    #[doc(hidden)]
+    pub use crate::proto::entry::EntryDsl;
+    #[doc(hidden)]
+    pub use crate::proto::form::FormDsl;
+    #[doc(hidden)]
+    pub use crate::proto::section::SectionDsl;
+    #[doc(hidden)]
+    pub use crate::proto::slice::SliceDsl;
+    #[doc(hidden)]
+    pub use crate::proto::tab::TabDsl;
+    #[doc(hidden)]
+    pub use crate::proto::track::TrackDsl;
+    #[doc(hidden)]
+    pub use notation_proto::prelude::*;
 }

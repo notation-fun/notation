@@ -1,4 +1,6 @@
 use fehler::{throw, throws};
+use notation_proto::prelude::{Chord, CoreEntry, Interval};
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -76,7 +78,7 @@ impl ToTokens for ChordDsl {
             empty,
             root,
             intervals,
-            bass: base,
+            bass,
             duration_tweak,
         } = self;
         let duration_quote = Context::duration_quote(duration_tweak);
@@ -84,7 +86,7 @@ impl ToTokens for ChordDsl {
             tokens.extend(empty.as_ref().unwrap().quote(duration_quote));
         } else if let Some(root) = root {
             let intervals_quote: Vec<_> = intervals.iter().map(|x| quote! { #x }).collect();
-            tokens.extend(match base {
+            tokens.extend(match bass {
                 Some(base) => quote! {
                     ProtoEntry::from(CoreEntry::from(
                         (Chord::from((#root, vec![
@@ -100,6 +102,34 @@ impl ToTokens for ChordDsl {
                     ))
                 },
             })
+        }
+    }
+}
+
+impl ChordDsl {
+    pub fn to_proto(&self) -> ProtoEntry {
+        let ChordDsl {
+            empty,
+            root,
+            intervals,
+            bass,
+            duration_tweak,
+        } = self;
+        let duration = Context::tweaked_duration(duration_tweak);
+        if empty.is_some() {
+            empty.as_ref().unwrap().to_proto(duration)
+        } else if let Some(root) = root {
+            let intervals = intervals
+                .iter()
+                .map(|x| x.to_proto())
+                .collect::<Vec<Interval>>();
+            let bass = bass.as_ref().map(|x| x.to_proto().clone());
+            ProtoEntry::from(CoreEntry::from((
+                Chord::new(root.to_proto(), intervals.into(), bass),
+                duration,
+            )))
+        } else {
+            ProtoEntry::from(CoreEntry::from(duration))
         }
     }
 }

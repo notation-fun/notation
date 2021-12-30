@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
-use crate::prelude::{NotationTheme};
-use notation_model::prelude::BarLane;
+use crate::prelude::NotationTheme;
 use notation_bevy_utils::prelude::ShapeOp;
+use notation_model::prelude::BarLane;
 
 use super::single_string::{SingleStringData, SingleStringValue};
 
@@ -24,11 +24,7 @@ macro_rules! impl_strings_grid {
                         string: string as u8,
                         bar_size: 0.0,
                     });
-                    data.create(
-                        commands,
-                        theme,
-                        entity,
-                    );
+                    data.create(commands, theme, entity);
                 }
             }
         }

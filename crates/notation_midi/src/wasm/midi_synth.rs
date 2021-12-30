@@ -26,9 +26,7 @@ impl MidiSynth {
                 channel: _,
                 key_number: _,
                 velocity: _,
-            } => {
-                Ok(())
-            },
+            } => Ok(()),
             StructuredShortMessage::NoteOn {
                 channel,
                 key_number,
@@ -48,7 +46,7 @@ impl MidiSynth {
                 } else {
                     Ok(())
                 }
-            },
+            }
             _ => Err("NOT_IMPLEMENTED".to_owned()),
         }
     }

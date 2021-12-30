@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{LayoutData, GridData};
-use notation_midi::prelude::{JumpToBarEvent, MidiState, PlayControlEvent, MidiSettings};
+use notation_bevy_utils::prelude::{GridData, LayoutData};
+use notation_midi::prelude::{JumpToBarEvent, MidiSettings, MidiState, PlayControlEvent};
 use notation_model::prelude::TabBarProps;
 
 use crate::bar::bar_view::BarView;
@@ -14,7 +14,7 @@ use crate::prelude::{
     AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationAppState, NotationAssetsStates,
     NotationSettings, NotationTheme, TabAsset, TabBars, TabState,
 };
-use crate::rhythm::rhythm_bar::{RhythmBarData};
+use crate::rhythm::rhythm_bar::RhythmBarData;
 use crate::rhythm::rhythm_view::RhythmView;
 use crate::viewer::control::Control;
 use crate::viewer::control_view::ControlView;
@@ -24,7 +24,11 @@ use super::tab_asset::TabAssetLoader;
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
 use super::tab_control::TabControl;
-use super::tab_events::{RhythmViewDoLayoutEvent, TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent, TabChordsDoLayoutEvent, TabContentDoLayoutEvent, TabControlDoLayoutEvent, TabHeaderDoLayoutEvent, TabViewDoLayoutEvent};
+use super::tab_events::{
+    RhythmViewDoLayoutEvent, TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent,
+    TabChordsDoLayoutEvent, TabContentDoLayoutEvent, TabControlDoLayoutEvent,
+    TabHeaderDoLayoutEvent, TabViewDoLayoutEvent,
+};
 use super::tab_header::TabHeader;
 use super::tab_view::TabView;
 
@@ -44,6 +48,8 @@ impl Plugin for TabPlugin {
         app.add_event::<TabBarsResizedPreEvent>();
         app.add_asset::<TabAsset>();
         app.init_asset_loader::<TabAssetLoader>();
+        #[cfg(feature = "dsl")]
+        app.init_asset_loader::<crate::dsl::get_tab_asset::GetTabAssetLoader>();
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(on_mouse_clicked.system())
@@ -61,10 +67,7 @@ impl Plugin for TabPlugin {
     }
 }
 
-pub fn jump_to_bar(
-    jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
-    bar_props: TabBarProps,
-) {
+pub fn jump_to_bar(jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>, bar_props: TabBarProps) {
     jump_to_bar_evts.send(JumpToBarEvent::new(bar_props));
 }
 
@@ -85,7 +88,9 @@ fn on_mouse_clicked(
     mut midi_state: ResMut<MidiState>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     let mut pos = None;
     for evt in evts.iter() {
         pos = Some(app_state.convert_pos(evt.cursor_position));
@@ -108,20 +113,29 @@ fn on_mouse_clicked(
             for (button, layout, global_transform) in button_query.iter() {
                 if layout.is_pos_inside(pos, global_transform) {
                     match button.action {
-                        crate::play::play_button::PlayButtonAction::PlayPause =>
-                            Control::play_or_pause(&mut midi_state, &mut play_control_evts),
-                        crate::play::play_button::PlayButtonAction::Stop =>
-                            Control::stop(&mut midi_state, &mut play_control_evts),
+                        crate::play::play_button::PlayButtonAction::PlayPause => {
+                            Control::play_or_pause(&mut midi_state, &mut play_control_evts)
+                        }
+                        crate::play::play_button::PlayButtonAction::Stop => {
+                            Control::stop(&mut midi_state, &mut play_control_evts)
+                        }
                         crate::play::play_button::PlayButtonAction::LoopMode => {
                             settings.should_loop = !settings.should_loop;
-                            Control::sync_should_loop(&settings, &mut midi_state, &mut play_control_evts)
+                            Control::sync_should_loop(
+                                &settings,
+                                &mut midi_state,
+                                &mut play_control_evts,
+                            )
                         }
-                        crate::play::play_button::PlayButtonAction::SetBegin =>
-                            Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts),
-                        crate::play::play_button::PlayButtonAction::SetEnd =>
-                            Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts),
-                        crate::play::play_button::PlayButtonAction::Clear =>
-                            Control::clear_begin_end(&mut midi_state, &mut play_control_evts),
+                        crate::play::play_button::PlayButtonAction::SetBegin => {
+                            Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts)
+                        }
+                        crate::play::play_button::PlayButtonAction::SetEnd => {
+                            Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts)
+                        }
+                        crate::play::play_button::PlayButtonAction::Clear => {
+                            Control::clear_begin_end(&mut midi_state, &mut play_control_evts)
+                        }
                     }
                     return;
                 }
@@ -167,14 +181,16 @@ fn on_mouse_dragged(
     theme: Res<NotationTheme>,
     settings: Res<NotationSettings>,
     mut tab_bars_query: Query<(
-            Entity,
-            &mut Transform,
-            &Arc<TabBars>,
-            &LayoutData,
-            &Arc<GridData>,
-        )>,
+        Entity,
+        &mut Transform,
+        &Arc<TabBars>,
+        &LayoutData,
+        &Arc<GridData>,
+    )>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     for evt in evts.iter() {
         let pos = app_state.convert_pos(evt.cursor_position);
         if app_state.show_control && ControlView::is_pos_inside(app_state.window_width, pos) {

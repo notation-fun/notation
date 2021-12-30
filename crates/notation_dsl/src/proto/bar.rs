@@ -1,5 +1,6 @@
 use fehler::throws;
 
+use notation_proto::prelude::{Bar, BarLayer};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -28,5 +29,15 @@ impl ToTokens for BarDsl {
                 #(#layers),*
             ])
         });
+    }
+}
+
+impl BarDsl {
+    pub fn to_proto(&self) -> Bar {
+        self.layers
+            .iter()
+            .map(|x| x.to_proto())
+            .collect::<Vec<BarLayer>>()
+            .into()
     }
 }

@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use crate::{prelude::{Key, Note, Pitch, Semitones, Syllable, SyllableNote, Chord, Octave}, tone::Tone};
+use crate::prelude::{Chord, Key, Note, Octave, Pitch, Semitones, Syllable, SyllableNote};
+use crate::tone::Tone;
 
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -50,25 +51,67 @@ impl Scale {
     pub fn get_syllables(&self) -> Vec<Syllable> {
         match self {
             Scale::Ionian => vec![
-                Syllable::Do, Syllable::Re, Syllable::Mi, Syllable::Fa, Syllable::So, Syllable::La, Syllable::Ti,
+                Syllable::Do,
+                Syllable::Re,
+                Syllable::Mi,
+                Syllable::Fa,
+                Syllable::So,
+                Syllable::La,
+                Syllable::Ti,
             ],
             Scale::Dorian => vec![
-                Syllable::Re, Syllable::Mi, Syllable::Fa, Syllable::So, Syllable::La, Syllable::Ti, Syllable::Do,
+                Syllable::Re,
+                Syllable::Mi,
+                Syllable::Fa,
+                Syllable::So,
+                Syllable::La,
+                Syllable::Ti,
+                Syllable::Do,
             ],
             Scale::Phrygian => vec![
-                Syllable::Mi, Syllable::Fa, Syllable::So, Syllable::La, Syllable::Ti, Syllable::Do, Syllable::Re,
+                Syllable::Mi,
+                Syllable::Fa,
+                Syllable::So,
+                Syllable::La,
+                Syllable::Ti,
+                Syllable::Do,
+                Syllable::Re,
             ],
             Scale::Lydian => vec![
-                Syllable::Fa, Syllable::So, Syllable::La, Syllable::Ti, Syllable::Do, Syllable::Re, Syllable::Mi,
+                Syllable::Fa,
+                Syllable::So,
+                Syllable::La,
+                Syllable::Ti,
+                Syllable::Do,
+                Syllable::Re,
+                Syllable::Mi,
             ],
             Scale::Mixolydian => vec![
-                Syllable::So, Syllable::La, Syllable::Ti, Syllable::Do, Syllable::Re, Syllable::Mi, Syllable::Fa,
+                Syllable::So,
+                Syllable::La,
+                Syllable::Ti,
+                Syllable::Do,
+                Syllable::Re,
+                Syllable::Mi,
+                Syllable::Fa,
             ],
             Scale::Aeolian => vec![
-                Syllable::La, Syllable::Ti, Syllable::Do, Syllable::Re, Syllable::Mi, Syllable::Fa, Syllable::So,
+                Syllable::La,
+                Syllable::Ti,
+                Syllable::Do,
+                Syllable::Re,
+                Syllable::Mi,
+                Syllable::Fa,
+                Syllable::So,
             ],
             Scale::Locrian => vec![
-                Syllable::Ti, Syllable::Do, Syllable::Re, Syllable::Mi, Syllable::Fa, Syllable::So, Syllable::La,
+                Syllable::Ti,
+                Syllable::Do,
+                Syllable::Re,
+                Syllable::Mi,
+                Syllable::Fa,
+                Syllable::So,
+                Syllable::La,
             ],
         }
     }

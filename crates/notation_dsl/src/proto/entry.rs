@@ -1,4 +1,5 @@
 use fehler::{throw, throws};
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -62,5 +63,19 @@ impl ToTokens for EntryDsl {
             Self::Shape(x) => quote! { #x },
             Self::Fretboard(x) => quote! { #x },
         });
+    }
+}
+impl EntryDsl {
+    pub fn add_proto(&self, entries: &mut Vec<ProtoEntry>) {
+        match self {
+            EntryDsl::Context(x) => entries.push(x.to_proto()),
+            EntryDsl::Mark(x) => entries.push(ProtoEntry::from(x.mark.clone())),
+            EntryDsl::Tone(x) => x.add_proto(entries),
+            EntryDsl::Chord(x) => x.add_proto(entries),
+            EntryDsl::Word(x) => x.add_proto(entries),
+            EntryDsl::Pick(x) => x.add_proto(entries),
+            EntryDsl::Shape(x) => entries.push(x.to_proto()),
+            EntryDsl::Fretboard(x) => entries.push(x.to_proto()),
+        }
     }
 }

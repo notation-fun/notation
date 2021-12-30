@@ -93,7 +93,11 @@ impl PlayControl {
         }
     }
     pub fn get_last_car_ordinal(&self) -> usize {
-        if self.bars > 0 { self.bars - 1 } else { 0 }
+        if self.bars > 0 {
+            self.bars - 1
+        } else {
+            0
+        }
     }
     pub fn new(tab: &Tab) -> Self {
         Self::_new(&tab.meta, tab.bars.len())
@@ -147,14 +151,18 @@ impl PlayControl {
         if self.play_state.is_playing() {
             let mut jumped = jumped;
             let delta_units = if self.position.bar.bar_ordinal < self.begin_bar_ordinal
-                    || self.position.bar.bar_ordinal > self.end_bar_ordinal {
+                || self.position.bar.bar_ordinal > self.end_bar_ordinal
+            {
                 self.position.set_in_bar(self.begin_bar_ordinal, Units(0.0));
                 jumped = true;
                 Units(0.0)
             } else {
                 self.play_speed.calc_units(delta_seconds)
             };
-            self._tick_to_position(jumped, TabPosition::new(self.position.tab.in_tab_pos + delta_units)) 
+            self._tick_to_position(
+                jumped,
+                TabPosition::new(self.position.tab.in_tab_pos + delta_units),
+            )
         } else {
             TickResult::new(false, false, false, jumped)
         }

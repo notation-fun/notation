@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use notation_bevy_utils::prelude::{ShapeOp};
+use notation_bevy_utils::prelude::ShapeOp;
 use notation_model::prelude::LaneEntry;
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme};
@@ -25,7 +25,8 @@ pub fn create_word_text(
     let text_entity = data.create(commands, theme, entity);
     if text.word.text != "" {
         theme
-            .texts.lyrics
+            .texts
+            .lyrics
             .spawn_word_text(commands, text_entity, &assets, text.word.text.as_str())
     }
 }
@@ -68,7 +69,9 @@ pub fn on_entry_playing_changed(
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
     mut text_query: Query<(Entity, &mut WordTextData)>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
             if let Ok((entity, mut data)) = text_query.get_mut(*child) {

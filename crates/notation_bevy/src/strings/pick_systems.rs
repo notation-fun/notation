@@ -19,8 +19,12 @@ pub fn on_entry_playing_changed(
     )>,
     mut font_query: Query<&mut Text>,
 ) {
-    if theme._bypass_systems { return; }
-    if settings.hide_strings_lane { return; }
+    if theme._bypass_systems {
+        return;
+    }
+    if settings.hide_strings_lane {
+        return;
+    }
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
             if let Ok((entity, mut data, note_children)) = note_query.q0_mut().get_mut(*child) {
@@ -66,10 +70,15 @@ macro_rules! impl_pick_system {
                             let data =
                                 PickNoteData::new(entry, PickNoteValue::new(pick_note, syllable));
                             let note_entity = data.create(commands, theme, entity);
-                            if !settings.hide_strings_lane && (settings.always_show_fret || pick_note.fret.is_some()) {
-                                theme
-                                    .texts.strings
-                                    .spawn_fret_text(commands, note_entity, &assets, fret);
+                            if !settings.hide_strings_lane
+                                && (settings.always_show_fret || pick_note.fret.is_some())
+                            {
+                                theme.texts.strings.spawn_fret_text(
+                                    commands,
+                                    note_entity,
+                                    &assets,
+                                    fret,
+                                );
                             }
                         }
                     }

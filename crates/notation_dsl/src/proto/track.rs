@@ -1,5 +1,6 @@
 use fehler::throws;
 
+use notation_proto::prelude::{Track, TrackKind};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -33,5 +34,19 @@ impl ToTokens for TrackDsl {
         tokens.extend(quote! {
             Track::new(#id.into(), TrackKind::from_ident(#kind_quote), #entries_quote)
         });
+    }
+}
+
+impl TrackDsl {
+    pub fn to_proto(&self) -> Track {
+        let mut entries = Vec::new();
+        for entry in self.entries.iter() {
+            entry.add_proto(&mut entries);
+        }
+        Track::new(
+            self.id.id.clone(),
+            TrackKind::from_ident(self.kind.to_string().as_str()),
+            entries,
+        )
     }
 }

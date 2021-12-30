@@ -45,3 +45,16 @@ impl From<GuitarTuning> for [Note; 6] {
         }
     }
 }
+
+impl GuitarTuning {
+    pub fn to_ident(&self) -> String {
+        format!("{:?}", self)
+    }
+    pub fn from_ident(ident: &str) -> Self {
+        match ident {
+            "StandardFlat" => Self::StandardFlat,
+            "DropD" => Self::DropD,
+            _ => Self::Standard,
+        }
+    }
+}

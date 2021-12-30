@@ -1,0 +1,16 @@
+[package]
+name = "notation_macro"
+version = "0.3.1"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+homepage = "https://www.notation.fun"
+repository = "https://github.com/notation-fun/notation"
+description = "Fun notation - DSL to create notation files"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[dependencies]
+notation_dsl = { version = "0.3.1", path = "../notation_dsl" }

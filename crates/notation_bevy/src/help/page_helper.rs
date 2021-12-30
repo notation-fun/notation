@@ -1,53 +1,39 @@
 use bevy::prelude::*;
-use bevy_egui::egui::{self, Ui, color_picker::show_color};
-use notation_bevy_utils::{prelude::BevyUtil, asset::markdown_asset::MarkDownAsset, easy_mark::{EasyMarkStyle, label_from_style}};
-use notation_model::prelude::{TrackKind, Pitch, Semitones, Scale, Syllable, Key, Interval};
+use bevy_egui::egui::color_picker::show_color;
+use bevy_egui::egui::Ui;
+use notation_bevy_utils::easy_mark::{label_from_style, EasyMarkStyle};
+use notation_bevy_utils::prelude::BevyUtil;
+use notation_model::prelude::{Interval, Key, Pitch, Scale, Semitones, Syllable};
 
-use crate::prelude::{NotationTheme, NotationAssets, NotationAppState};
+use crate::prelude::NotationTheme;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-pub struct PageHelper {
-}
+pub struct PageHelper {}
 
 impl PageHelper {
-    pub fn add_strong_text(
-        ui: &mut Ui,
-        text: &String,
-    ) {
+    pub fn add_strong_text(ui: &mut Ui, text: &String) {
         let strong_style = EasyMarkStyle {
             strong: true,
             ..EasyMarkStyle::default()
         };
         ui.add(label_from_style(text.as_str(), &strong_style));
     }
-    pub fn add_maybe_strong_text(
-        ui: &mut Ui,
-        strong: bool,
-        text: &String,
-    ) {
+    pub fn add_maybe_strong_text(ui: &mut Ui, strong: bool, text: &String) {
         if strong {
             Self::add_strong_text(ui, text);
         } else {
             ui.label(text);
         }
     }
-    pub fn add_key_scale(
-        ui: &mut Ui,
-        key: &Key,
-        scale: &Scale,
-    ) {
-        ui.horizontal(|ui|{
+    pub fn add_key_scale(ui: &mut Ui, key: &Key, scale: &Scale) {
+        ui.horizontal(|ui| {
             ui.label("Key:");
             Self::add_strong_text(ui, &key.to_string());
             ui.label("Scale:");
             Self::add_strong_text(ui, &scale.to_string());
         });
     }
-    pub fn add_syllable_color(
-        ui: &mut Ui,
-        theme: &NotationTheme,
-        syllable: &Syllable,
-    ) {
+    pub fn add_syllable_color(ui: &mut Ui, theme: &NotationTheme, syllable: &Syllable) {
         let color = BevyUtil::rgb_to_egui(&theme.colors.of_syllable(syllable.clone()));
         show_color(ui, color, ui.spacing().interact_size);
     }
@@ -62,7 +48,11 @@ impl PageHelper {
         if with_color {
             Self::add_syllable_color(ui, theme, syllable);
         }
-        let text = if show_ident { syllable.to_ident() } else { syllable.to_string() };
+        let text = if show_ident {
+            syllable.to_ident()
+        } else {
+            syllable.to_string()
+        };
         Self::add_maybe_strong_text(ui, strong, &text);
     }
     pub fn add_syllable_pitch(
@@ -109,7 +99,11 @@ impl PageHelper {
         show_ident: bool,
         strong: bool,
     ) {
-        let text = if show_ident { interval.to_ident() } else { interval.to_string() };
+        let text = if show_ident {
+            interval.to_ident()
+        } else {
+            interval.to_string()
+        };
         Self::add_maybe_strong_text(ui, strong, &text);
     }
 }

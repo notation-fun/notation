@@ -34,6 +34,10 @@ native = [
     "bevy/bevy_wgpu",
 ]
 
+dsl = [
+    "notation_dsl",
+]
+
 chinese = [
 ]
 
@@ -42,6 +46,8 @@ notation_bevy_utils = { version = "0.3.1", path = "../notation_bevy_utils" }
 
 notation_model = { version = "0.3.0", path = "../notation_model" }
 notation_midi = { version = "0.3.0", path = "../notation_midi" }
+
+notation_dsl = { version = "0.3.1", path = "../notation_dsl", optional = true }
 
 serde = {version = "1.0.126", features = ["derive"]}
 # https://github.com/serde-rs/serde/issues/1937

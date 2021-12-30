@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use std::sync::{Arc};
+use std::sync::Arc;
 
 use notation_proto::prelude::{Chord, Position};
 
@@ -50,7 +50,7 @@ impl TabChord {
         for bar_ordinal in begin_bar_ordinal..=end_bar_ordinal {
             for bar in self.bars.iter() {
                 if bar.props.bar_ordinal == bar_ordinal {
-                    return Some(bar.clone())
+                    return Some(bar.clone());
                 }
             }
         }
@@ -62,9 +62,7 @@ impl TabChord {
             match position {
                 Some(pos) => {
                     let bar_ordinal = pos.bar.bar_ordinal;
-                    if let Some(entry) =
-                        self.search_in_bars(bar_ordinal + 1, last_bar_ordinal)
-                    {
+                    if let Some(entry) = self.search_in_bars(bar_ordinal + 1, last_bar_ordinal) {
                         return Some(entry);
                     } else if pass_end {
                         return self.search_in_bars(1, bar_ordinal);

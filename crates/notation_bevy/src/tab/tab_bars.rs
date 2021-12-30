@@ -47,16 +47,12 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
             return GridData::ZERO;
         }
         let bar_margin = engine.theme.sizes.layout.bar_margin;
-        let beat_size_range =
-            match engine.settings.override_beat_size {
-                Some(size) => (size, size * 2.0),
-                None => engine.theme.sizes.bar.beat_size_range,
-            };
+        let beat_size_range = match engine.settings.override_beat_size {
+            Some(size) => (size, size * 2.0),
+            None => engine.theme.sizes.bar.beat_size_range,
+        };
         let bar_beats = self.tab.bar_beats() as f32;
-        let bar_width_range = (
-            beat_size_range.0 * bar_beats,
-            beat_size_range.1 * bar_beats,
-        );
+        let bar_width_range = (beat_size_range.0 * bar_beats, beat_size_range.1 * bar_beats);
         let tab_width = match engine.settings.layout.override_tab_width {
             Some(width) => width,
             None => grid_size.width,
@@ -98,7 +94,9 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
                 for col in 0..cols {
                     if let Some(bar_layout) = self.bar_layouts.get(row * cols + col) {
                         for lane_layout in bar_layout.lane_layouts.iter() {
-                            if engine.settings.layout.video_recording_mode || !lane_layout.is_ghost() {
+                            if engine.settings.layout.video_recording_mode
+                                || !lane_layout.is_ghost()
+                            {
                                 non_ghost_lanes.insert(lane_layout.id());
                             }
                         }
@@ -128,7 +126,10 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
             match engine.settings.layout.override_tab_width {
                 None => grid_data,
                 Some(_) => {
-                    let offset = grid_data.content_size.calc_offset(LayoutAnchor::TOP_LEFT, LayoutAnchor::TOP_LEFT) + Vec2::new(bar_margin, 0.0);
+                    let offset = grid_data
+                        .content_size
+                        .calc_offset(LayoutAnchor::TOP_LEFT, LayoutAnchor::TOP_LEFT)
+                        + Vec2::new(bar_margin, 0.0);
                     GridData {
                         offset,
                         ..grid_data
@@ -165,7 +166,7 @@ impl TabBars {
     fn calc_bar_layout_data(
         theme: &NotationTheme,
         all_lane_layouts: &Vec<LaneLayoutData>,
-        bar: &TabBar
+        bar: &TabBar,
     ) -> BarLayoutData {
         let mut lane_layouts = Vec::new();
         for lane_layout in all_lane_layouts.iter() {
@@ -237,7 +238,9 @@ impl TabBars {
         cell_query: Query<(&Parent, &Arc<BarView>, &LayoutData)>,
         mut tab_resized_evts: EventWriter<TabBarsResizedEvent>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         for evt in evts.iter() {
             let mut bars = Vec::new();
             for (parent, bar_view, layout) in cell_query.iter() {
@@ -258,7 +261,9 @@ impl TabBars {
         cell_query: ViewQuery<BarView>,
         mut tab_resized_evts: EventWriter<TabBarsResizedPreEvent>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

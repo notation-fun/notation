@@ -9,12 +9,7 @@ pub struct ChordColorBackground;
 
 impl ChordColorBackground {
     pub fn spawn(commands: &mut Commands, entity: Entity, z: f32, color: Color) -> Entity {
-        let result = ColorBackground::spawn(
-            commands,
-            entity,
-            z,
-            color,
-        );
+        let result = ColorBackground::spawn(commands, entity, z, color);
         commands.entity(result).insert(ChordColorBackground);
         result
     }

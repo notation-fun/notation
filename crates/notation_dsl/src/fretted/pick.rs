@@ -1,4 +1,6 @@
 use fehler::throws;
+use notation_proto::prelude::{CoreEntry, FrettedEntry4, FrettedEntry6, Pick};
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -58,6 +60,26 @@ impl ToTokens for PickDsl {
                     ]), #duration_quote)
                 ))
             });
+        }
+    }
+}
+
+impl PickDsl {
+    pub fn to_proto(&self) -> ProtoEntry {
+        let PickDsl {
+            notes,
+            duration_tweak,
+        } = self;
+        let duration = Context::tweaked_duration(duration_tweak);
+        if notes.len() == 0 {
+            ProtoEntry::from(CoreEntry::from(duration))
+        } else {
+            let _string_num = Context::fretted().string_num;
+            let notes: Vec<_> = notes.iter().map(|x| x.to_proto()).collect();
+            match Context::fretted().string_num {
+                4 => ProtoEntry::from(FrettedEntry4::from((Pick::from(notes), duration))),
+                _ => ProtoEntry::from(FrettedEntry6::from((Pick::from(notes), duration))),
+            }
         }
     }
 }

@@ -94,3 +94,9 @@ impl ToTokens for IntervalDsl {
         });
     }
 }
+
+impl IntervalDsl {
+    pub fn to_proto(&self) -> Interval {
+        self.interval
+    }
+}

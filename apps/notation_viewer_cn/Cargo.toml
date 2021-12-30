@@ -14,6 +14,7 @@ default = [
 ]
 native = [
     "notation_bevy/native",
+    "notation_bevy/dsl",
 ]
 dev = [
     "notation_bevy/dev",

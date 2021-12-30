@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 use bevy_prototype_lyon::entity::ShapeBundle;
+use bevy_prototype_lyon::prelude::*;
 
 pub trait Shape {
     fn _create(&self, commands: &mut Commands, entity: Entity);
@@ -16,7 +16,7 @@ pub trait Shape {
     }
 }
 
-pub trait SingleShape<T: Geometry> : Shape {
+pub trait SingleShape<T: Geometry>: Shape {
     fn get_shape(&self) -> T;
     fn get_colors(&self) -> ShapeColors;
     fn get_draw_mode(&self) -> DrawMode;
@@ -26,13 +26,15 @@ pub trait SingleShape<T: Geometry> : Shape {
         let colors = self.get_colors();
         let draw_mode = self.get_draw_mode();
         let transform = self.get_transform();
-        commands.entity(entity).insert_bundle(GeometryBuilder::build_as(
-            &shape, colors, draw_mode, transform,
-        ));
+        commands
+            .entity(entity)
+            .insert_bundle(GeometryBuilder::build_as(
+                &shape, colors, draw_mode, transform,
+            ));
     }
 }
 
-pub trait ShapeOp<Theme, S: Shape> : Clone + Send + Sync + 'static {
+pub trait ShapeOp<Theme, S: Shape>: Clone + Send + Sync + 'static {
     fn get_shape(&self, theme: &Theme) -> S;
     fn create(&self, commands: &mut Commands, theme: &Theme, parent: Entity) -> Entity {
         let shape = self.get_shape(theme);

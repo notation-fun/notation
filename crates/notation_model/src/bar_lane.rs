@@ -99,13 +99,12 @@ impl BarLane {
         in_bar_pos: Units,
         predicate: &F,
     ) -> Option<T> {
-        self.get_entry(
-            &|x: &LaneEntry| {
-                if x.props.in_bar_pos.is_bigger_than(&in_bar_pos) {
-                    predicate(x)
-                } else {
-                    None
-                }
+        self.get_entry(&|x: &LaneEntry| {
+            if x.props.in_bar_pos.is_bigger_than(&in_bar_pos) {
+                predicate(x)
+            } else {
+                None
+            }
         })
     }
 }

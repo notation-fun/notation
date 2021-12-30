@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Write;
+
 use ron::ser::{to_string_pretty, PrettyConfig};
 
 use notation_proto::prelude::*;

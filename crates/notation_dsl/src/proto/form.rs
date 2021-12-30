@@ -1,5 +1,6 @@
 use fehler::throws;
 
+use notation_proto::prelude::Form;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
@@ -28,5 +29,14 @@ impl ToTokens for FormDsl {
                 #(#sections),*
             ])
         });
+    }
+}
+impl FormDsl {
+    pub fn to_proto(&self) -> Form {
+        self.sections
+            .iter()
+            .map(|x| x.id.clone())
+            .collect::<Vec<String>>()
+            .into()
     }
 }

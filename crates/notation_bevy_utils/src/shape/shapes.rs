@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use super::shape::Shape;
 
-pub trait DoubleShape<T1: Geometry, T2: Geometry> : Shape {
+pub trait DoubleShape<T1: Geometry, T2: Geometry>: Shape {
     fn get_shape1(&self) -> T1;
     fn get_shape2(&self) -> T2;
     fn get_colors(&self) -> ShapeColors;
@@ -18,6 +18,8 @@ pub trait DoubleShape<T1: Geometry, T2: Geometry> : Shape {
         let mut multishape = GeometryBuilder::new();
         multishape.add(&shape1);
         multishape.add(&shape2);
-        commands.entity(entity).insert_bundle(multishape.build(colors, draw_mode, transform));
+        commands
+            .entity(entity)
+            .insert_bundle(multishape.build(colors, draw_mode, transform));
     }
 }

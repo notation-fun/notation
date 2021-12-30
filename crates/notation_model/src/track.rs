@@ -4,7 +4,9 @@ use std::sync::{Arc, Weak};
 
 use notation_proto::prelude::Chord;
 
-use crate::prelude::{Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, Tab, TrackKind, TabChord};
+use crate::prelude::{
+    Fretboard4, Fretboard6, ModelEntry, SliceBegin, SliceEnd, Tab, TabChord, TrackKind,
+};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct TrackProps {
@@ -118,14 +120,20 @@ impl Track {
             .map(|(chord, entries)| {
                 let bars = TabChord::calc_bars(self.tab(), chord);
                 TabChord {
-                    chord, entries, bars
+                    chord,
+                    entries,
+                    bars,
                 }
             })
             .collect::<Vec<TabChord>>();
         let scale = self.tab().map(|t| t.meta.scale);
         chords.sort_by(|a, b| {
-            let chord_a = scale.map(|s| s.calc_chord_for_sort(&a.chord)).unwrap_or(a.chord);
-            let chord_b = scale.map(|s| s.calc_chord_for_sort(&b.chord)).unwrap_or(b.chord);
+            let chord_a = scale
+                .map(|s| s.calc_chord_for_sort(&a.chord))
+                .unwrap_or(a.chord);
+            let chord_b = scale
+                .map(|s| s.calc_chord_for_sort(&b.chord))
+                .unwrap_or(b.chord);
             chord_a.cmp(&chord_b)
         });
         chords

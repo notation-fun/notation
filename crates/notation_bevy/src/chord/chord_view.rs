@@ -6,13 +6,13 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::{
     BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle,
 };
-use notation_model::prelude::{TabChord};
+use notation_model::prelude::TabChord;
 
-use crate::prelude::{NotationTheme, NotationAssets};
+use crate::prelude::{NotationAssets, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::chord_base::ChordBaseData;
-use super::chord_diagram::{ChordDiagramData};
+use super::chord_diagram::ChordDiagramData;
 use super::chord_interval::ChordIntervalData;
 use super::chord_playing::ChordPlaying;
 use super::interval_dot::IntervalDotData;
@@ -46,7 +46,9 @@ impl ChordView {
         mut dot_query: Query<(Entity, &mut IntervalDotData)>,
         mut text_query: Query<&mut Transform, With<Text>>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         for (_entity, _view, layout, children) in query.iter() {
             let radius = layout.size.width * theme.sizes.chord.diagram_factor;
             for child in children.iter() {
@@ -80,21 +82,31 @@ impl ChordView {
         let chord_entity = BevyUtil::spawn_child_bundle(
             commands,
             entity,
-            ViewBundle::from(ChordView{chord: chord.clone()}),
+            ViewBundle::from(ChordView {
+                chord: chord.clone(),
+            }),
         );
         //TODO: handle initialization in a nicer way.
         let radius = 0.0;
-        ChordDiagramData::spawn(commands, theme, chord_entity, chord.first_entry().unwrap().props, chord.chord, radius);
-        commands
-            .entity(chord_entity)
-            .insert(ChordPlaying::from((chord.first_entry().unwrap().props, chord.chord)));
+        ChordDiagramData::spawn(
+            commands,
+            theme,
+            chord_entity,
+            chord.first_entry().unwrap().props,
+            chord.chord,
+            radius,
+        );
+        commands.entity(chord_entity).insert(ChordPlaying::from((
+            chord.first_entry().unwrap().props,
+            chord.chord,
+        )));
         if chord.bars.len() > 1 {
             theme.texts.chord.spawn_bars_text(
                 commands,
                 assets,
                 chord_entity,
                 chord.bars.len().to_string().as_str(),
-                theme.z.chord_text
+                theme.z.chord_text,
             );
         }
         chord_entity
@@ -108,7 +120,9 @@ impl ChordView {
         >,
         mut diagram_query: Query<(Entity, &mut ChordDiagramData)>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         for (_entity, playing, _view, children) in query.iter_mut() {
             for child in children.iter() {
                 if let Ok((diagram_entity, mut diagram_data)) = diagram_query.get_mut(*child) {

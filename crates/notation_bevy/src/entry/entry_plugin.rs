@@ -1,21 +1,19 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{ShapeOp};
+use notation_bevy_utils::prelude::ShapeOp;
 
 use crate::chord::chord_view::ChordView;
 use crate::prelude::{
     BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates,
     NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle,
 };
-use crate::shapes::shape_diagram::{
-    ShapeDiagramData4, ShapeDiagramData6,
-};
-use crate::strings::pick_note::{PickNoteData};
-use crate::strings::single_string::{SingleStringData};
+use crate::shapes::shape_diagram::{ShapeDiagramData4, ShapeDiagramData6};
+use crate::strings::pick_note::PickNoteData;
+use crate::strings::single_string::SingleStringData;
 use crate::tab::tab_events::TabBarsResizedEvent;
-use crate::tone::tone_note::{ToneNoteData};
-use crate::word::word_text::{WordTextData};
+use crate::tone::tone_note::ToneNoteData;
+use crate::word::word_text::WordTextData;
 use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 
 pub struct EntryPlugin;
@@ -151,7 +149,9 @@ fn on_tab_bars_resized(
     mut shape_diagram_6_query: Query<(Entity, &mut ShapeDiagramData6), With<ShapeDiagramData6>>,
     mut shape_diagram_4_query: Query<(Entity, &mut ShapeDiagramData4), With<ShapeDiagramData4>>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     for evt in evts.iter() {
         let bars = &evt.0;
         for (entity, mut data) in tone_note_query.iter_mut() {

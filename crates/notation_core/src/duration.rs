@@ -55,6 +55,29 @@ impl Unit {
     }
 }
 
+impl Unit {
+    pub const _1: Self = Unit::Whole;
+    pub const _1_2: Self = Unit::Half;
+    pub const _1_4: Self = Unit::Quarter;
+    pub const _1_8: Self = Unit::Eighth;
+    pub const _1_16: Self = Unit::Sixteenth;
+    pub const _1_32: Self = Unit::ThirtySecondth;
+    pub fn to_ident(&self) -> String {
+        format!("{}", self)
+    }
+    pub fn from_ident(ident: &str) -> Self {
+        match ident {
+            "_1" => Self::_1,
+            "_1_2" => Self::_1_2,
+            "_1_4" => Self::_1_4,
+            "_1_8" => Self::_1_8,
+            "_1_16" => Self::_1_16,
+            "_1_32" => Self::_1_32,
+            _ => Self::_1_4,
+        }
+    }
+}
+
 #[derive(Copy, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Debug, Default)]
 pub struct Units(pub f32);
 

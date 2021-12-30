@@ -28,10 +28,6 @@ impl SingleShape<shapes::Line> for StrokeLine {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(self.line_width))
     }
     fn get_transform(&self) -> Transform {
-        Transform::from_xyz(
-            self.offset.x,
-            self.offset.y,
-            self.offset.z,
-        )
+        Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)
     }
 }

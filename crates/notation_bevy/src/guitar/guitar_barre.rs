@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 use notation_bevy_utils::prelude::{BevyUtil, FillRectangle, LayoutSize, ShapeOp};
 use notation_model::prelude::{HandShape6, Pick};
 
-use crate::prelude::{NotationTheme};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct GuitarBarreData {

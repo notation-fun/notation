@@ -9,7 +9,9 @@ use crate::prelude::{
 };
 use crate::tab::tab_events::BarViewDoLayoutEvent;
 use crate::ui::layout::NotationLayout;
-use notation_bevy_utils::prelude::{BevyUtil, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery};
+use notation_bevy_utils::prelude::{
+    BevyUtil, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery,
+};
 use notation_model::prelude::TabBar;
 
 use super::bar_beat::{BarBeatData, BarBeatValue};
@@ -41,7 +43,9 @@ impl BarView {
         mut sep_query: Query<(Entity, &mut BarSeparatorData)>,
         mut beat_query: Query<(Entity, &mut BarBeatData)>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let engine = NotationLayout::new(&theme, &state, &settings);
         let mut bars = Vec::new();
         for evt in evts.iter() {
@@ -78,12 +82,17 @@ impl BarView {
         mut evts: EventReader<BarViewDoLayoutEvent>,
         mut text_query: Query<(&Parent, &mut Transform), With<Text>>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         if !settings.hide_bar_number {
             for evt in evts.iter() {
                 for (parent, mut transform) in text_query.iter_mut() {
                     if parent.0 == evt.entity {
-                        theme.texts.tab.update_bar_number_x(&mut transform, evt.layout.size.width);
+                        theme
+                            .texts
+                            .tab
+                            .update_bar_number_x(&mut transform, evt.layout.size.width);
                     }
                 }
             }
@@ -114,28 +123,22 @@ impl BarView {
         //TODO, create bar separator for the first one in row
         if false {
             let data = BarSeparatorData::new(bar, BarSeparatorValue::new(true));
-            data.create(
-                commands,
-                theme,
-                bar_entity,
-            );
+            data.create(commands, theme, bar_entity);
         }
         let data = BarSeparatorData::new(bar, BarSeparatorValue::new(false));
-        data.create(
-            commands,
-            theme,
-            bar_entity,
-        );
+        data.create(commands, theme, bar_entity);
         let signature = bar.signature();
         for beat in 0..signature.bar_beats {
             let data = BarBeatData::new(bar, BarBeatValue::new(bar, &signature, beat));
             data.create(commands, theme, bar_entity);
         }
         if !settings.hide_bar_number {
-            theme
-                .texts
-                .tab
-                .spawn_bar_number(commands, assets, bar_entity, &bar.props.bar_ordinal.to_string());
+            theme.texts.tab.spawn_bar_number(
+                commands,
+                assets,
+                bar_entity,
+                &bar.props.bar_ordinal.to_string(),
+            );
         }
         bar_entity
     }

@@ -20,7 +20,7 @@ impl Plugin for MiniPlugin {
                 .with_system(on_bar_playing_changed.system())
                 .with_system(MiniMap::do_layout.system())
                 .with_system(MiniMap::update_debug_str.system())
-                .with_system(MiniBar::on_layout_changed.system())
+                .with_system(MiniBar::on_layout_changed.system()),
         );
     }
 }

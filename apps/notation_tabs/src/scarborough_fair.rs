@@ -13,7 +13,7 @@ pub fn main() {
 pub fn new_tab() -> Tab {
     tab! {
         "06dd7278-cdaf-40dd-abc6-6e66ec2d6b8c"
-        Meta: TabMeta::new(Key::E, Scale::Dorian, Signature::_3_4, Tempo::Bpm(110))
+        Meta: E Dorian 3 _4 110
         Tracks: [
             {chord Chord [
                 $duration = D_1_2
@@ -124,8 +124,6 @@ pub fn new_tab() -> Tab {
                 "v4:16" Word [ "hea-", "ther", @ ""* ] |
             ]}
             {vocal Vocal [
-                $key = E
-                $scale = Dorian
                 $duration = _1_4
                 "v:1" Tone [ 2* 2 ] |
                 "v:2" Tone [ 6, 6* 6, ] |
@@ -343,4 +341,3 @@ pub fn new_tab() -> Tab {
         Form: intro verse verse verse verse verse outro
     }
 }
-

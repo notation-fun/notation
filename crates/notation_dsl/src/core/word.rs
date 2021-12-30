@@ -1,4 +1,6 @@
 use fehler::throws;
+use notation_proto::prelude::LyricEntry;
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -51,6 +53,23 @@ impl ToTokens for WordDsl {
                     (#word, #duration_quote)
                 ))
             });
+        }
+    }
+}
+
+impl WordDsl {
+    pub fn to_proto(&self) -> ProtoEntry {
+        let WordDsl {
+            empty,
+            word,
+            duration_tweak,
+        } = self;
+        let duration = Context::tweaked_duration(duration_tweak);
+        if empty.is_some() {
+            empty.as_ref().unwrap().to_proto(duration)
+        } else {
+            let word = word.as_ref().unwrap();
+            ProtoEntry::from(LyricEntry::from((word.value(), duration)))
         }
     }
 }

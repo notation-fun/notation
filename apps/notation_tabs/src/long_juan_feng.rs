@@ -14,7 +14,7 @@ pub fn main() {
 pub fn new_tab() -> Tab {
     tab! {
         "ef6bb44b-17cf-47e6-a50e-0ab636868334"
-        Meta: TabMeta::new(Key::A, Scale::Major, Signature::_4_4, Tempo::Bpm(72))
+        Meta: A Major 4 _4 72
         Tracks: [
             {chord Chord [
                 $duration = _1
@@ -127,8 +127,6 @@ pub fn new_tab() -> Tab {
                     Word [ @ "" ]
             ]}
             {vocal Vocal [
-                $key = A
-                $scale = Major
                 $duration = _1_4
                 "v:1,2" Tone [ .5 2 2, 1, 3 ] |
                 "v:3" Tone [ .6 3 3, 2, 4 ] |

@@ -100,7 +100,10 @@ impl MidiChannel {
             self.calc_next_index(&old_position.bar);
         }
         let bypass = if is_seeking {
-            self.track.as_ref().map(|x| x.kind != settings.seeking_track).unwrap_or(true)
+            self.track
+                .as_ref()
+                .map(|x| x.kind != settings.seeking_track)
+                .unwrap_or(true)
         } else {
             false
         };
@@ -111,20 +114,36 @@ impl MidiChannel {
                     let seeking = is_seeking && track.kind == settings.seeking_track;
                     match track.kind {
                         TrackKind::Vocal => {
-                            velocity = if !seeking && settings.vocal_mute { 0 } else { settings.vocal_velocity };
-                        },
+                            velocity = if !seeking && settings.vocal_mute {
+                                0
+                            } else {
+                                settings.vocal_velocity
+                            };
+                        }
                         TrackKind::Guitar => {
-                            velocity = if !seeking && settings.guitar_mute { 0 } else { settings.guitar_velocity };
-                        },
+                            velocity = if !seeking && settings.guitar_mute {
+                                0
+                            } else {
+                                settings.guitar_velocity
+                            };
+                        }
                         TrackKind::Piano => {
-                            velocity = if !seeking && settings.piano_mute { 0 } else { settings.piano_velocity };
-                        },
+                            velocity = if !seeking && settings.piano_mute {
+                                0
+                            } else {
+                                settings.piano_velocity
+                            };
+                        }
                         _ => (),
                     }
-                },
+                }
                 None => {
                     let is_rest = play_control.position.bar.bar_ordinal == 0;
-                    velocity = if !is_rest && settings.click_mute { 0 } else { settings.click_velocity };
+                    velocity = if !is_rest && settings.click_mute {
+                        0
+                    } else {
+                        settings.click_velocity
+                    };
                 }
             }
         }
@@ -163,7 +182,13 @@ impl MidiChannel {
             hub.send(
                 settings,
                 speed,
-                &MidiMessage::new(first_msg.pass_mode, first_msg.pos, first_msg.duration, false, msg),
+                &MidiMessage::new(
+                    first_msg.pass_mode,
+                    first_msg.pos,
+                    first_msg.duration,
+                    false,
+                    msg,
+                ),
                 self.velocity.into(),
             );
             let msg = StructuredShortMessage::ControlChange {
@@ -174,7 +199,13 @@ impl MidiChannel {
             hub.send(
                 settings,
                 speed,
-                &MidiMessage::new(first_msg.pass_mode, first_msg.pos, first_msg.duration, false, msg),
+                &MidiMessage::new(
+                    first_msg.pass_mode,
+                    first_msg.pos,
+                    first_msg.duration,
+                    false,
+                    msg,
+                ),
                 self.velocity.into(),
             );
         }
@@ -258,11 +289,20 @@ impl MidiState {
         }
         None
     }
-    fn create_click_channel(&mut self, settings: &MidiSettings, hub: &mut MidiHub, tab: &Tab, index: &mut usize) {
+    fn create_click_channel(
+        &mut self,
+        settings: &MidiSettings,
+        hub: &mut MidiHub,
+        tab: &Tab,
+        index: &mut usize,
+    ) {
         let params = settings.get_click_channel_params();
         if let Some(channel) = self.channels.get_mut(*index) {
             channel.setup_no_track(settings, hub, params);
-            println!("switch_tab(), setup click channel: [{}] -> {}, {}", index, params.0, params.1);
+            println!(
+                "switch_tab(), setup click channel: [{}] -> {}, {}",
+                index, params.0, params.1
+            );
             *index += 1;
             let scale_root = tab.meta.scale.calc_root_syllable();
             let signature = tab.signature();
@@ -271,14 +311,37 @@ impl MidiState {
             for bar in tab.bars.iter() {
                 for beat in 0..signature.bar_beats {
                     let in_bar_pos = Units(beat as f32 * Units::from(signature.beat_unit).0);
-                    let root = bar.get_chord(Some(in_bar_pos)).map(|x| x.root).unwrap_or(scale_root);
-                    let note = tab.meta.scale.calc_click_note(&tab.meta.key, &settings.click_octave, &root);
+                    let root = bar
+                        .get_chord(Some(in_bar_pos))
+                        .map(|x| x.root)
+                        .unwrap_or(scale_root);
+                    let note = tab.meta.scale.calc_click_note(
+                        &tab.meta.key,
+                        &settings.click_octave,
+                        &root,
+                    );
                     let pos = BarPosition::new(bar_units, bar.props.bar_ordinal, in_bar_pos);
-                    if let Some(midi_msg) = MidiUtil::note_midi_on_msg(&note, channel.channel, channel.velocity) {
-                        channel.add_message(MidiMessage::new(EntryPassMode::Delayed, pos, beat_duration, false, midi_msg));
+                    if let Some(midi_msg) =
+                        MidiUtil::note_midi_on_msg(&note, channel.channel, channel.velocity)
+                    {
+                        channel.add_message(MidiMessage::new(
+                            EntryPassMode::Delayed,
+                            pos,
+                            beat_duration,
+                            false,
+                            midi_msg,
+                        ));
                     }
-                    if let Some(midi_msg) = MidiUtil::note_midi_off_msg(&note, channel.channel, channel.velocity) {
-                        channel.add_message(MidiMessage::new(EntryPassMode::Delayed, pos, beat_duration, true, midi_msg));
+                    if let Some(midi_msg) =
+                        MidiUtil::note_midi_off_msg(&note, channel.channel, channel.velocity)
+                    {
+                        channel.add_message(MidiMessage::new(
+                            EntryPassMode::Delayed,
+                            pos,
+                            beat_duration,
+                            true,
+                            midi_msg,
+                        ));
                     }
                 }
             }
@@ -296,7 +359,10 @@ impl MidiState {
             if let Some(params) = settings.get_track_channel_params(&track.kind) {
                 if let Some(channel) = self.channels.get_mut(index) {
                     channel.setup(settings, hub, params, track);
-                    println!("switch_tab(), setup channel: [{}] -> {}, {} - {}", index, params.0, params.1, track);
+                    println!(
+                        "switch_tab(), setup channel: [{}] -> {}, {} - {}",
+                        index, params.0, params.1, track
+                    );
                     index += 1;
                 }
             }
@@ -317,7 +383,12 @@ impl MidiState {
         self.play_control = PlayControl::new(&tab);
         self.init_channels(settings, hub);
     }
-    pub fn jump_to_bar(&mut self, settings: &MidiSettings, hub: &mut MidiHub, bar_props: TabBarProps) {
+    pub fn jump_to_bar(
+        &mut self,
+        settings: &MidiSettings,
+        hub: &mut MidiHub,
+        bar_props: TabBarProps,
+    ) {
         self.play_control
             .position
             .set_in_bar(bar_props.bar_ordinal, Units(0.0));
@@ -348,9 +419,7 @@ impl MidiState {
             }
         }
         let tick_result = match self.seek_position {
-            Some(pos) => {
-                self.play_control._tick_to_position(jumped, pos.into())
-            },
+            Some(pos) => self.play_control._tick_to_position(jumped, pos.into()),
             None => self.play_control.tick(jumped, delta_seconds),
         };
         if tick_result.changed {
@@ -384,18 +453,15 @@ impl MidiState {
             }
         }
     }
-    fn setup_seek(
-        &mut self,
-        seek_position: BarPosition,
-    ) {
-        println!("MidiState::setup_seek() {} -> {}", self.play_control.position.bar, seek_position);
+    fn setup_seek(&mut self, seek_position: BarPosition) {
+        println!(
+            "MidiState::setup_seek() {} -> {}",
+            self.play_control.position.bar, seek_position
+        );
         self.seek_position = Some(seek_position);
         self.play_control.play();
     }
-    pub fn seek_forward(
-        &mut self,
-        settings: &MidiSettings,
-    ) -> bool {
+    pub fn seek_forward(&mut self, settings: &MidiSettings) -> bool {
         if self.tab.is_some() {
             let pos = self.play_control.position.bar;
             if let Some(bar) = self.tab.as_ref().unwrap().get_bar(pos) {
@@ -408,10 +474,16 @@ impl MidiState {
                         Some(x.props)
                     }
                 }) {
-                    self.setup_seek(pos.with_in_bar_pos(props.in_bar_pos - Units::HALF_MIN_ACCURACY));
+                    self.setup_seek(
+                        pos.with_in_bar_pos(props.in_bar_pos - Units::HALF_MIN_ACCURACY),
+                    );
                     return true;
                 } else {
-                    self.setup_seek(BarPosition::new(pos.bar_units, pos.bar_ordinal, pos.bar_units - Units::HALF_MIN_ACCURACY));
+                    self.setup_seek(BarPosition::new(
+                        pos.bar_units,
+                        pos.bar_ordinal,
+                        pos.bar_units - Units::HALF_MIN_ACCURACY,
+                    ));
                     return true;
                 }
             }
@@ -424,10 +496,7 @@ impl MidiState {
      *  almost end of the bar, then the next time pass the first note on next bar.
      * A bit hacky, but works fine.
      */
-    fn seek_passed(
-        &mut self,
-        settings: &MidiSettings,
-    ) -> bool {
+    fn seek_passed(&mut self, settings: &MidiSettings) -> bool {
         if self.tab.is_some() {
             let mut pos = self.play_control.position.bar;
             if pos.in_bar_pos >= pos.bar_units - Units::MIN_ACCURACY {

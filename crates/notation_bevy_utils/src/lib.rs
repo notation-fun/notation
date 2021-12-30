@@ -1,10 +1,10 @@
+pub mod asset;
 pub mod bundle;
 pub mod layout;
+pub mod plugin;
 pub mod shape;
 pub mod util;
 pub mod view;
-pub mod asset;
-pub mod plugin;
 
 //#[cfg(feature = "dev")]
 pub mod dev;
@@ -32,19 +32,19 @@ pub mod prelude {
         View, ViewAddedQuery, ViewEntity, ViewQuery, ViewRootAddedQuery, ViewRootQuery,
     };
     #[doc(hidden)]
-    pub use crate::shape::shape::{SingleShape, ShapeOp};
+    pub use crate::plugin::UtilsPlugin;
     #[doc(hidden)]
-    pub use crate::shape::rectangle::{FillRectangle, StrokeRectangle, OutlineRectangle};
+    pub use crate::shape::circle::{FillCircle, OutlineCircle, StrokeCircle};
     #[doc(hidden)]
-    pub use crate::shape::circle::{FillCircle, StrokeCircle, OutlineCircle};
+    pub use crate::shape::line::StrokeLine;
     #[doc(hidden)]
-    pub use crate::shape::line::{StrokeLine};
+    pub use crate::shape::path::{FillPath, StrokeCirclePath, StrokePath, StrokeRectanglePath};
     #[doc(hidden)]
-    pub use crate::shape::path::{FillPath, StrokePath, StrokeCirclePath, StrokeRectanglePath};
+    pub use crate::shape::rectangle::{FillRectangle, OutlineRectangle, StrokeRectangle};
+    #[doc(hidden)]
+    pub use crate::shape::shape::{ShapeOp, SingleShape};
     #[doc(hidden)]
     pub use crate::util::BevyUtil;
     #[doc(hidden)]
     pub use crate::view::color_background::ColorBackground;
-    #[doc(hidden)]
-    pub use crate::plugin::UtilsPlugin;
 }

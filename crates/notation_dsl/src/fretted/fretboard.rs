@@ -1,14 +1,18 @@
 use fehler::throws;
-use notation_proto::prelude::GUITAR_FRET_NUM_ACOUSTIC;
+use notation_proto::prelude::{
+    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, GuitarTuning, Note,
+    GUITAR_FRET_NUM_ACOUSTIC,
+};
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
-use syn::{Expr, LitInt, Token};
+use syn::{Ident, LitInt, Token};
 
 use crate::context::Context;
 
 pub struct FretboardDsl {
-    pub tuning: Option<Expr>,
+    pub tuning: Option<Ident>,
     pub fret_num: Option<usize>,
     pub capo: Option<u8>,
 }
@@ -29,7 +33,7 @@ impl Parse for FretboardDsl {
             if input.peek(kw::tuning) {
                 input.parse::<kw::tuning>()?;
                 input.parse::<Token![:]>()?;
-                tuning = Some(input.parse::<Expr>()?);
+                tuning = Some(input.parse::<Ident>()?);
             } else if input.peek(kw::fret_num) {
                 input.parse::<kw::fret_num>()?;
                 input.parse::<Token![:]>()?;
@@ -64,9 +68,13 @@ impl ToTokens for FretboardDsl {
         });
         let capo = capo.unwrap_or(0);
         let tuning_quote = match tuning {
-            Some(tuning) => quote! { #tuning },
+            Some(tuning) => {
+                let tuning_quote = tuning.to_string();
+                match string_num {
+                    _ => quote! { GuitarTuning::from_ident(#tuning_quote)},
+                }
+            }
             None => match string_num {
-                6 => quote! { GuitarTuning::Standard },
                 _ => quote! { GuitarTuning::Standard },
             },
         };
@@ -77,5 +85,38 @@ impl ToTokens for FretboardDsl {
                 #fretboard_quote::new(#fret_num, #tuning_quote.into(), #capo)
             ))
         });
+    }
+}
+
+impl FretboardDsl {
+    pub fn to_proto(&self) -> ProtoEntry {
+        let FretboardDsl {
+            tuning,
+            fret_num,
+            capo,
+        } = self;
+        let string_num = Context::fretted().string_num;
+        let fret_num = fret_num.unwrap_or(match string_num {
+            6 => GUITAR_FRET_NUM_ACOUSTIC,
+            _ => GUITAR_FRET_NUM_ACOUSTIC,
+        });
+        let capo = capo.unwrap_or(0);
+        match string_num {
+            4 => {
+                let tuning = [Note::E_2; 4]; //todo;
+                ProtoEntry::from(FrettedEntry4::from(Fretboard4::new(fret_num, tuning, capo)))
+            }
+            _ => {
+                let tuning = match tuning {
+                    Some(ident) => GuitarTuning::from_ident(ident.to_string().as_str()),
+                    None => GuitarTuning::Standard,
+                };
+                ProtoEntry::from(FrettedEntry6::from(Fretboard6::new(
+                    fret_num,
+                    tuning.into(),
+                    capo,
+                )))
+            }
+        }
     }
 }

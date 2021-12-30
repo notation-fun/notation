@@ -17,6 +17,13 @@ impl From<ProtoTab> for TabAsset {
     }
 }
 
+impl TabAsset {
+    #[cfg(feature = "dsl")]
+    pub const EXTENSIONS: [&'static str; 2] = ["rs", "ron"];
+    #[cfg(not(feature = "dsl"))]
+    pub const EXTENSIONS: [&'static str; 1] = ["ron"];
+}
+
 #[derive(Default)]
 pub struct TabAssetLoader;
 

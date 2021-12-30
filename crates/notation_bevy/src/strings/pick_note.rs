@@ -69,9 +69,12 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for PickNoteData {
         let offset = if self.value.bar_size <= 0.0 {
             BevyUtil::offscreen_offset()
         } else {
-            let x = self.value.bar_size / self.bar_props.bar_units.0
-                * self.entry_props.in_bar_pos.0;
-            let y = theme.sizes.strings.calc_string_y(self.value.pick_note.string);
+            let x =
+                self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.in_bar_pos.0;
+            let y = theme
+                .sizes
+                .strings
+                .calc_string_y(self.value.pick_note.string);
             let extra_z = if self.value.playing_state.is_current() {
                 1.0
             } else {

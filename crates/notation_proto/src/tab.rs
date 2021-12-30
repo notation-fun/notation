@@ -77,7 +77,13 @@ impl Display for Tab {
     }
 }
 impl Tab {
-    pub fn new(uuid: &str, meta: TabMeta, tracks: Vec<Track>, sections: Vec<Section>, form: Form) -> Self {
+    pub fn new(
+        uuid: &str,
+        meta: TabMeta,
+        tracks: Vec<Track>,
+        sections: Vec<Section>,
+        form: Form,
+    ) -> Self {
         let uuid = Uuid::parse_str(uuid).unwrap();
         Self {
             uuid,

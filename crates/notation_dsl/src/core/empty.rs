@@ -1,4 +1,6 @@
 use fehler::{throw, throws};
+use notation_proto::prelude::{CoreEntry, Duration};
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::parse::{Error, Parse, ParseStream};
@@ -36,6 +38,15 @@ impl EmptyDsl {
             Self::Rest => quote! {
                 ProtoEntry::from(CoreEntry::from(#duration_quote))
             },
+        }
+    }
+}
+
+impl EmptyDsl {
+    pub fn to_proto(&self, duration: Duration) -> ProtoEntry {
+        match self {
+            Self::Tie => ProtoEntry::from(CoreEntry::from(())),
+            Self::Rest => ProtoEntry::from(CoreEntry::from(duration)),
         }
     }
 }

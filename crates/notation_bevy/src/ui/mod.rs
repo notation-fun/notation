@@ -1,8 +1,6 @@
-use std::ops::Add;
-
-use bevy::prelude::*;
 use bevy::app::StartupStage;
-use bevy_egui::{EguiSettings, EguiContext};
+use bevy::prelude::*;
+use bevy_egui::{EguiContext, EguiSettings};
 
 use crate::prelude::NotationAppState;
 
@@ -25,7 +23,10 @@ pub fn update_window_scale_factor(
     if let Some(window) = windows.get_primary() {
         let scale_factor = window.scale_factor();
         if scale_factor != app_state.window_scale_factor {
-            println!("scale_factor changed:() {} -> {}", app_state.window_scale_factor, scale_factor);
+            println!(
+                "scale_factor changed:() {} -> {}",
+                app_state.window_scale_factor, scale_factor
+            );
             app_state.window_scale_factor = scale_factor;
             /*
              * egui_settings.scale_factor = 1.0 / scale_factor;
@@ -34,9 +35,9 @@ pub fn update_window_scale_factor(
     }
 }
 
-pub fn setup_egui_fonts(
-    egui_ctx: Res<EguiContext>,
-) {
+pub fn setup_egui_fonts(egui_ctx: Res<EguiContext>) {
     println!("setup_egui_fonts() ---------------------------------------");
-    egui_ctx.ctx().set_fonts(crate::font::egui_fonts::embedded_fonts(1.0));
+    egui_ctx
+        .ctx()
+        .set_fonts(crate::font::egui_fonts::embedded_fonts(1.0));
 }

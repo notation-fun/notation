@@ -42,8 +42,17 @@ impl Plugin for TabViewerPlugin {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(GuitarView::on_layout_changed.system())
-                .with_system(GuitarView::update_hand_shape6.system().label("GuitarView::update_hand_shape6"))
-                .with_system(GuitarView::update_string_state.system().label("GuitarView::update_string_state").after("GuitarView::update_hand_shape6"))
+                .with_system(
+                    GuitarView::update_hand_shape6
+                        .system()
+                        .label("GuitarView::update_hand_shape6"),
+                )
+                .with_system(
+                    GuitarView::update_string_state
+                        .system()
+                        .label("GuitarView::update_string_state")
+                        .after("GuitarView::update_hand_shape6"),
+                )
                 .with_system(GuitarView::adjust_y_by_barre.system())
                 .with_system(TabViewer::do_layout.system()),
         );
@@ -63,7 +72,15 @@ impl TabViewer {
         let viewer_bundle = ViewBundle::from(TabViewer::new(tab.clone()));
         let viewer_entity = BevyUtil::spawn_child_bundle(commands, entity, viewer_bundle);
         MiniMap::spawn(commands, assets, theme, viewer_entity, &tab);
-        TabView::spawn(commands, materials, assets, theme, settings, viewer_entity, tab);
+        TabView::spawn(
+            commands,
+            materials,
+            assets,
+            theme,
+            settings,
+            viewer_entity,
+            tab,
+        );
         viewer_entity
     }
     pub fn do_layout(
@@ -75,7 +92,9 @@ impl TabViewer {
         panel_query: ViewQuery<MiniMap>,
         content_query: ViewQuery<TabView>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

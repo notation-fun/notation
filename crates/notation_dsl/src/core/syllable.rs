@@ -79,3 +79,9 @@ impl ToTokens for SyllableDsl {
         });
     }
 }
+
+impl SyllableDsl {
+    pub fn to_proto(&self) -> Syllable {
+        self.syllable
+    }
+}

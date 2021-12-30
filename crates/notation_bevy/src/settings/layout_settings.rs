@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
-use notation_bevy_utils::prelude::{GridData, LayoutData};
 use float_eq::float_ne;
+use notation_bevy_utils::prelude::{GridData, LayoutData};
 use std::sync::Arc;
 
-use notation_model::prelude::{Position};
+use notation_model::prelude::Position;
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -94,35 +94,43 @@ impl LayoutSettings {
         delta_x: f32,
         delta_y: f32,
     ) {
-        if let Ok((_, mut camera_transform, _bars, layout, grid_data)) = tab_bars_query.single_mut() {
+        if let Ok((_, mut camera_transform, _bars, layout, grid_data)) = tab_bars_query.single_mut()
+        {
             let trans = camera_transform.translation;
             let (x, y) = match self.mode {
                 LayoutMode::Grid => {
                     let mut y = trans.y + delta_y;
-                    let min_y = layout.offset.y + grid_data.offset.y - theme.sizes.layout.page_margin;
+                    let min_y =
+                        layout.offset.y + grid_data.offset.y - theme.sizes.layout.page_margin;
                     if y < min_y {
                         y = min_y;
                     } else {
-                        let max_y = layout.offset.y + theme.sizes.layout.page_margin + grid_data.content_size.height - grid_data.grid_size.height;
+                        let max_y = layout.offset.y
+                            + theme.sizes.layout.page_margin
+                            + grid_data.content_size.height
+                            - grid_data.grid_size.height;
                         if y > max_y {
                             y = max_y;
                         }
                     }
                     (trans.x, y)
-                },
+                }
                 LayoutMode::Line => {
                     let mut x = trans.x - delta_x;
                     let max_x = 0.0;
                     if x > max_x {
                         x = max_x
                     } else {
-                        let min_x = grid_data.calc_cell_size(grid_data.rows, grid_data.cols).width - grid_data.content_size.width;
+                        let min_x = grid_data
+                            .calc_cell_size(grid_data.rows, grid_data.cols)
+                            .width
+                            - grid_data.content_size.width;
                         if x < min_x {
                             x = min_x
                         }
                     }
                     (x, trans.y)
-                },
+                }
             };
             *camera_transform = Transform::from_xyz(x, y, trans.z);
         }
@@ -183,12 +191,20 @@ impl LayoutSettings {
                 }
                  */
                 if self.grid_align_mode == GridAlignMode::Center
-                    || self.grid_align_mode == GridAlignMode::ForceCenter {
-                    y += (grid_size.height - grid_data.margin.height * 2.0 - pos_data.bar_layout.size.height) / 2.0 + self.override_focus_offset_y.unwrap_or(0.0);
+                    || self.grid_align_mode == GridAlignMode::ForceCenter
+                {
+                    y += (grid_size.height
+                        - grid_data.margin.height * 2.0
+                        - pos_data.bar_layout.size.height)
+                        / 2.0
+                        + self.override_focus_offset_y.unwrap_or(0.0);
                 }
                 if self.grid_align_mode != GridAlignMode::ForceCenter
-                    && self.grid_align_mode != GridAlignMode::ForceTop {
-                    let min_y = grid_size.height - content_size.height - theme.sizes.layout.page_margin * 2.0;
+                    && self.grid_align_mode != GridAlignMode::ForceTop
+                {
+                    let min_y = grid_size.height
+                        - content_size.height
+                        - theme.sizes.layout.page_margin * 2.0;
                     if y < min_y {
                         y = min_y;
                     } else {

@@ -38,19 +38,18 @@ pub type BarBeatData = BarData<BarBeatValue>;
 impl ShapeOp<NotationTheme, FillRectangle> for BarBeatData {
     fn get_shape(&self, theme: &NotationTheme) -> FillRectangle {
         let signature = self.value.signature;
-        let color = theme
-            .colors.bar
-            .get_beat_color(&signature, self.value.beat, self.value.selected);
-        let x = self.value.bar_size.width / self.value.bar_beats as f32
-            * self.value.beat as f32;
+        let color =
+            theme
+                .colors
+                .bar
+                .get_beat_color(&signature, self.value.beat, self.value.selected);
+        let x = self.value.bar_size.width / self.value.bar_beats as f32 * self.value.beat as f32;
         FillRectangle {
             width: self.value.bar_size.width / self.value.bar_beats as f32,
             height: self.value.bar_size.height + theme.sizes.bar.bar_beat_extra * 2.0,
             origin: shapes::RectangleOrigin::TopLeft,
             color,
-            offset: Vec3::new(
-                x, theme.sizes.bar.bar_beat_extra, theme.z.beat,
-            ),
+            offset: Vec3::new(x, theme.sizes.bar.bar_beat_extra, theme.z.beat),
         }
     }
 }

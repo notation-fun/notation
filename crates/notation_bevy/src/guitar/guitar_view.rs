@@ -1,22 +1,24 @@
+use float_eq::float_ne;
 use std::fmt::Display;
 use std::sync::Arc;
-use float_eq::float_ne;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle};
+use notation_bevy_utils::prelude::{
+    BevyUtil, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle,
+};
 use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
-    Tab, Units, TrackKind,
+    Tab, TrackKind, Units,
 };
 
-use crate::prelude::{EntryPlaying, NotationAssets, NotationTheme, NotationSettings, TabState};
+use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme, TabState};
 use crate::ui::layout::NotationLayout;
 
-use super::fret_finger::{FretFingerData};
-use super::guitar_capo::{GuitarCapoData};
-use super::guitar_barre::{GuitarBarreData};
-use super::guitar_string::{GuitarStringData};
+use super::fret_finger::FretFingerData;
+use super::guitar_barre::GuitarBarreData;
+use super::guitar_capo::GuitarCapoData;
+use super::guitar_string::GuitarStringData;
 
 #[derive(Clone, Debug)]
 pub struct GuitarView {
@@ -71,11 +73,7 @@ impl GuitarView {
         for string in 1..=6 {
             for upper in [true, false] {
                 let string_data = GuitarStringData::new(string as u8, upper, fretboard);
-                string_data.create(
-                    commands,
-                    theme,
-                    guitar_entity,
-                );
+                string_data.create(commands, theme, guitar_entity);
             }
         }
         let capo_data = GuitarCapoData::default();
@@ -137,9 +135,12 @@ impl GuitarView {
         mut barre_query: Query<(&Parent, Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut finger_query: Query<(&Parent, Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         for (entity, _view, layout) in query.iter() {
-            let guitar_height = layout.size.width * theme.guitar.image_size.1 / theme.guitar.image_size.0;
+            let guitar_height =
+                layout.size.width * theme.guitar.image_size.1 / theme.guitar.image_size.0;
             let guitar_size = LayoutSize::new(layout.size.width, guitar_height);
             for (parent, mut transform) in sprite_query.iter_mut() {
                 if parent.0 == entity {
@@ -192,7 +193,9 @@ impl GuitarView {
         if Self::CHECKING_FRETS {
             return;
         }
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let mut current_entry_pick = None;
         let mut string_states = [None; 6];
         let mut hit_strings = [(false, Duration::Zero); 6];
@@ -244,7 +247,13 @@ impl GuitarView {
                             finger_entity,
                         );
                     }
-                    finger_data.update_with_syllable(&mut commands, &assets, &theme, &settings, finger_entity);
+                    finger_data.update_with_syllable(
+                        &mut commands,
+                        &assets,
+                        &theme,
+                        &settings,
+                        finger_entity,
+                    );
                 }
             }
             for (_barre_entity, mut barre_data) in barre_query.iter_mut() {
@@ -268,7 +277,9 @@ impl GuitarView {
         if Self::CHECKING_FRETS {
             return;
         }
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let mut current_shape = None;
         for (entry, shape, playing) in query.iter() {
             if playing.value.is_current() {
@@ -296,13 +307,14 @@ impl GuitarView {
             //println!("GuitarView::update_hand_shape6(): {}, {:#?}, {:#?}", shape, fretboard, chord);
             for (finger_entity, mut finger_data) in finger_query.iter_mut() {
                 finger_data.update_value(shape, fretboard, chord, pick, meta.clone());
-                finger_data.respawn_dots(
+                finger_data.respawn_dots(&mut commands, &theme, Some(&dot_query), finger_entity);
+                finger_data.update_with_syllable(
                     &mut commands,
+                    &assets,
                     &theme,
-                    Some(&dot_query),
+                    &settings,
                     finger_entity,
                 );
-                finger_data.update_with_syllable(&mut commands, &assets, &theme, &settings, finger_entity);
             }
             for (string_entity, mut string_data) in string_query.iter_mut() {
                 string_data.update_value(shape, fretboard, pick, meta.clone());
@@ -343,10 +355,7 @@ impl GuitarView {
             }
         }
     }
-    pub fn update_y(
-        guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
-        y: f32,
-    ) {
+    pub fn update_y(guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>, y: f32) {
         if let Ok(mut transform) = guitar_view_query.single_mut() {
             let trans = transform.translation;
             if float_ne!(trans.y, y, abs <= 0.01) {
@@ -363,10 +372,8 @@ impl GuitarView {
         min_fret: u8,
         max_fret: u8,
     ) {
-        let calc_y = |fret:u8| {
-            let fret_y = theme
-                    .guitar
-                    .calc_fret_y(fret, guitar_size.height);
+        let calc_y = |fret: u8| {
+            let fret_y = theme.guitar.calc_fret_y(fret, guitar_size.height);
             -(fret_y + guitar_size.height * theme.guitar.capo_height_factor)
         };
         let top_y = calc_y(min_fret);
@@ -388,7 +395,9 @@ impl GuitarView {
         if Self::CHECKING_FRETS {
             return;
         }
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         if settings.override_guitar_y.is_some() {
             return;
         }
@@ -398,7 +407,14 @@ impl GuitarView {
             } else {
                 let min_fret = barre_data.capo;
                 let max_fret = barre_data.max_fret();
-                Self::adjust_y_by_frets(&theme, &mut guitar_view_query, barre_data.view_size, barre_data.guitar_size, min_fret, max_fret);
+                Self::adjust_y_by_frets(
+                    &theme,
+                    &mut guitar_view_query,
+                    barre_data.view_size,
+                    barre_data.guitar_size,
+                    min_fret,
+                    max_fret,
+                );
             }
         }
     }

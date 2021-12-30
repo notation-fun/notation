@@ -3,18 +3,20 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use notation_bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, LayoutConstraint, LayoutSize, View, ViewBundle};
+use notation_bevy_utils::prelude::{
+    BevyUtil, DockPanel, DockSide, LayoutConstraint, LayoutSize, View, ViewBundle,
+};
 use notation_model::prelude::Tab;
 
 use crate::prelude::{NotationAssets, NotationTheme};
 use crate::tab::tab_events::RhythmViewDoLayoutEvent;
 use crate::ui::layout::NotationLayout;
 
-use super::rhythm_bar::{RhythmBarData};
+use super::rhythm_bar::RhythmBarData;
 use super::rhythm_beat::RhythmBeatData;
 use super::rhythm_indicator::RhythmIndicatorData;
 
-pub struct RhythmView{}
+pub struct RhythmView {}
 
 impl Display for RhythmView {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -44,14 +46,8 @@ impl RhythmView {
         tab: &Arc<Tab>,
     ) -> Entity {
         let view_entity =
-            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(RhythmView{}));
-        RhythmBarData::spawn(
-            commands,
-            assets,
-            theme,
-            view_entity,
-            tab,
-        );
+            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(RhythmView {}));
+        RhythmBarData::spawn(commands, assets, theme, view_entity, tab);
         view_entity
     }
     pub fn do_layout(
@@ -62,7 +58,9 @@ impl RhythmView {
         mut beat_query: Query<(Entity, &mut RhythmBeatData)>,
         mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         for evt in evts.iter() {
             if evt.layout.size.width > 0.0 && evt.layout.size.height > 0.0 {
                 for (parent, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {

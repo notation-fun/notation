@@ -7,9 +7,15 @@ impl BevyUtil {
         let mut path = root.clone();
         path.push("assets");
         if !path.exists() && path.is_dir() {
-            println!("BevyUtil check_assets_path() not exist: {:?} -> {:?}", root, path);
+            println!(
+                "BevyUtil check_assets_path() not exist: {:?} -> {:?}",
+                root, path
+            );
         } else if !path.is_dir() {
-            println!("BevyUtil check_assets_path() is not dir: {:?} -> {:?}", root, path);
+            println!(
+                "BevyUtil check_assets_path() is not dir: {:?} -> {:?}",
+                root, path
+            );
         } else {
             return Some(path);
         }
@@ -36,14 +42,17 @@ impl BevyUtil {
         if path.exists() {
             Some(path)
         } else {
-            println!("BevyUtil check_asset_path() not exist: {:?} {}.{} -> {:?}", root, name, extension, path);
+            println!(
+                "BevyUtil check_asset_path() not exist: {:?} {}.{} -> {:?}",
+                root, name, extension, path
+            );
             None
         }
     }
     pub fn get_asset_path(name: &str, extension: &str) -> Option<PathBuf> {
         match Self::get_assets_path() {
             Some(root) => Self::_get_asset_path(root, name, extension),
-            None => None
+            None => None,
         }
     }
 }

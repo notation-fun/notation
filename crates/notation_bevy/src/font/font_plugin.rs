@@ -9,4 +9,3 @@ impl Plugin for FontPlugin {
         app.init_asset_loader::<EmbeddedFontAssetLoader>();
     }
 }
-

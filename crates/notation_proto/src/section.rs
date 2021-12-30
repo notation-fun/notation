@@ -55,13 +55,13 @@ impl Display for Section {
     }
 }
 impl Section {
-    pub const REST_ID : &'static str = "REST";
+    pub const REST_ID: &'static str = "REST";
     pub fn new(id: String, kind: SectionKind, bars: Vec<Bar>) -> Self {
         Self { id, kind, bars }
     }
     pub fn new_rest() -> Self {
         let mut bars = Vec::new();
-        bars.push(Bar{layers:Vec::new()});
+        bars.push(Bar { layers: Vec::new() });
         Self::new(Self::REST_ID.to_string(), SectionKind::Rest, bars)
     }
 }

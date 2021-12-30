@@ -1,9 +1,9 @@
 use crate::prelude::{
     JumpToBarEvent, MidiHub, MidiSettings, MidiState, PlayControlEvent, SwitchTabEvent,
 };
-use bevy::prelude::*;
 use bevy::core::FixedTimestep;
-use notation_model::prelude::{PlayClock};
+use bevy::prelude::*;
+use notation_model::prelude::PlayClock;
 
 pub struct MidiPlugin;
 
@@ -23,8 +23,8 @@ impl Plugin for MidiPlugin {
         app.add_system(on_play_control_evt.system());
         app.add_system_set(
             SystemSet::new()
-            .with_run_criteria(FixedTimestep::step(DO_TICK_TIMESTEP))
-            .with_system(do_tick.system())
+                .with_run_criteria(FixedTimestep::step(DO_TICK_TIMESTEP))
+                .with_system(do_tick.system()),
         );
         #[cfg(not(target_arch = "wasm32"))]
         self.build_native(app);

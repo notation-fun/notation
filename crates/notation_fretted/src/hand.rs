@@ -47,17 +47,37 @@ macro_rules! impl_hand_shape {
         }
         impl Default for $type {
             fn default() -> Self {
-                let frets = [Some(0) ; $strings];
-                let fingers = [None ; $strings];
+                let frets = [Some(0); $strings];
+                let fingers = [None; $strings];
                 Self::new(frets, fingers)
             }
         }
         impl $type {
-            pub fn new_barre(barre: u8, frets: [Option<u8>; $strings], fingers: [Option<Finger>; $strings]) -> Self {
-                Self { barre: Some(barre), frets, fingers }
+            pub fn new_barre(
+                barre: u8,
+                frets: [Option<u8>; $strings],
+                fingers: [Option<Finger>; $strings],
+            ) -> Self {
+                if barre == 0 {
+                    Self {
+                        barre: None,
+                        frets,
+                        fingers,
+                    }
+                } else {
+                    Self {
+                        barre: Some(barre),
+                        frets,
+                        fingers,
+                    }
+                }
             }
             pub fn new(frets: [Option<u8>; $strings], fingers: [Option<Finger>; $strings]) -> Self {
-                Self { barre: None, frets, fingers }
+                Self {
+                    barre: None,
+                    frets,
+                    fingers,
+                }
             }
             pub fn barre(&self) -> u8 {
                 self.barre.unwrap_or(0)
@@ -69,7 +89,7 @@ macro_rules! impl_hand_shape {
                     self.frets[string as usize - 1]
                 }
             }
-            pub fn string_fret_with_barre(&self, string:u8) -> Option<u8> {
+            pub fn string_fret_with_barre(&self, string: u8) -> Option<u8> {
                 self.string_fret(string).map(|x| x + self.barre())
             }
             pub fn max_fret(&self) -> u8 {

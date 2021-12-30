@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use std::sync::{Arc};
+use std::sync::Arc;
 
 use crate::section::Section;
 
@@ -15,12 +15,11 @@ impl Display for Form {
 impl From<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
     fn from(v: (notation_proto::prelude::Form, &Vec<Arc<Section>>)) -> Self {
         let mut sections = Vec::new();
-        let mut add_section = |section_id: String| {
-            match v.1.iter().find(|x| x.id == section_id).cloned() {
+        let mut add_section =
+            |section_id: String| match v.1.iter().find(|x| x.id == section_id).cloned() {
                 Some(section) => sections.push(section),
                 None => println!("Form::from(), bad setion: {}", section_id),
-            }
-        };
+            };
         add_section(notation_proto::prelude::Section::REST_ID.to_string());
         for section_id in v.0.sections {
             add_section(section_id);

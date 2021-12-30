@@ -1,5 +1,5 @@
 use midi_msg::GMSoundSet;
-use notation_model::prelude::{TrackKind, Octave};
+use notation_model::prelude::{Octave, TrackKind};
 
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;

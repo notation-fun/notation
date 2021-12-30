@@ -1,5 +1,5 @@
-use bevy::prelude::*;
 use bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
+use bevy::prelude::*;
 use bevy::utils::BoxedFuture;
 
 #[derive(Default)]
@@ -19,15 +19,18 @@ impl AssetLoader for EmbeddedFontAssetLoader {
                     #[cfg(feature = "chinese")]
                     "NotoSansSC-Medium.font" => {
                         bytes = Some(include_bytes!("../../fonts/NotoSansSC-Medium.otf").to_vec())
-                    },
+                    }
                     "FiraMono-Medium.font" => {
                         bytes = Some(include_bytes!("../../fonts/FiraMono-Medium.ttf").to_vec())
-                    },
+                    }
                     _ => {}
                 }
             }
             if bytes.is_none() {
-                println!("EmbeddedFontAssetLoader: not found: path = {:?}", load_context.path());
+                println!(
+                    "EmbeddedFontAssetLoader: not found: path = {:?}",
+                    load_context.path()
+                );
             }
             let bytes = bytes.unwrap_or(include_bytes!("../../fonts/FiraMono-Medium.ttf").to_vec());
             let font = Font::try_from_bytes(bytes)?;

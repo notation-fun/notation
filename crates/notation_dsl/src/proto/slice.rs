@@ -1,3 +1,4 @@
+use notation_proto::prelude::{Slice, SliceBegin, SliceEnd};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
@@ -106,5 +107,30 @@ impl ToTokens for SliceDsl {
         tokens.extend(quote! {
             Slice::new(#begin, #end, #rounds_quote)
         });
+    }
+}
+impl SliceBeginDsl {
+    pub fn to_proto(&self) -> SliceBegin {
+        match self {
+            Self::Mark(x) => SliceBegin::Mark(x.mark.clone()),
+            Self::Index(x) => SliceBegin::Index(*x),
+        }
+    }
+}
+impl SliceEndDsl {
+    pub fn to_proto(&self) -> SliceEnd {
+        match self {
+            Self::Mark(x) => SliceEnd::Mark(x.mark.clone()),
+            Self::Count(x) => SliceEnd::Count(*x),
+        }
+    }
+}
+impl SliceDsl {
+    pub fn to_proto(&self) -> Slice {
+        Slice::new(
+            self.begin.to_proto(),
+            self.end.to_proto(),
+            self.rounds.clone(),
+        )
     }
 }

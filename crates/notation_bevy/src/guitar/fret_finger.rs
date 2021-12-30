@@ -7,7 +7,7 @@ use notation_model::prelude::{
 };
 
 use crate::chord::chord_note::{ChordNoteData, ChordNoteExtra, ChordNoteValue};
-use crate::prelude::{NotationTheme, NotationAssets, NotationSettings};
+use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
 
 #[derive(Clone, Debug)]
 pub struct FretFingerExtra {
@@ -123,7 +123,9 @@ impl FretFingerData {
             }
         } else {
             let pick_fret = pick_note.and_then(|x| x.fret);
-            self.value.extra.visible = pick_fret.is_none() || self.value.extra.fret.is_none() || pick_fret.unwrap() > self.value.extra.fret.unwrap();
+            self.value.extra.visible = pick_fret.is_none()
+                || self.value.extra.fret.is_none()
+                || pick_fret.unwrap() > self.value.extra.fret.unwrap();
             visible != self.value.extra.visible
         }
     }
@@ -163,7 +165,14 @@ impl FretFingerData {
         self.update(commands, theme, entity);
         let scale = theme.guitar.calc_scale(self.value.extra.guitar_size.width);
         if settings.show_guitar_syllable && self.value.extra.fret.is_some() {
-            theme.guitar.syllable_text.spawn_scaled_syllable_text(commands, entity, assets, settings, &self.value.calc_syllable(), scale)
+            theme.guitar.syllable_text.spawn_scaled_syllable_text(
+                commands,
+                entity,
+                assets,
+                settings,
+                &self.value.calc_syllable(),
+                scale,
+            )
         }
     }
 }

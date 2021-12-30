@@ -44,7 +44,9 @@ impl TabView {
         let tab_bundle = TabBundle::new(tab.clone());
         //let tab_view = tab_bundle.view.clone();
         let tab_entity = BevyUtil::spawn_child_bundle(commands, entity, tab_bundle);
-        TabControl::spawn(commands, materials, assets, theme, settings, tab_entity, &tab);
+        TabControl::spawn(
+            commands, materials, assets, theme, settings, tab_entity, &tab,
+        );
         let content_entity = BevyUtil::spawn_child_bundle(
             commands,
             tab_entity,
@@ -63,7 +65,9 @@ impl TabView {
         panel_query: ViewQuery<TabControl>,
         content_query: ViewQuery<TabContent>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

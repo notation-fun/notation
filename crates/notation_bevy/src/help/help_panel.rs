@@ -3,7 +3,7 @@ use bevy_egui::egui::{self, Ui};
 use bevy_egui::EguiContext;
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 
-use crate::prelude::{NotationTheme, NotationAppState, NotationAssets};
+use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
 
 use super::chords_page::ChordsPage;
 use super::notes_page::NotesPage;
@@ -32,7 +32,7 @@ pub trait HelpPage {
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
         state: &NotationAppState,
-        theme: &NotationTheme
+        theme: &NotationTheme,
     );
 }
 
@@ -56,7 +56,8 @@ impl HelpPanel {
             &self.notes as &dyn HelpPage,
             &self.chords as &dyn HelpPage,
             &self.usage as &dyn HelpPage,
-        ].into_iter()
+        ]
+        .into_iter()
     }
     fn get_current_page(&mut self) -> &mut dyn HelpPage {
         match self.current_page_id {
@@ -66,13 +67,13 @@ impl HelpPanel {
             HelpPageId::Usage => &mut self.usage as &mut dyn HelpPage,
         }
     }
-    fn topic_tabs_ui(
-        &mut self,
-        ui: &mut Ui,
-    ) {
+    fn topic_tabs_ui(&mut self, ui: &mut Ui) {
         let mut new_current = None;
         for page in self.get_pages() {
-            if ui.selectable_label(page.page_id() == self.current_page_id, page.tab_label()).clicked() {
+            if ui
+                .selectable_label(page.page_id() == self.current_page_id, page.tab_label())
+                .clicked()
+            {
                 new_current = Some(page.page_id());
             }
         }
@@ -96,7 +97,8 @@ impl HelpPanel {
         });
         ui.separator();
         egui::ScrollArea::vertical().show(ui, |ui| {
-            self.get_current_page().page_ui(ui, texts, assets, state, theme);
+            self.get_current_page()
+                .page_ui(ui, texts, assets, state, theme);
         });
     }
     pub fn help_ui(

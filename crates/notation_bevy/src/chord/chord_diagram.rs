@@ -7,8 +7,8 @@ use notation_model::prelude::{Chord, ModelEntryProps, PlayingState};
 
 use crate::prelude::{ModelEntryData, NotationTheme};
 
-use super::chord_base::{ChordBaseData};
-use super::chord_interval::{ChordIntervalData};
+use super::chord_base::ChordBaseData;
+use super::chord_interval::ChordIntervalData;
 use super::interval_dot::IntervalDotData;
 
 #[derive(Clone, Debug)]

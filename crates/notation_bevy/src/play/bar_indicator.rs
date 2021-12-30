@@ -1,10 +1,10 @@
-use std::sync::Arc;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutData, StrokeRectangle, ShapeOp};
-use notation_model::prelude::{TabBarProps, Chord, Tab, Units};
+use notation_bevy_utils::prelude::{BevyUtil, LayoutData, ShapeOp, StrokeRectangle};
+use notation_model::prelude::{Chord, Tab, TabBarProps, Units};
+use std::sync::Arc;
 
-use crate::prelude::{NotationTheme};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct BarIndicatorData {
@@ -34,9 +34,7 @@ impl ShapeOp<NotationTheme, StrokeRectangle> for BarIndicatorData {
             let y = self.bar_layout.offset.y + theme.sizes.bar.bar_separator_extra;
             Vec3::new(x, y, theme.z.bar_indicator)
         };
-        let color = theme
-            .colors
-            .of_option_chord(self.chord);
+        let color = theme.colors.of_option_chord(self.chord);
         StrokeRectangle {
             width: self.bar_layout.size.width + theme.sizes.bar.bar_separator_size * 2.0,
             height: self.bar_layout.size.height + theme.sizes.bar.bar_separator_extra * 2.0,
@@ -49,14 +47,15 @@ impl ShapeOp<NotationTheme, StrokeRectangle> for BarIndicatorData {
 }
 
 impl BarIndicatorData {
-    fn update_chord(&mut self,
-        bar_props: TabBarProps,
-        in_bar_pos: Option<Units>,
-    ) {
+    fn update_chord(&mut self, bar_props: TabBarProps, in_bar_pos: Option<Units>) {
         self.bar_props = bar_props;
-        self.chord = self.tab.get_bar_of_ordinal(bar_props.bar_ordinal).and_then(|x| x.get_chord(in_bar_pos));
+        self.chord = self
+            .tab
+            .get_bar_of_ordinal(bar_props.bar_ordinal)
+            .and_then(|x| x.get_chord(in_bar_pos));
     }
-    pub fn update_data(&mut self,
+    pub fn update_data(
+        &mut self,
         commands: &mut Commands,
         theme: &NotationTheme,
         entity: Entity,

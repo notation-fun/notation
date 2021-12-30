@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use crate::prelude::Semitones;
+use crate::prelude::{PitchName, PitchSign, Semitones};
 
 // https://en.wikipedia.org/wiki/Solf%C3%A8ge
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
@@ -167,6 +167,58 @@ impl From<Semitones> for Syllable {
             10 => Syllable::Li,
             11 => Syllable::Ti,
             _ => Syllable::Do,
+        }
+    }
+}
+
+impl From<(PitchSign, PitchName)> for Syllable {
+    fn from(v: (PitchSign, PitchName)) -> Self {
+        match v.0 {
+            PitchSign::DoubleFlat => match v.1 {
+                PitchName::C => Self::Te,
+                PitchName::D => Self::Do,
+                PitchName::E => Self::Re,
+                PitchName::F => Self::Me,
+                PitchName::G => Self::Fa,
+                PitchName::A => Self::So,
+                PitchName::B => Self::La,
+            },
+            PitchSign::Flat => match v.1 {
+                PitchName::C => Self::Ti,
+                PitchName::D => Self::Ra,
+                PitchName::E => Self::Me,
+                PitchName::F => Self::Mi,
+                PitchName::G => Self::Se,
+                PitchName::A => Self::Le,
+                PitchName::B => Self::Te,
+            },
+            PitchSign::Natural => match v.1 {
+                PitchName::C => Self::Do,
+                PitchName::D => Self::Re,
+                PitchName::E => Self::Mi,
+                PitchName::F => Self::Fa,
+                PitchName::G => Self::So,
+                PitchName::A => Self::La,
+                PitchName::B => Self::Ti,
+            },
+            PitchSign::Sharp => match v.1 {
+                PitchName::C => Self::Di,
+                PitchName::D => Self::Ri,
+                PitchName::E => Self::Fa,
+                PitchName::F => Self::Fi,
+                PitchName::G => Self::Si,
+                PitchName::A => Self::Li,
+                PitchName::B => Self::Do,
+            },
+            PitchSign::DoubleSharp => match v.1 {
+                PitchName::C => Self::Re,
+                PitchName::D => Self::Mi,
+                PitchName::E => Self::Fi,
+                PitchName::F => Self::So,
+                PitchName::G => Self::La,
+                PitchName::A => Self::Ti,
+                PitchName::B => Self::Di,
+            },
         }
     }
 }

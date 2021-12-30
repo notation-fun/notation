@@ -2929,6 +2929,7 @@ dependencies = [
  "getrandom",
  "gloo-events",
  "notation_bevy_utils",
+ "notation_dsl",
  "notation_midi",
  "notation_model",
  "rand",
@@ -2970,6 +2971,7 @@ dependencies = [
 name = "notation_dsl"
 version = "0.3.1"
 dependencies = [
+ "anyhow",
  "fehler",
  "lazy_static",
  "notation_proto",
@@ -2994,6 +2996,13 @@ dependencies = [
  "notation_core",
  "notation_fretted",
  "serde",
+]
+
+[[package]]
+name = "notation_macro"
+version = "0.3.1"
+dependencies = [
+ "notation_dsl",
 ]
 
 [[package]]
@@ -3038,7 +3047,9 @@ dependencies = [
 name = "notation_tab"
 version = "0.3.1"
 dependencies = [
+ "anyhow",
  "notation_dsl",
+ "notation_macro",
  "notation_proto",
  "ron",
  "serde",

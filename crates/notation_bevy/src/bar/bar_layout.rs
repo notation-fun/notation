@@ -17,7 +17,11 @@ impl Display for BarLayoutData {
     }
 }
 impl BarLayoutData {
-    pub fn new(min_height: f32, bar_props: TabBarProps, lane_layouts: Vec<Arc<LaneLayoutData>>) -> Self {
+    pub fn new(
+        min_height: f32,
+        bar_props: TabBarProps,
+        lane_layouts: Vec<Arc<LaneLayoutData>>,
+    ) -> Self {
         Self {
             min_height,
             bar_props,

@@ -3,13 +3,13 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 
-use notation_bevy_utils::prelude::{BevyUtil, ShapeOp, OutlineCircle};
+use notation_bevy_utils::prelude::{BevyUtil, OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, Signature, Tab};
 
 use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState};
 
-use super::rhythm_beat::{RhythmBeatData};
-use super::rhythm_indicator::{RhythmIndicatorData};
+use super::rhythm_beat::RhythmBeatData;
+use super::rhythm_indicator::RhythmIndicatorData;
 
 #[derive(Clone, Debug)]
 pub struct RhythmBarValue {
@@ -29,11 +29,7 @@ pub type RhythmBarData = BarData<RhythmBarValue>;
 impl ShapeOp<NotationTheme, OutlineCircle> for RhythmBarData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineCircle {
         let color = theme.colors.of_option_chord(self.value.chord);
-        let offset = Vec3::new(
-            self.value.offset.x,
-            self.value.offset.y,
-            theme.z.rhythm_bar,
-        );
+        let offset = Vec3::new(self.value.offset.x, self.value.offset.y, theme.z.rhythm_bar);
         let outline_width = theme.sizes.chord.diagram_outline.current;
         let outline_color = theme.colors.of_section(self.bar_props.section_ordinal);
         let radius = self.value.radius + outline_width;
@@ -68,12 +64,7 @@ impl RhythmBarData {
             } else if let Ok((indicator_entity, mut indicator_data)) =
                 indicator_query.get_mut(*child)
             {
-                indicator_data.update_size(
-                    commands,
-                    theme,
-                    indicator_entity,
-                    radius,
-                );
+                indicator_data.update_size(commands, theme, indicator_entity, radius);
             }
         }
     }
@@ -121,7 +112,9 @@ impl RhythmBarData {
         mut font_query: Query<&mut Text>,
         mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let mut current_position = None;
         let mut current_bar = None;
         let mut current_chord = None;
@@ -136,7 +129,9 @@ impl RhythmBarData {
         if current_bar.is_some() {
             let bar_props = current_bar.unwrap().props;
             for (bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
-                if bar_data.bar_props.bar_ordinal != bar_props.bar_ordinal || bar_data.value.chord != current_chord {
+                if bar_data.bar_props.bar_ordinal != bar_props.bar_ordinal
+                    || bar_data.value.chord != current_chord
+                {
                     bar_data.bar_props = bar_props;
                     bar_data.value.chord = current_chord;
                     bar_data.update(&mut commands, &theme, bar_entity);

@@ -1,15 +1,16 @@
 use bevy::prelude::*;
-use bevy_egui::egui::{self, Ui, color_picker::show_color};
-use notation_bevy_utils::{prelude::BevyUtil, asset::markdown_asset::MarkDownAsset, easy_mark::{EasyMarkStyle, label_from_style}};
-use notation_model::prelude::{TrackKind, Pitch, Semitones};
+use bevy_egui::egui::{self, Ui};
+use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
+use notation_bevy_utils::easy_mark::{label_from_style, EasyMarkStyle};
+use notation_model::prelude::TrackKind;
 
-use crate::prelude::{NotationTheme, NotationAssets, NotationAppState};
+use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
 
-use super::{help_panel::{HelpPageId, HelpPage}, page_helper::PageHelper};
+use super::help_panel::{HelpPage, HelpPageId};
+use super::page_helper::PageHelper;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-pub struct NotesPage {
-}
+pub struct NotesPage {}
 
 impl HelpPage for NotesPage {
     fn page_id(&self) -> HelpPageId {
@@ -30,8 +31,16 @@ impl HelpPage for NotesPage {
             strong: true,
             ..EasyMarkStyle::default()
         };
-        let scale = state.tab.as_ref().map(|x| x.meta.scale.clone()).unwrap_or_default();
-        let key = state.tab.as_ref().map(|x| x.meta.key.clone()).unwrap_or_default();
+        let scale = state
+            .tab
+            .as_ref()
+            .map(|x| x.meta.scale.clone())
+            .unwrap_or_default();
+        let key = state
+            .tab
+            .as_ref()
+            .map(|x| x.meta.key.clone())
+            .unwrap_or_default();
         PageHelper::add_key_scale(ui, &key, &scale);
         ui.separator();
         egui::Grid::new("notes").show(ui, |ui| {
@@ -54,20 +63,31 @@ impl HelpPage for NotesPage {
             ui.end_row();
             if let Some(fretboard) = state.tab.as_ref().and_then(|tab| {
                 tab.get_track_of_kind(TrackKind::Guitar)
-                .and_then(|x| x.get_fretboard6())
+                    .and_then(|x| x.get_fretboard6())
             }) {
                 if fretboard.capo > 0 {
                     ui.separator();
                     ui.add(label_from_style("guitar", &strong_style));
                     ui.add(label_from_style("capo", &strong_style));
                     ui.add(label_from_style("at", &strong_style));
-                    ui.add(label_from_style(fretboard.capo.to_string().as_str(), &strong_style));
+                    ui.add(label_from_style(
+                        fretboard.capo.to_string().as_str(),
+                        &strong_style,
+                    ));
                     let frets = if fretboard.capo == 1 { "fret" } else { "frets" };
                     ui.add(label_from_style(frets, &strong_style));
                     ui.separator();
                     ui.end_row();
                     for (index, syllable) in syllables.iter().enumerate() {
-                        PageHelper::add_syllable_pitch_with_capo(ui, theme, fretboard.capo, &scale, &key, syllable, index == 0);
+                        PageHelper::add_syllable_pitch_with_capo(
+                            ui,
+                            theme,
+                            fretboard.capo,
+                            &scale,
+                            &key,
+                            syllable,
+                            index == 0,
+                        );
                     }
                     ui.end_row();
                 }

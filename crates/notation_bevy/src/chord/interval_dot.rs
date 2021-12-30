@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::IntervalQuality;
 
-use crate::prelude::{NotationTheme};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct IntervalDotData {
@@ -82,11 +82,7 @@ impl ShapeOp<NotationTheme, OutlineCircle> for IntervalDotData {
         };
         let color = theme.colors.chord.dot.of_quality(&self.quality);
         let outline_width = theme.sizes.chord.interval_dot_outline;
-        let outline_color = theme
-                    .colors
-                    .chord
-                    .dot_outline
-                    .of_quality(&self.quality);
+        let outline_color = theme.colors.chord.dot_outline.of_quality(&self.quality);
         OutlineCircle {
             radius,
             color,

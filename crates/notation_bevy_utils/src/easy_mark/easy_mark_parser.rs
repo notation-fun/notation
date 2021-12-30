@@ -333,24 +333,21 @@ impl<'a> Iterator for Parser<'a> {
 #[test]
 fn test_easy_mark_parser() {
     let items: Vec<_> = Parser::new("~strikethrough `code`~").collect();
-    assert_eq!(
-        items,
-        vec![
-            Item::Text(
-                Style {
-                    strikethrough: true,
-                    ..Default::default()
-                },
-                "strikethrough "
-            ),
-            Item::Text(
-                Style {
-                    code: true,
-                    strikethrough: true,
-                    ..Default::default()
-                },
-                "code"
-            ),
-        ]
-    );
+    assert_eq!(items, vec![
+        Item::Text(
+            Style {
+                strikethrough: true,
+                ..Default::default()
+            },
+            "strikethrough "
+        ),
+        Item::Text(
+            Style {
+                code: true,
+                strikethrough: true,
+                ..Default::default()
+            },
+            "code"
+        ),
+    ]);
 }

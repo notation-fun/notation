@@ -1,5 +1,5 @@
 use notation_bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::{LaneKind, PlayingState, Semitones, TrackKind, Tab, Note};
+use notation_model::prelude::{LaneKind, Note, PlayingState, Semitones, Tab, TrackKind};
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "inspector")]
@@ -118,7 +118,7 @@ pub struct MelodySizes {
     pub semitone_height: f32,
     pub lowest: Semitones,
     pub highest: Semitones,
-    pub syllable_height: f32
+    pub syllable_height: f32,
 }
 impl Default for MelodySizes {
     fn default() -> Self {
@@ -137,7 +137,7 @@ impl MelodySizes {
         let default = Self::default();
         self.lowest = default.lowest;
         self.highest = default.highest;
-        if let Some (track) = tab.get_track_of_kind(TrackKind::Vocal) {
+        if let Some(track) = tab.get_track_of_kind(TrackKind::Vocal) {
             for entry in track.entries.iter() {
                 if let Some(entry) = entry.proto.as_core() {
                     if let Some(tone) = entry.as_tone() {
@@ -153,7 +153,10 @@ impl MelodySizes {
                     }
                 }
             }
-            println!("MelodySizes::update_with_tab: {} - {}", self.lowest.0, self.highest.0);
+            println!(
+                "MelodySizes::update_with_tab: {} - {}",
+                self.lowest.0, self.highest.0
+            );
         }
     }
     pub fn calc_note_y(&self, note: Note) -> f32 {
@@ -216,9 +219,7 @@ impl StringsSizes {
         self.string_space * 6.0
     }
     pub fn calc_string_y(&self, string: u8) -> f32 {
-        -1.0
-            * self.string_space
-            * (string as f32 - 0.5)
+        -1.0 * self.string_space * (string as f32 - 0.5)
     }
 }
 
@@ -316,10 +317,34 @@ impl ThemeSizes {
     }
     pub fn calc_lane_height(&self, settings: &NotationSettings, lane_kind: LaneKind) -> f32 {
         match lane_kind {
-            LaneKind::Lyrics => if settings.hide_lyrics_lane { 0.0 } else { self.lyrics.layout_height() },
-            LaneKind::Melody => if settings.hide_melody_lane { 0.0 } else { self.melody.layout_height(settings) },
-            LaneKind::Strings => if settings.hide_strings_lane { 0.0 } else { self.strings.layout_height() },
-            LaneKind::Shapes => if settings.hide_shapes_lane { 0.0 } else { self.layout.shapes_height },
+            LaneKind::Lyrics => {
+                if settings.hide_lyrics_lane {
+                    0.0
+                } else {
+                    self.lyrics.layout_height()
+                }
+            }
+            LaneKind::Melody => {
+                if settings.hide_melody_lane {
+                    0.0
+                } else {
+                    self.melody.layout_height(settings)
+                }
+            }
+            LaneKind::Strings => {
+                if settings.hide_strings_lane {
+                    0.0
+                } else {
+                    self.strings.layout_height()
+                }
+            }
+            LaneKind::Shapes => {
+                if settings.hide_shapes_lane {
+                    0.0
+                } else {
+                    self.layout.shapes_height
+                }
+            }
             _ => 0.0,
         }
     }

@@ -1,14 +1,14 @@
 use bevy::prelude::*;
-use bevy_egui::egui::{Ui};
+use bevy_egui::egui::Ui;
 
-use crate::prelude::{NotationTheme, NotationAssets, NotationAppState};
+use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
 
-use super::help_panel::{HelpPageId, HelpPage};
-use notation_bevy_utils::{easy_mark::easy_mark, asset::markdown_asset::MarkDownAsset};
+use super::help_panel::{HelpPage, HelpPageId};
+use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
+use notation_bevy_utils::easy_mark::easy_mark;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-pub struct WelcomePage {
-}
+pub struct WelcomePage {}
 
 impl HelpPage for WelcomePage {
     fn page_id(&self) -> HelpPageId {

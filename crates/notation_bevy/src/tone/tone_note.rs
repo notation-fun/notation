@@ -48,12 +48,10 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
         let offset = if self.value.bar_size <= 0.0 {
             BevyUtil::offscreen_offset()
         } else {
-            let x = self.value.bar_size / self.bar_props.bar_units.0
-                * self.entry_props.in_bar_pos.0;
+            let x =
+                self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.in_bar_pos.0;
             let mut y = if self.value.mode.is_melody() {
-                theme
-                    .sizes.melody
-                    .calc_note_y(self.value.note)
+                theme.sizes.melody.calc_note_y(self.value.note)
             } else {
                 0.0
             };
@@ -92,8 +90,8 @@ impl ToneNoteData {
     }
     fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
         let outline = self.calc_outline(theme);
-        let width = self.value.bar_size / self.bar_props.bar_units.0
-            * self.entry_props.tied_units.0;
+        let width =
+            self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
         let mut height = theme.sizes.melody.note_height;
         if self.value.playing_state.is_current() {
             height += outline;

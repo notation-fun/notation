@@ -7,7 +7,7 @@ use notation_model::prelude::{
     Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, SyllableNote, TabMeta, Units,
 };
 
-use crate::prelude::{NotationTheme};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct GuitarStringData {
@@ -138,10 +138,9 @@ impl GuitarStringData {
 
 impl ShapeOp<NotationTheme, OutlineRectangle> for GuitarStringData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
-        let fret_y = theme.guitar.calc_fret_y(
-            self.fret() + self.capo,
-            self.guitar_size.height,
-        );
+        let fret_y = theme
+            .guitar
+            .calc_fret_y(self.fret() + self.capo, self.guitar_size.height);
         let end_y = if self.upper {
             self.guitar_size.height * theme.guitar.string_y_factor
         } else {
@@ -158,18 +157,12 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for GuitarStringData {
             if self.is_muted() {
                 theme.colors.strings.muted
             } else {
-                theme
-                    .colors
-                    .strings
-                    .string
-                    .of_state(&PlayingState::Idle)
+                theme.colors.strings.string.of_state(&PlayingState::Idle)
             }
         } else if self.is_muted() {
             theme.colors.strings.muted
         } else if self.state.is_current() && self.note.is_some() {
-            theme
-                .colors
-                .of_syllable(self.note.unwrap().syllable)
+            theme.colors.of_syllable(self.note.unwrap().syllable)
         } else {
             theme.colors.strings.string.of_state(&self.state)
         };
@@ -182,10 +175,9 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for GuitarStringData {
         let x = theme
             .guitar
             .calc_string_x(self.string, self.guitar_size.width);
-        let fret_y = theme.guitar.calc_fret_y(
-            self.fret() + self.capo,
-            self.guitar_size.height,
-        );
+        let fret_y = theme
+            .guitar
+            .calc_fret_y(self.fret() + self.capo, self.guitar_size.height);
         let offset = Vec3::new(x - width / 2.0, fret_y, theme.z.guitar_string);
         OutlineRectangle {
             width,

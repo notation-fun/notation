@@ -34,14 +34,10 @@ impl SingleShape<shapes::Rectangle> for FillRectangle {
         DrawMode::Fill(FillOptions::default())
     }
     fn get_transform(&self) -> Transform {
-        if self.width <= 0.0 || self.height<= 0.0 {
+        if self.width <= 0.0 || self.height <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        Transform::from_xyz(
-            self.offset.x,
-            self.offset.y,
-            self.offset.z,
-        )
+        Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)
     }
 }
 
@@ -75,14 +71,10 @@ impl SingleShape<shapes::Rectangle> for StrokeRectangle {
         DrawMode::Stroke(StrokeOptions::default().with_line_width(self.line_width))
     }
     fn get_transform(&self) -> Transform {
-        if self.width <= 0.0 || self.height<= 0.0 {
+        if self.width <= 0.0 || self.height <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        Transform::from_xyz(
-            self.offset.x,
-            self.offset.y,
-            self.offset.z,
-        )
+        Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)
     }
 }
 
@@ -112,10 +104,7 @@ impl SingleShape<shapes::Rectangle> for OutlineRectangle {
     }
     fn get_colors(&self) -> ShapeColors {
         if self.outline_width > 0.0 {
-            ShapeColors::outlined(
-                self.color,
-                self.outline_color,
-            )
+            ShapeColors::outlined(self.color, self.outline_color)
         } else {
             ShapeColors::new(self.color)
         }
@@ -131,14 +120,9 @@ impl SingleShape<shapes::Rectangle> for OutlineRectangle {
         }
     }
     fn get_transform(&self) -> Transform {
-        if self.width <= 0.0 || self.height<= 0.0 {
+        if self.width <= 0.0 || self.height <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        Transform::from_xyz(
-            self.offset.x,
-            self.offset.y,
-            self.offset.z,
-        )
+        Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)
     }
 }
-

@@ -8,13 +8,16 @@ use bevy::window::WindowResized;
 use bevy_asset_loader::AssetLoader;
 
 use crate::help::help_panel::HelpPanel;
+use crate::prelude::*;
+use crate::settings::layout_settings::LayoutMode;
 use crate::theme::theme_colors::UiColors;
-use crate::{prelude::*, settings::layout_settings::LayoutMode};
 use crate::ui::viewer::TabViewerPlugin;
 use crate::viewer::control::Control;
 use crate::viewer::control_view::ControlView;
 
-use notation_midi::prelude::{MidiPlugin, MidiState, PlayControlEvent, MidiSettings, JumpToBarEvent};
+use notation_midi::prelude::{
+    JumpToBarEvent, MidiPlugin, MidiSettings, MidiState, PlayControlEvent,
+};
 use notation_model::prelude::*;
 
 use super::app_state::{NotationAppState, TabPathes};
@@ -44,7 +47,7 @@ impl PluginGroup for NotationPlugins {
 pub struct NotationApp;
 
 impl NotationApp {
-    pub const TITLE:&'static str = "Notation Viewer";
+    pub const TITLE: &'static str = "Notation Viewer";
 
     pub fn new_builder(title: &str) -> AppBuilder {
         let mut app = App::build();
@@ -115,7 +118,7 @@ impl NotationApp {
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
-                .with_system(setup_window_size.system())
+                .with_system(setup_window_size.system()),
         );
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
@@ -124,7 +127,7 @@ impl NotationApp {
                 .with_system(handle_mouse_inputs.system())
                 .with_system(handle_touch_inputs.system())
                 .with_system(load_tab.system())
-                .with_system(on_tab_asset.system())
+                .with_system(on_tab_asset.system()),
         );
 
         extra(&mut app);
@@ -161,9 +164,7 @@ fn setup_hot_reloading(asset_server: Res<AssetServer>) {
     asset_server.watch_for_changes().unwrap();
 }
 
-fn on_tab_asset(
-    mut evts: EventReader<AssetEvent<TabAsset>>,
-) {
+fn on_tab_asset(mut evts: EventReader<AssetEvent<TabAsset>>) {
     for evt in evts.iter() {
         println!("AssetEvent<TabAsset> {:?}", evt);
     }
@@ -181,7 +182,11 @@ fn load_tab(
     mut evts: EventWriter<AddTabEvent>,
     viewer_query: Query<(Entity, &Arc<NotationViewer>), With<Arc<NotationViewer>>>,
 ) {
-    if state.window_width > 0.0 && state.window_height > 0.0 && state.tab.is_none() && state.parse_error.is_none() {
+    if state.window_width > 0.0
+        && state.window_height > 0.0
+        && state.tab.is_none()
+        && state.parse_error.is_none()
+    {
         let mut count = 0;
         for _ in entities.iter() {
             count += 1;
@@ -190,7 +195,10 @@ fn load_tab(
         if count > 1 {
             if state._despawn_delay_seconds > 0.0 {
                 state._despawn_delay_seconds -= time.delta_seconds();
-                println!("load_tab(): Waiting to despawn: {} -> {}", count, state._despawn_delay_seconds);
+                println!(
+                    "load_tab(): Waiting to despawn: {} -> {}",
+                    count, state._despawn_delay_seconds
+                );
                 return;
             }
             let mut despawn_count = 0;
@@ -199,16 +207,25 @@ fn load_tab(
                 despawn_count += 1;
             }
             if despawn_count > 0 {
-                println!("load_tab(): Despawning viewers: {} {}", despawn_count, count);
+                println!(
+                    "load_tab(): Despawning viewers: {} {}",
+                    despawn_count, count
+                );
             } else {
-                println!("load_tab(): Waiting for entities to be despawned: {}", count);
+                println!(
+                    "load_tab(): Waiting for entities to be despawned: {}",
+                    count
+                );
             }
             return;
         }
         asset_server.free_unused_assets();
         if state._load_tab_delay_seconds > 0.0 {
             state._load_tab_delay_seconds -= time.delta_seconds();
-            println!("load_tab(): Waiting to Load tab: -> {}", state._load_tab_delay_seconds);
+            println!(
+                "load_tab(): Waiting to Load tab: -> {}",
+                state._load_tab_delay_seconds
+            );
             return;
         }
         println!("\nload_tab(): Loading: {}", state.tab_path);
@@ -252,11 +269,11 @@ fn handle_keyboard_inputs(
         if !ControlView::HUD_MODE {
             window_resized_evts.send(WindowResizedEvent());
         }
-    } else if keyboard_input.just_released(KeyCode::F1)
-            || keyboard_input.just_released(KeyCode::H) {
+    } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::H)
+    {
         app_state.show_help = !app_state.show_help;
-    } else if keyboard_input.just_released(KeyCode::F5)
-            || keyboard_input.just_released(KeyCode::R) {
+    } else if keyboard_input.just_released(KeyCode::F5) || keyboard_input.just_released(KeyCode::R)
+    {
         Control::reload_tab(&mut app_state, &mut theme);
     } else if keyboard_input.just_released(KeyCode::Space) {
         Control::play_or_pause(&mut midi_state, &mut play_control_evts);
@@ -286,11 +303,7 @@ fn handle_keyboard_inputs(
         Control::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
     } else if keyboard_input.just_released(KeyCode::L) {
         settings.should_loop = !settings.should_loop;
-        Control::sync_should_loop(
-            &settings,
-            &mut midi_state,
-            &mut play_control_evts,
-        );
+        Control::sync_should_loop(&settings, &mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::A) {
         Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
     } else if keyboard_input.just_released(KeyCode::B) {
@@ -327,10 +340,7 @@ fn handle_mouse_inputs(
     if app_state.tab.is_none() {
         return;
     }
-    let cursor_position =
-        windows
-            .get_primary()
-            .and_then(|x| x.cursor_position());
+    let cursor_position = windows.get_primary().and_then(|x| x.cursor_position());
     if cursor_position.is_none() {
         return;
     }
@@ -342,20 +352,27 @@ fn handle_mouse_inputs(
     } else if mouse_input.pressed(MouseButton::Right) {
         for event in mouse_motion_events.iter() {
             //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
-            mouse_dragged.send(MouseDraggedEvent { cursor_position, delta: event.delta });
+            mouse_dragged.send(MouseDraggedEvent {
+                cursor_position,
+                delta: event.delta,
+            });
         }
     } else {
         for event in mouse_wheel_input.iter() {
             let mut delta = match event.unit {
-                    bevy::input::mouse::MouseScrollUnit::Line =>
-                        Vec2::new(event.x * settings.panning_line_size, event.y * settings.panning_line_size),
-                    bevy::input::mouse::MouseScrollUnit::Pixel =>
-                        Vec2::new(event.x, event.y),
-                };
+                bevy::input::mouse::MouseScrollUnit::Line => Vec2::new(
+                    event.x * settings.panning_line_size,
+                    event.y * settings.panning_line_size,
+                ),
+                bevy::input::mouse::MouseScrollUnit::Pixel => Vec2::new(event.x, event.y),
+            };
             if settings.layout.mode == LayoutMode::Line {
                 delta = Vec2::new(delta.y, delta.x);
             }
-            mouse_dragged.send(MouseDraggedEvent { cursor_position, delta: delta });
+            mouse_dragged.send(MouseDraggedEvent {
+                cursor_position,
+                delta: delta,
+            });
         }
     }
 }
@@ -375,7 +392,7 @@ fn handle_touch_inputs(
             windows
                 .get_primary()
                 .map(|w| (w.physical_width() as f32, w.physical_height() as f32))
-                .map(| (physical_width, physical_height) | {
+                .map(|(physical_width, physical_height)| {
                     /*
                     Super hacky way to get the touch input in mobile browsers (WASM).
                     winit not support it yet, using a pull request version, which seems to have some issues
@@ -386,8 +403,16 @@ fn handle_touch_inputs(
                     let dpi_y = physical_height / app_state.window_height;
                     let x = finger.position().x * dpi_x;
                     let y = app_state.window_height - finger.position().y * dpi_y;
-                    app_state.debug_str = Some(format!("Touch: {} {:?} -> {} {}", _index, finger.position(), x, y));
-                    mouse_clicked.send(MouseClickedEvent { cursor_position: Vec2::new(x, y) });
+                    app_state.debug_str = Some(format!(
+                        "Touch: {} {:?} -> {} {}",
+                        _index,
+                        finger.position(),
+                        x,
+                        y
+                    ));
+                    mouse_clicked.send(MouseClickedEvent {
+                        cursor_position: Vec2::new(x, y),
+                    });
                 });
         } else if touch_input.just_released(finger.id()) {
             app_state.debug_str = None;
@@ -402,10 +427,7 @@ fn handle_touch_inputs(
     }
 }
 
-fn setup_window_size(
-    window: Res<WindowDescriptor>,
-    mut app_state: ResMut<NotationAppState>,
-) {
+fn setup_window_size(window: Res<WindowDescriptor>, mut app_state: ResMut<NotationAppState>) {
     #[cfg(target_arch = "wasm32")]
     let (width, height) = crate::wasm::bevy_web_fullscreen::get_viewport_size();
 
@@ -430,7 +452,10 @@ fn on_window_resized(
         if evt.width as usize != window.width as usize
             || evt.height as usize != window.height as usize
         {
-            println!("on_window_resized(): {} {} -> {} {} ", window.width, window.height, evt.width, evt.height);
+            println!(
+                "on_window_resized(): {} {} -> {} {} ",
+                window.width, window.height, evt.width, evt.height
+            );
             window.width = evt.width;
             window.height = evt.height;
             app_state.window_width = evt.width;

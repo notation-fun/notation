@@ -1,9 +1,10 @@
-use fehler::{throws};
+use fehler::throws;
+use notation_proto::prelude::{FrettedEntry4, FrettedEntry6, HandShape4, HandShape6};
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
-use syn::{parenthesized, token};
-use syn::{LitInt, Token};
+use syn::{parenthesized, token, LitInt, Token};
 
 use crate::context::Context;
 use crate::core::duration::DurationTweakDsl;
@@ -66,29 +67,51 @@ impl ToTokens for ShapeDsl {
         let duration_quote = Context::duration_quote(duration_tweak);
         let fretted_entry_quote = Context::fretted().fretted_entry_quote();
         let hand_shape_quote = Context::fretted().hand_shape_quote();
-        match barre {
-            Some(barre) => {
-                tokens.extend(quote! {
-                    ProtoEntry::from(#fretted_entry_quote::from(
-                        (#hand_shape_quote::new_barre(
-                            #barre, [
-                            #(#frets_quote),*
-                        ], [
-                            #(#fingers_quote),*
-                        ]), #duration_quote)
-                    ))
-                });
+        let barre = barre.unwrap_or(0);
+        tokens.extend(quote! {
+            ProtoEntry::from(#fretted_entry_quote::from(
+                (#hand_shape_quote::new_barre(
+                    #barre, [
+                    #(#frets_quote),*
+                ], [
+                    #(#fingers_quote),*
+                ]), #duration_quote)
+            ))
+        });
+    }
+}
+
+impl ShapeDsl {
+    pub fn to_proto(&self) -> ProtoEntry {
+        let ShapeDsl {
+            barre,
+            frets: _,
+            duration_tweak,
+        } = self;
+        let barre = barre.unwrap_or(0);
+        let duration = Context::tweaked_duration(duration_tweak);
+        match Context::fretted().string_num {
+            4 => {
+                let mut frets = [None; 4];
+                for i in 0..4 {
+                    frets[i] = self.frets.get(i).unwrap().clone();
+                }
+                let fingers = [None; 4];
+                ProtoEntry::from(FrettedEntry4::from((
+                    HandShape4::new_barre(barre, frets, fingers),
+                    duration,
+                )))
             }
-            None => {
-                tokens.extend(quote! {
-                    ProtoEntry::from(#fretted_entry_quote::from(
-                        (#hand_shape_quote::new([
-                            #(#frets_quote),*
-                        ], [
-                            #(#fingers_quote),*
-                        ]), #duration_quote)
-                    ))
-                });
+            _ => {
+                let mut frets = [None; 6];
+                for i in 0..6 {
+                    frets[i] = self.frets.get(i).unwrap().clone();
+                }
+                let fingers = [None; 6];
+                ProtoEntry::from(FrettedEntry6::from((
+                    HandShape6::new_barre(barre, frets, fingers),
+                    duration,
+                )))
             }
         }
     }

@@ -143,7 +143,6 @@ impl From<BarPosition> for TabPosition {
     }
 }
 
-
 impl From<BarPosition> for Position {
     fn from(v: BarPosition) -> Self {
         Position {

@@ -7,7 +7,7 @@ use notation_model::prelude::{Interval, Syllable};
 
 use crate::prelude::{ModelEntryData, NotationTheme};
 
-use super::interval_dot::{IntervalDotData};
+use super::interval_dot::IntervalDotData;
 
 pub trait ChordNoteExtra: Send + Sync + Clone {
     fn offset(&self, theme: &NotationTheme) -> Vec2;
@@ -65,23 +65,16 @@ pub type ChordNoteData<T> = ModelEntryData<ChordNoteValue<T>>;
 
 impl<T: ChordNoteExtra + 'static> ShapeOp<NotationTheme, FillCircle> for ChordNoteData<T> {
     fn get_shape(&self, theme: &NotationTheme) -> FillCircle {
-        let color = theme
-            .colors
-            .of_syllable(self.value.calc_syllable());
+        let color = theme.colors.of_syllable(self.value.calc_syllable());
         let color = self.value.extra.get_color(theme, color);
         let offset = self.value.extra.offset(theme);
         FillCircle {
             radius: self.value.extra.radius(theme),
             color,
-            offset: Vec3::new(
-                offset.x,
-                offset.y,
-                self.value.extra.get_z(theme),
-            ),
+            offset: Vec3::new(offset.x, offset.y, self.value.extra.get_z(theme)),
         }
     }
 }
-
 
 impl<T: ChordNoteExtra + 'static> ChordNoteData<T> {
     pub fn update_size(
@@ -103,12 +96,7 @@ impl<T: ChordNoteExtra + 'static> ChordNoteData<T> {
             }
         }
     }
-    pub fn spawn(
-        &self,
-        commands: &mut Commands,
-        theme: &NotationTheme,
-        entity: Entity,
-    ) -> Entity {
+    pub fn spawn(&self, commands: &mut Commands, theme: &NotationTheme, entity: Entity) -> Entity {
         let note_entity = self.create(commands, theme, entity);
         self.respawn_dots(commands, theme, None, note_entity);
         note_entity

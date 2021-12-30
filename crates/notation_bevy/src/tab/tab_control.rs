@@ -2,12 +2,17 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery};
-use notation_model::prelude::{Tab};
+use notation_bevy_utils::prelude::{
+    BevyUtil, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View,
+    ViewBundle, ViewQuery,
+};
+use notation_model::prelude::Tab;
 
 use crate::chord::chord_color_background::ChordColorBackground;
 use crate::play::play_panel::PlayPanel;
-use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme, GuitarView};
+use crate::prelude::{
+    GuitarView, NotationAppState, NotationAssets, NotationSettings, NotationTheme,
+};
 use crate::ui::layout::NotationLayout;
 
 use super::tab_events::TabControlDoLayoutEvent;
@@ -30,7 +35,8 @@ impl<'a> View<NotationLayout<'a>> for TabControl {
         let width = match engine.settings.override_guitar_width {
             Some(width) => width,
             None => {
-                let mut width = constraint.max.width * engine.theme.sizes.tab_control.control_width_factor;
+                let mut width =
+                    constraint.max.width * engine.theme.sizes.tab_control.control_width_factor;
                 if width < engine.theme.sizes.tab_control.tab_control_range.0 {
                     width = engine.theme.sizes.tab_control.tab_control_range.0;
                 } else if width > engine.theme.sizes.tab_control.tab_control_range.1 {
@@ -66,17 +72,12 @@ impl TabControl {
             commands,
             control_entity,
             theme.z.tab_control,
-            theme.colors.of_syllable(tab.meta.scale.calc_root_syllable()),
+            theme
+                .colors
+                .of_syllable(tab.meta.scale.calc_root_syllable()),
         );
         GuitarView::spawn(commands, materials, assets, theme, control_entity, tab);
-        PlayPanel::spawn(
-            commands,
-            assets,
-            theme,
-            settings,
-            control_entity,
-            tab,
-        );
+        PlayPanel::spawn(commands, assets, theme, settings, control_entity, tab);
         control_entity
     }
     pub fn do_layout(
@@ -88,7 +89,9 @@ impl TabControl {
         panel_query: ViewQuery<PlayPanel>,
         content_query: ViewQuery<GuitarView>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

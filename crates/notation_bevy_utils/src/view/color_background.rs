@@ -68,7 +68,8 @@ impl ColorBackground {
             SingleBundle::<ColorBackground>::from(ColorBackground::new(z, color)),
         )
     }
-    pub fn update_color(&mut self,
+    pub fn update_color(
+        &mut self,
         commands: &mut Commands,
         background_entity: Entity,
         color: Color,

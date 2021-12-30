@@ -11,4 +11,3 @@ pub mod web_utils {
 }
 
 pub mod bevy_web_fullscreen;
-

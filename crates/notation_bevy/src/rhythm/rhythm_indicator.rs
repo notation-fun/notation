@@ -58,9 +58,7 @@ impl ShapeOp<NotationTheme, StrokePath> for RhythmIndicatorData {
             radius - width / 2.0,
             radius
         );
-        let color = theme
-            .colors
-            .rhythm.indicator;
+        let color = theme.colors.rhythm.indicator;
         let line_width = theme.sizes.tab_control.rhythm_indicator_line_width;
         StrokePath {
             size: Vec2::new(radius * 2.0, radius * 2.0),

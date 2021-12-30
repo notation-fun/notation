@@ -23,7 +23,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::bar_lane::{BarLane, BarLaneProps};
     #[doc(hidden)]
-    pub use crate::form::{Form};
+    pub use crate::form::Form;
     #[doc(hidden)]
     pub use crate::lane_entry::{LaneEntry, LaneEntryProps};
     #[doc(hidden)]
@@ -39,13 +39,13 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_state::{PlayState, PlayingState};
     #[doc(hidden)]
-    pub use crate::section::{Section};
+    pub use crate::section::Section;
     #[doc(hidden)]
     pub use crate::tab::Tab;
     #[doc(hidden)]
     pub use crate::tab_bar::{TabBar, TabBarProps};
     #[doc(hidden)]
-    pub use crate::tab_chord::{TabChord};
+    pub use crate::tab_chord::TabChord;
     #[doc(hidden)]
     pub use crate::track::{Track, TrackProps};
     #[doc(hidden)]

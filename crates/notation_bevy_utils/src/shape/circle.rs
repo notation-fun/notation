@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::BevyUtil;
 
-use super::shape::{SingleShape, Shape};
+use super::shape::{Shape, SingleShape};
 
 #[derive(Clone, Debug)]
 pub struct FillCircle {
@@ -34,11 +34,7 @@ impl SingleShape<shapes::Circle> for FillCircle {
         if self.radius <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        Transform::from_xyz(
-            self.offset.x,
-            self.offset.y,
-            self.offset.z,
-        )
+        Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)
     }
 }
 
@@ -72,11 +68,7 @@ impl SingleShape<shapes::Circle> for StrokeCircle {
         if self.radius <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        Transform::from_xyz(
-            self.offset.x,
-            self.offset.y,
-            self.offset.z,
-        )
+        Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)
     }
 }
 
@@ -103,10 +95,7 @@ impl SingleShape<shapes::Circle> for OutlineCircle {
     }
     fn get_colors(&self) -> ShapeColors {
         if self.outline_width > 0.0 {
-            ShapeColors::outlined(
-                self.color,
-                self.outline_color,
-            )
+            ShapeColors::outlined(self.color, self.outline_color)
         } else {
             ShapeColors::new(self.color)
         }
@@ -125,11 +114,6 @@ impl SingleShape<shapes::Circle> for OutlineCircle {
         if self.radius <= 0.0 {
             return BevyUtil::offscreen_transform();
         }
-        Transform::from_xyz(
-            self.offset.x,
-            self.offset.y,
-            self.offset.z,
-        )
+        Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)
     }
 }
-

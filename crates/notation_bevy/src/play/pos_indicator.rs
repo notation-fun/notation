@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 use notation_bevy_utils::prelude::{BevyUtil, LayoutData, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{BarPosition, Position, TabBarProps, Units};
 
-use crate::prelude::{NotationTheme};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct PosIndicatorData {
@@ -36,9 +36,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for PosIndicatorData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
         let width = theme.sizes.bar.pos_indicator_size;
         let height = self.bar_layout.size.height + theme.sizes.bar.bar_separator_extra * 2.0;
-        let color = theme
-                .colors
-                .of_section(self.bar_props.section_ordinal);
+        let color = theme.colors.of_section(self.bar_props.section_ordinal);
         let outline_color = theme.colors.bar.pos_indicator_color;
         let outline_width = theme.sizes.bar.pos_indicator_outline;
         let offset = if self.bar_layout.size.width <= 0.0 {
@@ -62,7 +60,6 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for PosIndicatorData {
         }
     }
 }
-
 
 impl PosIndicatorData {
     pub fn update_pos(

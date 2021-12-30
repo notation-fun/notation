@@ -10,7 +10,6 @@ description = "Fun notation - DSL to create notation files"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-proc-macro = true
 
 [dependencies]
 notation_proto = { version = "0.3.1", path = "../notation_proto" }
@@ -19,4 +18,5 @@ syn = { version = "1.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
 fehler = "1.0"
+anyhow = "1.0"
 lazy_static = "1.4.0"

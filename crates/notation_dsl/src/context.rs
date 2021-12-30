@@ -6,6 +6,7 @@ use fehler::{throw, throws};
 use notation_proto::prelude::{
     Duration, Key, Note, Octave, Scale, Syllable, SyllableNote, GUITAR_STRING_NUM,
 };
+use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, Parse, ParseStream};
@@ -93,12 +94,21 @@ impl Context {
     pub fn fretted() -> FrettedContext {
         CONTEXT.read().unwrap().fretted
     }
+    pub fn set_key(key: Key) {
+        CONTEXT.write().unwrap().key = key;
+    }
+    pub fn set_scale(scale: Scale) {
+        CONTEXT.write().unwrap().scale = scale;
+    }
 }
 
 impl Context {
-    pub fn duration_quote(tweak: &Option<DurationTweakDsl>) -> TokenStream {
+    pub fn tweaked_duration(tweak: &Option<DurationTweakDsl>) -> Duration {
         let base = Self::duration();
-        let duration = tweak.as_ref().map(|t| t.tweak(&base)).unwrap_or(base);
+        tweak.as_ref().map(|t| t.tweak(&base)).unwrap_or(base)
+    }
+    pub fn duration_quote(tweak: &Option<DurationTweakDsl>) -> TokenStream {
+        let duration = Self::tweaked_duration(tweak);
         let ident = duration.to_ident();
         quote! {
             Duration::from_ident(#ident)
@@ -179,14 +189,14 @@ impl ToTokens for ContextDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.extend(match self {
             Self::Key(x) => {
-                CONTEXT.write().unwrap().key = Key::from_ident(x.to_string().as_str());
+                Context::set_key(Key::from_ident(x.to_string().as_str()));
                 let comment = format!("{}", Context::key());
                 quote! {
                     ProtoEntry::from(("dsl::context::key", #comment))
                 }
             }
             Self::Scale(x) => {
-                CONTEXT.write().unwrap().scale = Scale::from_ident(x.to_string().as_str());
+                Context::set_scale(Scale::from_ident(x.to_string().as_str()));
                 let comment = format!("{}", Context::scale());
                 quote! {
                     ProtoEntry::from(("dsl::context::scale", #comment))
@@ -214,5 +224,37 @@ impl ToTokens for ContextDsl {
                 }
             }
         });
+    }
+}
+
+impl ContextDsl {
+    pub fn to_proto(&self) -> ProtoEntry {
+        match self {
+            Self::Key(x) => {
+                Context::set_key(Key::from_ident(x.to_string().as_str()));
+                let comment = format!("{}", Context::key());
+                ProtoEntry::from(("dsl::context::key", comment))
+            }
+            Self::Scale(x) => {
+                Context::set_scale(Scale::from_ident(x.to_string().as_str()));
+                let comment = format!("{}", Context::scale());
+                ProtoEntry::from(("dsl::context::scale", comment))
+            }
+            Self::Duration(x) => {
+                CONTEXT.write().unwrap().duration = Duration::from_ident(x.to_string().as_str());
+                let comment = format!("{}", Context::duration());
+                ProtoEntry::from(("dsl::context::duration", comment))
+            }
+            Self::Octave(x) => {
+                CONTEXT.write().unwrap().octave = Octave::from_ident(x.to_string().as_str());
+                let comment = format!("{}", Context::base_octave());
+                ProtoEntry::from(("dsl::context::octave", comment))
+            }
+            Self::StringNum(x) => {
+                CONTEXT.write().unwrap().fretted.string_num = *x;
+                let comment = format!("{}", Context::fretted().string_num);
+                ProtoEntry::from(("dsl::context::string_num", comment))
+            }
+        }
     }
 }

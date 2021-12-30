@@ -1,25 +1,20 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_midi::prelude::{MidiState, PlayControlEvent, MidiSettings, JumpToBarEvent};
+use notation_midi::prelude::{JumpToBarEvent, MidiSettings, MidiState, PlayControlEvent};
 use notation_model::play::play_control::TickResult;
-use notation_model::prelude::{Tab, Units, BarPosition};
+use notation_model::prelude::{BarPosition, Tab, Units};
 use notation_model::tab_bar::TabBar;
 
 use crate::settings::layout_settings::LayoutMode;
 use crate::tab::tab_plugin;
 
-use crate::prelude::{
-    NotationAppState, NotationSettings, NotationTheme,
-};
+use crate::prelude::{NotationAppState, NotationSettings, NotationTheme};
 
 pub struct Control();
 
 impl Control {
-    pub fn reload_tab(
-        state: &mut NotationAppState,
-        theme: &mut NotationTheme,
-    ) {
+    pub fn reload_tab(state: &mut NotationAppState, theme: &mut NotationTheme) {
         if state.tab.is_none() {
             return;
         }
@@ -44,9 +39,7 @@ impl Control {
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
-        midi_state
-            .play_control
-            .should_loop = settings.should_loop;
+        midi_state.play_control.should_loop = settings.should_loop;
         play_control_evts.send(PlayControlEvent::on_should_loop(
             midi_state.play_control.should_loop,
         ));
@@ -69,10 +62,7 @@ impl Control {
             tick_result,
         ));
     }
-    pub fn play(
-        midi_state: &mut MidiState,
-        play_control_evts: &mut EventWriter<PlayControlEvent>,
-    ) {
+    pub fn play(midi_state: &mut MidiState, play_control_evts: &mut EventWriter<PlayControlEvent>) {
         if !midi_state.play_control.play_state.is_playing() {
             if midi_state.play_control.play() {
                 Self::send_play_state_evt(midi_state, play_control_evts);
@@ -115,12 +105,10 @@ impl Control {
             }
         }
     }
-    pub fn stop(
-        midi_state: &mut MidiState,
-        play_control_evts: &mut EventWriter<PlayControlEvent>,
-    ) {
+    pub fn stop(midi_state: &mut MidiState, play_control_evts: &mut EventWriter<PlayControlEvent>) {
         if midi_state.play_control.stop() {
-            midi_state.play_control.position.bar.bar_ordinal = midi_state.play_control.begin_bar_ordinal;
+            midi_state.play_control.position.bar.bar_ordinal =
+                midi_state.play_control.begin_bar_ordinal;
             midi_state.play_control.position.bar.in_bar_pos = Units(0.0);
             Self::send_play_state_evt(midi_state, play_control_evts);
         }
@@ -153,16 +141,20 @@ impl Control {
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
-        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
             let center = tab.bars.len() / 2;
-            tab.get_bar_of_ordinal(if center == pos.bar_ordinal { center + 1 } else { center })
+            tab.get_bar_of_ordinal(if center == pos.bar_ordinal {
+                center + 1
+            } else {
+                center
+            })
         });
     }
     pub fn jump_to_prev_bar(
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
-        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
             if pos.in_bar_pos.0 > 0.0 {
                 tab.get_bar_of_ordinal(pos.bar_ordinal)
             } else if pos.bar_ordinal > 0 {
@@ -176,7 +168,7 @@ impl Control {
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
-        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
             if pos.bar_ordinal < tab.bars.len() - 1 {
                 tab.get_bar_of_ordinal(pos.bar_ordinal + 1)
             } else {
@@ -188,9 +180,9 @@ impl Control {
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
-        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
             if let Some(bar) = tab.get_bar_of_ordinal(pos.bar_ordinal) {
-                return tab.get_bar_of_ordinal(bar.props.get_section_first_bar_ordinal())
+                return tab.get_bar_of_ordinal(bar.props.get_section_first_bar_ordinal());
             }
             None
         });
@@ -199,9 +191,11 @@ impl Control {
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
-        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
             if let Some(bar) = tab.get_bar_of_ordinal(pos.bar_ordinal) {
-                return tab.get_bar_of_ordinal(bar.props.get_section_first_bar_ordinal() + bar.section.bars.len() - 1)
+                return tab.get_bar_of_ordinal(
+                    bar.props.get_section_first_bar_ordinal() + bar.section.bars.len() - 1,
+                );
             }
             None
         });
@@ -210,12 +204,12 @@ impl Control {
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
-        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
             if let Some(bar) = tab.get_bar_of_ordinal(pos.bar_ordinal) {
                 let first_bar_ordinal = pos.bar_ordinal - bar.props.bar_index;
                 if first_bar_ordinal > 0 {
                     if let Some(bar) = tab.get_bar_of_ordinal(first_bar_ordinal - 1) {
-                        return tab.get_bar_of_ordinal(bar.props.get_section_first_bar_ordinal())
+                        return tab.get_bar_of_ordinal(bar.props.get_section_first_bar_ordinal());
                     }
                 }
             }
@@ -226,9 +220,11 @@ impl Control {
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
-        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos|{
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
             if let Some(bar) = tab.get_bar_of_ordinal(pos.bar_ordinal) {
-                return tab.get_bar_of_ordinal(bar.props.get_section_first_bar_ordinal() + bar.section.bars.len());
+                return tab.get_bar_of_ordinal(
+                    bar.props.get_section_first_bar_ordinal() + bar.section.bars.len(),
+                );
             }
             None
         });
@@ -277,9 +273,13 @@ impl Control {
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
         if let Some(tab) = &midi_state.tab {
-            if let Some(bar) = tab.get_bar_of_ordinal(midi_state.play_control.position.bar.bar_ordinal)  {
-                midi_state.play_control.begin_bar_ordinal = bar.props.get_section_first_bar_ordinal();
-                midi_state.play_control.end_bar_ordinal = bar.props.get_section_first_bar_ordinal() + bar.section.bars.len() - 1;
+            if let Some(bar) =
+                tab.get_bar_of_ordinal(midi_state.play_control.position.bar.bar_ordinal)
+            {
+                midi_state.play_control.begin_bar_ordinal =
+                    bar.props.get_section_first_bar_ordinal();
+                midi_state.play_control.end_bar_ordinal =
+                    bar.props.get_section_first_bar_ordinal() + bar.section.bars.len() - 1;
                 Self::send_begin_end_evt(midi_state, play_control_evts);
             }
         }
@@ -320,11 +320,7 @@ impl Control {
         settings.always_show_fret = !settings.always_show_fret;
         Self::reload_tab(state, theme);
     }
-    pub fn set_window_size(
-        window: &mut Window,
-        width: usize,
-        height: usize,
-    ) {
+    pub fn set_window_size(window: &mut Window, width: usize, height: usize) {
         /* Bevy is using the requested width and height for a check, so if the window got resized after
          * set_resolution(), set same value won't trigger update, use a quick hack here for now.
          */
@@ -340,10 +336,6 @@ impl Control {
         speed_factor: f32,
     ) {
         settings.speed_factor = speed_factor;
-        Self::sync_speed_factor(
-            settings,
-            midi_state,
-            play_control_evts,
-        )
+        Self::sync_speed_factor(settings, midi_state, play_control_evts)
     }
 }

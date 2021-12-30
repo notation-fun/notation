@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
-use super::{shape::{Shape, SingleShape}, shapes::DoubleShape};
+use super::shape::{Shape, SingleShape};
+use super::shapes::DoubleShape;
 
 #[derive(Clone, Debug)]
 pub struct FillPath {
@@ -67,9 +68,7 @@ impl SingleShape<shapes::SvgPathShape> for StrokePath {
         ShapeColors::new(self.color)
     }
     fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Stroke(
-            StrokeOptions::default().with_line_width(self.line_width),
-        )
+        DrawMode::Stroke(StrokeOptions::default().with_line_width(self.line_width))
     }
     fn get_transform(&self) -> Transform {
         Transform {

@@ -1,5 +1,6 @@
 use fehler::throws;
 
+use notation_proto::prelude::BarLayer;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Error, ParseStream};
@@ -35,5 +36,12 @@ impl ToTokens for LayerDsl {
         tokens.extend(quote! {
             BarLayer::new(#track.into(), #slices_quote)
         });
+    }
+}
+
+impl LayerDsl {
+    pub fn to_proto(&self) -> BarLayer {
+        let slices = self.slices.iter().map(|x| x.to_proto()).collect();
+        BarLayer::new(self.track.id.clone(), slices)
     }
 }

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{ShapeOp, FillRectangle};
+use notation_bevy_utils::prelude::{FillRectangle, ShapeOp};
 
-use crate::prelude::{NotationTheme};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct ShapeBarreData {
@@ -10,9 +10,7 @@ pub struct ShapeBarreData {
 
 impl ShapeBarreData {
     pub fn new(barre: u8) -> Self {
-        ShapeBarreData {
-            barre,
-        }
+        ShapeBarreData { barre }
     }
 }
 
@@ -27,11 +25,7 @@ impl ShapeOp<NotationTheme, FillRectangle> for ShapeBarreData {
             height: shapes.shape_barre_height,
             origin: bevy_prototype_lyon::prelude::shapes::RectangleOrigin::Center,
             color,
-            offset: Vec3::new(
-                x,
-                y,
-                theme.shapes.shape_text_z,
-            ),
+            offset: Vec3::new(x, y, theme.shapes.shape_text_z),
         }
     }
 }

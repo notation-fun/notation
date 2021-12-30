@@ -16,7 +16,10 @@ impl EntryPlaying {
         for (_entity, entry, mut entry_playing) in query.iter_mut() {
             if tab_state.play_control.play_state.is_stopped() {
                 if tab_state.is_bar_in_range(entry_playing.bar_props.bar_ordinal) {
-                    if entry.bar_props().bar_ordinal == tab_state.play_control.position.bar.bar_ordinal && entry.props.in_bar_pos.0 == 0.0 {
+                    if entry.bar_props().bar_ordinal
+                        == tab_state.play_control.position.bar.bar_ordinal
+                        && entry.props.in_bar_pos.0 == 0.0
+                    {
                         entry_playing.value = PlayingState::Current;
                     } else {
                         entry_playing.value = PlayingState::Idle;

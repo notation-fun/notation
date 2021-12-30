@@ -10,7 +10,13 @@ pub struct MidiMessage {
     pub midi: StructuredShortMessage,
 }
 impl MidiMessage {
-    pub fn new(pass_mode: EntryPassMode, pos: BarPosition, duration: Units, delay: bool, midi: StructuredShortMessage) -> Self {
+    pub fn new(
+        pass_mode: EntryPassMode,
+        pos: BarPosition,
+        duration: Units,
+        delay: bool,
+        midi: StructuredShortMessage,
+    ) -> Self {
         Self {
             pass_mode,
             pos,

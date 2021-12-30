@@ -9,7 +9,9 @@ use crate::prelude::{
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
 use crate::ui::layout::NotationLayout;
-use notation_bevy_utils::prelude::{LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle, ColorBackground};
+use notation_bevy_utils::prelude::{
+    ColorBackground, LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle,
+};
 use notation_model::prelude::{BarLane, LaneKind, TabBar};
 
 pub type LaneView = LaneLayoutData;
@@ -52,15 +54,17 @@ impl LaneView {
                         LaneKind::Melody => ThemeColors::hex_linear("00FFFF33"),
                         _ => ThemeColors::hex_linear("00000033"),
                     };
-                    ColorBackground::spawn(
-                        commands,
-                        lane_entity,
-                        30.0,
-                        color,
-                    );
+                    ColorBackground::spawn(commands, lane_entity, 30.0, color);
                 }
                 for entry in lane.entries.iter() {
-                    entry_plugin::create_entry(commands, assets, theme, settings, lane_entity, entry);
+                    entry_plugin::create_entry(
+                        commands,
+                        assets,
+                        theme,
+                        settings,
+                        lane_entity,
+                        entry,
+                    );
                 }
             }
         } else {
@@ -72,7 +76,7 @@ impl LaneView {
         commands: &mut Commands,
         settings: &NotationSettings,
         lane: &BarLane,
-        lane_entity: Entity
+        lane_entity: Entity,
     ) -> bool {
         match lane.kind {
             LaneKind::Lyrics => {

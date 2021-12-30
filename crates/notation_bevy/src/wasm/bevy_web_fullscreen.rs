@@ -33,7 +33,11 @@ pub fn get_viewport_size() -> (f32, f32) {
 
     let width = document_element.client_width();
     let height = document_element.client_height();
-    web_log!("bevy_web_fullscreen::get_viewport_size() -> {}, {}", width, height);
+    web_log!(
+        "bevy_web_fullscreen::get_viewport_size() -> {}, {}",
+        width,
+        height
+    );
 
     (width as f32, height as f32)
 }
@@ -45,7 +49,10 @@ fn setup_viewport_resize_system(resize_sender: Res<Mutex<OnResizeSender>>) {
     local_sender.send(()).unwrap();
 
     gloo_events::EventListener::new(&web_window, "resize", move |_event| {
-        web_log!("bevy_web_fullscreen::setup_viewport_resize_system() {:?}", _event);
+        web_log!(
+            "bevy_web_fullscreen::setup_viewport_resize_system() {:?}",
+            _event
+        );
         local_sender.send(()).unwrap();
     })
     .forget();
@@ -58,9 +65,12 @@ fn viewport_resize_system(
     if resize_receiver.lock().unwrap().try_recv().is_ok() {
         if let Some(window) = windows.get_primary_mut() {
             let size = get_viewport_size();
-            web_log!("bevy_web_fullscreen::viewport_resize_system() {}, {}", size.0, size.1);
+            web_log!(
+                "bevy_web_fullscreen::viewport_resize_system() {}, {}",
+                size.0,
+                size.1
+            );
             window.set_resolution(size.0, size.1);
         }
     }
 }
-

@@ -163,12 +163,27 @@ impl Default for BarColors {
 impl BarColors {
     pub fn get_beat_color(&self, signature: &Signature, beat: u8, selected: bool) -> Color {
         if selected {
-            self._get_beat_color(signature, beat, self.selected_beat_color0, self.selected_beat_color1, self.selected_beat_color2)
+            self._get_beat_color(
+                signature,
+                beat,
+                self.selected_beat_color0,
+                self.selected_beat_color1,
+                self.selected_beat_color2,
+            )
         } else {
-            self._get_beat_color(signature, beat, self.beat_color0, self.beat_color1, self.beat_color2)
+            self._get_beat_color(
+                signature,
+                beat,
+                self.beat_color0,
+                self.beat_color1,
+                self.beat_color2,
+            )
         }
     }
-    pub fn _get_beat_color(&self, signature: &Signature, beat: u8,
+    pub fn _get_beat_color(
+        &self,
+        signature: &Signature,
+        beat: u8,
         color0: Color,
         color1: Color,
         color2: Color,

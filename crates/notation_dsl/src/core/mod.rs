@@ -6,6 +6,8 @@ pub mod note;
 pub mod octave;
 pub mod pitch_name;
 pub mod pitch_sign;
+pub mod signature;
 pub mod syllable;
+pub mod tempo;
 pub mod tone;
 pub mod word;

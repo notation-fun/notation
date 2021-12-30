@@ -44,11 +44,7 @@ impl NotationAppState {
             _load_tab_delay_seconds: 0.0,
         }
     }
-    pub fn change_tab(
-        &mut self,
-        theme: &mut NotationTheme,
-        tab_path: String
-    ) {
+    pub fn change_tab(&mut self, theme: &mut NotationTheme, tab_path: String) {
         theme._bypass_systems = true;
         self.tab_path = tab_path;
         self.parse_error = None;

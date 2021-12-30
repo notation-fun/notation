@@ -17,7 +17,9 @@ impl From<String> for MarkDownAsset {
 
 impl From<&str> for MarkDownAsset {
     fn from(v: &str) -> Self {
-        Self { text: String::from(v) }
+        Self {
+            text: String::from(v),
+        }
     }
 }
 

@@ -7,7 +7,7 @@ use bevy::prelude::*;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use crate::prelude::{NotationAssets, ThemeColors, NotationSettings};
+use crate::prelude::{NotationAssets, NotationSettings, ThemeColors};
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -256,7 +256,11 @@ impl MelodyTexts {
             assets.latin_font.clone(),
             self.syllable_font_size * scale,
             self.syllable_font_color,
-            if self.horizontal_center { HorizontalAlign::Center } else { HorizontalAlign::Right } ,
+            if self.horizontal_center {
+                HorizontalAlign::Center
+            } else {
+                HorizontalAlign::Right
+            },
             VerticalAlign::Center,
             self.text_x * scale,
             self.text_y * scale,

@@ -43,8 +43,8 @@ impl ShapeOp<NotationTheme, StrokeLine> for WordTextData {
         let offset = if self.value.bar_size <= 0.0 {
             BevyUtil::offscreen_offset()
         } else {
-            let x = self.value.bar_size / self.bar_props.bar_units.0
-                * self.entry_props.in_bar_pos.0;
+            let x =
+                self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.in_bar_pos.0;
             let y = 0.0;
             Vec3::new(x, y, theme.z.word)
         };

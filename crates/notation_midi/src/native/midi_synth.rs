@@ -34,7 +34,10 @@ impl MidiSynth {
         if path.exists() {
             Some(path)
         } else {
-            println!("MidiSynth check_path() not exist: {:?} {} -> {:?}", root, name, path);
+            println!(
+                "MidiSynth check_path() not exist: {:?} {} -> {:?}",
+                root, name, path
+            );
             None
         }
     }
@@ -57,7 +60,7 @@ impl MidiSynth {
                     Some(path) => {
                         println!("MidiSynth try_new() Loading: {:?}", path);
                         synth.sfload(path, true).map(|_| synth)
-                    },
+                    }
                     None => {
                         let path = format!("assets/{}.sf2", Self::SOUND_FONT);
                         synth.sfload(path, true).map(|_| synth)
@@ -86,8 +89,7 @@ impl MidiSynth {
             synth.write(data).unwrap();
         });
     }
-    pub fn init_channels(&self, _settings: &MidiSettings, _state: &MidiState) {
-    }
+    pub fn init_channels(&self, _settings: &MidiSettings, _state: &MidiState) {}
     pub fn send(&self, _speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) -> Result<(), String> {
         match msg.midi {
             StructuredShortMessage::NoteOff {
@@ -101,10 +103,9 @@ impl MidiSynth {
                 velocity: _,
             } => {
                 let velocity = if velocity > 127 { 127 } else { velocity };
-                self
-                .synth
-                .note_on(channel.into(), key_number.into(), velocity.into())
-            },
+                self.synth
+                    .note_on(channel.into(), key_number.into(), velocity.into())
+            }
             StructuredShortMessage::PolyphonicKeyPressure {
                 channel: _,
                 key_number: _,

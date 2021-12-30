@@ -4,13 +4,13 @@ use std::sync::Arc;
 use bevy::prelude::*;
 
 use notation_bevy_utils::prelude::{
-    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery,
-    LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
+    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutQuery,
+    LayoutSize, View, ViewBundle, ViewQuery,
 };
 use notation_model::prelude::{Tab, TabChord};
 
 use crate::chord::chord_view::ChordView;
-use crate::prelude::{NotationAppState, NotationSettings, NotationTheme, NotationAssets};
+use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
 use crate::ui::layout::NotationLayout;
 
 use super::tab_events::TabChordsDoLayoutEvent;
@@ -21,7 +21,12 @@ pub struct TabChords {
 }
 impl Display for TabChords {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<TabChords>(B:{}, C:{})", self.tab.bars.len(), self.chords.len())
+        write!(
+            f,
+            "<TabChords>(B:{}, C:{})",
+            self.tab.bars.len(),
+            self.chords.len()
+        )
     }
 }
 impl TabChords {
@@ -33,17 +38,12 @@ impl TabChords {
         grid_size: LayoutSize,
         chords: usize,
     ) -> GridData {
-        let chord_size_range =
-            match engine.settings.override_chord_size {
-                Some(size) => (size, size),
-                None => engine.theme.sizes.chord.chord_size_range,
-            };
-        let (mut rows, mut cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
-            grid_size.width,
-            chord_size_range,
-            0.0,
-            chords,
-        );
+        let chord_size_range = match engine.settings.override_chord_size {
+            Some(size) => (size, size),
+            None => engine.theme.sizes.chord.chord_size_range,
+        };
+        let (mut rows, mut cols, cell_width) =
+            GridData::cals_fixed_rows_cols_by_width(grid_size.width, chord_size_range, 0.0, chords);
         if rows == 1 && cols > chords {
             cols = chords;
         }
@@ -101,7 +101,9 @@ impl TabChords {
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<ChordView>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

@@ -1,10 +1,8 @@
 use std::sync::Arc;
 
-use notation_bevy_utils::prelude::{DoLayoutEvent, GridData, LayoutData, ShapeOp, ColorBackground};
+use notation_bevy_utils::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp};
 use notation_midi::prelude::PlayControlEvent;
-use notation_model::prelude::{
-    LaneEntry, PlayState, PlayingState, Position, Tab, TickResult,
-};
+use notation_model::prelude::{LaneEntry, PlayState, PlayingState, Position, Tab, TickResult};
 
 use bevy::prelude::*;
 
@@ -13,8 +11,8 @@ use crate::bar::bar_view::BarView;
 use crate::chord::chord_color_background::ChordColorBackground;
 use crate::chord::chord_playing::ChordPlaying;
 use crate::prelude::{
-    BarPlaying, EntryPlaying, NotationAssetsStates, NotationSettings, NotationTheme,
-    TabBars, TabState,
+    BarPlaying, EntryPlaying, NotationAssetsStates, NotationSettings, NotationTheme, TabBars,
+    TabState,
 };
 
 use crate::settings::layout_settings::LayoutMode;
@@ -22,10 +20,10 @@ use crate::tab::tab_events::TabBarsResizedEvent;
 use crate::tab::tab_state::TabPlayStateChanged;
 use crate::ui::layout::NotationLayout;
 
-use super::bar_indicator::{BarIndicatorData};
+use super::bar_indicator::BarIndicatorData;
 use super::play_button::PlayButton;
 use super::play_panel::PlayPanel;
-use super::pos_indicator::{PosIndicatorData};
+use super::pos_indicator::PosIndicatorData;
 
 pub type PlayPanelDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, PlayPanel>;
 
@@ -65,7 +63,10 @@ fn update_indicators(
     commands: &mut Commands,
     theme: &NotationTheme,
     settings: &mut NotationSettings,
-    chord_color_background_query: &mut Query<(Entity, &mut ColorBackground), With<ChordColorBackground>>,
+    chord_color_background_query: &mut Query<
+        (Entity, &mut ColorBackground),
+        With<ChordColorBackground>,
+    >,
     bar_indicator_query: &mut Query<(Entity, &mut BarIndicatorData), With<BarIndicatorData>>,
     pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     tab_bars_query: &mut Query<(
@@ -93,7 +94,12 @@ fn update_indicators(
         data.bar_props = bar_props;
         data.bar_layout = bar_layout;
         data.update_data(commands, theme, entity, bar_props, bar_layout, in_bar_pos);
-        ChordColorBackground::update_color(commands, theme, chord_color_background_query, data.chord);
+        ChordColorBackground::update_color(
+            commands,
+            theme,
+            chord_color_background_query,
+            data.chord,
+        );
     }
 }
 
@@ -103,7 +109,10 @@ fn on_tab_resized(
     theme: Res<NotationTheme>,
     mut settings: ResMut<NotationSettings>,
     mut query: Query<(Entity, &BarPlaying, &Arc<BarView>, &LayoutData)>,
-    mut chord_color_background_query: Query<(Entity, &mut ColorBackground), With<ChordColorBackground>>,
+    mut chord_color_background_query: Query<
+        (Entity, &mut ColorBackground),
+        With<ChordColorBackground>,
+    >,
     mut bar_indicator_query: Query<(Entity, &mut BarIndicatorData), With<BarIndicatorData>>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     mut tab_bars_query: Query<(
@@ -114,7 +123,9 @@ fn on_tab_resized(
         &Arc<GridData>,
     )>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     let mut bars = None;
     for evt in evts.iter() {
         bars = Some(&evt.0);
@@ -157,7 +168,10 @@ fn on_bar_playing_changed(
     theme: Res<NotationTheme>,
     mut settings: ResMut<NotationSettings>,
     mut query: Query<(Entity, &BarPlaying, &Arc<BarView>, &LayoutData), Changed<BarPlaying>>,
-    mut chord_color_background_query: Query<(Entity, &mut ColorBackground), With<ChordColorBackground>>,
+    mut chord_color_background_query: Query<
+        (Entity, &mut ColorBackground),
+        With<ChordColorBackground>,
+    >,
     mut bar_indicator_query: Query<(Entity, &mut BarIndicatorData), With<BarIndicatorData>>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     mut tab_bars_query: Query<(
@@ -168,7 +182,9 @@ fn on_bar_playing_changed(
         &Arc<GridData>,
     )>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     for (_entity, playing, _view, layout) in query.iter_mut() {
         if playing.value == PlayingState::Current {
             update_indicators(
@@ -206,7 +222,9 @@ fn on_tab_play_state_changed(
         &Arc<GridData>,
     )>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     for (state_entity, tab_state) in query.iter_mut() {
         TabState::clear_play_state_changed(&mut commands, state_entity);
         if let Some(pos_data) = PosIndicatorData::update_pos(
@@ -231,7 +249,10 @@ fn on_tick(
     commands: &mut Commands,
     theme: &NotationTheme,
     settings: &mut NotationSettings,
-    chord_color_background_query: &mut Query<(Entity, &mut ColorBackground), With<ChordColorBackground>>,
+    chord_color_background_query: &mut Query<
+        (Entity, &mut ColorBackground),
+        With<ChordColorBackground>,
+    >,
     bar_indicator_query: &mut Query<(Entity, &mut BarIndicatorData), With<BarIndicatorData>>,
     pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     bar_playing_query: &mut Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
@@ -281,8 +302,19 @@ fn on_tick(
                 .focus_bar(commands, theme, tab_bars_query, &pos_data);
         }
         if chord_changed > 0 {
-            if let Some(bar_data) = BarIndicatorData::update_pos(commands, theme, bar_indicator_query, pos_data.bar_props, pos_data.bar_position.in_bar_pos) {
-                ChordColorBackground::update_color(commands, theme, chord_color_background_query, bar_data.chord);
+            if let Some(bar_data) = BarIndicatorData::update_pos(
+                commands,
+                theme,
+                bar_indicator_query,
+                pos_data.bar_props,
+                pos_data.bar_position.in_bar_pos,
+            ) {
+                ChordColorBackground::update_color(
+                    commands,
+                    theme,
+                    chord_color_background_query,
+                    bar_data.chord,
+                );
             }
         }
     }
@@ -294,7 +326,10 @@ fn on_play_control_evt(
     mut settings: ResMut<NotationSettings>,
     mut evts: EventReader<PlayControlEvent>,
     mut tab_state_query: Query<(Entity, &mut TabState)>,
-    mut chord_color_background_query: Query<(Entity, &mut ColorBackground), With<ChordColorBackground>>,
+    mut chord_color_background_query: Query<
+        (Entity, &mut ColorBackground),
+        With<ChordColorBackground>,
+    >,
     mut bar_indicator_query: Query<(Entity, &mut BarIndicatorData), With<BarIndicatorData>>,
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
@@ -312,7 +347,9 @@ fn on_play_control_evt(
     )>,
     mut beat_query: Query<(Entity, &mut BarBeatData)>,
 ) {
-    if theme._bypass_systems { return; }
+    if theme._bypass_systems {
+        return;
+    }
     for evt in evts.iter() {
         for (state_entity, mut tab_state) in tab_state_query.iter_mut() {
             if !tab_state.under_control {
@@ -350,7 +387,6 @@ fn on_play_control_evt(
                 }
                 PlayControlEvent::OnShouldLoop(should_loop) => {
                     tab_state.set_should_loop(*should_loop);
-
                 }
             }
         }

@@ -84,7 +84,9 @@ impl MiniMap {
         for bar in tab.bars.iter() {
             MiniBar::spawn(commands, assets, theme, map_entity, bar);
         }
-        theme.texts.mini_map
+        theme
+            .texts
+            .mini_map
             .spawn_debug_text(commands, background_entity, &assets, "");
         map_entity
     }

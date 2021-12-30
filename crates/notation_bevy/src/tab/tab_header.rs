@@ -3,10 +3,10 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, DockView, LayoutChangedQuery, LayoutConstraint, LayoutQuery,
-    LayoutSize, View, ViewBundle, ViewQuery, ColorBackground,
+    BevyUtil, ColorBackground, DockPanel, DockSide, DockView, LayoutChangedQuery, LayoutConstraint,
+    LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
-use notation_model::prelude::{Tab, TrackKind, TabChord};
+use notation_model::prelude::{Tab, TabChord, TrackKind};
 
 use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
 use crate::rhythm::rhythm_view::RhythmView;
@@ -65,13 +65,7 @@ impl TabHeader {
             theme.z.tab_header,
             theme.colors.chord.background,
         );
-        RhythmView::spawn(
-            commands,
-            assets,
-            theme,
-            header_entity,
-            tab,
-        );
+        RhythmView::spawn(commands, assets, theme, header_entity, tab);
         TabChords::spawn(commands, assets, theme, header_entity, &tab, &view.chords);
         header_entity
     }
@@ -84,7 +78,9 @@ impl TabHeader {
         panel_query: ViewQuery<RhythmView>,
         content_query: ViewQuery<TabChords>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         let engine = NotationLayout::new(&theme, &state, &settings);
         for evt in evts.iter() {
             evt.view.do_layout(

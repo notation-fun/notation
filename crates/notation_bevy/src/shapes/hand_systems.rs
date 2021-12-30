@@ -4,9 +4,9 @@ use notation_model::prelude::LaneEntry;
 
 use notation_bevy_utils::prelude::ShapeOp;
 
+use super::shape_barre::ShapeBarreData;
 use super::shape_diagram::{ShapeDiagramData4, ShapeDiagramData6};
-use super::shape_barre::{ShapeBarreData};
-use super::shape_finger::{ShapeFingerData};
+use super::shape_finger::ShapeFingerData;
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
 use notation_model::prelude::{HandShape4, HandShape6};
 
@@ -46,13 +46,5 @@ macro_rules! impl_hand_system {
     };
 }
 
-impl_hand_system!(
-    create_hand_shape6,
-    HandShape6,
-    ShapeDiagramData6
-);
-impl_hand_system!(
-    create_hand_shape4,
-    HandShape4,
-    ShapeDiagramData4
-);
+impl_hand_system!(create_hand_shape6, HandShape6, ShapeDiagramData6);
+impl_hand_system!(create_hand_shape4, HandShape4, ShapeDiagramData4);

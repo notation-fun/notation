@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::Finger;
 
-use crate::prelude::{NotationTheme};
+use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug)]
 pub struct ShapeFingerData {
@@ -30,16 +30,12 @@ impl ShapeOp<NotationTheme, FillCircle> for ShapeFingerData {
             shapes.shape_finger_color
         };
         let x = shapes.shape_finger_offset_x - shapes.shape_string_space * self.string as f32;
-        let y = shapes.shape_finger_offset_y
-            - shapes.shape_fret_space * self.fret.unwrap_or(0) as f32;
+        let y =
+            shapes.shape_finger_offset_y - shapes.shape_fret_space * self.fret.unwrap_or(0) as f32;
         FillCircle {
             radius: shapes.shape_finger_radius,
             color,
-            offset: Vec3::new(
-                x,
-                y,
-                shapes.shape_text_z,
-            ),
+            offset: Vec3::new(x, y, shapes.shape_text_z),
         }
     }
 }

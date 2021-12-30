@@ -40,7 +40,10 @@ impl ChordPlaying {
                     false
                 }
             } else {
-                let chords = tab_state.tab.get_bar(new_position.bar).map(|x| x.get_chords());
+                let chords = tab_state
+                    .tab
+                    .get_bar(new_position.bar)
+                    .map(|x| x.get_chords());
                 if let Some(chords) = chords {
                     chords.contains(&c)
                 } else {

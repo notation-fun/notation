@@ -1,15 +1,15 @@
 use bevy::prelude::*;
-use bevy_egui::egui::{self, Ui, color_picker::show_color};
-use notation_bevy_utils::{prelude::BevyUtil, asset::markdown_asset::MarkDownAsset, easy_mark::{EasyMarkStyle, label_from_style}};
-use notation_model::prelude::{TrackKind, Pitch, Semitones};
+use bevy_egui::egui::{self, Ui};
+use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
+use notation_model::prelude::TrackKind;
 
-use crate::prelude::{NotationTheme, NotationAssets, NotationAppState};
+use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
 
-use super::{help_panel::{HelpPageId, HelpPage}, page_helper::PageHelper};
+use super::help_panel::{HelpPage, HelpPageId};
+use super::page_helper::PageHelper;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
-pub struct ChordsPage {
-}
+pub struct ChordsPage {}
 
 impl HelpPage for ChordsPage {
     fn page_id(&self) -> HelpPageId {
@@ -30,12 +30,23 @@ impl HelpPage for ChordsPage {
             ui.label("Tab not loaded...");
             return;
         }
-        let chords = state.tab.as_deref().unwrap()
+        let chords = state
+            .tab
+            .as_deref()
+            .unwrap()
             .get_track_of_kind(TrackKind::Chord)
             .map(|x| x.get_tab_chords())
             .unwrap_or_default();
-        let scale = state.tab.as_ref().map(|x| x.meta.scale.clone()).unwrap_or_default();
-        let key = state.tab.as_ref().map(|x| x.meta.key.clone()).unwrap_or_default();
+        let scale = state
+            .tab
+            .as_ref()
+            .map(|x| x.meta.scale.clone())
+            .unwrap_or_default();
+        let key = state
+            .tab
+            .as_ref()
+            .map(|x| x.meta.key.clone())
+            .unwrap_or_default();
         PageHelper::add_key_scale(ui, &key, &scale);
         ui.separator();
         egui::Grid::new("chords").show(ui, |ui| {
@@ -44,7 +55,14 @@ impl HelpPage for ChordsPage {
                 PageHelper::add_syllable(ui, theme, true, &chord.chord.root, false, true);
                 let mut index = 0;
                 for interval in chord.chord.intervals.get_intervals().iter() {
-                    PageHelper::add_interval_syllable(ui, theme, true, &chord.chord.root, interval, false);
+                    PageHelper::add_interval_syllable(
+                        ui,
+                        theme,
+                        true,
+                        &chord.chord.root,
+                        interval,
+                        false,
+                    );
                     index += 1;
                 }
                 for _ in index..=3 {
@@ -52,7 +70,14 @@ impl HelpPage for ChordsPage {
                     ui.label("");
                 }
                 if let Some(bass) = chord.chord.bass {
-                    PageHelper::add_interval_syllable(ui, theme, true, &chord.chord.root, &bass, true);
+                    PageHelper::add_interval_syllable(
+                        ui,
+                        theme,
+                        true,
+                        &chord.chord.root,
+                        &bass,
+                        true,
+                    );
                 }
                 ui.end_row();
                 ui.label("");

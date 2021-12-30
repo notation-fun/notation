@@ -41,7 +41,9 @@ macro_rules! impl_strings_plugin {
             theme: Res<NotationTheme>,
             query: Query<(Entity, &Arc<BarLane>, &$strings_grid), Added<$strings_grid>>,
         ) {
-            if theme._bypass_systems { return; }
+            if theme._bypass_systems {
+                return;
+            }
             for (entity, lane, strings_grid) in query.iter() {
                 strings_grid.add_strings(&mut commands, &theme, entity, lane);
             }

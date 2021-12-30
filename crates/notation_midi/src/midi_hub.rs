@@ -75,7 +75,13 @@ impl MidiHub {
             synth.init_channels(settings, state);
         }
     }
-    pub fn send(&mut self, settings: &MidiSettings, speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) {
+    pub fn send(
+        &mut self,
+        settings: &MidiSettings,
+        speed: &PlaySpeed,
+        msg: &MidiMessage,
+        velocity: u8,
+    ) {
         if settings.bypass_hub {
             return;
         }

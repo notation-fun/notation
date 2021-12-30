@@ -2,7 +2,10 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, ShapeOp, FillPath, View, ViewBundle};
+use notation_bevy_utils::prelude::{
+    BevyUtil, FillPath, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, ShapeOp, View,
+    ViewBundle,
+};
 use notation_model::prelude::{PlayState, Tab};
 
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
@@ -73,7 +76,7 @@ impl From<usize> for PlayButtonAction {
 }
 
 #[derive(Clone, Debug)]
-pub struct PlayButton  {
+pub struct PlayButton {
     pub action: PlayButtonAction,
 }
 impl Display for PlayButton {
@@ -101,15 +104,14 @@ impl Display for PlayButtonShape {
 impl PlayButtonShape {
     pub fn get_color(&self, theme: &NotationTheme) -> Color {
         match self.action {
-            PlayButtonAction::PlayPause |
-            PlayButtonAction::Stop =>
-                theme.colors.ui.button_on,
-            PlayButtonAction::LoopMode =>
-                theme.colors.ui.of_button(self.should_loop),
-            PlayButtonAction::SetBegin |
-            PlayButtonAction::SetEnd |
-            PlayButtonAction::Clear =>
-                theme.colors.ui.of_button(self.begin_bar_ordinal != 0 || self.end_bar_ordinal + 1 != self.bars),
+            PlayButtonAction::PlayPause | PlayButtonAction::Stop => theme.colors.ui.button_on,
+            PlayButtonAction::LoopMode => theme.colors.ui.of_button(self.should_loop),
+            PlayButtonAction::SetBegin | PlayButtonAction::SetEnd | PlayButtonAction::Clear => {
+                theme
+                    .colors
+                    .ui
+                    .of_button(self.begin_bar_ordinal != 0 || self.end_bar_ordinal + 1 != self.bars)
+            }
         }
     }
 }
@@ -150,11 +152,8 @@ impl PlayButton {
         tab: &Arc<Tab>,
         action: PlayButtonAction,
     ) -> Entity {
-        let button_entity = BevyUtil::spawn_child_bundle(
-            commands,
-            entity,
-            ViewBundle::from(PlayButton{action}),
-        );
+        let button_entity =
+            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(PlayButton { action }));
         let button_shape = PlayButtonShape {
             action,
             width: 32.0,
@@ -163,7 +162,11 @@ impl PlayButton {
             should_loop: settings.should_loop,
             bars: tab.bars.len(),
             begin_bar_ordinal: 0,
-            end_bar_ordinal: if tab.bars.len() > 0 { tab.bars.len() - 1 } else { 0 },
+            end_bar_ordinal: if tab.bars.len() > 0 {
+                tab.bars.len() - 1
+            } else {
+                0
+            },
         };
         button_shape.create(commands, theme, button_entity);
         button_entity
@@ -174,7 +177,9 @@ impl PlayButton {
         query: LayoutChangedWithChildrenQuery<PlayButton>,
         mut shape_query: Query<(Entity, &mut PlayButtonShape)>,
     ) {
-        if theme._bypass_systems { return; }
+        if theme._bypass_systems {
+            return;
+        }
         for (_entity, _view, layout, children) in query.iter() {
             for child in children.iter() {
                 if let Ok((entity, mut data)) = shape_query.get_mut(*child) {
@@ -223,7 +228,8 @@ impl PlayButton {
             shape.end_bar_ordinal = end_bar_ordinal;
             if shape.action == PlayButtonAction::SetBegin
                 || shape.action == PlayButtonAction::SetEnd
-                || shape.action == PlayButtonAction::Clear {
+                || shape.action == PlayButtonAction::Clear
+            {
                 shape.update(commands, theme, entity);
             }
         }
