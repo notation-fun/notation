@@ -2943,7 +2943,7 @@ dependencies = [
 
 [[package]]
 name = "notation_bevy_utils"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "anyhow",
  "bevy",
