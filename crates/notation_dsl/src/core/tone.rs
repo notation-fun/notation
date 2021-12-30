@@ -66,14 +66,23 @@ impl ToTokens for ToneDsl {
 
 impl ToneDsl {
     pub fn to_proto(&self) -> ProtoEntry {
-        let notes = self
-            .notes
-            .iter()
-            .map(|x| x.to_proto())
-            .collect::<Vec<Note>>();
-        ProtoEntry::from(CoreEntry::from((
-            Tone::from(notes),
-            Context::tweaked_duration(&self.duration_tweak),
-        )))
+        let ToneDsl {
+            empty,
+            notes,
+            duration_tweak,
+        } = self;
+        let duration = Context::tweaked_duration(duration_tweak);
+        if empty.is_some() {
+            empty.as_ref().unwrap().to_proto(duration)
+        } else {
+            let notes = notes
+                .iter()
+                .map(|x| x.to_proto())
+                .collect::<Vec<Note>>();
+            ProtoEntry::from(CoreEntry::from((
+                Tone::from(notes),
+                duration,
+            )))
+        }
     }
 }

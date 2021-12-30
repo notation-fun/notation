@@ -2913,7 +2913,7 @@ dependencies = [
 
 [[package]]
 name = "notation_bevy"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2969,7 +2969,7 @@ dependencies = [
 
 [[package]]
 name = "notation_dsl"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "anyhow",
  "fehler",
@@ -3000,7 +3000,7 @@ dependencies = [
 
 [[package]]
 name = "notation_macro"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "notation_dsl",
 ]
@@ -3045,7 +3045,7 @@ dependencies = [
 
 [[package]]
 name = "notation_tab"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "anyhow",
  "notation_dsl",
@@ -3064,14 +3064,14 @@ dependencies = [
 
 [[package]]
 name = "notation_viewer"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "notation_bevy",
 ]
 
 [[package]]
 name = "notation_viewer_cn"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "notation_bevy",
 ]
