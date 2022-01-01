@@ -14,7 +14,7 @@ pub struct NotationState {
     pub tab_path: String,
     pub tab: Option<Arc<Tab>>,
     pub show_control: bool,
-    pub show_help: bool,
+    pub show_kb: bool,
     pub parse_error: Option<ParseError>,
     pub debug_str: Option<String>,
     pub _despawn_delay_seconds: f32,
@@ -33,10 +33,10 @@ impl NotationState {
             show_control: false,
 
             #[cfg(debug_assertions)]
-            show_help: false,
+            show_kb: false,
 
             #[cfg(not(debug_assertions))]
-            show_help: true,
+            show_kb: true,
 
             parse_error: None,
             debug_str: None,
@@ -66,6 +66,6 @@ impl NotationState {
 impl FromWorld for NotationState {
     fn from_world(world: &mut World) -> Self {
         let tab_pathes = world.get_resource::<TabPathes>().unwrap();
-        Self::new(tab_pathes.0[0].clone())
+        Self::new(tab_pathes.0.first().unwrap_or(&"".to_owned()).clone())
     }
 }

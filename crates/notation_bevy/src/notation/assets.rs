@@ -19,6 +19,7 @@ pub struct NotationAssets {
     //pub guitar: Handle<Scene>,
     #[asset(path = "png/fretboard.png")]
     pub fretboard: Handle<Texture>,
+
     #[asset(path = "help/welcome.md")]
     pub help_welcome: Handle<MarkDownAsset>,
     #[asset(path = "help/usage.md")]

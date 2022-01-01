@@ -8,10 +8,13 @@ use notation_bevy::prelude::*;
 use notation_bevy::settings::layout_settings::LayoutMode;
 use notation_bevy::notation_midi::prelude::*;
 
+use crate::help_panel::HelpPanel;
+
 pub struct NotationViewer();
 
 impl NotationViewer {
     fn extra(app: &mut AppBuilder) {
+        app.init_resource::<HelpPanel>();
         TabPlugin::setup_mouse_input(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
@@ -19,6 +22,7 @@ impl NotationViewer {
                 .with_system(Self::handle_mouse_inputs.system())
                 .with_system(Self::handle_touch_inputs.system())
                 .with_system(Self::load_tab.system())
+                .with_system(HelpPanel::help_ui.system())
         );
     }
     pub fn run(tabs: Vec<String>) {
@@ -128,7 +132,7 @@ impl NotationViewer {
             }
         } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::H)
         {
-            app_state.show_help = !app_state.show_help;
+            app_state.show_kb = !app_state.show_kb;
         } else if keyboard_input.just_released(KeyCode::F5) || keyboard_input.just_released(KeyCode::R)
         {
             Control::reload_tab(&mut app_state, &mut theme);

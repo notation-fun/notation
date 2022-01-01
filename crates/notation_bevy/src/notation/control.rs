@@ -7,7 +7,7 @@ use notation_model::prelude::{BarPosition, Tab, Units};
 use notation_model::tab_bar::TabBar;
 
 use crate::settings::layout_settings::LayoutMode;
-use crate::tab::tab_plugin::{self, TabPlugin};
+use crate::tab::tab_plugin::{TabPlugin};
 
 use crate::prelude::{NotationState, NotationSettings, NotationTheme};
 

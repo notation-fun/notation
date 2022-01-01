@@ -1,22 +1,17 @@
-use std::fmt::Display;
 use std::sync::Arc;
 
 use bevy::prelude::*;
 use bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
 use bevy_egui::EguiContext;
 use float_eq::float_ne;
-use notation_bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, LayoutAnchor, LayoutConstraint, LayoutSize, View, ViewBundle,
-};
 use notation_midi::prelude::{JumpToBarEvent, MidiSettings, MidiState, PlayControlEvent};
-use notation_model::prelude::{Octave, Tab};
+use notation_model::prelude::{Octave};
 
 use crate::settings::layout_settings::{GridAlignMode, LayoutMode};
-use super::layout::NotationLayout;
 use super::control::Control;
 
 use crate::prelude::{
-    GuitarView, NotationState, NotationAssets, NotationSettings, NotationTheme, TabAsset,
+    GuitarView, NotationState, NotationSettings, NotationTheme, TabAsset,
     TabPathes, WindowResizedEvent,
 };
 
@@ -436,7 +431,7 @@ impl ControlPanel {
             }
             ui.separator();
             if ui.button("Help").clicked() {
-                state.show_help = true;
+                state.show_kb = true;
             }
             egui::warn_if_debug_build(ui);
             #[cfg(not(target_arch = "wasm32"))]

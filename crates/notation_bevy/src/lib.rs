@@ -1,6 +1,6 @@
 pub use {notation_midi, notation_model};
 
-pub use {bevy, bevy_prototype_lyon};
+pub use {bevy, bevy_prototype_lyon, bevy_egui};
 
 #[cfg(target_arch = "wasm32")]
 pub use bevy_webgl2;
@@ -20,7 +20,7 @@ pub mod play;
 pub mod tab;
 
 pub mod guitar;
-pub mod help;
+pub mod kb;
 pub mod lyrics;
 pub mod melody;
 pub mod rhythm;
@@ -144,4 +144,10 @@ pub mod prelude {
     pub use crate::notation::control::Control;
     #[doc(hidden)]
     pub use crate::notation::control_panel::ControlPanel;
+    #[doc(hidden)]
+    pub use crate::kb::kb_page::{KbPage, KbPageId};
+    #[doc(hidden)]
+    pub use crate::kb::page_helper::PageHelper;
+    #[doc(hidden)]
+    pub use crate::kb::kb_panel::KbPanel;
 }

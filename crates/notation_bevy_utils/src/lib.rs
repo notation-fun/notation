@@ -13,6 +13,8 @@ pub mod easy_mark;
 
 pub mod prelude {
     #[doc(hidden)]
+    pub use crate::asset::markdown_asset::MarkDownAsset;
+    #[doc(hidden)]
     pub use crate::bundle::single_bundle::{SingleArcBundle, SingleBundle};
     #[doc(hidden)]
     pub use crate::bundle::view_bundle::ViewBundle;

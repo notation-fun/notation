@@ -4,7 +4,7 @@ use bevy::window::WindowResized;
 
 use bevy_asset_loader::AssetLoader;
 
-use crate::{help::help_panel::HelpPanel, theme::theme_colors::UiColors};
+use crate::theme::theme_colors::UiColors;
 use crate::prelude::*;
 use super::control_panel::ControlPanel;
 use super::tab_viewer::TabViewerPlugin;
@@ -60,7 +60,6 @@ impl NotationApp {
 
         app.init_resource::<NotationTheme>();
         app.init_resource::<NotationSettings>();
-        app.init_resource::<HelpPanel>();
         app.add_plugins(NotationPlugins);
 
         #[cfg(target_arch = "wasm32")]
@@ -116,7 +115,6 @@ impl NotationApp {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(ControlPanel::control_ui.system())
-                .with_system(HelpPanel::help_ui.system())
                 .with_system(TabViewer::on_add_tab.system())
                 .with_system(TabViewer::on_window_resized.system())
                 .with_system(TabViewer::on_added.system()),
@@ -188,7 +186,7 @@ impl NotationApp {
         mut app_state: ResMut<NotationState>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
     ) {
-        if app_state.tab.is_none() {
+        if app_state.tab_path.len() > 0 && app_state.tab.is_none() {
             return;
         }
         for evt in evts.iter() {

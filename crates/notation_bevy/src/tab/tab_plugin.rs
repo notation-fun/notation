@@ -105,7 +105,7 @@ impl TabPlugin {
                 if !ControlPanel::is_pos_inside(app_state.window_width, pos) {
                     app_state.show_control = false;
                 }
-            } else if app_state.show_help {
+            } else if app_state.show_kb {
                 //TODO: after #125 done, can pass click event in case of not inside help panel
             } else {
                 println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
@@ -201,7 +201,7 @@ impl TabPlugin {
             if app_state.show_control && ControlPanel::is_pos_inside(app_state.window_width, pos) {
                 return;
             }
-            if app_state.show_help {
+            if app_state.show_kb {
                 //TODO: after #125 done, can pass drag event in case of not inside help panel
                 return;
             }

@@ -5,7 +5,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use notation_bevy_utils::prelude::{
-    BevyUtil, ColorBackground, DoLayoutEvent, DockView, LayoutQuery, View, ViewBundle, ViewQuery, LayoutConstraint, ViewRootQuery, ViewRootAddedQuery,
+    ColorBackground, DockView, LayoutQuery, View, ViewBundle, ViewQuery, LayoutConstraint, ViewRootQuery, ViewRootAddedQuery,
 };
 
 use crate::mini::mini_map::MiniMap;
