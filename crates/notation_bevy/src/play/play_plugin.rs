@@ -18,7 +18,7 @@ use crate::prelude::{
 use crate::settings::layout_settings::LayoutMode;
 use crate::tab::tab_events::TabBarsResizedEvent;
 use crate::tab::tab_state::TabPlayStateChanged;
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::bar_indicator::BarIndicatorData;
 use super::play_button::PlayButton;

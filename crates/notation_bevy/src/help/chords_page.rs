@@ -3,7 +3,7 @@ use bevy_egui::egui::{self, Ui};
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 use notation_model::prelude::TrackKind;
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
+use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use super::help_panel::{HelpPage, HelpPageId};
 use super::page_helper::PageHelper;
@@ -23,7 +23,7 @@ impl HelpPage for ChordsPage {
         ui: &mut Ui,
         _texts: &Assets<MarkDownAsset>,
         _assets: &NotationAssets,
-        state: &NotationAppState,
+        state: &NotationState,
         theme: &NotationTheme,
     ) {
         if state.tab.is_none() {

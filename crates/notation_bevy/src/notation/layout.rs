@@ -1,10 +1,10 @@
 use notation_bevy_utils::prelude::LayoutEnv;
 
-use crate::prelude::{NotationAppState, NotationSettings, NotationTheme};
+use crate::prelude::{NotationState, NotationSettings, NotationTheme};
 
 pub struct NotationLayout<'a> {
     pub theme: &'a NotationTheme,
-    pub state: &'a NotationAppState,
+    pub state: &'a NotationState,
     pub settings: &'a NotationSettings,
 }
 
@@ -22,7 +22,7 @@ impl<'a> LayoutEnv for NotationLayout<'a> {
 impl<'a> NotationLayout<'a> {
     pub fn new(
         theme: &'a NotationTheme,
-        state: &'a NotationAppState,
+        state: &'a NotationState,
         settings: &'a NotationSettings,
     ) -> Self {
         Self {

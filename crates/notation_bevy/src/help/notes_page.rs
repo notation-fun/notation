@@ -4,7 +4,7 @@ use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 use notation_bevy_utils::easy_mark::{label_from_style, EasyMarkStyle};
 use notation_model::prelude::TrackKind;
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
+use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use super::help_panel::{HelpPage, HelpPageId};
 use super::page_helper::PageHelper;
@@ -24,7 +24,7 @@ impl HelpPage for NotesPage {
         ui: &mut Ui,
         _texts: &Assets<MarkDownAsset>,
         _assets: &NotationAssets,
-        state: &NotationAppState,
+        state: &NotationState,
         theme: &NotationTheme,
     ) {
         let strong_style = EasyMarkStyle {

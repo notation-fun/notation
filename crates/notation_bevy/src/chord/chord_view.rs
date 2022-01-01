@@ -9,7 +9,7 @@ use notation_bevy_utils::prelude::{
 use notation_model::prelude::TabChord;
 
 use crate::prelude::{NotationAssets, NotationTheme};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::chord_base::ChordBaseData;
 use super::chord_diagram::ChordDiagramData;

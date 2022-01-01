@@ -11,9 +11,9 @@ use notation_model::prelude::Tab;
 use crate::chord::chord_color_background::ChordColorBackground;
 use crate::play::play_panel::PlayPanel;
 use crate::prelude::{
-    GuitarView, NotationAppState, NotationAssets, NotationSettings, NotationTheme,
+    GuitarView, NotationState, NotationAssets, NotationSettings, NotationTheme,
 };
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::tab_events::TabControlDoLayoutEvent;
 
@@ -83,7 +83,7 @@ impl TabControl {
     pub fn do_layout(
         mut evts: EventReader<TabControlDoLayoutEvent>,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         panel_query: ViewQuery<PlayPanel>,

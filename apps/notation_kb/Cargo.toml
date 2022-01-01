@@ -1,17 +1,16 @@
 [package]
-name = "notation_viewer"
+name = "notation_kb"
 version = "0.3.3"
 edition = "2021"
-description = "Notation Viewer"
+description = "Fun Notation Knowledge Base"
 
 [package.metadata.bundle]
-identifier = "fun.notation.viewer"
+identifier = "fun.notation.kb"
 resources = ["assets"]
 
 [features]
 native = [
     "notation_bevy/native",
-    "notation_bevy/dsl",
 ]
 dev = [
     "notation_bevy/dev",
@@ -23,4 +22,4 @@ inspector = [
 ]
 
 [dependencies]
-notation_bevy = { path = "../../crates/notation_bevy" }
+notation_bevy = { version = "0.3.3", path = "../../crates/notation_bevy" }

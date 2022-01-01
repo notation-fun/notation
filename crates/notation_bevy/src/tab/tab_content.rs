@@ -5,8 +5,8 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::{DockView, LayoutChangedQuery, LayoutQuery, View, ViewQuery};
 use notation_model::prelude::Tab;
 
-use crate::prelude::{NotationAppState, NotationSettings, NotationTheme, TabBars};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::{NotationState, NotationSettings, NotationTheme, TabBars};
+use crate::prelude::NotationLayout;
 
 use super::tab_events::TabContentDoLayoutEvent;
 use super::tab_header::TabHeader;
@@ -31,7 +31,7 @@ impl TabContent {
     pub fn do_layout(
         mut evts: EventReader<TabContentDoLayoutEvent>,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         panel_query: ViewQuery<TabHeader>,

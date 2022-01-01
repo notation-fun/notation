@@ -10,7 +10,7 @@ use notation_bevy_utils::prelude::{
 use notation_model::prelude::{PlayingState, Syllable, TabBar};
 
 use crate::prelude::{BarData, BarPlaying, NotationAssets, NotationTheme};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::mini_section_separator::{MiniSectionSeparatorData, MiniSectionSeparatorValue};
 

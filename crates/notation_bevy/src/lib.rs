@@ -31,10 +31,7 @@ pub mod data;
 pub mod font;
 pub mod settings;
 pub mod theme;
-
-pub mod app;
-pub mod ui;
-pub mod viewer;
+pub mod notation;
 
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
@@ -50,13 +47,9 @@ pub mod dsl;
 
 pub mod prelude {
     #[doc(hidden)]
-    pub use crate::app::app::{NotationApp, NotationPlugins};
+    pub use notation_model::prelude::*;
     #[doc(hidden)]
-    pub use crate::app::app_events::*;
-    #[doc(hidden)]
-    pub use crate::app::app_state::{NotationAppState, TabPathes};
-    #[doc(hidden)]
-    pub use crate::app::assets::{NotationAssets, NotationAssetsStates};
+    pub use notation_bevy_utils::prelude::*;
     #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
@@ -134,13 +127,21 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::tone::tone_mode::ToneMode;
     #[doc(hidden)]
-    pub use crate::ui::layout::NotationLayout;
+    pub use crate::notation::app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
-    pub use crate::ui::viewer::TabViewer;
+    pub use crate::notation::events::*;
     #[doc(hidden)]
-    pub use crate::ui::NotationUiPlugin;
+    pub use crate::notation::state::{NotationState, TabPathes};
     #[doc(hidden)]
-    pub use crate::viewer::app::NotationViewer;
+    pub use crate::notation::assets::{NotationAssets, NotationAssetsStates};
     #[doc(hidden)]
-    pub use notation_bevy_utils::prelude::*;
+    pub use crate::notation::layout::NotationLayout;
+    #[doc(hidden)]
+    pub use crate::notation::tab_viewer::TabViewer;
+    #[doc(hidden)]
+    pub use crate::notation::ui::NotationUiPlugin;
+    #[doc(hidden)]
+    pub use crate::notation::control::Control;
+    #[doc(hidden)]
+    pub use crate::notation::control_panel::ControlPanel;
 }

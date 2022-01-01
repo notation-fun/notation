@@ -12,65 +12,22 @@ use notation_midi::prelude::{JumpToBarEvent, MidiSettings, MidiState, PlayContro
 use notation_model::prelude::{Octave, Tab};
 
 use crate::settings::layout_settings::{GridAlignMode, LayoutMode};
-use crate::ui::layout::NotationLayout;
-use crate::viewer::control::Control;
+use super::layout::NotationLayout;
+use super::control::Control;
 
 use crate::prelude::{
-    GuitarView, NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabAsset,
+    GuitarView, NotationState, NotationAssets, NotationSettings, NotationTheme, TabAsset,
     TabPathes, WindowResizedEvent,
 };
 
 #[derive(Clone, Debug)]
-pub struct ControlView {
-    pub tab: Arc<Tab>,
-}
-impl Display for ControlView {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<ControlView>({})", self.tab.bars.len())
-    }
-}
-impl ControlView {
-    pub fn new(tab: Arc<Tab>) -> Self {
-        Self { tab }
-    }
+pub struct ControlPanel {
 }
 
-impl<'a> DockPanel<NotationLayout<'a>> for ControlView {
-    fn dock_side(&self, _engine: &NotationLayout<'a>, _size: LayoutSize) -> DockSide {
-        DockSide::Right
-    }
-}
-
-impl<'a> View<NotationLayout<'a>> for ControlView {
-    fn pivot(&self) -> LayoutAnchor {
-        LayoutAnchor::CENTER
-    }
-    fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
-        if Self::HUD_MODE || !engine.state.show_control {
-            LayoutSize::ZERO
-        } else {
-            LayoutSize::new(Self::MIN_WIDTH, constraint.max.height)
-        }
-    }
-}
-
-impl ControlView {
+impl ControlPanel {
     pub const HUD_MODE: bool = true;
     pub const MIN_WIDTH: f32 = 320.0;
     pub const MAX_WIDTH: f32 = 512.0;
-    pub fn spawn(
-        commands: &mut Commands,
-        _materials: &mut ResMut<Assets<ColorMaterial>>,
-        _assets: &NotationAssets,
-        _theme: &NotationTheme,
-        _settings: &NotationSettings,
-        entity: Entity,
-        tab: &Arc<Tab>,
-    ) -> Entity {
-        let viewer_bundle = ViewBundle::from(ControlView::new(tab.clone()));
-        let viewer_entity = BevyUtil::spawn_child_bundle(commands, entity, viewer_bundle);
-        viewer_entity
-    }
     pub fn calc_width(window_width: f32) -> f32 {
         let width = window_width * 0.30;
         if width < Self::MIN_WIDTH {
@@ -82,7 +39,7 @@ impl ControlView {
         }
     }
     pub fn is_pos_inside(window_width: f32, pos: Vec2) -> bool {
-        window_width / 2.0 - pos.x <= ControlView::calc_width(window_width)
+        window_width / 2.0 - pos.x <= ControlPanel::calc_width(window_width)
     }
     pub fn overrides_ui(
         ui: &mut Ui,
@@ -195,7 +152,7 @@ impl ControlView {
     }
     pub fn midi_settings_ui(
         ui: &mut Ui,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         theme: &mut NotationTheme,
         midi_settings: &mut MidiSettings,
         midi_state: &mut MidiState,
@@ -331,7 +288,7 @@ impl ControlView {
     }
     pub fn display_ui(
         ui: &mut Ui,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
@@ -398,7 +355,7 @@ impl ControlView {
     }
     pub fn layout_ui(
         ui: &mut Ui,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
@@ -465,7 +422,7 @@ impl ControlView {
     pub fn tab_ui(
         ui: &mut Ui,
         pathes: &mut TabPathes,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         _settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
@@ -520,7 +477,7 @@ impl ControlView {
     }
     pub fn guitar_tab_display_ui(
         ui: &mut Ui,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
     ) {
@@ -587,7 +544,7 @@ impl ControlView {
     }
     pub fn lyrics_display_ui(
         ui: &mut Ui,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
     ) {
@@ -669,7 +626,7 @@ impl ControlView {
     }
     pub fn melody_display_ui(
         ui: &mut Ui,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
     ) {
@@ -762,7 +719,7 @@ impl ControlView {
         egui_ctx: Res<EguiContext>,
         mut windows: ResMut<Windows>,
         mut pathes: ResMut<TabPathes>,
-        mut state: ResMut<NotationAppState>,
+        mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
         mut midi_settings: ResMut<MidiSettings>,

@@ -10,7 +10,7 @@ use notation_model::prelude::Tab;
 
 use crate::prelude::{NotationAssets, NotationTheme};
 use crate::tab::tab_events::RhythmViewDoLayoutEvent;
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::rhythm_bar::RhythmBarData;
 use super::rhythm_beat::RhythmBeatData;

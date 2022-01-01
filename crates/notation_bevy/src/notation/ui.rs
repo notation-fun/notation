@@ -2,10 +2,8 @@ use bevy::app::StartupStage;
 use bevy::prelude::*;
 use bevy_egui::{EguiContext, EguiSettings};
 
-use crate::prelude::NotationAppState;
+use super::state::NotationState;
 
-pub mod layout;
-pub mod viewer;
 pub struct NotationUiPlugin;
 
 impl Plugin for NotationUiPlugin {
@@ -18,7 +16,7 @@ impl Plugin for NotationUiPlugin {
 pub fn update_window_scale_factor(
     mut _egui_settings: ResMut<EguiSettings>,
     windows: Res<Windows>,
-    mut app_state: ResMut<NotationAppState>,
+    mut app_state: ResMut<NotationState>,
 ) {
     if let Some(window) = windows.get_primary() {
         let scale_factor = window.scale_factor();

@@ -9,7 +9,7 @@ use notation_bevy_utils::prelude::{
 use notation_model::prelude::{PlayState, Tab};
 
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum PlayButtonAction {

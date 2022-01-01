@@ -4,7 +4,7 @@ use std::fmt::Display;
 use std::sync::Arc;
 
 use crate::prelude::{
-    NotationAppState, NotationAssets, NotationLayout, NotationSettings, NotationTheme,
+    NotationState, NotationAssets, NotationLayout, NotationSettings, NotationTheme,
 };
 use notation_bevy_utils::prelude::{
     BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
@@ -94,7 +94,7 @@ impl MiniMap {
         mut evts: EventReader<MiniMapDoLayoutEvent>,
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<MiniBar>,
@@ -112,7 +112,7 @@ impl MiniMap {
         }
     }
     pub fn update_debug_str(
-        app_state: Res<NotationAppState>,
+        app_state: Res<NotationState>,
         background_query: Query<&ColorBackground>,
         mut font_query: Query<(&Parent, &mut Text)>,
     ) {

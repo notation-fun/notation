@@ -8,7 +8,7 @@ use crate::prelude::{
 };
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 use notation_bevy_utils::prelude::{
     ColorBackground, LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle,
 };

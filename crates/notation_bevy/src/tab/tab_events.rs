@@ -7,7 +7,7 @@ use notation_model::prelude::*;
 use crate::bar::bar_view::BarView;
 use crate::prelude::TabBars;
 use crate::rhythm::rhythm_view::RhythmView;
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 use notation_bevy_utils::prelude::{DoLayoutEvent, LayoutData};
 
 use super::tab_chords::TabChords;

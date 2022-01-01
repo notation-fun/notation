@@ -3,7 +3,7 @@ use bevy_egui::egui::{self, Ui};
 use bevy_egui::EguiContext;
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
+use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use super::chords_page::ChordsPage;
 use super::notes_page::NotesPage;
@@ -31,7 +31,7 @@ pub trait HelpPage {
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
-        state: &NotationAppState,
+        state: &NotationState,
         theme: &NotationTheme,
     );
 }
@@ -86,7 +86,7 @@ impl HelpPanel {
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         theme: &NotationTheme,
     ) {
         ui.horizontal(|ui| {
@@ -105,7 +105,7 @@ impl HelpPanel {
         egui_ctx: Res<EguiContext>,
         texts: Res<Assets<MarkDownAsset>>,
         assets: Res<NotationAssets>,
-        mut state: ResMut<NotationAppState>,
+        mut state: ResMut<NotationState>,
         theme: Res<NotationTheme>,
         mut help: ResMut<HelpPanel>,
     ) {

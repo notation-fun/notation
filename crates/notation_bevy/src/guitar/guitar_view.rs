@@ -13,7 +13,7 @@ use notation_model::prelude::{
 };
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme, TabState};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::fret_finger::FretFingerData;
 use super::guitar_barre::GuitarBarreData;

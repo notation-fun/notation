@@ -11,5 +11,5 @@ fn main() {
         "tabs/test.ron".to_owned(),
         "tabs/scarborough_fair.ron".to_owned(),
     ];
-    notation_bevy::prelude::NotationViewer::run(tabs);
+    notation_viewer::viewer::NotationViewer::run(tabs);
 }

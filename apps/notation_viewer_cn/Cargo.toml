@@ -13,17 +13,17 @@ default = [
     "notation_bevy/chinese",
 ]
 native = [
-    "notation_bevy/native",
-    "notation_bevy/dsl",
+    "notation_viewer/native",
 ]
 dev = [
-    "notation_bevy/dev",
+    "notation_viewer/dev",
     "native",
 ]
 inspector = [
-    "notation_bevy/inspector",
+    "notation_viewer/inspector",
     "native",
 ]
 
 [dependencies]
-notation_bevy = { version = "0.3.3", path = "../../crates/notation_bevy" }
+notation_viewer = { path = "../notation_viewer" }
+notation_bevy = { path = "../../crates/notation_bevy" }

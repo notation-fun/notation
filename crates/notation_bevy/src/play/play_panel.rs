@@ -9,8 +9,8 @@ use notation_bevy_utils::prelude::{
 use notation_midi::prelude::PlayControlEvent;
 use notation_model::prelude::{PlayState, Tab};
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::{NotationState, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::NotationLayout;
 
 use super::play_button::{PlayButton, PlayButtonShape};
 use super::play_plugin::PlayPanelDoLayoutEvent;
@@ -109,7 +109,7 @@ impl PlayPanel {
         mut evts: EventReader<PlayPanelDoLayoutEvent>,
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<PlayButton>,

@@ -7,14 +7,14 @@ use notation_model::prelude::{BarPosition, Tab, Units};
 use notation_model::tab_bar::TabBar;
 
 use crate::settings::layout_settings::LayoutMode;
-use crate::tab::tab_plugin;
+use crate::tab::tab_plugin::{self, TabPlugin};
 
-use crate::prelude::{NotationAppState, NotationSettings, NotationTheme};
+use crate::prelude::{NotationState, NotationSettings, NotationTheme};
 
 pub struct Control();
 
 impl Control {
-    pub fn reload_tab(state: &mut NotationAppState, theme: &mut NotationTheme) {
+    pub fn reload_tab(state: &mut NotationState, theme: &mut NotationTheme) {
         if state.tab.is_none() {
             return;
         }
@@ -133,7 +133,7 @@ impl Control {
         if let Some(tab) = &midi_state.tab {
             let pos = midi_state.play_control.position.bar;
             if let Some(bar) = calc_bar(&tab, pos) {
-                tab_plugin::jump_to_bar(jump_to_bar_evts, bar.props);
+                TabPlugin::jump_to_bar(jump_to_bar_evts, bar.props);
             }
         }
     }
@@ -285,7 +285,7 @@ impl Control {
         }
     }
     pub fn toggle_layout_mode(
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
@@ -297,7 +297,7 @@ impl Control {
         Self::reload_tab(state, theme);
     }
     pub fn toggle_show_guitar_syllable(
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
@@ -305,7 +305,7 @@ impl Control {
         Self::reload_tab(state, theme);
     }
     pub fn toggle_show_melody_syllable(
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
@@ -313,7 +313,7 @@ impl Control {
         Self::reload_tab(state, theme);
     }
     pub fn toggle_always_show_fret(
-        state: &mut NotationAppState,
+        state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {

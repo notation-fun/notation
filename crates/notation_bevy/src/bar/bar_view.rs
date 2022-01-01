@@ -4,11 +4,11 @@ use bevy::prelude::*;
 
 use crate::lane::lane_view::LaneView;
 use crate::prelude::{
-    BarBundle, BarData, BarLayoutData, NotationAppState, NotationAssets, NotationSettings,
+    BarBundle, BarData, BarLayoutData, NotationState, NotationAssets, NotationSettings,
     NotationTheme,
 };
 use crate::tab::tab_events::BarViewDoLayoutEvent;
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 use notation_bevy_utils::prelude::{
     BevyUtil, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery,
 };
@@ -36,7 +36,7 @@ impl BarView {
         mut evts: EventReader<BarViewDoLayoutEvent>,
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<LaneView>,

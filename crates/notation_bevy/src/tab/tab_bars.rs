@@ -14,10 +14,10 @@ use crate::bar::bar_layout::BarLayoutData;
 use crate::bar::bar_view::BarView;
 use crate::lane::lane_layout::LaneLayoutData;
 use crate::prelude::{
-    NotationAppState, NotationAssets, NotationSettings, NotationTheme, PlayPlugin,
+    NotationState, NotationAssets, NotationSettings, NotationTheme, PlayPlugin,
 };
 use crate::settings::layout_settings::LayoutMode;
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent};
 
@@ -255,7 +255,7 @@ impl TabBars {
         mut evts: EventReader<TabBarsDoLayoutEvent>,
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<BarView>,

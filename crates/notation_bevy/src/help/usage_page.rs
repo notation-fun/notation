@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_egui::egui::Ui;
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationTheme};
+use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use super::help_panel::{HelpPage, HelpPageId};
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
@@ -22,7 +22,7 @@ impl HelpPage for UsagePage {
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
-        _state: &NotationAppState,
+        _state: &NotationState,
         _theme: &NotationTheme,
     ) {
         if let Some(text) = texts.get(assets.help_usage.clone()) {

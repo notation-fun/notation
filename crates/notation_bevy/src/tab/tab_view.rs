@@ -6,9 +6,9 @@ use notation_bevy_utils::prelude::{BevyUtil, DockView, LayoutQuery, View, ViewBu
 use notation_model::prelude::Tab;
 
 use crate::prelude::{
-    NotationAppState, NotationAssets, NotationSettings, NotationTheme, TabBars, TabBundle,
+    NotationState, NotationAssets, NotationSettings, NotationTheme, TabBars, TabBundle,
 };
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::tab_content::TabContent;
 use super::tab_control::TabControl;
@@ -59,7 +59,7 @@ impl TabView {
     pub fn do_layout(
         mut evts: EventReader<TabViewDoLayoutEvent>,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         panel_query: ViewQuery<TabControl>,

@@ -8,9 +8,9 @@ use notation_bevy_utils::prelude::{
 };
 use notation_model::prelude::{Tab, TabChord, TrackKind};
 
-use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::{NotationState, NotationAssets, NotationSettings, NotationTheme};
 use crate::rhythm::rhythm_view::RhythmView;
-use crate::ui::layout::NotationLayout;
+use crate::prelude::NotationLayout;
 
 use super::tab_chords::TabChords;
 use super::tab_events::TabHeaderDoLayoutEvent;
@@ -72,7 +72,7 @@ impl TabHeader {
     pub fn do_layout(
         mut evts: EventReader<TabHeaderDoLayoutEvent>,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         panel_query: ViewQuery<RhythmView>,

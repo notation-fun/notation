@@ -10,8 +10,8 @@ use notation_bevy_utils::prelude::{
 use notation_model::prelude::{Tab, TabChord};
 
 use crate::chord::chord_view::ChordView;
-use crate::prelude::{NotationAppState, NotationAssets, NotationSettings, NotationTheme};
-use crate::ui::layout::NotationLayout;
+use crate::prelude::{NotationState, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::NotationLayout;
 
 use super::tab_events::TabChordsDoLayoutEvent;
 
@@ -96,7 +96,7 @@ impl TabChords {
         mut evts: EventReader<TabChordsDoLayoutEvent>,
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        state: Res<NotationAppState>,
+        state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut layout_query: LayoutQuery,
         cell_query: ViewQuery<ChordView>,

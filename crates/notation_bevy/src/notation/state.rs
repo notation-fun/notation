@@ -6,7 +6,7 @@ use notation_model::prelude::*;
 
 pub struct TabPathes(pub Vec<String>);
 
-pub struct NotationAppState {
+pub struct NotationState {
     pub window_width: f32,
     pub window_height: f32,
     pub window_scale_factor: f64,
@@ -21,7 +21,7 @@ pub struct NotationAppState {
     pub _load_tab_delay_seconds: f32,
 }
 
-impl NotationAppState {
+impl NotationState {
     pub fn new(tab_path: String) -> Self {
         Self {
             window_width: 0.0,
@@ -63,7 +63,7 @@ impl NotationAppState {
     }
 }
 
-impl FromWorld for NotationAppState {
+impl FromWorld for NotationState {
     fn from_world(world: &mut World) -> Self {
         let tab_pathes = world.get_resource::<TabPathes>().unwrap();
         Self::new(tab_pathes.0[0].clone())

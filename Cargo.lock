@@ -3074,6 +3074,7 @@ name = "notation_viewer_cn"
 version = "0.3.3"
 dependencies = [
  "notation_bevy",
+ "notation_viewer",
 ]
 
 [[package]]
