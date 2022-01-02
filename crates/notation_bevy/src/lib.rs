@@ -145,7 +145,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::notation::control_panel::ControlPanel;
     #[doc(hidden)]
-    pub use crate::kb::kb_page::{KbPage, KbPageId};
+    pub use crate::kb::kb_page::{KbPage, KbPageId, KbContent};
     #[doc(hidden)]
     pub use crate::kb::page_helper::PageHelper;
     #[doc(hidden)]

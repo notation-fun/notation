@@ -1,2 +1,3 @@
-pub mod index_panel;
 pub mod kb;
+pub mod theory;
+pub mod index_panel;

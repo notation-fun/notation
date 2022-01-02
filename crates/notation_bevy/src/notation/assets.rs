@@ -1,5 +1,6 @@
-use bevy::prelude::*;
-use bevy_asset_loader::AssetCollection;
+use std::path::PathBuf;
+use bevy::{prelude::*, asset::{AssetPath, HandleId}};
+use bevy_asset_loader::{AssetCollection};
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 
 #[derive(AssetCollection)]
@@ -20,14 +21,26 @@ pub struct NotationAssets {
     #[asset(path = "png/fretboard.png")]
     pub fretboard: Handle<Texture>,
 
-    #[asset(path = "help/welcome.md")]
-    pub help_welcome: Handle<MarkDownAsset>,
-    #[asset(path = "help/usage.md")]
-    pub help_usage: Handle<MarkDownAsset>,
+    #[asset(folder = "kb")]
+    pub kb: Vec<HandleUntyped>,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum NotationAssetsStates {
     Loading,
     Loaded,
+}
+
+impl NotationAssets {
+    pub fn get_kb(&self, path: PathBuf) -> Option<Handle<MarkDownAsset>> {
+        let handle_id = HandleId::from(AssetPath::new(path, None));
+        let mut handle = None;
+        for asset in self.kb.iter() {
+            if asset.id == handle_id {
+                handle = Some(asset.clone().typed::<MarkDownAsset>());
+                break;
+            }
+        }
+        handle
+    }
 }

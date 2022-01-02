@@ -1,10 +1,7 @@
 use bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
-use bevy::reflect::TypeUuid;
 use bevy::utils::BoxedFuture;
-use serde::Deserialize;
 
 use notation_dsl::prelude::parse_get_tab;
-use notation_model::prelude::ProtoTab;
 
 use crate::tab::tab_asset::TabAsset;
 

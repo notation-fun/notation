@@ -44,7 +44,8 @@ impl NotationApp {
 
     pub fn new_builder(title: &str) -> AppBuilder {
         let mut app = App::build();
-        AssetLoader::new(NotationAssetsStates::Loading, NotationAssetsStates::Loaded)
+        AssetLoader::new(NotationAssetsStates::Loading)
+            .continue_to_state(NotationAssetsStates::Loaded)
             .with_collection::<NotationAssets>()
             .build(&mut app);
         app.add_state(NotationAssetsStates::Loading);

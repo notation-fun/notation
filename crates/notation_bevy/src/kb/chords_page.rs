@@ -5,7 +5,7 @@ use notation_model::prelude::TrackKind;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
-use super::kb_page::{KbPage, KbPageId};
+use super::kb_page::{KbPage};
 use super::page_helper::PageHelper;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
@@ -97,9 +97,4 @@ impl KbPage for ChordsPage {
             }
         });
     }
-}
-
-impl ChordsPage {
-    pub const ID: KbPageId = KbPageId::Chords;
-    pub const LABEL: &'static str = "Chords";
 }

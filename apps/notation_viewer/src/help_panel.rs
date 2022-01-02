@@ -6,17 +6,36 @@ use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use notation_bevy::kb::chords_page::ChordsPage;
 use notation_bevy::kb::notes_page::NotesPage;
-use notation_bevy::kb::usage_page::UsagePage;
-use notation_bevy::kb::welcome_page::WelcomePage;
+use notation_bevy::kb::markdown_page::MarkDownPage;
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct HelpPanel {
     pub open_times: usize,
     pub current_page_id: KbPageId,
-    pub welcome: WelcomePage,
+    pub welcome: MarkDownPage,
     pub notes: NotesPage,
     pub chords: ChordsPage,
-    pub usage: UsagePage,
+    pub usage: MarkDownPage,
+}
+
+impl Default for HelpPanel {
+    fn default() -> Self {
+        Self {
+            open_times: 0,
+            current_page_id: Self::WELCOME,
+            welcome: MarkDownPage::new(Self::WELCOME_PATH),
+            notes: Default::default(),
+            chords: Default::default(),
+            usage: MarkDownPage::new(Self::USAGE_PATH),
+        }
+    }
+}
+
+impl HelpPanel {
+    pub const WELCOME_PATH: &'static str = "kb/welcome.md";
+    pub const WELCOME: KbPageId = KbPageId::MarkDown(Self::WELCOME_PATH);
+    pub const USAGE_PATH: &'static str = "kb/usage.md";
+    pub const USAGE: KbPageId = KbPageId::MarkDown(Self::USAGE_PATH);
 }
 
 impl KbPanel for HelpPanel {
@@ -31,22 +50,22 @@ impl KbPanel for HelpPanel {
     }
     fn get_page_tabs(&self) -> Vec<(KbPageId, &'static str)> {
         vec![
-            (WelcomePage::ID, WelcomePage::LABEL),
-            (NotesPage::ID, NotesPage::LABEL),
-            (ChordsPage::ID, ChordsPage::LABEL),
-            (UsagePage::ID, UsagePage::LABEL),
+            (Self::WELCOME, "Welcome"),
+            (KbPageId::Notes, "Notes"),
+            (KbPageId::Chords, "Chords"),
+            (Self::USAGE, "Usage"),
         ]
     }
     fn get_page_mut(&mut self, page_id: KbPageId) -> &mut dyn KbPage {
         match page_id {
             KbPageId::Notes => &mut self.notes as &mut dyn KbPage,
             KbPageId::Chords => &mut self.chords as &mut dyn KbPage,
-            KbPageId::Usage => &mut self.usage as &mut dyn KbPage,
+            Self::USAGE => &mut self.usage as &mut dyn KbPage,
             _ => &mut self.welcome as &mut dyn KbPage,
         }
     }
     fn on_close(&mut self) {
-        if self.open_times == 0 && self.current_page_id == KbPageId::Welcome {
+        if self.open_times == 0 && self.current_page_id == Self::WELCOME {
             self.set_current_page_id(KbPageId::Notes);
         }
         self.open_times += 1;

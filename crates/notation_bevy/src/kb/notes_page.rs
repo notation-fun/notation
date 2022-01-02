@@ -6,7 +6,7 @@ use notation_model::prelude::TrackKind;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
-use super::kb_page::{KbPage, KbPageId};
+use super::kb_page::{KbPage};
 use super::page_helper::PageHelper;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
@@ -88,9 +88,4 @@ impl KbPage for NotesPage {
             }
         });
     }
-}
-
-impl NotesPage {
-    pub const ID: KbPageId = KbPageId::Notes;
-    pub const LABEL: &'static str = "Notes";
 }
