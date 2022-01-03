@@ -9,7 +9,7 @@ pub mod view;
 //#[cfg(feature = "dev")]
 pub mod dev;
 
-pub mod easy_mark;
+pub mod egui;
 
 pub mod prelude {
     #[doc(hidden)]
@@ -49,4 +49,6 @@ pub mod prelude {
     pub use crate::util::BevyUtil;
     #[doc(hidden)]
     pub use crate::view::color_background::ColorBackground;
+    #[doc(hidden)]
+    pub use crate::egui::*;
 }

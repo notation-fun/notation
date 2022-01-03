@@ -3004,6 +3004,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "notation_kb_cn"
+version = "0.3.3"
+dependencies = [
+ "notation_bevy",
+ "notation_kb",
+]
+
+[[package]]
 name = "notation_macro"
 version = "0.3.3"
 dependencies = [

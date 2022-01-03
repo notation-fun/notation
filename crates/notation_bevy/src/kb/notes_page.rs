@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 use bevy_egui::egui::{self, Ui};
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
-use notation_bevy_utils::easy_mark::{label_from_style, EasyMarkStyle};
+use notation_bevy_utils::egui::{label_from_style, EasyMarkStyle};
+use notation_bevy_utils::prelude::EasyLinkEvent;
 use notation_model::prelude::TrackKind;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
@@ -20,6 +21,7 @@ impl KbPage for NotesPage {
         _assets: &NotationAssets,
         state: &NotationState,
         theme: &NotationTheme,
+        _link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
         let strong_style = EasyMarkStyle {
             strong: true,

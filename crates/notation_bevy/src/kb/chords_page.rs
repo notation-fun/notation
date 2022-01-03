@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy_egui::egui::{self, Ui};
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
+use notation_bevy_utils::prelude::EasyLinkEvent;
 use notation_model::prelude::TrackKind;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
@@ -19,6 +20,7 @@ impl KbPage for ChordsPage {
         _assets: &NotationAssets,
         state: &NotationState,
         theme: &NotationTheme,
+        _link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
         if state.tab.is_none() {
             ui.label("Tab not loaded...");

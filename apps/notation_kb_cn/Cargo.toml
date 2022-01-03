@@ -1,0 +1,29 @@
+[package]
+name = "notation_kb_cn"
+version = "0.3.3"
+edition = "2021"
+description = "Fun Notation Knowledge Base (Chinese)"
+
+[package.metadata.bundle]
+identifier = "fun.notation.kb_cn"
+resources = ["assets"]
+
+[features]
+default = [
+    "notation_bevy/chinese",
+]
+native = [
+    "notation_kb/native",
+]
+dev = [
+    "notation_kb/dev",
+    "native",
+]
+inspector = [
+    "notation_kb/inspector",
+    "native",
+]
+
+[dependencies]
+notation_kb = { path = "../notation_kb" }
+notation_bevy = { path = "../../crates/notation_bevy" }

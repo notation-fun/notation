@@ -1,7 +1,7 @@
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::EguiContext;
 
-use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel};
+use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent};
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use notation_bevy::kb::chords_page::ChordsPage;
@@ -79,8 +79,9 @@ impl HelpPanel {
         assets: Res<NotationAssets>,
         mut state: ResMut<NotationState>,
         theme: Res<NotationTheme>,
+        mut link_evts: EventWriter<EasyLinkEvent>,
         mut help: ResMut<HelpPanel>,
     ) {
-        (&mut help).window_ui(&egui_ctx, &texts, &assets, &mut state, &theme);
+        (&mut help).window_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts);
     }
 }

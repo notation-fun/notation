@@ -16,6 +16,7 @@ impl NotationKnowledgeBase {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(IndexPanel::index_ui.system())
+                .with_system(IndexPanel::handle_link_evts.system())
         );
     }
     pub fn run() {

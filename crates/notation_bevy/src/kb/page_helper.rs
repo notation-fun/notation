@@ -1,7 +1,7 @@
 use bevy_egui::egui::color_picker::show_color;
-use bevy_egui::egui::Ui;
-use notation_bevy_utils::easy_mark::{label_from_style, EasyMarkStyle};
-use notation_bevy_utils::prelude::BevyUtil;
+use bevy_egui::egui::{Ui};
+use notation_bevy_utils::egui::{label_from_style, EasyMarkStyle};
+use notation_bevy_utils::prelude::{BevyUtil};
 use notation_model::prelude::{Interval, Key, Pitch, Scale, Semitones, Syllable};
 
 use crate::prelude::NotationTheme;

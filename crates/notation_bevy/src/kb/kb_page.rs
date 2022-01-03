@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_egui::egui::{Ui};
-use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
+use notation_bevy_utils::prelude::{MarkDownAsset, EasyLinkEvent};
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
@@ -25,6 +25,7 @@ pub trait KbPage {
         assets: &NotationAssets,
         state: &NotationState,
         theme: &NotationTheme,
+        link_evts: &mut EventWriter<EasyLinkEvent>,
     );
 }
 
@@ -36,5 +37,6 @@ pub trait KbContent {
         assets: &NotationAssets,
         state: &NotationState,
         theme: &NotationTheme,
+        link_evts: &mut EventWriter<EasyLinkEvent>,
     );
 }

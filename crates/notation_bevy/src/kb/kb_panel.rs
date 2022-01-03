@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy_egui::egui::{self, Ui};
 use bevy_egui::EguiContext;
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
+use notation_bevy_utils::prelude::EasyLinkEvent;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme, KbPage, DockSide};
 
@@ -41,6 +42,7 @@ pub trait KbPanel {
         assets: &NotationAssets,
         state: &mut NotationState,
         theme: &NotationTheme,
+        link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
         ui.horizontal(|ui| {
             self.topic_tabs_ui(ui);
@@ -52,7 +54,7 @@ pub trait KbPanel {
         egui::ScrollArea::vertical().show(ui, |ui| {
             let page_id = self.get_current_page_id();
             self.get_page_mut(page_id)
-                .page_ui(ui, texts, assets, state, theme);
+                .page_ui(ui, texts, assets, state, theme, link_evts);
         });
     }
     fn window_ui(
@@ -62,6 +64,7 @@ pub trait KbPanel {
         assets: &NotationAssets,
         state: &mut NotationState,
         theme: &NotationTheme,
+        link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
         if !state.show_kb {
             return;
@@ -72,7 +75,7 @@ pub trait KbPanel {
             .id(Self::window_id());
         window = window.open(&mut window_open);
         window.show(egui_ctx.ctx(), |ui| {
-            self.kb_panel_ui(ui, texts, assets, state, theme);
+            self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
         });
         if !window_open {
             self.on_close();
@@ -86,6 +89,7 @@ pub trait KbPanel {
         assets: &NotationAssets,
         state: &mut NotationState,
         theme: &NotationTheme,
+        link_evts: &mut EventWriter<EasyLinkEvent>,
         side: DockSide,
         size: (f32, f32),
     ) {
@@ -98,28 +102,28 @@ pub trait KbPanel {
                     .min_height(size.0)
                     .max_height(size.1)
                     .show(egui_ctx.ctx(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme);
+                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
             DockSide::Bottom =>
                 egui::TopBottomPanel::bottom(self.get_title())
                     .min_height(size.0)
                     .max_height(size.1)
                     .show(egui_ctx.ctx(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme);
+                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
             DockSide::Left =>
                 egui::SidePanel::left(self.get_title())
                     .min_width(size.0)
                     .max_width(size.1)
                     .show(egui_ctx.ctx(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme);
+                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
             DockSide::Right =>
                 egui::SidePanel::right(self.get_title())
                     .min_width(size.0)
                     .max_width(size.1)
                     .show(egui_ctx.ctx(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme);
+                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
         };
     }
