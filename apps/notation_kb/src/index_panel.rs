@@ -24,7 +24,12 @@ impl Default for IndexPanel {
     fn default() -> Self {
         Self {
             open_times: 0,
+
+            #[cfg(debug_assertions)]
+            current_page_id: Self::HARMONICS,
+            #[cfg(not(debug_assertions))]
             current_page_id: Self::WELCOME,
+
             welcome: MarkDownPage::new(Self::PATH_WELCOME),
             notes: Default::default(),
             chords: Default::default(),
@@ -135,10 +140,10 @@ impl IndexPanel {
         &mut self,
         evt: &EasyLinkEvent,
     ) {
-        println!("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA {:?}", evt);
+        println!("handle_link_evt {:?}", evt);
         match evt.link.as_str() {
             Self::LINK_HARMONICS_SINGLE_STRING => {
-                self.harmonics.section = HarmonicsSection::SingleString;
+                self.harmonics.section = HarmonicsSection::SingleString(Default::default());
             }
             _ => (),
         }
