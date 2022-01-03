@@ -15,6 +15,7 @@ pub enum HarmonicsSection {
 #[derive(Copy, Clone, Debug)]
 pub struct SingleStringData {
     pub time: f64,
+    pub size: f64,
     pub frequency: f64,
     pub max_segments: u8,
     pub separate_mode: bool
@@ -24,6 +25,7 @@ impl Default for SingleStringData {
     fn default() -> Self {
         Self {
             time: 0.0,
+            size: 1.0,
             frequency: 1.0,
             max_segments: 9,
             separate_mode: false,
@@ -132,10 +134,11 @@ impl HarmonicsPage {
         };
         let frequency = data.frequency;
         let time = data.time;
+        let size = data.size;
         Line::new(Values::from_explicit_callback(
             move |x| {
-                y_offset + Self::calc_harmonic_y(segments, frequency, time, x)
-            }, -1.0..=1.0, 256,
+                size * (y_offset + Self::calc_harmonic_y(segments, frequency, time, x / size))
+            }, -size..=size, 256,
         )).color(BevyUtil::rgb_to_egui(&theme.colors.of_option_syllable(syllable)))
         .name(format!("harmonic {}", segments))
     }
@@ -146,14 +149,15 @@ impl HarmonicsPage {
         let max_segments = data.max_segments;
         let frequency = data.frequency;
         let time = data.time;
+        let size = data.size;
         Line::new(Values::from_explicit_callback(
             move |x| {
                 let mut y = 0.0;
                 for segments in 1..=max_segments {
-                    y += Self::calc_harmonic_y(segments, frequency, time, x);
+                    y += size * Self::calc_harmonic_y(segments, frequency, time, x / size);
                 }
                 y
-            }, -1.0..=1.0, 256,
+            }, -size..=size, 256,
         )).color(BevyUtil::rgb_to_egui(&theme.colors.of_syllable(Syllable::Do)))
         .name("tone")
     }
@@ -169,11 +173,10 @@ impl HarmonicsPage {
         data.time += ui.input().unstable_dt.min(1.0 / 60.0) as f64;
         ui.ctx().request_repaint();
         ui.horizontal(|ui| {
+            ui.add(Slider::new(&mut data.size, 1.0..=10.0).text("Size"));
             ui.checkbox(&mut data.separate_mode, "Show Harmonics Separately");
             ui.separator();
-            let mut max_segments = data.max_segments;
-            ui.add(Slider::new(&mut max_segments, 5..=20).text("Max Harmonics"));
-            data.max_segments = max_segments.max(5).min(20);
+            ui.add(Slider::new(&mut data.max_segments, 5..=30).text("Max Harmonics"));
             ui.separator();
             ui.add(Slider::new(&mut data.frequency, 0.1..=10.0).text("Frequency"));
         });
