@@ -45,7 +45,7 @@ pub struct Style {
     pub strong: bool,
     /// _underline_
     pub underline: bool,
-    /// -strikethrough-
+    /// ~strikethrough~
     pub strikethrough: bool,
     /// /italics/
     pub italics: bool,
@@ -67,7 +67,7 @@ pub struct Style {
 ///
 /// ```
 pub struct Parser<'a> {
-    /// The remainer of the input text
+    /// The remainder of the input text
     s: &'a str,
     /// Are we at the start of a line?
     start_of_line: bool,
@@ -319,8 +319,7 @@ impl<'a> Iterator for Parser<'a> {
             let end = self
                 .s
                 .find(&['*', '`', '~', '_', '/', '$', '^', '\\', '<', '[', '\n'][..])
-                .map(|special| special.max(1)) // make sure we swallow at least one character
-                .unwrap_or_else(|| self.s.len());
+                .map_or_else(|| self.s.len(), |special| special.max(1));
 
             let item = Item::Text(self.style, &self.s[..end]);
             self.s = &self.s[end..];
@@ -333,21 +332,24 @@ impl<'a> Iterator for Parser<'a> {
 #[test]
 fn test_easy_mark_parser() {
     let items: Vec<_> = Parser::new("~strikethrough `code`~").collect();
-    assert_eq!(items, vec![
-        Item::Text(
-            Style {
-                strikethrough: true,
-                ..Default::default()
-            },
-            "strikethrough "
-        ),
-        Item::Text(
-            Style {
-                code: true,
-                strikethrough: true,
-                ..Default::default()
-            },
-            "code"
-        ),
-    ]);
+    assert_eq!(
+        items,
+        vec![
+            Item::Text(
+                Style {
+                    strikethrough: true,
+                    ..Default::default()
+                },
+                "strikethrough "
+            ),
+            Item::Text(
+                Style {
+                    code: true,
+                    strikethrough: true,
+                    ..Default::default()
+                },
+                "code"
+            ),
+        ]
+    );
 }

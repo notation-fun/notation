@@ -9,6 +9,7 @@ pub mod view;
 //#[cfg(feature = "dev")]
 pub mod dev;
 
+pub mod easy_mark;
 pub mod egui;
 
 pub mod prelude {
@@ -51,4 +52,34 @@ pub mod prelude {
     pub use crate::view::color_background::ColorBackground;
     #[doc(hidden)]
     pub use crate::egui::*;
+}
+
+/// Create a [`Hyperlink`](crate::Hyperlink) to this egui source code file on github.
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __egui_github_link_file {
+    () => {
+        crate::__egui_github_link_file!("(source code)")
+    };
+    ($label: expr) => {
+        egui::github_link_file!(
+            "https://github.com/emilk/egui/blob/master/",
+            egui::RichText::new($label).small()
+        )
+    };
+}
+
+/// Create a [`Hyperlink`](crate::Hyperlink) to this egui source code file and line on github.
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __egui_github_link_file_line {
+    () => {
+        crate::__egui_github_link_file_line!("(source code)")
+    };
+    ($label: expr) => {
+        egui::github_link_file_line!(
+            "https://github.com/emilk/egui/blob/master/",
+            egui::RichText::new($label).small()
+        )
+    };
 }

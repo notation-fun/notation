@@ -175,16 +175,16 @@ impl HarmonicsPage {
             ui.add(Slider::new(&mut max_segments, 5..=20).text("Max Harmonics"));
             data.max_segments = max_segments.max(5).min(20);
             ui.separator();
-            ui.add(Slider::new(&mut data.frequency, 0.1..=60.0).text("Frequency"));
+            ui.add(Slider::new(&mut data.frequency, 0.1..=10.0).text("Frequency"));
         });
-        let mut plot = Plot::new("single_string");
-        plot = plot.line(Self::tone_line(theme, data));
-        for i in 1..=data.max_segments {
-            plot = plot.line(Self::harmonic_line(theme, data, i));
-        }
-        let plot = plot
+        let plot = Plot::new("single_string")
             .legend(Legend::default())
             .data_aspect(1.0);
-        ui.add(plot);
+        plot.show(ui, |plot_ui| {
+            plot_ui.line(Self::tone_line(theme, data));
+            for i in 1..=data.max_segments {
+                plot_ui.line(Self::harmonic_line(theme, data, i));
+            }
+        });
     }
 }

@@ -1,6 +1,6 @@
 use bevy::prelude::EventWriter;
 use bevy_egui::egui::{self, *};
-use super::easy_mark_parser::Style;
+use crate::easy_mark::easy_mark_parser::Style;
 
 /// A clickable link, e.g. to `"https://github.com/emilk/egui"`.
 /// urls starts with colon will be treated as internal link, e.g, `:do_something`
@@ -37,7 +37,7 @@ impl EasyLink {
 
     pub fn ui(self, ui: &mut Ui, link_evts: &mut EventWriter<EasyLinkEvent>) -> Response {
         let EasyLink { url, text, style } = self;
-        let label = super::easy_mark_viewer::label_from_style(&text, &style);
+        let label = super::label_from_style(&text, &style);
         let color = ui.visuals().hyperlink_color;
         let label = label.text_color(color);
         let response = ui.add(label.sense(Sense::click()));
