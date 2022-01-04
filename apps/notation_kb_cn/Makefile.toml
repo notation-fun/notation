@@ -63,6 +63,6 @@ dependencies = ["build-native"]
 script_runner = "@shell"
 script = ["""
 cp ./target/wasm.js ../../public/notation_kb_cn/
-cp ./target/wasm_bg.wasm ../../public/notation_kb_cn/
+wasm-opt -Os -o ../../public/notation_kb_cn/wasm_bg.wasm ./target/wasm_bg.wasm
 """]
 dependencies = ["build-web"]

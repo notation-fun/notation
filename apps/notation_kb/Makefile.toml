@@ -62,7 +62,7 @@ dependencies = ["build-native"]
 [tasks.release-web]
 script_runner = "@shell"
 script = ["""
-cp ./target/wasm.js ../../public/notation/
-wasm-opt -Os -o ../../public/notation/wasm_bg.wasm ./target/wasm_bg.wasm
+cp ./target/wasm.js ../../public/notation_kb/
+wasm-opt -Os -o ../../public/notation_kb/wasm_bg.wasm ./target/wasm_bg.wasm
 """]
 dependencies = ["build-web"]
