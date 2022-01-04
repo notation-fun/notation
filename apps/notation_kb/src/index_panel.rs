@@ -8,16 +8,16 @@ use notation_bevy::kb::chords_page::ChordsPage;
 use notation_bevy::kb::notes_page::NotesPage;
 use notation_bevy::kb::markdown_page::MarkDownPage;
 
-use crate::theory::harmonics::{HarmonicsPage, HarmonicsSection};
+use crate::theory::scale::ScalePage;
+use crate::theory::sound::{SoundPage, SoundSection};
 
 #[derive(Clone, Debug)]
 pub struct IndexPanel {
     pub open_times: usize,
     pub current_page_id: KbPageId,
     pub welcome: MarkDownPage,
-    pub notes: NotesPage,
-    pub chords: ChordsPage,
-    pub harmonics: HarmonicsPage,
+    pub sound: SoundPage,
+    pub scale: ScalePage,
 }
 
 impl Default for IndexPanel {
@@ -26,26 +26,29 @@ impl Default for IndexPanel {
             open_times: 0,
 
             #[cfg(debug_assertions)]
-            current_page_id: Self::HARMONICS,
+            current_page_id: Self::SOUND,
             #[cfg(not(debug_assertions))]
             current_page_id: Self::WELCOME,
 
             welcome: MarkDownPage::new(Self::PATH_WELCOME),
-            notes: Default::default(),
-            chords: Default::default(),
-            harmonics: HarmonicsPage::new(Self::PATH_HARMONICS),
+            sound: SoundPage::new(Self::PATH_SOUND),
+            scale: ScalePage::new(Self::PATH_SCALE),
         }
     }
 }
 
 impl IndexPanel {
     pub const WELCOME: KbPageId = KbPageId::MarkDown(Self::PATH_WELCOME);
-    pub const HARMONICS: KbPageId = KbPageId::Custom("harmonics");
+    pub const SOUND: KbPageId = KbPageId::Custom("sound");
+    pub const SCALE: KbPageId = KbPageId::Custom("scale");
 
     pub const PATH_WELCOME: &'static str = "kb/welcome.md";
-    pub const PATH_HARMONICS: &'static str = "kb/harmonics.md";
+    pub const PATH_SOUND: &'static str = "kb/sound.md";
+    pub const PATH_SCALE: &'static str = "kb/scale.md";
 
-    pub const LINK_HARMONICS_SINGLE_STRING: &'static str = ":kb:harmonics:single_string";
+    pub const LINK_SOUND: &'static str = ":kb:sound";
+    pub const LINK_SCALE: &'static str = ":kb:scale";
+    pub const LINK_SOUND_SINGLE_STRING: &'static str = ":kb:sound:single_string";
 }
 
 impl KbPanel for IndexPanel {
@@ -61,23 +64,18 @@ impl KbPanel for IndexPanel {
     fn get_page_tabs(&self) -> Vec<(KbPageId, &'static str)> {
         vec![
             (Self::WELCOME, "Welcome"),
-            (KbPageId::Notes, "Notes"),
-            (KbPageId::Chords, "Chords"),
-            (Self::HARMONICS, "Harmonics"),
+            (Self::SOUND, "Sound"),
+            (Self::SCALE, "Scale"),
         ]
     }
     fn get_page_mut(&mut self, page_id: KbPageId) -> &mut dyn KbPage {
         match page_id {
-            KbPageId::Notes => &mut self.notes as &mut dyn KbPage,
-            KbPageId::Chords => &mut self.chords as &mut dyn KbPage,
-            Self::HARMONICS => &mut self.harmonics as &mut dyn KbPage,
+            Self::SOUND => &mut self.sound as &mut dyn KbPage,
+            Self::SCALE => &mut self.scale as &mut dyn KbPage,
             _ => &mut self.welcome as &mut dyn KbPage,
         }
     }
     fn on_close(&mut self) {
-        if self.open_times == 0 && self.current_page_id == Self::WELCOME {
-            self.set_current_page_id(KbPageId::Notes);
-        }
         self.open_times += 1;
     }
 }
@@ -113,9 +111,9 @@ impl IndexPanel {
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
         if let Some(content) = match self.current_page_id {
-            Self::HARMONICS => {
-                if self.harmonics.content_visible() {
-                    Some(&mut self.harmonics as &mut dyn KbContent)
+            Self::SOUND => {
+                if self.sound.content_visible() {
+                    Some(&mut self.sound as &mut dyn KbContent)
                 } else {
                     None
                 }
@@ -142,8 +140,15 @@ impl IndexPanel {
     ) {
         println!("handle_link_evt {:?}", evt);
         match evt.link.as_str() {
-            Self::LINK_HARMONICS_SINGLE_STRING => {
-                self.harmonics.section = HarmonicsSection::SingleString(Default::default());
+            Self::LINK_SOUND => {
+                self.current_page_id = Self::SOUND;
+            },
+            Self::LINK_SCALE => {
+                self.current_page_id = Self::SCALE;
+            },
+            Self::LINK_SOUND_SINGLE_STRING => {
+                self.current_page_id = Self::SOUND;
+                self.sound.section = SoundSection::SingleString(Default::default());
             }
             _ => (),
         }

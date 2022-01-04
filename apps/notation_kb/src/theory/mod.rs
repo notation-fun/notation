@@ -1,1 +1,2 @@
-pub mod harmonics;
+pub mod sound;
+pub mod scale;
