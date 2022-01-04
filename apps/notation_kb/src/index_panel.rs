@@ -13,7 +13,7 @@ use crate::theory::sound::{SoundPage, SoundSection};
 
 #[derive(Clone, Debug)]
 pub struct IndexPanel {
-    pub open_times: usize,
+    pub skip_frames: usize,
     pub current_page_id: KbPageId,
     pub welcome: MarkDownPage,
     pub sound: SoundPage,
@@ -23,7 +23,15 @@ pub struct IndexPanel {
 impl Default for IndexPanel {
     fn default() -> Self {
         Self {
-            open_times: 0,
+            /* if the first page displayed is using the chinese font, will crash, this is a hack around this
+            wgpu error: Validation Error
+
+Caused by:
+    In CommandEncoder::copy_buffer_to_texture
+    Copy error
+    copy of Y 0..256 would end up overruning the bounds of the Destination texture of Y size 128
+             */
+            skip_frames: 2,
 
             #[cfg(debug_assertions)]
             current_page_id: Self::SOUND,
@@ -75,9 +83,6 @@ impl KbPanel for IndexPanel {
             _ => &mut self.welcome as &mut dyn KbPage,
         }
     }
-    fn on_close(&mut self) {
-        self.open_times += 1;
-    }
 }
 
 impl IndexPanel {
@@ -90,6 +95,11 @@ impl IndexPanel {
         mut link_evts: EventWriter<EasyLinkEvent>,
         mut index: ResMut<IndexPanel>,
     ) {
+        if index.skip_frames > 0 {
+            index.skip_frames -= 1;
+            return;
+        }
+
         if state.window_width > state.window_height {
             let min_width = state.window_width / 3.0;
             let max_width = state.window_width * 2.0 / 3.0;
