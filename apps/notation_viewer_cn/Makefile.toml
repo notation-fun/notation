@@ -64,5 +64,6 @@ script_runner = "@shell"
 script = ["""
 cp ./target/wasm.js ../../public/notation_cn/
 wasm-opt -Os -o ../../public/notation_cn/wasm_bg.wasm ./target/wasm_bg.wasm
+ls -l ../../public/notation_cn
 """]
 dependencies = ["build-web"]
