@@ -24,6 +24,7 @@ impl NotationViewer {
                 .with_system(Self::handle_touch_inputs.system())
                 .with_system(Self::load_tab.system())
                 .with_system(HelpPanel::help_ui.system())
+                .with_system(HelpPanel::handle_link_evts.system())
         );
     }
     pub fn run(tabs: Vec<String>) {

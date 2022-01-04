@@ -36,6 +36,9 @@ impl HelpPanel {
     pub const WELCOME: KbPageId = KbPageId::MarkDown(Self::WELCOME_PATH);
     pub const USAGE_PATH: &'static str = "kb/usage.md";
     pub const USAGE: KbPageId = KbPageId::MarkDown(Self::USAGE_PATH);
+
+    pub const LINK_NOTES: &'static str = ":kb:notes";
+    pub const LINK_CHORDS: &'static str = ":kb:chords";
 }
 
 impl KbPanel for HelpPanel {
@@ -84,4 +87,26 @@ impl HelpPanel {
     ) {
         (&mut help).window_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts);
     }
-}
+    pub fn handle_link_evts(
+        mut index: ResMut<HelpPanel>,
+        mut evts: EventReader<EasyLinkEvent>,
+    ) {
+        for evt in evts.iter() {
+            (&mut index).handle_link_evt(evt);
+        }
+    }
+    fn handle_link_evt(
+        &mut self,
+        evt: &EasyLinkEvent,
+    ) {
+        println!("handle_link_evt {:?}", evt);
+        match evt.link.as_str() {
+            Self::LINK_NOTES => {
+                self.current_page_id = KbPageId::Notes;
+            },
+            Self::LINK_CHORDS => {
+                self.current_page_id = KbPageId::Chords;
+            },
+            _ => (),
+        }
+    }}
