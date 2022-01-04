@@ -8,5 +8,5 @@
 # [Chords](:kb:chords)
 系统中用不同颜色的圆圈上加入镶嵌元素的方式来表示和声，当前曲目中所用到的和声音符、音程信息可见与 Chords 页面。
 
-# [Guitar](:kb:guitar)
+# Guitar
 目前系统中大部分的主要功能是为了吉他谱的展示而来的，相关乐谱、教学、视频、以及订阅信息请访问[唉嘛怵栮Guitar](https://www.amateurguitar.cn)
