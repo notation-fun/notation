@@ -42,11 +42,12 @@ pub struct NotationApp;
 impl NotationApp {
     pub const TITLE: &'static str = "Fun Notation";
 
-    pub fn new_builder(title: &str) -> AppBuilder {
+    pub fn new_builder<A: ExtraAssets>(title: &str) -> AppBuilder {
         let mut app = App::build();
         AssetLoader::new(NotationAssetsStates::Loading)
             .continue_to_state(NotationAssetsStates::Loaded)
             .with_collection::<NotationAssets>()
+            .with_collection::<A>()
             .build(&mut app);
         app.add_state(NotationAssetsStates::Loading);
         Self::insert_window_descriptor(&mut app, String::from(title));
@@ -95,11 +96,12 @@ impl NotationApp {
             .map(|x| x.trim_start_matches('?').to_owned())
     }
 
-    pub fn run_with_extra<F>(tab_pathes: Vec<String>, extra: F)
+    pub fn run_with_extra<A, F>(tab_pathes: Vec<String>, extra: F)
     where
+        A: ExtraAssets,
         F: Fn(&mut AppBuilder),
     {
-        let mut app = NotationApp::new_builder(Self::TITLE);
+        let mut app = NotationApp::new_builder::<A>(Self::TITLE);
 
         app.insert_resource(TabPathes(tab_pathes));
         app.init_resource::<NotationState>();
@@ -111,6 +113,7 @@ impl NotationApp {
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
+                .with_system(NotationAssets::add_extra_assets::<A>.system())
                 .with_system(Self::setup_window_size.system()),
         );
         app.add_system_set(
@@ -128,8 +131,8 @@ impl NotationApp {
         extra(&mut app);
         app.run();
     }
-    pub fn run(tab_pathes: Vec<String>) {
-        Self::run_with_extra(tab_pathes, |_app|{})
+    pub fn run<A: ExtraAssets>(tab_pathes: Vec<String>) {
+        Self::run_with_extra::<A, _>(tab_pathes, |_app|{})
     }
 }
 

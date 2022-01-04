@@ -1,6 +1,6 @@
 pub use {notation_midi, notation_model};
 
-pub use {bevy, bevy_prototype_lyon, bevy_egui};
+pub use {bevy, bevy_prototype_lyon, bevy_egui, bevy_asset_loader};
 
 #[cfg(target_arch = "wasm32")]
 pub use bevy_webgl2;
@@ -50,6 +50,8 @@ pub mod prelude {
     pub use notation_model::prelude::*;
     #[doc(hidden)]
     pub use notation_bevy_utils::prelude::*;
+    #[doc(hidden)]
+    pub use bevy_asset_loader::{self, AssetCollection};
     #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]
@@ -133,7 +135,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::notation::state::{NotationState, TabPathes};
     #[doc(hidden)]
-    pub use crate::notation::assets::{NotationAssets, NotationAssetsStates};
+    pub use crate::notation::assets::{NotationAssets, NotationAssetsStates, ExtraAssets, NoExtraAssets};
     #[doc(hidden)]
     pub use crate::notation::layout::NotationLayout;
     #[doc(hidden)]

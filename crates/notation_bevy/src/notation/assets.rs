@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use bevy::{prelude::*, asset::{AssetPath, HandleId}};
+use bevy::{prelude::*, asset::{AssetPath, HandleId, Asset}};
 use bevy_asset_loader::{AssetCollection};
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 
@@ -21,8 +21,13 @@ pub struct NotationAssets {
     #[asset(path = "png/fretboard.png")]
     pub fretboard: Handle<Texture>,
 
-    #[asset(folder = "kb")]
-    pub kb: Vec<HandleUntyped>,
+    //Not using the folder way, which is not supported under wasm
+    //#[asset(folder = "extra")]
+    pub extra: Vec<HandleUntyped>,
+}
+
+pub trait ExtraAssets : AssetCollection {
+    fn get_assets(&self) -> Vec<HandleUntyped>;
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
@@ -32,15 +37,36 @@ pub enum NotationAssetsStates {
 }
 
 impl NotationAssets {
-    pub fn get_kb(&self, path: PathBuf) -> Option<Handle<MarkDownAsset>> {
+    pub fn get_extra<A: Asset>(&self, path: PathBuf) -> Option<Handle<A>> {
         let handle_id = HandleId::from(AssetPath::new(path, None));
         let mut handle = None;
-        for asset in self.kb.iter() {
+        for asset in self.extra.iter() {
             if asset.id == handle_id {
-                handle = Some(asset.clone().typed::<MarkDownAsset>());
+                handle = Some(asset.clone().typed::<A>());
                 break;
             }
         }
         handle
+    }
+    pub fn add_extra(&mut self, handle: HandleUntyped) {
+        self.extra.push(handle)
+    }
+    pub fn add_extra_assets<A: ExtraAssets>(
+        extra: Res<A>,
+        mut assets: ResMut<NotationAssets>,
+    ) {
+        for asset in extra.get_assets().iter() {
+            assets.add_extra(asset.clone());
+        }
+    }
+}
+
+#[derive(AssetCollection)]
+pub struct NoExtraAssets {
+}
+
+impl ExtraAssets for NoExtraAssets {
+    fn get_assets(&self) -> Vec<HandleUntyped> {
+        Vec::new()
     }
 }

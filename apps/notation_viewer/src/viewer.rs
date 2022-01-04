@@ -8,6 +8,7 @@ use notation_bevy::prelude::*;
 use notation_bevy::settings::layout_settings::LayoutMode;
 use notation_bevy::notation_midi::prelude::*;
 
+use crate::assets::NotationViewerAssets;
 use crate::help_panel::HelpPanel;
 
 pub struct NotationViewer();
@@ -26,7 +27,7 @@ impl NotationViewer {
         );
     }
     pub fn run(tabs: Vec<String>) {
-        notation_bevy::prelude::NotationApp::run_with_extra(tabs, Self::extra);
+        notation_bevy::prelude::NotationApp::run_with_extra::<NotationViewerAssets, _>(tabs, Self::extra);
     }
 }
 
