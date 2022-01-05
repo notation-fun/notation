@@ -7,7 +7,7 @@ use notation_model::prelude::{Entry, PlaySpeed};
 pub struct MidiSynth {}
 
 impl MidiSynth {
-    pub const VOLUME_FACTOR: f32 = 0.7; //The sound in browser is a bit too loud
+    pub const VOLUME_FACTOR: f32 = 0.5; //The sound in browser is a bit too loud
 
     pub fn try_new() -> Option<MidiSynth> {
         Some(MidiSynth {})
