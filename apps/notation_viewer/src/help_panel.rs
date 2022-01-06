@@ -10,6 +10,7 @@ use notation_bevy::kb::markdown_page::MarkDownPage;
 
 #[derive(Clone, Debug)]
 pub struct HelpPanel {
+    pub skip_frames: usize,
     pub open_times: usize,
     pub current_page_id: KbPageId,
     pub welcome: MarkDownPage,
@@ -21,6 +22,7 @@ pub struct HelpPanel {
 impl Default for HelpPanel {
     fn default() -> Self {
         Self {
+            skip_frames: 2,
             open_times: 0,
             current_page_id: Self::WELCOME,
             welcome: MarkDownPage::new(Self::WELCOME_PATH),
@@ -85,6 +87,10 @@ impl HelpPanel {
         mut link_evts: EventWriter<EasyLinkEvent>,
         mut help: ResMut<HelpPanel>,
     ) {
+        if help.skip_frames > 0 {
+            help.skip_frames -= 1;
+            return;
+        }
         (&mut help).window_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts);
     }
     pub fn handle_link_evts(
