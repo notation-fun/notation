@@ -53,6 +53,9 @@ impl<'a> DockPanel<NotationLayout<'a>> for MiniMap {
 }
 impl<'a> View<NotationLayout<'a>> for MiniMap {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
+        if engine.settings.hide_mini_map {
+            return LayoutSize::new(constraint.max.width, 0.0);
+        }
         let grid_data = self.calc_grid_data(engine, constraint.max);
         let height =
             grid_data.content_size().height + engine.theme.sizes.mini_map.bar_margin().height * 2.0;
@@ -70,11 +73,15 @@ impl MiniMap {
         commands: &mut Commands,
         assets: &NotationAssets,
         theme: &NotationTheme,
+        settings: &NotationSettings,
         entity: Entity,
         tab: &Arc<Tab>,
     ) -> Entity {
         let minimap = MiniMap::new(tab.clone());
         let map_entity = BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
+        if settings.hide_mini_map {
+            return map_entity;
+        }
         let background_entity = ColorBackground::spawn(
             commands,
             map_entity,

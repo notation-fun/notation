@@ -32,6 +32,9 @@ impl TabControl {
 }
 impl<'a> View<NotationLayout<'a>> for TabControl {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
+        if engine.settings.hide_guitar_view {
+            return LayoutSize::new(0.0, constraint.max.height);
+        }
         let width = match engine.settings.override_guitar_width {
             Some(width) => width,
             None => {
@@ -68,6 +71,9 @@ impl TabControl {
         let control = TabControl::new(tab.clone());
         let control_entity =
             BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(control));
+        if settings.hide_guitar_view {
+            return control_entity;
+        }
         ChordColorBackground::spawn(
             commands,
             control_entity,

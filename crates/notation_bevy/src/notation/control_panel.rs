@@ -346,6 +346,25 @@ impl ControlPanel {
                 if always_show_fret != settings.always_show_fret {
                     Control::reload_tab(state, theme);
                 }
+                ui.separator();
+                let mut hide_guitar_view = settings.hide_guitar_view;
+                ui.checkbox(&mut hide_guitar_view, "Hide Guitar View");
+                if settings.hide_guitar_view != hide_guitar_view {
+                    settings.hide_guitar_view = hide_guitar_view;
+                    Control::reload_tab(state, theme);
+                }
+                let mut hide_chords_view = settings.hide_chords_view;
+                ui.checkbox(&mut hide_chords_view, "Hide Chords View");
+                if settings.hide_chords_view != hide_chords_view {
+                    settings.hide_chords_view = hide_chords_view;
+                    Control::reload_tab(state, theme);
+                }
+                let mut hide_mini_map = settings.hide_mini_map;
+                ui.checkbox(&mut hide_mini_map, "Hide Mini Map");
+                if settings.hide_mini_map != hide_mini_map {
+                    settings.hide_mini_map = hide_mini_map;
+                    Control::reload_tab(state, theme);
+                }
             });
     }
     pub fn layout_ui(

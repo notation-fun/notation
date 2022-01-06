@@ -196,6 +196,9 @@ impl GuitarView {
         if theme._bypass_systems {
             return;
         }
+        if settings.hide_guitar_view {
+            return;
+        }
         let mut current_entry_pick = None;
         let mut string_states = [None; 6];
         let mut hit_strings = [(false, Duration::Zero); 6];
@@ -278,6 +281,9 @@ impl GuitarView {
             return;
         }
         if theme._bypass_systems {
+            return;
+        }
+        if settings.hide_guitar_view {
             return;
         }
         let mut current_shape = None;
@@ -396,6 +402,9 @@ impl GuitarView {
             return;
         }
         if theme._bypass_systems {
+            return;
+        }
+        if settings.hide_guitar_view {
             return;
         }
         if settings.override_guitar_y.is_some() {

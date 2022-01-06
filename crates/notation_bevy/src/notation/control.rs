@@ -296,6 +296,30 @@ impl Control {
         }
         Self::reload_tab(state, theme);
     }
+    pub fn toggle_hide_guitar_view(
+        state: &mut NotationState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.hide_guitar_view = !settings.hide_guitar_view;
+        Self::reload_tab(state, theme);
+    }
+    pub fn toggle_hide_chords_view(
+        state: &mut NotationState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.hide_chords_view = !settings.hide_chords_view;
+        Self::reload_tab(state, theme);
+    }
+    pub fn toggle_hide_mini_map(
+        state: &mut NotationState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.hide_mini_map = !settings.hide_mini_map;
+        Self::reload_tab(state, theme);
+    }
     pub fn toggle_show_guitar_syllable(
         state: &mut NotationState,
         settings: &mut NotationSettings,

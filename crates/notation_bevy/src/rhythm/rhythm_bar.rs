@@ -6,7 +6,7 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::{BevyUtil, OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, Signature, Tab};
 
-use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState};
+use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState, NotationSettings};
 
 use super::rhythm_beat::RhythmBeatData;
 use super::rhythm_indicator::RhythmIndicatorData;
@@ -105,6 +105,7 @@ impl RhythmBarData {
     }
     pub fn update_rhythm(
         mut commands: Commands,
+        settings: Res<NotationSettings>,
         theme: Res<NotationTheme>,
         mut query: Query<(Entity, &TabState), Changed<TabState>>,
         mut bar_query: Query<(Entity, &mut RhythmBarData, &Children)>,
@@ -113,6 +114,9 @@ impl RhythmBarData {
         mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
     ) {
         if theme._bypass_systems {
+            return;
+        }
+        if settings.hide_chords_view {
             return;
         }
         let mut current_position = None;

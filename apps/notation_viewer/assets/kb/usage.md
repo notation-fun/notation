@@ -1,6 +1,9 @@
 # Keyboard Shortcuts - GUI
+- *Tab* toggle control gui (right)
 - *F1, H* toggle help dialog
-- *Tab* toggle control gui
+- *F2* toggle guitar view (left)
+- *F3* toggle chords view (top)
+- *F4* toggle mini map (bottom)
 - *F5, R* reload current tab
 
 # Keyboard Shortcuts - Move Around

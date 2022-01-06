@@ -35,6 +35,9 @@ impl TabHeader {
 }
 impl<'a> View<NotationLayout<'a>> for TabHeader {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
+        if engine.settings.hide_chords_view {
+            return LayoutSize::new(constraint.max.width, 0.0);
+        }
         let grid_data = TabChords::calc_grid_data(engine, constraint.max, self.chords.len() + 1);
         let height = grid_data.content_size().height;
         LayoutSize::new(constraint.max.width, height)
@@ -52,13 +55,16 @@ impl TabHeader {
         commands: &mut Commands,
         assets: &NotationAssets,
         theme: &NotationTheme,
-        _settings: &NotationSettings,
+        settings: &NotationSettings,
         entity: Entity,
         tab: &Arc<Tab>,
     ) -> Entity {
         let view_bundle = ViewBundle::from(TabHeader::new(tab.clone()));
         let view = view_bundle.view.clone();
         let header_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
+        if settings.hide_chords_view {
+            return header_entity;
+        }
         ColorBackground::spawn(
             commands,
             header_entity,

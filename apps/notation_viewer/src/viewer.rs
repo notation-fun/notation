@@ -135,6 +135,15 @@ impl NotationViewer {
         } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::H)
         {
             app_state.show_kb = !app_state.show_kb;
+        } else if keyboard_input.just_released(KeyCode::F2)
+        {
+            Control::toggle_hide_guitar_view(&mut app_state, &mut settings, &mut theme);
+        } else if keyboard_input.just_released(KeyCode::F3)
+        {
+            Control::toggle_hide_chords_view(&mut app_state, &mut settings, &mut theme);
+        } else if keyboard_input.just_released(KeyCode::F4)
+        {
+            Control::toggle_hide_mini_map(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F5) || keyboard_input.just_released(KeyCode::R)
         {
             Control::reload_tab(&mut app_state, &mut theme);

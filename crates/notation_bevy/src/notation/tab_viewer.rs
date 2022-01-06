@@ -69,7 +69,7 @@ impl TabViewer {
     ) -> Entity {
         let viewer_bundle = ViewBundle::from(TabViewer::new(tab.clone()));
         let viewer_entity = commands.spawn_bundle(viewer_bundle).id();
-        MiniMap::spawn(commands, assets, theme, viewer_entity, &tab);
+        MiniMap::spawn(commands, assets, theme, settings, viewer_entity, &tab);
         TabView::spawn(
             commands,
             materials,
