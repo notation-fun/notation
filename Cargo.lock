@@ -265,31 +265,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d5f2f58f0aec3c50a20799792c3705e80dd7df327e79791cacec197e84e5e61"
 
 [[package]]
-name = "bevy-inspector-egui"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5bc705295fc79159a6d96888ed20de42ed143da50a31b72b3060b2c5099fb024"
-dependencies = [
- "bevy",
- "bevy-inspector-egui-derive",
- "bevy_egui 0.4.2",
- "emath 0.11.0",
- "image",
- "pretty-type-name",
-]
-
-[[package]]
-name = "bevy-inspector-egui-derive"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d10a625d3c87e6662404eb21b5de6356c63a338c933436b177adbacd0edea606"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "bevy_app"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -440,27 +415,13 @@ dependencies = [
 
 [[package]]
 name = "bevy_egui"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3de8da8d35ee092c04816725eb9ab9f4dc809f0c1ad2cda4de74042fa8a3454"
-dependencies = [
- "bevy",
- "clipboard",
- "egui 0.11.0",
- "thread_local",
- "webbrowser",
- "winit",
-]
-
-[[package]]
-name = "bevy_egui"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c39707b49ae7d148d0d36f227986b6121368b06bd87aaaf7a5a9b6780dc23c08"
 dependencies = [
  "bevy",
  "clipboard",
- "egui 0.16.1",
+ "egui",
  "thread_local",
  "webbrowser",
  "winit",
@@ -541,6 +502,18 @@ dependencies = [
  "anyhow",
  "bevy",
  "bevy_reflect",
+ "kira",
+ "parking_lot",
+]
+
+[[package]]
+name = "bevy_kira_audio"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "adbc031a44b98bc650849bb1886dd5aff6f1e6966ff492198e15d67fefed282c"
+dependencies = [
+ "anyhow",
+ "bevy",
  "kira",
  "parking_lot",
 ]
@@ -1477,21 +1450,12 @@ checksum = "9ea835d29036a4087793836fa931b08837ad5e957da9e23886b29586fb9b6650"
 
 [[package]]
 name = "egui"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d7d6535c3ecdc8627a72c1c52d052d66cd9f71c238428690cc46bef9d1f2bce"
-dependencies = [
- "epaint 0.11.0",
-]
-
-[[package]]
-name = "egui"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c733356eb5f1139fdeedc370c00e9ea689c5d9120502c43925285bc7249a333"
 dependencies = [
  "ahash 0.7.4",
- "epaint 0.16.0",
+ "epaint",
  "nohash-hasher",
 ]
 
@@ -1500,12 +1464,6 @@ name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
-
-[[package]]
-name = "emath"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4ed72c14666517e5c0198490864adea871081abe4f5523af8c3f4f56595142e"
 
 [[package]]
 name = "emath"
@@ -1525,19 +1483,6 @@ dependencies = [
 
 [[package]]
 name = "epaint"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a19eff631454edbe5abe4693be00be0c1ea9832d727dc385c16841caa2d0162"
-dependencies = [
- "ahash 0.7.4",
- "atomic_refcell",
- "emath 0.11.0",
- "ordered-float",
- "rusttype",
-]
-
-[[package]]
-name = "epaint"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "adfd9296f7f92902e41c0e8e5deca6d2fb29f289c86d03a01ea01bd7498316c2"
@@ -1545,7 +1490,7 @@ dependencies = [
  "ab_glyph",
  "ahash 0.7.4",
  "atomic_refcell",
- "emath 0.16.0",
+ "emath",
  "nohash-hasher",
 ]
 
@@ -2472,6 +2417,7 @@ dependencies = [
  "getrandom",
  "indexmap",
  "instant",
+ "lewton",
  "rand",
  "ringbuf",
  "thiserror",
@@ -2489,6 +2435,17 @@ name = "lazycell"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
+
+[[package]]
+name = "lewton"
+version = "0.10.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "777b48df9aaab155475a83a7df3070395ea1ac6902f5cd062b8f2b028075c030"
+dependencies = [
+ "byteorder",
+ "ogg",
+ "tinyvec",
+]
 
 [[package]]
 name = "libc"
@@ -2910,15 +2867,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "notation_audio"
+version = "0.3.2"
+dependencies = [
+ "bevy",
+ "bevy_kira_audio 0.7.0",
+ "notation_model",
+ "ringbuf",
+]
+
+[[package]]
 name = "notation_bevy"
 version = "0.3.3"
 dependencies = [
  "anyhow",
  "bevy",
- "bevy-inspector-egui",
  "bevy_asset_loader",
  "bevy_easings",
- "bevy_egui 0.9.0",
+ "bevy_egui",
  "bevy_prototype_lyon",
  "bevy_webgl2",
  "console_error_panic_hook",
@@ -2945,9 +2911,8 @@ version = "0.3.2"
 dependencies = [
  "anyhow",
  "bevy",
- "bevy-inspector-egui",
  "bevy_easings",
- "bevy_egui 0.9.0",
+ "bevy_egui",
  "bevy_prototype_lyon",
  "float_eq",
  "getrandom",
@@ -3000,6 +2965,7 @@ dependencies = [
 name = "notation_kb"
 version = "0.3.3"
 dependencies = [
+ "notation_audio",
  "notation_bevy",
 ]
 
@@ -3023,8 +2989,7 @@ name = "notation_midi"
 version = "0.3.2"
 dependencies = [
  "bevy",
- "bevy-inspector-egui",
- "bevy_kira_audio",
+ "bevy_kira_audio 0.5.1",
  "dmsort",
  "fluidlite",
  "helgoboss-midi",
@@ -3286,19 +3251,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "ogg"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6951b4e8bf21c8193da321bcce9c9dd2e13c858fe078bf9054a288b419ae5d6e"
+dependencies = [
+ "byteorder",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56"
-
-[[package]]
-name = "ordered-float"
-version = "2.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "039f02eb0f69271f26abe3202189275d7aa2258b903cb0281b5de710a2570ff3"
-dependencies = [
- "num-traits",
-]
 
 [[package]]
 name = "owned_ttf_parser"
@@ -3427,12 +3392,6 @@ name = "ppv-lite86"
 version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac74c624d6b2d21f425f752262f42188365d7b8ff1aff74c82e45136510a4857"
-
-[[package]]
-name = "pretty-type-name"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8815d101cfb4cb491154896bdab292a395a7ac9ab185a9941a2f5be0135900d"
 
 [[package]]
 name = "proc-macro-crate"
@@ -4035,6 +3994,21 @@ dependencies = [
  "libc",
  "winapi 0.3.9",
 ]
+
+[[package]]
+name = "tinyvec"
+version = "1.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c1c1d5a42b6245520c249549ec267180beaffcc0615401ac8e31853d4b6d8d2"
+dependencies = [
+ "tinyvec_macros",
+]
+
+[[package]]
+name = "tinyvec_macros"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cda74da7e1a664f795bb1f8a87ec406fb89a02522cf6e50620d016add6dbbf5c"
 
 [[package]]
 name = "toml"

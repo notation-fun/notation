@@ -2,14 +2,12 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::{GridData, LayoutData};
-use notation_midi::prelude::{JumpToBarEvent, MidiSettings, MidiState, PlayControlEvent};
-use notation_model::prelude::TabBarProps;
+use notation_model::prelude::{JumpToBarEvent, PlayControlEvent, TabBarProps};
 
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_view::ChordView;
 use crate::mini::mini_bar::MiniBar;
 
-use crate::notation::control::Control;
 use crate::notation::control_panel::ControlPanel;
 use crate::play::play_button::PlayButton;
 use crate::prelude::{
@@ -31,6 +29,12 @@ use super::tab_events::{
 };
 use super::tab_header::TabHeader;
 use super::tab_view::TabView;
+
+#[cfg(feature = "midi")]
+use notation_midi::prelude::{MidiSettings, MidiState};
+
+#[cfg(feature = "midi")]
+use crate::midi::midi_control::MidiControl;
 
 pub struct TabPlugin;
 
@@ -89,7 +93,9 @@ impl TabPlugin {
         bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
         tab_control_query: Query<(&Arc<TabControl>, &LayoutData, &GlobalTransform)>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
+        #[cfg(feature = "midi")]
         midi_settings: Res<MidiSettings>,
+        #[cfg(feature = "midi")]
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
     ) {
@@ -117,31 +123,8 @@ impl TabPlugin {
                 }
                 for (button, layout, global_transform) in button_query.iter() {
                     if layout.is_pos_inside(pos, global_transform) {
-                        match button.action {
-                            crate::play::play_button::PlayButtonAction::PlayPause => {
-                                Control::play_or_pause(&mut midi_state, &mut play_control_evts)
-                            }
-                            crate::play::play_button::PlayButtonAction::Stop => {
-                                Control::stop(&mut midi_state, &mut play_control_evts)
-                            }
-                            crate::play::play_button::PlayButtonAction::LoopMode => {
-                                settings.should_loop = !settings.should_loop;
-                                Control::sync_should_loop(
-                                    &settings,
-                                    &mut midi_state,
-                                    &mut play_control_evts,
-                                )
-                            }
-                            crate::play::play_button::PlayButtonAction::SetBegin => {
-                                Control::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts)
-                            }
-                            crate::play::play_button::PlayButtonAction::SetEnd => {
-                                Control::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts)
-                            }
-                            crate::play::play_button::PlayButtonAction::Clear => {
-                                Control::clear_begin_end(&mut midi_state, &mut play_control_evts)
-                            }
-                        }
+                        #[cfg(feature = "midi")]
+                        Self::on_play_button_clicked(&mut settings, &midi_settings, &mut midi_state, &mut play_control_evts, button);
                         return;
                     }
                 }
@@ -172,7 +155,8 @@ impl TabPlugin {
                 // Not using GuitarView here, since it's y position been changed to adjust with capo position
                 for (_tab_control, layout, global_transform) in tab_control_query.iter() {
                     if layout.is_pos_inside(pos, global_transform) {
-                        Control::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
+                        #[cfg(feature = "midi")]
+                        MidiControl::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
                         return;
                     }
                 }

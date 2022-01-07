@@ -39,6 +39,8 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::play::play_state::{PlayState, PlayingState};
     #[doc(hidden)]
+    pub use crate::play::play_events::*;
+    #[doc(hidden)]
     pub use crate::section::Section;
     #[doc(hidden)]
     pub use crate::tab::Tab;

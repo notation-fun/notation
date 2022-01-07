@@ -1,4 +1,7 @@
-pub use {notation_midi, notation_model};
+pub use {notation_model};
+
+#[cfg(feature = "midi")]
+pub use notation_midi;
 
 pub use {bevy, bevy_prototype_lyon, bevy_egui, bevy_asset_loader};
 
@@ -41,6 +44,9 @@ pub mod inspector;
 
 #[cfg(feature = "dev")]
 pub mod dev;
+
+#[cfg(feature = "midi")]
+pub mod midi;
 
 #[cfg(feature = "dsl")]
 pub mod dsl;
@@ -152,4 +158,7 @@ pub mod prelude {
     pub use crate::kb::page_helper::PageHelper;
     #[doc(hidden)]
     pub use crate::kb::kb_panel::KbPanel;
+    #[cfg(feature = "midi")]
+    #[doc(hidden)]
+    pub use crate::midi::midi_control::MidiControl;
 }

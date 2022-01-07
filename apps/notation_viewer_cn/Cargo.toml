@@ -19,10 +19,6 @@ dev = [
     "notation_viewer/dev",
     "native",
 ]
-inspector = [
-    "notation_viewer/inspector",
-    "native",
-]
 
 [dependencies]
 notation_viewer = { path = "../notation_viewer" }

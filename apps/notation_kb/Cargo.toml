@@ -16,10 +16,7 @@ dev = [
     "notation_bevy/dev",
     "native",
 ]
-inspector = [
-    "notation_bevy/inspector",
-    "native",
-]
 
 [dependencies]
 notation_bevy = { path = "../../crates/notation_bevy" }
+notation_audio = { path = "../../crates/notation_audio" }

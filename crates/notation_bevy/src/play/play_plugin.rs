@@ -1,8 +1,7 @@
 use std::sync::Arc;
 
 use notation_bevy_utils::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp};
-use notation_midi::prelude::PlayControlEvent;
-use notation_model::prelude::{LaneEntry, PlayState, PlayingState, Position, Tab, TickResult};
+use notation_model::prelude::{PlayControlEvent, LaneEntry, PlayState, PlayingState, Position, Tab, TickResult, SwitchTabEvent, JumpToBarEvent};
 
 use bevy::prelude::*;
 
@@ -31,6 +30,9 @@ pub struct PlayPlugin;
 
 impl Plugin for PlayPlugin {
     fn build(&self, app: &mut AppBuilder) {
+        app.add_event::<SwitchTabEvent>();
+        app.add_event::<JumpToBarEvent>();
+        app.add_event::<PlayControlEvent>();
         PlayPanelDoLayoutEvent::setup(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)

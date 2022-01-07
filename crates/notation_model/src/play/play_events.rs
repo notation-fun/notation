@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
-use notation_model::play::play_control::TickResult;
-use notation_model::prelude::*;
+use crate::prelude::*;
 
 #[derive(Debug)]
 pub struct SwitchTabEvent {

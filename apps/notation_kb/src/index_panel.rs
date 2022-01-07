@@ -1,11 +1,10 @@
+use notation_audio::prelude::MonoStream;
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::{egui, EguiContext};
 
 use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
 
-use notation_bevy::kb::chords_page::ChordsPage;
-use notation_bevy::kb::notes_page::NotesPage;
 use notation_bevy::kb::markdown_page::MarkDownPage;
 
 use crate::theory::scale::ScalePage;
@@ -134,7 +133,6 @@ impl IndexPanel {
                 content.content_ui(ui, texts, assets, state, theme, link_evts);
             });
         }
-
     }
     pub fn handle_link_evts(
         mut index: ResMut<IndexPanel>,
@@ -162,5 +160,22 @@ impl IndexPanel {
             }
             _ => (),
         }
+    }
+    fn _index_audio(
+        &mut self,
+        stream: &mut MonoStream,
+    ) {
+        match self.current_page_id {
+            Self::SOUND => {
+                self.sound.audio(stream);
+            },
+            _ => {},
+        }
+    }
+    pub fn index_audio(
+        mut index: ResMut<IndexPanel>,
+        mut stream: ResMut<MonoStream>,
+    ) {
+        (&mut index)._index_audio(&mut stream);
     }
 }

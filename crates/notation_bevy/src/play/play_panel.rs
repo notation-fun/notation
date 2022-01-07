@@ -6,8 +6,7 @@ use notation_bevy_utils::prelude::{
     BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
-use notation_midi::prelude::PlayControlEvent;
-use notation_model::prelude::{PlayState, Tab};
+use notation_model::prelude::{PlayControlEvent, PlayState, Tab};
 
 use crate::prelude::{NotationState, NotationAssets, NotationSettings, NotationTheme};
 use crate::prelude::NotationLayout;

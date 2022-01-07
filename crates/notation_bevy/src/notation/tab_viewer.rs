@@ -1,6 +1,5 @@
 use bevy::prelude::*;
-use notation_midi::prelude::SwitchTabEvent;
-use notation_model::prelude::Tab;
+use notation_model::prelude::{Tab, SwitchTabEvent};
 use std::fmt::Display;
 use std::sync::Arc;
 

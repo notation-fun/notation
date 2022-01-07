@@ -24,14 +24,12 @@ dev = [
     "notation_bevy_utils/dev",
 ]
 
-inspector = [
-    "bevy-inspector-egui",
-    "notation_bevy_utils/inspector",
-    "notation_midi/inspector",
-]
-
 native = [
     "bevy/bevy_wgpu",
+]
+
+midi = [
+    "notation_midi",
 ]
 
 dsl = [
@@ -45,8 +43,8 @@ chinese = [
 notation_bevy_utils = { version = "0.3.2", path = "../notation_bevy_utils" }
 
 notation_model = { version = "0.3.2", path = "../notation_model" }
-notation_midi = { version = "0.3.2", path = "../notation_midi" }
 
+notation_midi = { version = "0.3.2", path = "../notation_midi", optional = true }
 notation_dsl = { version = "0.3.3", path = "../notation_dsl", optional = true }
 
 serde = {version = "1.0.126", features = ["derive"]}
@@ -68,7 +66,6 @@ bevy_easings = "0.4.1"
 # bevy_svg = "0.3"
 # bevy_svg_map = "0.2"
 
-bevy-inspector-egui = { version = "0.5.1", optional = true }
 rfd = "0.6.2"
 
 #[target."cfg(not(target_arch = "wasm32"))".dependencies]

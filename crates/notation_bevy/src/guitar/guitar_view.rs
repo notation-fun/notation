@@ -6,7 +6,6 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::{
     BevyUtil, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle,
 };
-use notation_midi::prelude::MidiState;
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
     Tab, TrackKind, Units,
@@ -19,6 +18,9 @@ use super::fret_finger::FretFingerData;
 use super::guitar_barre::GuitarBarreData;
 use super::guitar_capo::GuitarCapoData;
 use super::guitar_string::GuitarStringData;
+
+#[cfg(feature = "midi")]
+use notation_midi::prelude::MidiState;
 
 #[derive(Clone, Debug)]
 pub struct GuitarView {
@@ -181,6 +183,7 @@ impl GuitarView {
         mut commands: Commands,
         assets: Res<NotationAssets>,
         settings: Res<NotationSettings>,
+        #[cfg(feature = "midi")]
         midi_state: Res<MidiState>,
         time: Res<Time>,
         theme: Res<NotationTheme>,
@@ -221,6 +224,7 @@ impl GuitarView {
         for (string_entity, mut string_data) in string_query.iter_mut() {
             if string_data.string >= 1 && string_data.string <= 6 {
                 let (hit, hit_duration) = hit_strings[(string_data.string - 1) as usize];
+                #[cfg(feature = "midi")]
                 string_data.set_hit(
                     hit,
                     hit_duration,

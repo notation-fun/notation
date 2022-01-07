@@ -1,9 +1,11 @@
 use crate::prelude::{
-    JumpToBarEvent, MidiHub, MidiSettings, MidiState, PlayControlEvent, SwitchTabEvent,
+    MidiHub, MidiSettings, MidiState,
 };
 use bevy::core::FixedTimestep;
 use bevy::prelude::*;
-use notation_model::prelude::PlayClock;
+use notation_model::prelude::{
+    PlayClock, JumpToBarEvent, PlayControlEvent, SwitchTabEvent,
+};
 
 pub struct MidiPlugin;
 
@@ -11,9 +13,6 @@ const DO_TICK_TIMESTEP: f64 = 1.0 / 60.0;
 
 impl Plugin for MidiPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.add_event::<SwitchTabEvent>();
-        app.add_event::<JumpToBarEvent>();
-        app.add_event::<PlayControlEvent>();
         app.init_resource::<PlayClock>();
         app.init_resource::<MidiSettings>();
         app.init_resource::<MidiState>();

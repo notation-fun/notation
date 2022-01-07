@@ -4,8 +4,7 @@ use bevy::prelude::*;
 use bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
 use bevy_egui::EguiContext;
 use float_eq::float_ne;
-use notation_midi::prelude::{JumpToBarEvent, MidiSettings, MidiState, PlayControlEvent};
-use notation_model::prelude::{Octave};
+use notation_model::prelude::{JumpToBarEvent, PlayControlEvent};
 
 use crate::settings::layout_settings::{GridAlignMode, LayoutMode};
 use super::control::Control;
@@ -14,6 +13,12 @@ use crate::prelude::{
     GuitarView, NotationState, NotationSettings, NotationTheme, TabAsset,
     TabPathes, WindowResizedEvent,
 };
+
+#[cfg(feature = "midi")]
+use notation_midi::prelude::{MidiSettings, MidiState};
+
+#[cfg(feature = "midi")]
+use crate::midi::midi_control::MidiControl;
 
 #[derive(Clone, Debug)]
 pub struct ControlPanel {
@@ -41,6 +46,7 @@ impl ControlPanel {
         settings: &mut NotationSettings,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
         guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
+        #[cfg(feature = "midi")]
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
     ) {
@@ -121,11 +127,13 @@ impl ControlPanel {
                         || float_ne!(offset_y, last_offset_y, abs <= 1.0)
                     {
                         settings.layout.override_focus_offset_y = Some(offset_y);
-                        Control::jump_to_center_bar(midi_state, jump_to_bar_evts);
+                        #[cfg(feature = "midi")]
+                        MidiControl::jump_to_center_bar(midi_state, jump_to_bar_evts);
                     }
                 } else if settings.layout.override_focus_offset_y.is_some() {
                     settings.layout.override_focus_offset_y = None;
-                    Control::jump_to_center_bar(midi_state, jump_to_bar_evts);
+                    #[cfg(feature = "midi")]
+                    MidiControl::jump_to_center_bar(midi_state, jump_to_bar_evts);
                 }
                 let mut override_guitar_y = settings.override_guitar_y.is_some();
                 ui.checkbox(&mut override_guitar_y, "Override Guitar Y");
@@ -142,142 +150,6 @@ impl ControlPanel {
                 } else if settings.override_guitar_y.is_some() {
                     settings.override_guitar_y = None;
                     window_resized_evts.send(WindowResizedEvent());
-                }
-            });
-    }
-    pub fn midi_settings_ui(
-        ui: &mut Ui,
-        state: &mut NotationState,
-        theme: &mut NotationTheme,
-        midi_settings: &mut MidiSettings,
-        midi_state: &mut MidiState,
-        play_control_evts: &mut EventWriter<PlayControlEvent>,
-    ) {
-        CollapsingHeader::new("Midi & Audio")
-            .default_open(true)
-            .show(ui, |ui| {
-                let mut bypass_hub = midi_settings.bypass_hub;
-                ui.checkbox(&mut bypass_hub, "Bypass Midi Hub");
-                if midi_settings.bypass_hub != bypass_hub {
-                    if midi_state.play_control.play_state.is_playing() {
-                        Control::pause(midi_state, play_control_evts);
-                    } else {
-                        midi_settings.bypass_hub = bypass_hub;
-                    }
-                }
-                if !midi_settings.bypass_hub {
-                    ui.separator();
-                    ui.horizontal(|ui| {
-                        ui.label(format!("Click Octave: {}", midi_settings.click_octave));
-                        ui.separator();
-                        if midi_settings.click_octave > Octave::P1 && ui.button("lower").clicked() {
-                            midi_settings.click_octave = midi_settings.click_octave.get_lower();
-                            Control::reload_tab(state, theme);
-                        }
-                        if midi_settings.click_octave < Octave::P7 && ui.button("higher").clicked()
-                        {
-                            midi_settings.click_octave = midi_settings.click_octave.get_higher();
-                            Control::reload_tab(state, theme);
-                        }
-                    });
-                    ui.horizontal(|ui| {
-                        ui.checkbox(&mut midi_settings.click_mute, "Mute");
-                        ui.add(
-                            Slider::new(&mut midi_settings.click_velocity, 0..=127).text("Click"),
-                        );
-                    });
-                    ui.horizontal(|ui| {
-                        ui.checkbox(&mut midi_settings.vocal_mute, "Mute");
-                        ui.add(
-                            Slider::new(&mut midi_settings.vocal_velocity, 0..=127).text("Vocal"),
-                        );
-                    });
-                    ui.horizontal(|ui| {
-                        ui.checkbox(&mut midi_settings.guitar_mute, "Mute");
-                        ui.add(
-                            Slider::new(&mut midi_settings.guitar_velocity, 0..=127).text("Guitar"),
-                        );
-                    });
-                    if ui.button("Reset Audio").clicked() {
-                        let default = MidiSettings::default();
-                        midi_settings.click_mute = default.click_mute;
-                        midi_settings.click_velocity = default.click_velocity;
-                        midi_settings.vocal_mute = default.vocal_mute;
-                        midi_settings.vocal_velocity = default.vocal_velocity;
-                        midi_settings.guitar_mute = default.guitar_mute;
-                        midi_settings.guitar_velocity = default.guitar_velocity;
-                    }
-                }
-            });
-    }
-    pub fn play_control_ui(
-        ui: &mut Ui,
-        settings: &mut NotationSettings,
-        midi_state: &mut MidiState,
-        play_control_evts: &mut EventWriter<PlayControlEvent>,
-    ) {
-        CollapsingHeader::new("Play Control")
-            .default_open(true)
-            .show(ui, |ui| {
-                let play_title = if midi_state.play_control.play_state.is_playing() {
-                    "Pause"
-                } else {
-                    "Play"
-                };
-                ui.horizontal(|ui| {
-                    if ui.button(play_title).clicked() {
-                        Control::play_or_pause(midi_state, play_control_evts);
-                    }
-                    if ui.button("Stop").clicked() {
-                        if midi_state.play_control.stop() {
-                            Control::send_play_state_evt(midi_state, play_control_evts);
-                        }
-                    }
-                });
-                let should_loop = settings.should_loop;
-                ui.horizontal(|ui| {
-                    ui.checkbox(&mut settings.should_loop, "Loop");
-                    if should_loop != settings.should_loop {
-                        Control::sync_should_loop(settings, midi_state, play_control_evts)
-                    }
-                    if ui
-                        .button(format!(
-                            "Begin: {}",
-                            midi_state.play_control.begin_bar_ordinal
-                        ))
-                        .clicked()
-                    {
-                        Control::set_begin_bar_ordinal(midi_state, play_control_evts);
-                    }
-                    if ui
-                        .button(format!("End: {}", midi_state.play_control.end_bar_ordinal))
-                        .clicked()
-                    {
-                        Control::set_end_bar_ordinal(midi_state, play_control_evts);
-                    }
-                    if ui.button("Clear").clicked() {
-                        Control::clear_begin_end(midi_state, play_control_evts);
-                    }
-                });
-                ui.separator();
-                let mut speed_factor = settings.speed_factor;
-                ui.add(Slider::new(&mut speed_factor, 0.1..=2.0).text("Speed"));
-                ui.horizontal(|ui| {
-                    if ui.button("1/4").clicked() {
-                        speed_factor = 0.25;
-                    }
-                    if ui.button("2/4").clicked() {
-                        speed_factor = 0.5;
-                    }
-                    if ui.button("3/4").clicked() {
-                        speed_factor = 0.75;
-                    }
-                    if ui.button("4/4").clicked() {
-                        speed_factor = 1.0;
-                    }
-                });
-                if float_ne!(speed_factor, settings.speed_factor, abs <= 0.01) {
-                    Control::set_speed_factor(settings, midi_state, play_control_evts, speed_factor)
                 }
             });
     }
@@ -736,7 +608,9 @@ impl ControlPanel {
         mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
+        #[cfg(feature = "midi")]
         mut midi_settings: ResMut<MidiSettings>,
+        #[cfg(feature = "midi")]
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
@@ -761,15 +635,19 @@ impl ControlPanel {
                      */
                     Self::tab_ui(ui, &mut pathes, &mut state, &mut settings, &mut theme);
                     ui.separator();
-                    Self::play_control_ui(
-                        ui,
-                        &mut settings,
-                        &mut midi_state,
-                        &mut play_control_evts,
-                    );
-                    ui.separator();
+                    #[cfg(feature = "midi")]
+                    {
+                        Self::play_control_ui(
+                            ui,
+                            &mut settings,
+                            &mut midi_state,
+                            &mut play_control_evts,
+                        );
+                        ui.separator();
+                    }
                     egui::ScrollArea::vertical().show(ui, |ui| {
                         ui.vertical(|ui| {
+                            #[cfg(feature = "midi")]
                             Self::midi_settings_ui(
                                 ui,
                                 &mut state,
@@ -786,6 +664,7 @@ impl ControlPanel {
                                 &mut settings,
                                 &mut window_resized_evts,
                                 &mut guitar_view_query,
+                                #[cfg(feature = "midi")]
                                 &midi_state,
                                 &mut jump_to_bar_evts,
                             );

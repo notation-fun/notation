@@ -9,16 +9,16 @@ identifier = "fun.notation.viewer"
 resources = ["assets"]
 
 [features]
+default = [
+    "notation_bevy/midi",
+]
+
 native = [
     "notation_bevy/native",
     "notation_bevy/dsl",
 ]
 dev = [
     "notation_bevy/dev",
-    "native",
-]
-inspector = [
-    "notation_bevy/inspector",
     "native",
 ]
 

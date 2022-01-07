@@ -1,4 +1,3 @@
-pub mod midi_events;
 pub mod midi_hub;
 pub mod midi_message;
 pub mod midi_plugin;
@@ -13,9 +12,6 @@ pub mod native;
 pub mod wasm;
 
 pub mod prelude {
-    #[doc(hidden)]
-    #[doc(hidden)]
-    pub use crate::midi_events::{JumpToBarEvent, PlayControlEvent, SwitchTabEvent};
     #[doc(hidden)]
     pub use crate::midi_hub::MidiHub;
     #[doc(hidden)]

@@ -9,6 +9,7 @@ use crate::prelude::*;
 use super::control_panel::ControlPanel;
 use super::tab_viewer::TabViewerPlugin;
 
+#[cfg(feature = "midi")]
 use notation_midi::prelude::{
     MidiPlugin,
 };
@@ -29,7 +30,9 @@ impl PluginGroup for NotationPlugins {
         group.add(TabPlugin);
         group.add(PlayPlugin);
         group.add(TabViewerPlugin);
+
         //crates plugins
+        #[cfg(feature = "midi")]
         group.add(MidiPlugin);
         //external plugins
         group.add(bevy_prototype_lyon::prelude::ShapePlugin);

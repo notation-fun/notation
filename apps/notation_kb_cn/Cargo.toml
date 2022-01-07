@@ -19,10 +19,6 @@ dev = [
     "notation_kb/dev",
     "native",
 ]
-inspector = [
-    "notation_kb/inspector",
-    "native",
-]
 
 [dependencies]
 notation_kb = { path = "../notation_kb" }
