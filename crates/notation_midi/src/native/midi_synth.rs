@@ -126,7 +126,7 @@ impl MidiSynth {
                 key_number,
                 velocity: _,
             } => {
-                let velocity = if velocity > 127 { 127 } else { velocity };
+                let velocity = velocity.min(127);
                 self.synth
                     .note_on(channel.into(), key_number.into(), velocity.into())
             }
