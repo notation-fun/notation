@@ -86,7 +86,7 @@ impl MidiSynth {
                 let loader = fluidlite::Loader::new_default().unwrap();
                 loader.set_file_api(EmbeddedApi);
                 synth.add_sfloader(loader);
-                let path = format!("assets/{}.invalid", Self::SOUND_FONT);
+                let path = format!("assets/{}.sf2", Self::SOUND_FONT);
                 synth.sfload(path, true).map(|_| synth)
             })
             .map(Self::new)
