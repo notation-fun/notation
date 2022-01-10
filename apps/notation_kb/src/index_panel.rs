@@ -33,7 +33,7 @@ Caused by:
             skip_frames: 2,
 
             #[cfg(debug_assertions)]
-            current_page_id: Self::SOUND,
+            current_page_id: Self::SCALE,
             #[cfg(not(debug_assertions))]
             current_page_id: Self::WELCOME,
 

@@ -30,6 +30,9 @@ impl Scale {
     pub const Major: Scale = Scale::Ionian;
     #[allow(non_upper_case_globals)]
     pub const Minor: Scale = Scale::Aeolian;
+    pub const ALL: [ Scale; 7 ] = [
+        Scale::Ionian, Scale::Dorian, Scale::Phrygian, Scale::Lydian, Scale::Mixolydian, Scale::Aeolian, Scale::Locrian,
+    ];
 
     pub fn to_ident(&self) -> String {
         format!("{}", self)
