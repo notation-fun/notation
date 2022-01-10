@@ -2995,6 +2995,7 @@ dependencies = [
  "helgoboss-midi",
  "midi-msg",
  "midir",
+ "notation_audio",
  "notation_model",
  "wasm-bindgen",
 ]

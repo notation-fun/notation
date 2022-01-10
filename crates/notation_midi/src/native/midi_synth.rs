@@ -5,13 +5,15 @@ use helgoboss_midi::StructuredShortMessage;
 use crate::prelude::{MidiMessage, MidiSettings, MidiState};
 use notation_model::prelude::PlaySpeed;
 
-use super::audio_stream::DoubleAudioBuffer;
+use notation_audio::prelude::StereoStream;
 
 pub struct MidiSynth {
     synth: fluidlite::Synth,
-    buffer: DoubleAudioBuffer,
+    buffer_left: [f32; Self::AUDIO_BUFFER_SIZE],
+    buffer_right: [f32; Self::AUDIO_BUFFER_SIZE],
 }
 impl MidiSynth {
+    pub const AUDIO_BUFFER_SIZE: usize = 2048;
     pub const SOUND_FONT: &'static str = "sblive";
 
     #[cfg(target_os = "windows")]
@@ -23,7 +25,8 @@ impl MidiSynth {
     fn new(synth: fluidlite::Synth) -> Self {
         Self {
             synth,
-            buffer: DoubleAudioBuffer::new(),
+            buffer_left: [0f32; Self::AUDIO_BUFFER_SIZE],
+            buffer_right: [0f32; Self::AUDIO_BUFFER_SIZE],
         }
     }
     fn check_path(root: PathBuf, name: &str) -> Option<PathBuf> {
@@ -74,20 +77,21 @@ impl MidiSynth {
             })
             .ok()
     }
-    pub fn get_buffer(&self) -> Option<DoubleAudioBuffer> {
-        Some(self.buffer.clone())
-    }
-    pub fn check_buffer(&mut self) {
+    pub fn send_buffer(&mut self, stream: &mut StereoStream) {
+        if stream.buffer.remaining() < self.buffer_left.len() + 1 {
+            return;
+        }
         let synth = &self.synth;
         // let use_buffer_2 = self.buffer.use_buffer_2;
-        self.buffer.write_buffer(|data| {
-            /*
-            println!("NativeMidiSynth writing buffer: {} [{}]",
-                if use_buffer_2 { 2 } else { 1 },
-                data.len());
-             */
-            synth.write(data).unwrap();
-        });
+        /*
+        println!("NativeMidiSynth writing buffer: {} [{}]",
+            if use_buffer_2 { 2 } else { 1 },
+            data.len());
+            */
+        synth.write((&mut self.buffer_left as &mut [f32], &mut self.buffer_right as &mut [f32])).unwrap();
+        for i in 0..self.buffer_left.len() {
+            stream.push(self.buffer_left[i], self.buffer_right[i]);
+        }
     }
     pub fn init_channels(&self, _settings: &MidiSettings, _state: &MidiState) {}
     pub fn send(&self, _speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) -> Result<(), String> {
