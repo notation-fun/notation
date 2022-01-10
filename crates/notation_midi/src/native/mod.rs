@@ -1,4 +1,5 @@
 pub mod midi_synth;
+pub mod embedded_api;
 
 use bevy::prelude::*;
 use notation_audio::prelude::StereoStream;

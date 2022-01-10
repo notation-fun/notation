@@ -7,6 +7,8 @@ use notation_model::prelude::PlaySpeed;
 
 use notation_audio::prelude::StereoStream;
 
+use super::embedded_api::EmbeddedApi;
+
 pub struct MidiSynth {
     synth: fluidlite::Synth,
     buffer_left: [f32; Self::AUDIO_BUFFER_SIZE],
@@ -44,7 +46,7 @@ impl MidiSynth {
             None
         }
     }
-    pub fn try_new() -> Option<MidiSynth> {
+    pub fn try_new_file() -> Option<MidiSynth> {
         fluidlite::Settings::new()
             .and_then(fluidlite::Synth::new)
             .and_then(|synth| {
@@ -76,6 +78,24 @@ impl MidiSynth {
                 err
             })
             .ok()
+    }
+    pub fn try_new() -> Option<MidiSynth> {
+        fluidlite::Settings::new()
+            .and_then(fluidlite::Synth::new)
+            .and_then(|synth| {
+                let loader = fluidlite::Loader::new_default().unwrap();
+                loader.set_file_api(EmbeddedApi);
+                synth.add_sfloader(loader);
+                let path = format!("assets/{}.invalid", Self::SOUND_FONT);
+                synth.sfload(path, true).map(|_| synth)
+            })
+            .map(Self::new)
+            .map_err(|err| {
+                println!("MidiSynth try_new() failed: {:?}", err);
+                err
+            })
+            .ok()
+
     }
     pub fn send_buffer(&mut self, stream: &mut StereoStream) {
         if stream.buffer.remaining() < self.buffer_left.len() + 1 {
