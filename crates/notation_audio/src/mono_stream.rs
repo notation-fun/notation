@@ -8,7 +8,7 @@ pub struct MonoStreamOutput {
 
 impl std::fmt::Debug for MonoStreamOutput {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<MonoStream>({}/{})", self.buffer.len(), self.buffer.capacity())
+        write!(f, "<MonoStreamOutput>({}/{})", self.buffer.len(), self.buffer.capacity())
     }
 }
 
@@ -17,7 +17,7 @@ impl AudioStream for MonoStreamOutput {
         if self.buffer.is_full() {
             let capacity = self.buffer.capacity();
             let dropped = self.buffer.discard(self.buffer.capacity() / 2);
-            println!("<MonoStream>[{}] buffer is full, dropped: {}", capacity, dropped);
+            println!("<MonoStreamOutput>[{}] buffer is full, dropped: {}", capacity, dropped);
         }
         let data = self.buffer.pop().unwrap_or(0.0);
         Frame::from_mono(data)
@@ -39,7 +39,7 @@ pub struct MonoStream {
 
 impl std::fmt::Debug for MonoStream {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<MonoBuffer>({}/{}, v:{})", self.buffer.len(), self.buffer.capacity(), self.volume)
+        write!(f, "<MonoStream>({}/{}, v:{})", self.buffer.len(), self.buffer.capacity(), self.volume)
     }
 }
 
@@ -50,7 +50,7 @@ impl MonoStream {
     pub const DEFAULT_VOLUME: f32 = 1.0;
     pub fn push(&mut self, data: f32) {
         if let Err(err) = self.buffer.push(data * self.volume) {
-            println!("<MonoBuffer> push failed: {} -> {:?}", data, err);
+            println!("<MonoStream> push failed: {} -> {:?}", data, err);
         }
     }
     pub fn init_streaming(

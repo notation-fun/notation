@@ -349,7 +349,7 @@ impl ControlPanel {
         });
         if pathes.0.len() > 1 {
             let width = Self::calc_width(state.window_width);
-            egui::ComboBox::from_label("")
+            egui::ComboBox::from_id_source("tab")
                 .selected_text(state.tab_path.clone())
                 .width(width - 24.0)
                 .show_ui(ui, |ui| {

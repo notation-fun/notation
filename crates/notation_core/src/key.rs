@@ -41,6 +41,16 @@ impl Key {
     pub const G_FLAT: Self = Self::Flat(PitchName::G);
     pub const A_FLAT: Self = Self::Flat(PitchName::A);
     pub const B_FLAT: Self = Self::Flat(PitchName::B);
+
+    pub const ALL: [Key ; 17] = [
+        Key::C, Key::C_SHARP, Key::D_FLAT,
+        Key::D, Key::D_SHARP, Key::E_FLAT,
+        Key::E,
+        Key::F, Key::F_SHARP, Key::G_FLAT,
+        Key::G, Key::G_SHARP, Key::A_FLAT,
+        Key::A, Key::A_SHARP, Key::B_FLAT,
+        Key::B,
+    ];
 }
 
 impl Key {

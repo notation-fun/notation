@@ -1,21 +1,37 @@
-pub mod audio_stream;
 pub mod midi_synth;
+pub mod embedded_api;
 
 use bevy::prelude::*;
-use bevy_kira_audio::{AudioPlugin, AudioStreamPlugin, StreamedAudio};
+use notation_audio::prelude::StereoStream;
 
-use crate::prelude::{MidiHub, MidiPlugin, MidiSettings};
-use audio_stream::{DoubleAudioBuffer, MidiAudioStream};
+use crate::prelude::{MidiPlugin, MidiHub};
 
 impl MidiPlugin {
     pub fn build_native(&self, app: &mut AppBuilder) {
-        app.add_plugin(AudioPlugin);
-        app.add_plugin(AudioStreamPlugin::<MidiAudioStream>::default());
-        app.add_startup_system(setup_audio_stream.system());
-        app.add_system(check_synth_buffer.system());
+        StereoStream::init_streaming(app, true);
+        //app.add_plugin(AudioPlugin);
+        //app.add_plugin(AudioStreamPlugin::<MidiAudioStream>::default());
+        //app.add_startup_system(setup_audio_stream.system());
+        app.add_system(send_synth_buffer.system());
     }
 }
 
+fn send_synth_buffer(
+    mut hub: NonSendMut<MidiHub>,
+    mut stream: ResMut<StereoStream>,
+) {
+    hub.send_buffer(&mut stream);
+}
+
+impl MidiHub {
+    pub fn send_buffer(&mut self, stream: &mut StereoStream) {
+        if let Some(synth) = self.output_synth.as_mut() {
+            synth.send_buffer(stream);
+        }
+    }
+}
+
+/*
 fn setup_audio_stream(
     streamed_audio: Res<StreamedAudio<MidiAudioStream>>,
     mut hub: NonSendMut<MidiHub>,
@@ -46,3 +62,4 @@ impl MidiHub {
         }
     }
 }
+ */
