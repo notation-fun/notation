@@ -25,6 +25,9 @@ cargo publish
 cd ../notation_tab
 cargo publish
 
+cd ../notation_audio
+cargo publish
+
 cd ../notation_midi
 cargo publish
 
