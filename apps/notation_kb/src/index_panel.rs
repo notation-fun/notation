@@ -112,9 +112,12 @@ impl IndexPanel {
     ) {
         theme.sizes.melody.note_height = 8.0;
         theme.sizes.melody.semitone_height = 8.0;
+        theme.texts.melody.text_y = -18.0;
         settings.hide_mini_map = true;
         settings.hide_bar_number = true;
         settings.layout.focus_bar_ease_ms = 0;
+        settings.show_melody_syllable = true;
+        settings.show_syllable_as_pitch = true;
         if state.window_width > 0.0 && state.window_height > 0.0 {
             if state.window_width > state.window_height {
                 let width = state.window_width / 3.0 + theme.sizes.layout.page_margin;
