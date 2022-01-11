@@ -8,6 +8,11 @@ use syn::{LitInt, Token};
 pub struct SyllableDsl {
     pub syllable: Syllable,
 }
+
+mod kw {
+    syn::custom_keyword!(b);
+}
+
 impl SyllableDsl {
     pub fn new(syllable: Syllable) -> Self {
         Self { syllable }
@@ -41,7 +46,7 @@ impl SyllableDsl {
     #[throws(Error)]
     fn parse_flat(input: ParseStream) -> Self {
         let syllable = input.parse::<LitInt>()?.base10_parse::<u8>()?;
-        input.parse::<Token![%]>()?;
+        input.parse::<kw::b>()?;
         SyllableDsl::new(match syllable {
             2 => Syllable::Ra,
             3 => Syllable::Me,
@@ -58,7 +63,7 @@ impl Parse for SyllableDsl {
     fn parse(input: ParseStream) -> Self {
         if input.peek2(Token![#]) {
             Self::parse_sharp(input)?
-        } else if input.peek2(Token![%]) {
+        } else if input.peek2(kw::b) {
             Self::parse_flat(input)?
         } else {
             Self::parse_natural(input)?

@@ -8,6 +8,10 @@ pub struct PitchSignDsl {
     pub sign: PitchSign,
 }
 
+mod kw {
+    syn::custom_keyword!(b);
+}
+
 impl Parse for PitchSignDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
@@ -16,8 +20,8 @@ impl Parse for PitchSignDsl {
             if input.peek(Token![#]) {
                 input.parse::<Token![#]>()?;
                 semitones += 1;
-            } else if input.peek(Token![%]) {
-                input.parse::<Token![%]>()?;
+            } else if input.peek(kw::b) {
+                input.parse::<kw::b>()?;
                 semitones -= 1;
             }
         }
