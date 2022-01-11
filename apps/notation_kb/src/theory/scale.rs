@@ -1,9 +1,11 @@
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::egui::{self, *};
 
+use notation_tab::prelude::{track, Context};
+
 use notation_bevy::kb::markdown_page::MarkDownPage;
 use notation_bevy::kb::notes_page::NotesPage;
-use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, Scale, Key};
+use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, Scale, Key, ProtoTab, TabMeta, Signature, Tempo};
 
 #[derive(Copy, Clone, Debug)]
 pub struct ScalePage {
@@ -75,5 +77,24 @@ impl ScalePage {
             scale: Default::default(),
             key: Default::default(),
         }
+    }
+    pub fn make_tab(&self) -> ProtoTab {
+        let meta = TabMeta::new(
+            self.key.clone(), self.scale.clone(),
+            Signature::_4_4, Tempo::Bpm(60),
+        );
+        Context::set_scale(self.scale);
+        Context::set_key(self.key);
+        Context::set_duration(Duration::_1_4);
+        let track = track! {vocal Vocal [
+        ]};
+        let section = Section::new();
+        ProtoTab::new(
+            ProtoTab::new_uuid().as_str(),
+            meta,
+            vec![track],
+            vec![section],
+            Form{ sections: vec!["section"]},
+        )
     }
 }

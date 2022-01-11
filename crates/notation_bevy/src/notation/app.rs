@@ -288,8 +288,6 @@ impl NotationApp {
                         state.parse_error = Some(err);
                     }
                 }
-            } else {
-                println!("nload_tab(): Tab is None");
             }
         }
     }

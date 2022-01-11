@@ -1,6 +1,6 @@
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::{egui, EguiContext};
-use notation_bevy::prelude::StereoStream;
+use notation_bevy::prelude::{StereoStream, ProtoTab};
 
 use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
@@ -178,7 +178,15 @@ impl IndexPanel {
     ) {
         (&mut index)._index_audio(&mut stream);
     }
-    pub fn make_tab(&self) -> Option<ProtoTab> {
-        None
+    pub fn make_tab(&self, _tab_path: String) -> Option<ProtoTab> {
+        Some(match self.current_page_id {
+            Self::SCALE => {
+                self.scale.make_tab()
+            },
+            _ => Self::make_default_tab(),
+        })
+    }
+    pub fn make_default_tab() -> ProtoTab {
+        ProtoTab::new_empty()
     }
 }

@@ -1,5 +1,8 @@
 pub use {notation_model};
 
+#[cfg(feature = "dsl")]
+pub use notation_dsl;
+
 #[cfg(feature = "midi")]
 pub use notation_midi;
 
@@ -164,4 +167,7 @@ pub mod prelude {
     #[cfg(feature = "midi")]
     #[doc(hidden)]
     pub use crate::midi::midi_control::MidiControl;
+    #[cfg(feature = "dsl")]
+    #[doc(hidden)]
+    pub use crate::notation_dsl::prelude::*;
 }

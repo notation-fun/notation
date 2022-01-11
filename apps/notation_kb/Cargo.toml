@@ -22,3 +22,4 @@ dev = [
 
 [dependencies]
 notation_bevy = { path = "../../crates/notation_bevy" }
+notation_tab = { path = "../../crates/notation_tab" }

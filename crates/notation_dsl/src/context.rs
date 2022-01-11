@@ -88,7 +88,7 @@ impl Context {
     pub fn duration() -> Duration {
         CONTEXT.read().unwrap().duration
     }
-    pub fn base_octave() -> Octave {
+    pub fn octave() -> Octave {
         CONTEXT.read().unwrap().octave
     }
     pub fn fretted() -> FrettedContext {
@@ -99,6 +99,12 @@ impl Context {
     }
     pub fn set_scale(scale: Scale) {
         CONTEXT.write().unwrap().scale = scale;
+    }
+    pub fn set_duration(duration: Duration) {
+        CONTEXT.write().unwrap().duration = duration;
+    }
+    pub fn set_octave(octave: Octave) {
+        CONTEXT.write().unwrap().octave = octave;
     }
 }
 
@@ -114,12 +120,12 @@ impl Context {
             Duration::from_ident(#ident)
         }
     }
-    pub fn octave(tweak: &Option<OctaveTweakDsl>) -> Octave {
-        let base = Self::base_octave();
+    pub fn tweaked_octave(tweak: &Option<OctaveTweakDsl>) -> Octave {
+        let base = Self::octave();
         tweak.as_ref().map(|t| t.tweak(&base)).unwrap_or(base)
     }
     pub fn octave_quote(tweak: &Option<OctaveTweakDsl>) -> TokenStream {
-        let ident = Self::octave(tweak).to_ident();
+        let ident = Self::tweaked_octave(tweak).to_ident();
         quote! {
             Octave::from_ident(#ident)
         }
@@ -211,7 +217,7 @@ impl ToTokens for ContextDsl {
             }
             Self::Octave(x) => {
                 CONTEXT.write().unwrap().octave = Octave::from_ident(x.to_string().as_str());
-                let comment = format!("{}", Context::base_octave());
+                let comment = format!("{}", Context::octave());
                 quote! {
                     ProtoEntry::from(("dsl::context::octave", #comment))
                 }
@@ -247,7 +253,7 @@ impl ContextDsl {
             }
             Self::Octave(x) => {
                 CONTEXT.write().unwrap().octave = Octave::from_ident(x.to_string().as_str());
-                let comment = format!("{}", Context::base_octave());
+                let comment = format!("{}", Context::octave());
                 ProtoEntry::from(("dsl::context::octave", comment))
             }
             Self::StringNum(x) => {

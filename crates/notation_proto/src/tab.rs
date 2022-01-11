@@ -77,6 +77,9 @@ impl Display for Tab {
     }
 }
 impl Tab {
+    pub fn new_uuid() -> String {
+        Uuid::new_v4().to_string()
+    }
     pub fn new(
         uuid: &str,
         meta: TabMeta,
@@ -92,5 +95,14 @@ impl Tab {
             sections,
             form,
         }
+    }
+    pub fn new_empty() -> Self {
+        Self::new(
+            Self::new_uuid().as_str(),
+            TabMeta::default(),
+            vec![],
+            vec![],
+            Form { sections: vec![] },
+        )
     }
 }

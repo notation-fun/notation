@@ -33,5 +33,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::proto::track::TrackDsl;
     #[doc(hidden)]
+    pub use crate::context::Context;
+    #[doc(hidden)]
     pub use notation_proto::prelude::*;
 }
