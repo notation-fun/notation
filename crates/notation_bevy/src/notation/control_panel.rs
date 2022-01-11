@@ -198,15 +198,20 @@ impl ControlPanel {
                 if show_melody_syllable != settings.show_melody_syllable {
                     Control::reload_tab(state, theme);
                 }
+                let show_syllable_as_pitch = settings.show_syllable_as_pitch;
+                ui.checkbox(
+                    &mut settings.show_syllable_as_pitch,
+                    "Show Syllable as Pitches",
+                );
+                if show_syllable_as_pitch != settings.show_syllable_as_pitch {
+                    Control::reload_tab(state, theme);
+                }
                 let show_syllable_as_num = settings.show_syllable_as_num;
                 ui.checkbox(
                     &mut settings.show_syllable_as_num,
                     "Show Syllable as Numbers",
                 );
                 if show_syllable_as_num != settings.show_syllable_as_num {
-                    if show_syllable_as_num {
-                        settings.show_melody_syllable = true;
-                    }
                     Control::reload_tab(state, theme);
                 }
                 let hide_bar_number = settings.hide_bar_number;

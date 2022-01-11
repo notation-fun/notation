@@ -118,6 +118,9 @@ impl Key {
             _ => Self::default(),
         }
     }
+    pub fn transpose(&self, offset: Semitones) -> Self {
+        Key::from(Semitones::from(*self) - offset)
+    }
 }
 
 impl From<Key> for Semitones {

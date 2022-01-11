@@ -260,6 +260,7 @@ impl GuitarView {
                         &theme,
                         &settings,
                         finger_entity,
+                        &meta.clone().unwrap_or_default(),
                     );
                 }
             }
@@ -324,6 +325,7 @@ impl GuitarView {
                     &theme,
                     &settings,
                     finger_entity,
+                    &meta.clone().unwrap_or_default(),
                 );
             }
             for (string_entity, mut string_data) in string_query.iter_mut() {

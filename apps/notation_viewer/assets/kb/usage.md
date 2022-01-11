@@ -35,4 +35,5 @@
 - *Minus* toggle layout between grid mode and line mode
 - *G* toggle whether showing syllable in guitar fretboard
 - *M* toggle whether showing syllable in melody lines
+- *P* toggle whether showing syllable as pitch
 - *F* toggle whether always show fret number in guitar tab

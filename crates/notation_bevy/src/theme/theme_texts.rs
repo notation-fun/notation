@@ -1,5 +1,5 @@
 use notation_bevy_utils::prelude::{BevyUtil, LayoutData};
-use notation_model::prelude::Syllable;
+use notation_model::prelude::{Syllable, Scale, Key};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -230,9 +230,11 @@ impl MelodyTexts {
         entity: Entity,
         assets: &NotationAssets,
         settings: &NotationSettings,
+        scale: &Scale,
+        key: &Key,
         syllable: &Syllable,
     ) {
-        self.spawn_scaled_syllable_text(commands, entity, assets, settings, syllable, 1.0);
+        self.spawn_scaled_syllable_text(commands, entity, assets, settings, scale, key, syllable, 1.0);
     }
     pub fn spawn_scaled_syllable_text(
         &self,
@@ -240,10 +242,14 @@ impl MelodyTexts {
         entity: Entity,
         assets: &NotationAssets,
         settings: &NotationSettings,
+        scale: &Scale,
+        key: &Key,
         syllable: &Syllable,
-        scale: f32,
+        size_scale: f32,
     ) {
-        let text = if settings.show_syllable_as_num {
+        let text = if settings.show_syllable_as_pitch {
+            scale.calc_pitch(key, syllable).to_text()
+        } else if settings.show_syllable_as_num {
             syllable.to_text()
         } else {
             syllable.to_ident()
@@ -254,7 +260,7 @@ impl MelodyTexts {
             entity,
             text.as_str(),
             assets.latin_font.clone(),
-            self.syllable_font_size * scale,
+            self.syllable_font_size * size_scale,
             self.syllable_font_color,
             if self.horizontal_center {
                 HorizontalAlign::Center
@@ -262,8 +268,8 @@ impl MelodyTexts {
                 HorizontalAlign::Right
             },
             VerticalAlign::Center,
-            self.text_x * scale,
-            self.text_y * scale,
+            self.text_x * size_scale,
+            self.text_y * size_scale,
             self.text_z,
         );
     }

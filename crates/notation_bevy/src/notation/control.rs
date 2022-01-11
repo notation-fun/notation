@@ -67,6 +67,14 @@ impl Control {
         settings.show_melody_syllable = !settings.show_melody_syllable;
         Self::reload_tab(state, theme);
     }
+    pub fn toggle_show_syllable_as_pitch(
+        state: &mut NotationState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.show_syllable_as_pitch = !settings.show_syllable_as_pitch;
+        Self::reload_tab(state, theme);
+    }
     pub fn toggle_always_show_fret(
         state: &mut NotationState,
         settings: &mut NotationSettings,

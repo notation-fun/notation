@@ -107,6 +107,8 @@ impl NotationViewer {
             Control::toggle_show_guitar_syllable(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::M) {
             Control::toggle_show_melody_syllable(&mut app_state, &mut settings, &mut theme);
+        } else if keyboard_input.just_released(KeyCode::P) {
+            Control::toggle_show_syllable_as_pitch(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F) {
             Control::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::L) {

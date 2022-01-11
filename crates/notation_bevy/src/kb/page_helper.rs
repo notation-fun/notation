@@ -75,7 +75,7 @@ impl PageHelper {
         syllable: &Syllable,
         strong: bool,
     ) {
-        let key = Key::from(Semitones::from(*key) - Semitones(transpose));
+        let key = key.transpose(Semitones(transpose));
         Self::add_syllable_pitch(ui, theme, scale, &key, syllable, strong);
     }
     pub fn add_interval_syllable(
