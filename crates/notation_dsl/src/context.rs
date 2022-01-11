@@ -131,7 +131,7 @@ impl Context {
         }
     }
     pub fn calc_note(tweak: &Option<OctaveTweakDsl>, syllable: &Syllable) -> Note {
-        let octave = Self::octave(tweak);
+        let octave = Self::tweaked_octave(tweak);
         let key = Self::key();
         let scale = Self::scale();
         scale.calc_note(&key, &SyllableNote::new(octave, *syllable))

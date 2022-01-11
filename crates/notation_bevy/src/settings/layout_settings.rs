@@ -156,14 +156,18 @@ impl LayoutSettings {
                 "layout_settings.ease_transform_xy(): {}, {} -> {}, {}",
                 from.x, from.y, to.x, to.y
             );
-            let ease_function = EaseFunction::CubicOut;
-            entity_commands.insert(transform.ease_to(
-                Transform::from_translation(to),
-                ease_function,
-                EasingType::Once {
-                    duration: std::time::Duration::from_millis(self.focus_bar_ease_ms),
-                },
-            ));
+            if self.focus_bar_ease_ms > 0 {
+                let ease_function = EaseFunction::CubicOut;
+                entity_commands.insert(transform.ease_to(
+                    Transform::from_translation(to),
+                    ease_function,
+                    EasingType::Once {
+                        duration: std::time::Duration::from_millis(self.focus_bar_ease_ms),
+                    },
+                ));
+            } else {
+                transform.translation = to;
+            }
         }
     }
     fn calc_grid_focus_y(

@@ -1,7 +1,18 @@
 use bevy::prelude::*;
 
+use super::state::NotationState;
+
 #[derive(Clone, Debug)]
-pub struct WindowResizedEvent();
+pub struct WindowResizedEvent{
+    pub last_width: f32,
+    pub last_height: f32,
+}
+
+impl WindowResizedEvent {
+    pub fn new(state: &NotationState) -> Self {
+        Self { last_width: state.window_width, last_height: state.window_height, }
+    }
+}
 
 #[derive(Clone, Debug)]
 pub struct MouseClickedEvent {

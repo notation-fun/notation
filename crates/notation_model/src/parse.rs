@@ -19,6 +19,7 @@ impl Tab {
     #[throws(ParseError)]
     pub fn try_parse_arc(proto: notation_proto::prelude::Tab) -> Arc<Self> {
         Arc::<Tab>::new_cyclic(|weak_self| {
+            let need_rest = proto.need_rest();
             let uuid = proto.uuid;
             let meta = Arc::new(proto.meta);
             let tracks = proto
@@ -38,7 +39,9 @@ impl Tab {
                     ),
                 }
             };
-            add_section(0, notation_proto::prelude::Section::new_rest());
+            if need_rest {
+                add_section(0, notation_proto::prelude::Section::new_rest());
+            }
             for (index, section) in proto.sections.into_iter().enumerate() {
                 add_section(index, section);
             }

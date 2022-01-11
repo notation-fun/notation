@@ -43,6 +43,7 @@ impl ControlPanel {
     }
     pub fn overrides_ui(
         ui: &mut Ui,
+        state: &NotationState,
         settings: &mut NotationSettings,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
         guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
@@ -63,11 +64,11 @@ impl ControlPanel {
                         || float_ne!(tab_width, last_tab_width, abs <= 1.0)
                     {
                         settings.layout.override_tab_width = Some(tab_width);
-                        window_resized_evts.send(WindowResizedEvent());
+                        window_resized_evts.send(WindowResizedEvent::new(&state));
                     }
                 } else if settings.layout.override_tab_width.is_some() {
                     settings.layout.override_tab_width = None;
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let mut override_beat_size = settings.override_beat_size.is_some();
                 ui.checkbox(&mut override_beat_size, "Override Beat Size");
@@ -79,11 +80,11 @@ impl ControlPanel {
                         || float_ne!(beat_size, last_beat_size, abs <= 1.0)
                     {
                         settings.override_beat_size = Some(beat_size);
-                        window_resized_evts.send(WindowResizedEvent());
+                        window_resized_evts.send(WindowResizedEvent::new(&state));
                     }
                 } else if settings.override_beat_size.is_some() {
                     settings.override_beat_size = None;
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let mut override_chord_size = settings.override_chord_size.is_some();
                 ui.checkbox(&mut override_chord_size, "Override Chord Size");
@@ -95,11 +96,11 @@ impl ControlPanel {
                         || float_ne!(chord_size, last_chord_size, abs <= 1.0)
                     {
                         settings.override_chord_size = Some(chord_size);
-                        window_resized_evts.send(WindowResizedEvent());
+                        window_resized_evts.send(WindowResizedEvent::new(&state));
                     }
                 } else if settings.override_chord_size.is_some() {
                     settings.override_chord_size = None;
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let mut override_guitar_width = settings.override_guitar_width.is_some();
                 ui.checkbox(&mut override_guitar_width, "Override Guitar Width");
@@ -111,11 +112,11 @@ impl ControlPanel {
                         || float_ne!(guitar_width, last_guitar_width, abs <= 1.0)
                     {
                         settings.override_guitar_width = Some(guitar_width);
-                        window_resized_evts.send(WindowResizedEvent());
+                        window_resized_evts.send(WindowResizedEvent::new(&state));
                     }
                 } else if settings.override_guitar_width.is_some() {
                     settings.override_guitar_width = None;
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let mut override_focus_offset_y = settings.layout.override_focus_offset_y.is_some();
                 ui.checkbox(&mut override_focus_offset_y, "Override Focus Offset Y");
@@ -149,7 +150,7 @@ impl ControlPanel {
                     }
                 } else if settings.override_guitar_y.is_some() {
                     settings.override_guitar_y = None;
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
             });
     }
@@ -380,7 +381,7 @@ impl ControlPanel {
                     last_string_space,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let last_note_height = theme.sizes.strings.note_height;
                 ui.add(
@@ -392,7 +393,7 @@ impl ControlPanel {
                     last_note_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let mut changed = false;
                 let last_word_font_size = theme.texts.strings.fret_font_size;
@@ -447,7 +448,7 @@ impl ControlPanel {
                     last_line_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let last_line_height = theme.sizes.lyrics.line_height.current;
                 ui.add(
@@ -459,7 +460,7 @@ impl ControlPanel {
                     last_line_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let last_line_height = theme.sizes.lyrics.line_height.played;
                 ui.add(
@@ -471,12 +472,12 @@ impl ControlPanel {
                     last_line_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let last_word_gap = theme.sizes.lyrics.word_gap;
                 ui.add(Slider::new(&mut theme.sizes.lyrics.word_gap, 0.0..=8.0).text("Word Gap"));
                 if float_ne!(theme.sizes.lyrics.word_gap, last_word_gap, abs <= 0.5) {
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let mut changed = false;
                 let last_word_font_size = theme.texts.lyrics.word_font_size;
@@ -525,7 +526,7 @@ impl ControlPanel {
                         .text("Note Height"),
                 );
                 if float_ne!(theme.sizes.melody.note_height, last_note_height, abs <= 0.5) {
-                    window_resized_evts.send(WindowResizedEvent());
+                    window_resized_evts.send(WindowResizedEvent::new(&state));
                 }
                 let mut changed = false;
                 let last_syllable_font_size = theme.texts.melody.syllable_font_size;
@@ -629,7 +630,7 @@ impl ControlPanel {
                     /*
                     if ui.button("Hide Control\n(Press Tab to Show)").clicked() {
                         state.hide_control = true;
-                        window_resized_evts.send(WindowResizedEvent());
+                        window_resized_evts.send(WindowResizedEvent::new(&state));
                     }
                     ui.separator();
                      */
@@ -661,6 +662,7 @@ impl ControlPanel {
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(
                                 ui,
+                                &state,
                                 &mut settings,
                                 &mut window_resized_evts,
                                 &mut guitar_view_query,

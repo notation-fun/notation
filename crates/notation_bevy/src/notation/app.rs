@@ -206,12 +206,13 @@ impl NotationApp {
                     "on_window_resized(): {} {} -> {} {} ",
                     window.width, window.height, evt.width, evt.height
                 );
+                let resized_evt = WindowResizedEvent::new(&app_state);
                 window.width = evt.width;
                 window.height = evt.height;
                 app_state.window_width = evt.width;
                 app_state.window_height = evt.height;
                 app_state.scale_factor_override = window.scale_factor_override;
-                window_resized_evts.send(WindowResizedEvent());
+                window_resized_evts.send(resized_evt);
             }
         }
     }

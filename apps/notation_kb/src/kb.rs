@@ -14,27 +14,26 @@ pub struct NotationKnowledgeBase();
 impl NotationKnowledgeBase {
     fn extra(app: &mut AppBuilder) {
         app.init_resource::<IndexPanel>();
-        app.add_startup_system(Self::setup.system());
+        app.add_startup_system(Self::setup_state.system());
         TabPlugin::setup_mouse_input(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
+                .with_system(IndexPanel::hack_settings.system())
+                .with_system(IndexPanel::check_reload.system())
                 .with_system(IndexPanel::index_ui.system())
                 .with_system(IndexPanel::index_audio.system())
                 .with_system(IndexPanel::handle_link_evts.system())
                 .with_system(Self::load_tab.system())
+                .with_system(Self::on_window_resized.system())
         );
     }
     pub fn run() {
         notation_bevy::prelude::NotationApp::run_with_extra::<NotationKnowledgeBaseAssets, _>(vec![], Self::extra);
     }
-    fn setup(
+    fn setup_state(
         mut state: ResMut<NotationState>,
-        mut settings: ResMut<NotationSettings>,
     ) {
         state.show_kb = true;
-        settings.hide_guitar_view = true;
-        settings.hide_chords_view = true;
-        settings.hide_mini_map = true;
     }
     fn load_tab(
         mut commands: Commands,
@@ -50,6 +49,27 @@ impl NotationKnowledgeBase {
         NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &mut evts, &entities, &viewer_query, |tab_path| {
             index.make_tab(tab_path)
         })
+    }
+    fn on_window_resized(
+        mut state: ResMut<NotationState>,
+        mut theme: ResMut<NotationTheme>,
+        mut window_resized_evts: EventReader<WindowResizedEvent>,
+    ) {
+        let mut need_reload = false;
+        for evt in window_resized_evts.iter() {
+            if state.window_width > state.window_height {
+                if evt.last_width <= evt.last_height {
+                    need_reload = true;
+                }
+            } else {
+                if evt.last_width > evt.last_height {
+                    need_reload = true;
+                }
+            }
+        }
+        if need_reload {
+            Control::reload_tab(&mut state, &mut theme);
+        }
     }
 }
 

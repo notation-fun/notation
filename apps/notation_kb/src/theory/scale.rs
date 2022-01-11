@@ -1,17 +1,17 @@
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::egui::{self, *};
 
-use notation_tab::prelude::{track, Context};
-
 use notation_bevy::kb::markdown_page::MarkDownPage;
 use notation_bevy::kb::notes_page::NotesPage;
-use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, Scale, Key, ProtoTab, TabMeta, Signature, Tempo};
+use notation_bevy::prelude::*;
+
+use crate::index_panel::IndexPanel;
 
 #[derive(Copy, Clone, Debug)]
 pub struct ScalePage {
     pub path: &'static str,
     pub scale: Scale,
-    pub key: Key,
+    pub key: notation_bevy::prelude::Key,
 }
 
 impl KbPage for ScalePage {
@@ -34,7 +34,7 @@ impl KbPage for ScalePage {
             .width(64.0)
             .selected_text(key.to_string())
             .show_ui(ui, |ui| {
-                for k in Key::ALL.iter() {
+                for k in notation_bevy::prelude::Key::ALL.iter() {
                     if ui.selectable_label(*k == key, k.to_string()).clicked() {
                         self.key = k.clone();
                     }
@@ -54,6 +54,12 @@ impl KbPage for ScalePage {
         });
         ui.separator();
         NotesPage::notes_ui(ui, texts, assets, state, theme, link_evts, self.scale, self.key);
+        ui.separator();
+        ui.horizontal(|ui| {
+            if ui.button("play").clicked() {
+                link_evts.send(EasyLinkEvent::from(IndexPanel::LINK_MIDI_PLAY));
+            }
+        });
     }
 }
 
@@ -83,18 +89,41 @@ impl ScalePage {
             self.key.clone(), self.scale.clone(),
             Signature::_4_4, Tempo::Bpm(60),
         );
-        Context::set_scale(self.scale);
-        Context::set_key(self.key);
-        Context::set_duration(Duration::_1_4);
-        let track = track! {vocal Vocal [
-        ]};
-        let section = Section::new();
+        let mut entries = vec![];
+        let duration = Duration::_1_4;
+        for syllable in self.scale.get_syllables().iter() {
+            let note = Note::from(Semitones::from(Octave::CENTER) + Semitones::from(self.scale.calc_syllable_for_sort(syllable)));
+            entries.push(ProtoEntry::from(CoreEntry::from((Tone::from(note), duration))));
+        }
+        let note = Note::from(Semitones(12) + Semitones::from(Octave::CENTER) + Semitones::from(self.scale.calc_syllable_for_sort(&self.scale.calc_root_syllable())));
+        entries.push(ProtoEntry::from(CoreEntry::from((Tone::from(note), duration))));
+        let track = ProtoTrack::new("notes".to_owned(), TrackKind::Vocal, entries);
+        let bars = vec![
+            ProtoBar::new(
+                vec![
+                    ProtoBarLayer::new("notes".to_owned(), vec![
+                        Slice::new(SliceBegin::Index(0), SliceEnd::Count(4), None),
+                    ])
+                ],
+            ),
+            ProtoBar::new(
+                vec![
+                    ProtoBarLayer::new("notes".to_owned(), vec![
+                        Slice::new(SliceBegin::Index(4), SliceEnd::Count(4), None),
+                    ])
+                ]
+            ),
+        ];
+        let section = ProtoSection::new("notes".to_owned(), SectionKind::Rest, bars);
         ProtoTab::new(
             ProtoTab::new_uuid().as_str(),
             meta,
             vec![track],
             vec![section],
-            Form{ sections: vec!["section"]},
+            ProtoForm{ sections: vec!["notes".to_owned()]},
         )
+    }
+    pub fn check_reload(&self, tab: &Tab) -> bool {
+        self.scale != tab.meta.scale || self.key != tab.meta.key
     }
 }

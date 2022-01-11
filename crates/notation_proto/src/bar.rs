@@ -21,6 +21,11 @@ impl Display for Bar {
         write!(f, "<{}>(L:{})", stringify!(Bar), self.layers.len())
     }
 }
+impl Bar {
+    pub fn new(layers: Vec<BarLayer>) -> Self {
+        Self { layers }
+    }
+}
 impl BarLayer {
     pub fn new(track: String, slices: Vec<Slice>) -> Self {
         Self { track, slices }

@@ -22,6 +22,21 @@ pub struct EasyLinkEvent {
     pub link: String,
     pub new_tab: bool,
 }
+impl EasyLinkEvent {
+    pub fn new(link: String, new_tab: bool) -> Self {
+        Self { link, new_tab, }
+    }
+}
+impl From<String> for EasyLinkEvent {
+    fn from(link: String) -> Self {
+        Self::new(link, false)
+    }
+}
+impl From<&str> for EasyLinkEvent {
+    fn from(link: &str) -> Self {
+        Self::new(link.to_owned(), false)
+    }
+}
 
 impl EasyLink {
     pub const INTERNAL_LINK_PREFIX: &'static str = ":";
@@ -34,7 +49,6 @@ impl EasyLink {
             style,
         }
     }
-
     pub fn ui(self, ui: &mut Ui, link_evts: &mut EventWriter<EasyLinkEvent>) -> Response {
         let EasyLink { url, text, style } = self;
         let label = super::label_from_style(&text, &style);

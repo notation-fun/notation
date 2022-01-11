@@ -3,7 +3,7 @@ use uuid::Uuid;
 
 use std::fmt::Display;
 
-use crate::prelude::{Form, Section, Track};
+use crate::prelude::{Form, Section, Track, SectionKind};
 use notation_core::prelude::{
     Key, Note, Pitch, Scale, Signature, Syllable, SyllableNote, Tempo, Units,
 };
@@ -104,5 +104,10 @@ impl Tab {
             vec![],
             Form { sections: vec![] },
         )
+    }
+    pub fn need_rest(&self) -> bool {
+        self.sections.get(0).map(|section|
+            section.kind != SectionKind::Rest
+        ).unwrap_or(false)
     }
 }

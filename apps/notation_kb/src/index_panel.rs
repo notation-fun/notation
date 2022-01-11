@@ -1,6 +1,6 @@
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::{egui, EguiContext};
-use notation_bevy::prelude::{StereoStream, ProtoTab};
+use notation_bevy::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl};
 
 use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
@@ -56,6 +56,8 @@ impl IndexPanel {
     pub const LINK_SOUND: &'static str = ":kb:sound";
     pub const LINK_SCALE: &'static str = ":kb:scale";
     pub const LINK_SOUND_SINGLE_STRING: &'static str = ":kb:sound:single_string";
+
+    pub const LINK_MIDI_PLAY: &'static str = ":midi:play";
 }
 
 impl KbPanel for IndexPanel {
@@ -85,6 +87,46 @@ impl KbPanel for IndexPanel {
 }
 
 impl IndexPanel {
+    pub fn check_reload(
+        mut state: ResMut<NotationState>,
+        mut theme: ResMut<NotationTheme>,
+        index: Res<IndexPanel>,
+    ) {
+        if let Some(tab) = state.tab.as_ref() {
+            let need_reload = match index.current_page_id {
+                Self::SCALE => {
+                    index.scale.check_reload(&tab)
+                },
+                _ => false,
+            };
+            if need_reload {
+                Control::reload_tab(&mut state, &mut theme);
+            }
+        }
+    }
+    pub fn hack_settings(
+        state: Res<NotationState>,
+        theme: Res<NotationTheme>,
+        mut settings: ResMut<NotationSettings>,
+    ) {
+        settings.hide_mini_map = true;
+        settings.hide_bar_number = true;
+        settings.layout.focus_bar_ease_ms = 0;
+        if state.window_width > 0.0 && state.window_height > 0.0 {
+            if state.window_width > state.window_height {
+                let width = state.window_width / 3.0 + theme.sizes.layout.page_margin;
+                settings.hide_guitar_view = false;
+                settings.override_guitar_width = Some(width);
+                settings.hide_chords_view = true;
+            } else {
+                settings.hide_guitar_view = true;
+                settings.hide_chords_view = false;
+                settings.override_guitar_width = None;
+                let height = state.window_height / 3.0;
+                settings.override_chord_size = Some(height);
+            }
+        }
+    }
     pub fn index_ui(
         egui_ctx: Res<EguiContext>,
         texts: Res<Assets<MarkDownAsset>>,
@@ -98,15 +140,12 @@ impl IndexPanel {
             index.skip_frames -= 1;
             return;
         }
-
         if state.window_width > state.window_height {
-            let min_width = state.window_width / 3.0;
-            let max_width = state.window_width * 2.0 / 3.0;
-            (&mut index).side_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Left, (min_width, max_width));
+            let width = state.window_width / 3.0;
+            (&mut index).side_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Left, (width, width));
         } else {
-            let min_height = state.window_height / 3.0;
-            let max_height = state.window_height * 2.0 / 3.0;
-            (&mut index).side_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Top, (min_height, max_height));
+            let height = state.window_height / 3.0;
+            (&mut index).side_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Top, (height, height));
         }
         (&mut index).content_ui(&egui_ctx, &texts, &assets, &state, &theme, &mut link_evts);
     }
@@ -135,15 +174,19 @@ impl IndexPanel {
         }
     }
     pub fn handle_link_evts(
+        mut midi_state: ResMut<MidiState>,
+        mut play_control_evts: EventWriter<PlayControlEvent>,
         mut index: ResMut<IndexPanel>,
         mut evts: EventReader<EasyLinkEvent>,
     ) {
         for evt in evts.iter() {
-            (&mut index).handle_link_evt(evt);
+            (&mut index).handle_link_evt(&mut midi_state, &mut play_control_evts, evt);
         }
     }
     fn handle_link_evt(
         &mut self,
+        midi_state: &mut MidiState,
+        play_control_evts: &mut EventWriter<PlayControlEvent>,
         evt: &EasyLinkEvent,
     ) {
         println!("handle_link_evt {:?}", evt);
@@ -157,6 +200,9 @@ impl IndexPanel {
             Self::LINK_SOUND_SINGLE_STRING => {
                 self.current_page_id = Self::SOUND;
                 self.sound.section = SoundSection::SingleString(Default::default());
+            }
+            Self::LINK_MIDI_PLAY => {
+                MidiControl::play(midi_state, play_control_evts)
             }
             _ => (),
         }
