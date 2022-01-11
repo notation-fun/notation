@@ -118,10 +118,29 @@ impl Scale {
             ],
         }
     }
+    pub fn calc_key_index(&self, key: Key) -> usize {
+        let offset = Semitones::from(key) - Semitones::from(self.get_keys()[0]);
+        let offset_val = if offset.0 >= 0 { offset.0 % 12 } else { offset.0 % 12 + 12 };
+        match offset_val {
+            0 => 0,
+            1 => 7,
+            2 => 2,
+            3 => 9,
+            4 => 4,
+            5 => 11,
+            6 => 6,
+            7 => 1,
+            8 => 8,
+            9 => 3,
+            10 => 10,
+            11 => 5,
+            _ => 0,
+        }
+    }
     //https://www.hooktheory.com/cheat-sheet
-    pub fn get_keys(&self) -> Vec<Key> {
+    pub fn get_keys(&self) -> [Key; 12] {
         match self {
-            Scale::Ionian => vec![
+            Scale::Ionian => [
                 Key::C,
                 Key::G,
                 Key::D,
@@ -135,7 +154,7 @@ impl Scale {
                 Key::B_FLAT,
                 Key::F,
             ],
-            Scale::Dorian => vec![
+            Scale::Dorian => [
                 Key::D,
                 Key::A,
                 Key::E,
@@ -149,7 +168,7 @@ impl Scale {
                 Key::C,
                 Key::G,
             ],
-            Scale::Phrygian => vec![
+            Scale::Phrygian => [
                 Key::E,
                 Key::B,
                 Key::F_SHARP,
@@ -163,7 +182,7 @@ impl Scale {
                 Key::D,
                 Key::A,
             ],
-            Scale::Lydian => vec![
+            Scale::Lydian => [
                 Key::F,
                 Key::C,
                 Key::G,
@@ -177,7 +196,7 @@ impl Scale {
                 Key::E_FLAT,
                 Key::B_FLAT,
             ],
-            Scale::Mixolydian => vec![
+            Scale::Mixolydian => [
                 Key::G,
                 Key::D,
                 Key::A,
@@ -191,7 +210,7 @@ impl Scale {
                 Key::F,
                 Key::C,
             ],
-            Scale::Aeolian => vec![
+            Scale::Aeolian => [
                 Key::A,
                 Key::E,
                 Key::B,
@@ -205,7 +224,7 @@ impl Scale {
                 Key::G,
                 Key::D,
             ],
-            Scale::Locrian => vec![
+            Scale::Locrian => [
                 Key::B,
                 Key::F_SHARP,
                 Key::C_SHARP,
@@ -261,7 +280,21 @@ impl Scale {
         (Semitones::from(*pitch) - self.calc_do_semitones(key)).into()
     }
     pub fn calc_pitch(&self, key: &Key, syllable: &Syllable) -> Pitch {
-        (Semitones::from(*syllable) + self.calc_do_semitones(key)).into()
+        let key_index = self.calc_key_index(key.clone());
+        if let Some(keys) = match syllable {
+            Syllable::Do => Some(Scale::Ionian.get_keys()),
+            Syllable::Re => Some(Scale::Dorian.get_keys()),
+            Syllable::Mi => Some(Scale::Phrygian.get_keys()),
+            Syllable::Fa => Some(Scale::Lydian.get_keys()),
+            Syllable::So => Some(Scale::Mixolydian.get_keys()),
+            Syllable::La => Some(Scale::Aeolian.get_keys()),
+            Syllable::Ti => Some(Scale::Locrian.get_keys()),
+            _ => None,
+        } {
+            keys[key_index].into()
+        } else {
+            (Semitones::from(*syllable) + self.calc_do_semitones(key)).into()
+        }
     }
     pub fn calc_syllable_note(&self, key: &Key, note: &Note) -> SyllableNote {
         (Semitones::from(*note) - self.calc_do_semitones(key)).into()

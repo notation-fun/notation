@@ -38,6 +38,7 @@ impl KbPage for ScalePage {
                 for s in Scale::ALL.iter() {
                     if ui.selectable_label(*s == scale, s.to_ident()).clicked() {
                         self.scale = s.clone();
+                        self.key = s.get_keys()[0];
                     }
                 }
             });
@@ -97,8 +98,13 @@ impl ScalePage {
         let mut entries = vec![];
         let duration = Duration::_1_4;
         let mut add_note = |syllable: &Syllable, semitones: Option<Semitones>| {
+            let octave = if self.scale.calc_do_offset() > 0 {
+                Octave::P3
+            } else {
+                Octave::P4
+            };
             let note = Note::from(
-                Semitones::from(Octave::CENTER)
+                Semitones::from(octave)
                 + Semitones::from(self.key.clone())
                 + Semitones::from(self.scale.calc_syllable_for_sort(syllable))
                 + semitones.unwrap_or(Semitones(0))

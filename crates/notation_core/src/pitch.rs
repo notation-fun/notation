@@ -3,6 +3,8 @@ use std::ops::{Add, Sub};
 
 use serde::{Deserialize, Serialize};
 
+use crate::prelude::Key;
+
 // https://hellomusictheory.com/learn/
 // http://openmusictheory.com/pitches.html
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
@@ -306,6 +308,16 @@ impl From<Semitones> for Pitch {
             10 => Pitch::A_SHARP,
             11 => Pitch::B,
             _ => Pitch::C,
+        }
+    }
+}
+
+impl From<Key> for Pitch {
+    fn from(v: Key) -> Self {
+        match v {
+            Key::Natural(name) => Self::new(name, PitchSign::Natural),
+            Key::Sharp(name) => Self::new(name, PitchSign::Sharp),
+            Key::Flat(name) => Self::new(name, PitchSign::Flat),
         }
     }
 }
