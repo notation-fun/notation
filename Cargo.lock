@@ -2868,17 +2868,16 @@ dependencies = [
 
 [[package]]
 name = "notation_audio"
-version = "0.3.2"
+version = "0.3.4"
 dependencies = [
  "bevy",
  "bevy_kira_audio 0.7.0",
- "notation_model",
  "ringbuf",
 ]
 
 [[package]]
 name = "notation_bevy"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2932,7 +2931,7 @@ dependencies = [
 
 [[package]]
 name = "notation_dsl"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "anyhow",
  "fehler",
@@ -2954,7 +2953,7 @@ dependencies = [
 
 [[package]]
 name = "notation_guitar"
-version = "0.3.2"
+version = "0.3.4"
 dependencies = [
  "notation_core",
  "notation_fretted",
@@ -2978,14 +2977,14 @@ dependencies = [
 
 [[package]]
 name = "notation_macro"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "notation_dsl",
 ]
 
 [[package]]
 name = "notation_midi"
-version = "0.3.2"
+version = "0.3.4"
 dependencies = [
  "bevy",
  "bevy_kira_audio 0.5.1",
@@ -3001,7 +3000,7 @@ dependencies = [
 
 [[package]]
 name = "notation_model"
-version = "0.3.2"
+version = "0.3.4"
 dependencies = [
  "fehler",
  "instant",
@@ -3012,7 +3011,7 @@ dependencies = [
 
 [[package]]
 name = "notation_proto"
-version = "0.3.2"
+version = "0.3.4"
 dependencies = [
  "notation_core",
  "notation_fretted",
@@ -3023,7 +3022,7 @@ dependencies = [
 
 [[package]]
 name = "notation_tab"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "anyhow",
  "notation_dsl",
