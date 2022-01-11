@@ -178,4 +178,7 @@ impl IndexPanel {
     ) {
         (&mut index)._index_audio(&mut stream);
     }
+    pub fn make_tab(&self) -> Option<ProtoTab> {
+        None
+    }
 }
