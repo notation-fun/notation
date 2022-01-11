@@ -27,8 +27,9 @@ impl SyllableDsl {
     }
     #[throws(Error)]
     fn parse_sharp(input: ParseStream) -> Self {
+        let syllable = input.parse::<LitInt>()?.base10_parse::<u8>()?;
         input.parse::<Token![#]>()?;
-        SyllableDsl::new(match input.parse::<LitInt>()?.base10_parse::<u8>()? {
+        SyllableDsl::new(match syllable {
             1 => Syllable::Di,
             2 => Syllable::Ri,
             4 => Syllable::Fi,
@@ -39,8 +40,9 @@ impl SyllableDsl {
     }
     #[throws(Error)]
     fn parse_flat(input: ParseStream) -> Self {
+        let syllable = input.parse::<LitInt>()?.base10_parse::<u8>()?;
         input.parse::<Token![%]>()?;
-        SyllableDsl::new(match input.parse::<LitInt>()?.base10_parse::<u8>()? {
+        SyllableDsl::new(match syllable {
             2 => Syllable::Ra,
             3 => Syllable::Me,
             5 => Syllable::Se,
@@ -54,9 +56,9 @@ impl SyllableDsl {
 impl Parse for SyllableDsl {
     #[throws(Error)]
     fn parse(input: ParseStream) -> Self {
-        if input.peek(Token![#]) {
+        if input.peek2(Token![#]) {
             Self::parse_sharp(input)?
-        } else if input.peek(Token![%]) {
+        } else if input.peek2(Token![%]) {
             Self::parse_flat(input)?
         } else {
             Self::parse_natural(input)?

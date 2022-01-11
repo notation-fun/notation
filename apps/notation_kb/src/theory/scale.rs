@@ -93,7 +93,7 @@ impl ScalePage {
     pub fn make_tab(&self) -> ProtoTab {
         let meta = TabMeta::new(
             self.key.clone(), self.scale.clone(),
-            Signature::_4_4, Tempo::Bpm(60),
+            Signature::_4_4, Tempo::Bpm(80),
         );
         let mut entries = vec![];
         let duration = Duration::_1_4;
