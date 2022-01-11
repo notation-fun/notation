@@ -30,4 +30,3 @@ opt-level = 1
 
 [patch.crates-io]
 # winit = { git = "https://github.com/yjpark/winit/", branch = "touch-input_0.24.0" }
-bevy_asset_loader = { git = "https://github.com/NiklasEi/bevy_asset_loader/", branch = "main" }

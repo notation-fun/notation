@@ -310,8 +310,9 @@ dependencies = [
 
 [[package]]
 name = "bevy_asset_loader"
-version = "0.6.0"
-source = "git+https://github.com/NiklasEi/bevy_asset_loader/?branch=main#ffd4a8546e125f75dedfc3008da9420d8d8b60e3"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8a7efd4303f4d90f9d252f9a4d02d1c006de35556e92940676ed4af7ad21074c"
 dependencies = [
  "bevy",
  "bevy_asset_loader_derive",
@@ -319,8 +320,9 @@ dependencies = [
 
 [[package]]
 name = "bevy_asset_loader_derive"
-version = "0.6.0"
-source = "git+https://github.com/NiklasEi/bevy_asset_loader/?branch=main#ffd4a8546e125f75dedfc3008da9420d8d8b60e3"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a06cb29b6ac3df32baef5e7a49a48c4c1c7ab611d9ce3d10be3b5b00eb418e3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2962,14 +2964,14 @@ dependencies = [
 
 [[package]]
 name = "notation_kb"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "notation_bevy",
 ]
 
 [[package]]
 name = "notation_kb_cn"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "notation_bevy",
  "notation_kb",
@@ -3034,21 +3036,21 @@ dependencies = [
 
 [[package]]
 name = "notation_tabs"
-version = "0.3.0"
+version = "0.3.4"
 dependencies = [
  "notation_tab",
 ]
 
 [[package]]
 name = "notation_viewer"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "notation_bevy",
 ]
 
 [[package]]
 name = "notation_viewer_cn"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "notation_bevy",
  "notation_viewer",
