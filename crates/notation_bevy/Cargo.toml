@@ -40,7 +40,7 @@ chinese = [
 ]
 
 [dependencies]
-notation_bevy_utils = { version = "0.3.2", path = "../notation_bevy_utils" }
+notation_bevy_utils = { version = "0.3.4", path = "../notation_bevy_utils" }
 
 notation_model = { version = "0.3.4", path = "../notation_model" }
 
