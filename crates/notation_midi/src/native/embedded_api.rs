@@ -11,7 +11,7 @@ pub struct EmbeddedApi;
 
 impl FileApi for EmbeddedApi {
     type File = EmbeddedFile;
-    fn open(&mut self, filename: &Path) -> Option<Self::File> {
+    fn open(&mut self, _filename: &Path) -> Option<Self::File> {
         let bytes = include_bytes!("../../assets/sblive.sf2");
         Some(Self::File {
             pos: 0,

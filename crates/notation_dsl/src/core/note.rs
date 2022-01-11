@@ -69,7 +69,7 @@ impl NoteDsl {
             let syllable = Syllable::from((pitch_sign.sign, pitch_name.name));
             Context::calc_note(octave_tweak, &syllable)
         } else {
-            let octave = Context::octave(octave_tweak);
+            let octave = Context::tweaked_octave(octave_tweak);
             let pitch = Pitch::new(pitch_name.name, pitch_sign.sign);
             Note::new(octave, pitch)
         }

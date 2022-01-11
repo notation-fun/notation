@@ -300,7 +300,8 @@ impl Scale {
         (Semitones::from(*note) - self.calc_do_semitones(key)).into()
     }
     pub fn calc_note(&self, key: &Key, syllable_note: &SyllableNote) -> Note {
-        (Semitones::from(*syllable_note) + self.calc_do_semitones(key)).into()
+        let pitch = self.calc_pitch(key, &syllable_note.syllable);
+        Note::new(syllable_note.octave, pitch)
     }
     pub fn calc_click_note(&self, key: &Key, octave: &Octave, syllable: &Syllable) -> Note {
         let pitch = self.calc_pitch(key, syllable);
