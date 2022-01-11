@@ -9,9 +9,6 @@ use crate::prelude::{MidiPlugin, MidiHub};
 impl MidiPlugin {
     pub fn build_native(&self, app: &mut AppBuilder) {
         StereoStream::init_streaming(app, true);
-        //app.add_plugin(AudioPlugin);
-        //app.add_plugin(AudioStreamPlugin::<MidiAudioStream>::default());
-        //app.add_startup_system(setup_audio_stream.system());
         app.add_system(send_synth_buffer.system());
     }
 }

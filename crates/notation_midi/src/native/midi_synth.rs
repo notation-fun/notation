@@ -110,7 +110,7 @@ impl MidiSynth {
             */
         synth.write((&mut self.buffer_left as &mut [f32], &mut self.buffer_right as &mut [f32])).unwrap();
         for i in 0..self.buffer_left.len() {
-            stream.push(self.buffer_left[i], self.buffer_right[i]);
+            stream.push(self.buffer_left[i] * Self::VOLUME_FACTOR, self.buffer_right[i] * Self::VOLUME_FACTOR);
         }
     }
     pub fn init_channels(&self, _settings: &MidiSettings, _state: &MidiState) {}
