@@ -1,6 +1,6 @@
 [package]
 name = "notation_macro"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -13,4 +13,4 @@ description = "Fun notation - DSL to create notation files"
 proc-macro = true
 
 [dependencies]
-notation_dsl = { version = "0.3.3", path = "../notation_dsl" }
+notation_dsl = { version = "0.3.4", path = "../notation_dsl" }

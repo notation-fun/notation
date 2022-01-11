@@ -2924,7 +2924,7 @@ dependencies = [
 
 [[package]]
 name = "notation_core"
-version = "0.3.2"
+version = "0.3.4"
 dependencies = [
  "fehler",
  "serde",
@@ -2945,7 +2945,7 @@ dependencies = [
 
 [[package]]
 name = "notation_fretted"
-version = "0.3.2"
+version = "0.3.4"
 dependencies = [
  "notation_core",
  "serde",

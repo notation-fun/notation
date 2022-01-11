@@ -1,6 +1,6 @@
 [package]
 name = "notation_audio"
-version = "0.3.2"
+version = "0.3.4"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -13,7 +13,6 @@ description = "Fun notation - audio features"
 [features]
 
 [dependencies]
-notation_model = { version = "0.3.2", path = "../notation_model" }
 bevy = { version = "0.5.0", default-features = false }
 bevy_kira_audio = "0.7.0"
 ringbuf = "0.2.6"
