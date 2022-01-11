@@ -2,7 +2,6 @@ use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy::prelude::AppBuilder;
 //use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
-use notation_audio::prelude::MonoStream;
 use notation_bevy::prelude::*;
 
 use crate::assets::NotationKnowledgeBaseAssets;
@@ -12,7 +11,6 @@ pub struct NotationKnowledgeBase();
 
 impl NotationKnowledgeBase {
     fn extra(app: &mut AppBuilder) {
-        MonoStream::init_streaming(app, true);
         app.init_resource::<IndexPanel>();
         app.add_startup_system(Self::setup_state.system());
         TabPlugin::setup_mouse_input(app);

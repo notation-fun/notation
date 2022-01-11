@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy::window::WindowResized;
@@ -211,6 +213,96 @@ impl NotationApp {
                 app_state.scale_factor_override = window.scale_factor_override;
                 window_resized_evts.send(WindowResizedEvent());
             }
+        }
+    }
+    pub fn load_tab<F: Fn(String) -> Option<ProtoTab>>(
+        commands: &mut Commands,
+        time: &Time,
+        windows: &mut Windows,
+        state: &mut NotationState,
+        theme: &mut NotationTheme,
+        evts: &mut EventWriter<AddTabEvent>,
+        entities_query: &Query<Entity, With<GlobalTransform>>,
+        viewer_query: &Query<(Entity, &Arc<TabViewer>), With<Arc<TabViewer>>>,
+        load_tab: F,
+    ) {
+        if state.window_width > 0.0
+            && state.window_height > 0.0
+            && state.tab.is_none()
+            && state.parse_error.is_none()
+        {
+            let mut count = 0;
+            for _ in entities_query.iter() {
+                count += 1;
+            }
+            //A bit hacky to make sure despawning finished, otherwise might got panic with "Entity not exist"
+            if count > 1 {
+                if state._despawn_delay_seconds > 0.0 {
+                    state._despawn_delay_seconds -= time.delta_seconds();
+                    println!(
+                        "load_tab(): Waiting to despawn: {} -> {}",
+                        count, state._despawn_delay_seconds
+                    );
+                    return;
+                }
+                let mut despawn_count = 0;
+                for (entity, _viewer) in viewer_query.iter() {
+                    commands.entity(entity).despawn_recursive();
+                    despawn_count += 1;
+                }
+                if despawn_count > 0 {
+                    println!(
+                        "load_tab(): Despawning viewers: {} {}",
+                        despawn_count, count
+                    );
+                } else {
+                    println!(
+                        "load_tab(): Waiting for entities to be despawned: {}",
+                        count
+                    );
+                }
+                return;
+            }
+            if state._load_tab_delay_seconds > 0.0 {
+                state._load_tab_delay_seconds -= time.delta_seconds();
+                println!(
+                    "load_tab(): Waiting to Load tab: -> {}",
+                    state._load_tab_delay_seconds
+                );
+                return;
+            }
+            println!("\nload_tab(): Loading: {}", state.tab_path);
+            if let Some(tab) = load_tab(state.tab_path.clone()) {
+                match Tab::try_parse_arc(tab) {
+                    Ok(tab) => {
+                        state.tab = Some(tab.clone());
+                        if let Some(window) = windows.get_primary_mut() {
+                            let title = format!("{} - {}", NotationApp::TITLE, state.tab_path);
+                            window.set_title(title);
+                        }
+                        theme._bypass_systems = false;
+                        evts.send(AddTabEvent(tab));
+                    }
+                    Err(err) => {
+                        println!("nload_tab(): Parse Tab Failed: {:?}", err);
+                        state.parse_error = Some(err);
+                    }
+                }
+            } else {
+                println!("nload_tab(): Tab is None");
+            }
+        }
+    }
+    pub fn load_tab_from_assets(
+        asset_server: &AssetServer,
+        assets: &Assets<TabAsset>,
+        tab_path: String,
+    ) -> Option<ProtoTab> {
+        let tab_asset: Handle<TabAsset> = asset_server.load(tab_path.as_str());
+        if let Some(asset) = assets.get(&tab_asset) {
+            Some(asset.tab.clone())
+        } else {
+            None
         }
     }
 }

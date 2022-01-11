@@ -1,6 +1,6 @@
-use notation_audio::prelude::MonoStream;
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::{egui, EguiContext};
+use notation_bevy::prelude::StereoStream;
 
 use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
@@ -163,7 +163,7 @@ impl IndexPanel {
     }
     fn _index_audio(
         &mut self,
-        stream: &mut MonoStream,
+        stream: &mut StereoStream,
     ) {
         match self.current_page_id {
             Self::SOUND => {
@@ -174,7 +174,7 @@ impl IndexPanel {
     }
     pub fn index_audio(
         mut index: ResMut<IndexPanel>,
-        mut stream: ResMut<MonoStream>,
+        mut stream: ResMut<StereoStream>,
     ) {
         (&mut index)._index_audio(&mut stream);
     }

@@ -5,6 +5,8 @@ pub mod midi_settings;
 pub mod midi_state;
 pub mod midi_util;
 
+pub use notation_audio;
+
 #[cfg(not(target_arch = "wasm32"))]
 pub mod native;
 
@@ -12,6 +14,8 @@ pub mod native;
 pub mod wasm;
 
 pub mod prelude {
+    #[doc(hidden)]
+    pub use notation_audio::prelude::*;
     #[doc(hidden)]
     pub use crate::midi_hub::MidiHub;
     #[doc(hidden)]

@@ -160,5 +160,8 @@ pub mod prelude {
     pub use crate::kb::kb_panel::KbPanel;
     #[cfg(feature = "midi")]
     #[doc(hidden)]
+    pub use crate::notation_midi::prelude::*;
+    #[cfg(feature = "midi")]
+    #[doc(hidden)]
     pub use crate::midi::midi_control::MidiControl;
 }

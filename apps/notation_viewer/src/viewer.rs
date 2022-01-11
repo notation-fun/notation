@@ -36,81 +36,18 @@ impl NotationViewer {
     fn load_tab(
         mut commands: Commands,
         time: Res<Time>,
-        asset_server: Res<AssetServer>,
         mut windows: ResMut<Windows>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
-        entities: Query<Entity, With<GlobalTransform>>,
-        assets: ResMut<Assets<TabAsset>>,
         mut evts: EventWriter<AddTabEvent>,
+        entities: Query<Entity, With<GlobalTransform>>,
         viewer_query: Query<(Entity, &Arc<TabViewer>), With<Arc<TabViewer>>>,
+        asset_server: Res<AssetServer>,
+        assets: Res<Assets<TabAsset>>,
     ) {
-        if state.window_width > 0.0
-            && state.window_height > 0.0
-            && state.tab.is_none()
-            && state.parse_error.is_none()
-        {
-            let mut count = 0;
-            for _ in entities.iter() {
-                count += 1;
-            }
-            //A bit hacky to make sure despawning finished, otherwise might got panic with "Entity not exist"
-            if count > 1 {
-                if state._despawn_delay_seconds > 0.0 {
-                    state._despawn_delay_seconds -= time.delta_seconds();
-                    println!(
-                        "load_tab(): Waiting to despawn: {} -> {}",
-                        count, state._despawn_delay_seconds
-                    );
-                    return;
-                }
-                let mut despawn_count = 0;
-                for (entity, _viewer) in viewer_query.iter() {
-                    commands.entity(entity).despawn_recursive();
-                    despawn_count += 1;
-                }
-                if despawn_count > 0 {
-                    println!(
-                        "load_tab(): Despawning viewers: {} {}",
-                        despawn_count, count
-                    );
-                } else {
-                    println!(
-                        "load_tab(): Waiting for entities to be despawned: {}",
-                        count
-                    );
-                }
-                return;
-            }
-            asset_server.free_unused_assets();
-            if state._load_tab_delay_seconds > 0.0 {
-                state._load_tab_delay_seconds -= time.delta_seconds();
-                println!(
-                    "load_tab(): Waiting to Load tab: -> {}",
-                    state._load_tab_delay_seconds
-                );
-                return;
-            }
-            println!("\nload_tab(): Loading: {}", state.tab_path);
-            let tab_asset: Handle<TabAsset> = asset_server.load(state.tab_path.as_str());
-            if let Some(asset) = assets.get(&tab_asset) {
-                match Tab::try_parse_arc(asset.tab.clone()) {
-                    Ok(tab) => {
-                        state.tab = Some(tab.clone());
-                        if let Some(window) = windows.get_primary_mut() {
-                            let title = format!("{} - {}", NotationApp::TITLE, state.tab_path);
-                            window.set_title(title);
-                        }
-                        theme._bypass_systems = false;
-                        evts.send(AddTabEvent(tab));
-                    }
-                    Err(err) => {
-                        println!("Parse Tab Failed: {:?}", err);
-                        state.parse_error = Some(err);
-                    }
-                }
-            }
-        }
+        NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &mut evts, &entities, &viewer_query, |tab_path| {
+            NotationApp::load_tab_from_assets(&asset_server, &assets, tab_path)
+        })
     }
 
     fn handle_keyboard_inputs(
@@ -127,7 +64,7 @@ impl NotationViewer {
         if app_state.tab.is_none() {
             return;
         }
-        if keyboard_input.just_released(KeyCode::Tab) {
+        if keyboard_input.just_released(KeyCode::F10) || keyboard_input.just_released(KeyCode::Backslash) {
             app_state.show_control = !app_state.show_control;
             if !ControlPanel::HUD_MODE {
                 window_resized_evts.send(WindowResizedEvent());
@@ -165,7 +102,7 @@ impl NotationViewer {
             MidiControl::jump_to_next_bar(&midi_state, &mut jump_to_bar_evts);
         } else if keyboard_input.just_released(KeyCode::Down) {
             MidiControl::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::Backslash) {
+        } else if keyboard_input.just_released(KeyCode::Minus) {
             Control::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::G) {
             Control::toggle_show_guitar_syllable(&mut app_state, &mut settings, &mut theme);

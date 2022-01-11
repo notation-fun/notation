@@ -9,6 +9,9 @@ identifier = "fun.notation.kb"
 resources = ["assets"]
 
 [features]
+default = [
+    "notation_bevy/midi",
+]
 native = [
     "notation_bevy/native",
 ]
@@ -19,4 +22,3 @@ dev = [
 
 [dependencies]
 notation_bevy = { path = "../../crates/notation_bevy" }
-notation_audio = { path = "../../crates/notation_audio" }

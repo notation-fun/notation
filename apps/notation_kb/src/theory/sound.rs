@@ -1,9 +1,9 @@
 use std::f64::consts::{PI, FRAC_PI_2};
 
-use notation_audio::prelude::{AudioConsts, MonoStream};
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::egui::{self, *};
 use notation_bevy::bevy_egui::egui::plot::*;
+use notation_bevy::prelude::{AudioConsts, StereoStream};
 
 use notation_bevy::kb::markdown_page::MarkDownPage;
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, BevyUtil, Syllable, PageHelper};
@@ -287,7 +287,7 @@ impl SoundPage {
         });
         ui.separator();
     }
-    pub fn audio(&mut self, stream: &mut MonoStream) {
+    pub fn audio(&mut self, stream: &mut StereoStream) {
         match self.section {
             SoundSection::SingleString(ref mut data) => {
                 Self::single_string_audio(stream, data);
@@ -305,7 +305,7 @@ impl SoundPage {
         (t * 2.0 * PI * 220.0 * segments as f64).sin() * volume
     }
     pub fn single_string_audio(
-        stream: &mut MonoStream,
+        stream: &mut StereoStream,
         data: &mut SingleStringData,
     ) {
         if data.mute {
@@ -322,7 +322,7 @@ impl SoundPage {
                 let volume = data.audio_strength(segments);
                 total += Self::calc_harmonics_audio(data.t + t, segments, volume);
             }
-            stream.push(total as f32);
+            stream.push(total as f32, total as f32);
             t += step;
         }
         data.t += t;
