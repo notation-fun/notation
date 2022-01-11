@@ -35,7 +35,13 @@ impl KbPage for NotesPage {
             .unwrap_or_default();
         PageHelper::add_key_scale(ui, &key, &scale);
         ui.separator();
-        Self::notes_ui(ui, texts, assets, state, theme, link_evts, scale, key);
+
+        let capo = state.tab.as_ref().and_then(|tab| {
+            tab.get_track_of_kind(TrackKind::Guitar)
+                .and_then(|x| x.get_fretboard6())
+        }).map(|x| x.capo).unwrap_or(0);
+        let transpose = capo as i8;
+        Self::notes_ui(ui, texts, assets, state, theme, link_evts, scale, key, transpose);
     }
 }
 
@@ -44,11 +50,12 @@ impl NotesPage {
         ui: &mut Ui,
         _texts: &Assets<MarkDownAsset>,
         _assets: &NotationAssets,
-        state: &NotationState,
+        _state: &NotationState,
         theme: &NotationTheme,
         _link_evts: &mut EventWriter<EasyLinkEvent>,
         scale: Scale,
         key: Key,
+        transpose: i8,
     ) {
         let strong_style = EasyMarkStyle {
             strong: true,
@@ -72,36 +79,31 @@ impl NotesPage {
                 PageHelper::add_syllable_pitch(ui, theme, &scale, &key, syllable, index == 0);
             }
             ui.end_row();
-            if let Some(fretboard) = state.tab.as_ref().and_then(|tab| {
-                tab.get_track_of_kind(TrackKind::Guitar)
-                    .and_then(|x| x.get_fretboard6())
-            }) {
-                if fretboard.capo > 0 {
-                    ui.separator();
-                    ui.add(label_from_style("guitar", &strong_style));
-                    ui.add(label_from_style("capo", &strong_style));
-                    ui.add(label_from_style("at", &strong_style));
-                    ui.add(label_from_style(
-                        fretboard.capo.to_string().as_str(),
-                        &strong_style,
-                    ));
-                    let frets = if fretboard.capo == 1 { "fret" } else { "frets" };
-                    ui.add(label_from_style(frets, &strong_style));
-                    ui.separator();
-                    ui.end_row();
-                    for (index, syllable) in syllables.iter().enumerate() {
-                        PageHelper::add_syllable_pitch_with_capo(
-                            ui,
-                            theme,
-                            fretboard.capo,
-                            &scale,
-                            &key,
-                            syllable,
-                            index == 0,
-                        );
-                    }
-                    ui.end_row();
+            if transpose != 0 {
+                ui.separator();
+                ui.add(label_from_style("guitar", &strong_style));
+                ui.add(label_from_style("capo", &strong_style));
+                ui.add(label_from_style("at", &strong_style));
+                ui.add(label_from_style(
+                    transpose.to_string().as_str(),
+                    &strong_style,
+                ));
+                let frets = if transpose == 1 { "fret" } else { "frets" };
+                ui.add(label_from_style(frets, &strong_style));
+                ui.separator();
+                ui.end_row();
+                for (index, syllable) in syllables.iter().enumerate() {
+                    PageHelper::add_syllable_pitch_with_transpose(
+                        ui,
+                        theme,
+                        transpose,
+                        &scale,
+                        &key,
+                        syllable,
+                        index == 0,
+                    );
                 }
+                ui.end_row();
             }
         });
     }

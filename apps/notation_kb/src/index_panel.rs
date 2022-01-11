@@ -58,6 +58,7 @@ impl IndexPanel {
     pub const LINK_SOUND_SINGLE_STRING: &'static str = ":kb:sound:single_string";
 
     pub const LINK_MIDI_PLAY: &'static str = ":midi:play";
+    pub const LINK_MIDI_STOP: &'static str = ":midi:stop";
 }
 
 impl KbPanel for IndexPanel {
@@ -106,9 +107,11 @@ impl IndexPanel {
     }
     pub fn hack_settings(
         state: Res<NotationState>,
-        theme: Res<NotationTheme>,
+        mut theme: ResMut<NotationTheme>,
         mut settings: ResMut<NotationSettings>,
     ) {
+        theme.sizes.melody.note_height = 8.0;
+        theme.sizes.melody.semitone_height = 8.0;
         settings.hide_mini_map = true;
         settings.hide_bar_number = true;
         settings.layout.focus_bar_ease_ms = 0;
@@ -200,10 +203,13 @@ impl IndexPanel {
             Self::LINK_SOUND_SINGLE_STRING => {
                 self.current_page_id = Self::SOUND;
                 self.sound.section = SoundSection::SingleString(Default::default());
-            }
+            },
             Self::LINK_MIDI_PLAY => {
                 MidiControl::play(midi_state, play_control_evts)
-            }
+            },
+            Self::LINK_MIDI_STOP => {
+                MidiControl::stop(midi_state, play_control_evts)
+            },
             _ => (),
         }
     }

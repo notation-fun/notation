@@ -66,17 +66,17 @@ impl PageHelper {
         let text = pitch.to_string();
         Self::add_maybe_strong_text(ui, strong, &text);
     }
-    pub fn add_syllable_pitch_with_capo(
+    pub fn add_syllable_pitch_with_transpose(
         ui: &mut Ui,
         _theme: &NotationTheme,
-        capo: u8,
+        transpose: i8,
         scale: &Scale,
         key: &Key,
         syllable: &Syllable,
         strong: bool,
     ) {
         let pitch = scale.calc_pitch(&key, &syllable);
-        let pitch = Pitch::from(Semitones::from(pitch) - Semitones(capo as i8));
+        let pitch = Pitch::from(Semitones::from(pitch) - Semitones(transpose));
         let text = pitch.to_string();
         Self::add_maybe_strong_text(ui, strong, &text);
     }

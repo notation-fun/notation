@@ -12,6 +12,7 @@ pub struct ScalePage {
     pub path: &'static str,
     pub scale: Scale,
     pub key: notation_bevy::prelude::Key,
+    pub transpose: i8,
 }
 
 impl KbPage for ScalePage {
@@ -53,11 +54,14 @@ impl KbPage for ScalePage {
             });
         });
         ui.separator();
-        NotesPage::notes_ui(ui, texts, assets, state, theme, link_evts, self.scale, self.key);
+        NotesPage::notes_ui(ui, texts, assets, state, theme, link_evts, self.scale, self.key, self.transpose);
         ui.separator();
         ui.horizontal(|ui| {
             if ui.button("play").clicked() {
                 link_evts.send(EasyLinkEvent::from(IndexPanel::LINK_MIDI_PLAY));
+            }
+            if ui.button("stop").clicked() {
+                link_evts.send(EasyLinkEvent::from(IndexPanel::LINK_MIDI_STOP));
             }
         });
     }
@@ -82,6 +86,7 @@ impl ScalePage {
             path,
             scale: Default::default(),
             key: Default::default(),
+            transpose: 0,
         }
     }
     pub fn make_tab(&self) -> ProtoTab {
@@ -91,28 +96,40 @@ impl ScalePage {
         );
         let mut entries = vec![];
         let duration = Duration::_1_4;
-        for syllable in self.scale.get_syllables().iter() {
-            let note = Note::from(Semitones::from(Octave::CENTER) + Semitones::from(self.scale.calc_syllable_for_sort(syllable)));
+        let mut add_note = |syllable: &Syllable, semitones: Option<Semitones>| {
+            let note = Note::from(
+                Semitones::from(Octave::CENTER)
+                + Semitones::from(self.key.clone())
+                + Semitones::from(self.scale.calc_syllable_for_sort(syllable))
+                + semitones.unwrap_or(Semitones(0))
+            );
             entries.push(ProtoEntry::from(CoreEntry::from((Tone::from(note), duration))));
+        };
+        let mut syllables = self.scale.get_syllables();
+        for syllable in syllables.iter() {
+            add_note(syllable, None);
         }
-        let note = Note::from(Semitones(12) + Semitones::from(Octave::CENTER) + Semitones::from(self.scale.calc_syllable_for_sort(&self.scale.calc_root_syllable())));
-        entries.push(ProtoEntry::from(CoreEntry::from((Tone::from(note), duration))));
-        let track = ProtoTrack::new("notes".to_owned(), TrackKind::Vocal, entries);
-        let bars = vec![
+        add_note(&self.scale.calc_root_syllable(), Some(Semitones(12)));
+        add_note(&self.scale.calc_root_syllable(), Some(Semitones(12)));
+        syllables.reverse();
+        for syllable in syllables.iter() {
+            add_note(syllable, None);
+        }
+        let new_bar = |index: usize| {
             ProtoBar::new(
                 vec![
                     ProtoBarLayer::new("notes".to_owned(), vec![
-                        Slice::new(SliceBegin::Index(0), SliceEnd::Count(4), None),
+                        Slice::new(SliceBegin::Index(index), SliceEnd::Count(4), None),
                     ])
                 ],
-            ),
-            ProtoBar::new(
-                vec![
-                    ProtoBarLayer::new("notes".to_owned(), vec![
-                        Slice::new(SliceBegin::Index(4), SliceEnd::Count(4), None),
-                    ])
-                ]
-            ),
+            )
+        };
+        let track = ProtoTrack::new("notes".to_owned(), TrackKind::Vocal, entries);
+        let bars = vec![
+            new_bar(0),
+            new_bar(4),
+            new_bar(8),
+            new_bar(12),
         ];
         let section = ProtoSection::new("notes".to_owned(), SectionKind::Rest, bars);
         ProtoTab::new(

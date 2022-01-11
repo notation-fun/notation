@@ -351,7 +351,9 @@ impl MidiState {
         self.tab = Some(tab.clone());
         self.reset_channels();
         let mut index: usize = 0;
-        self.create_click_channel(settings, hub, &tab, &mut index);
+        if tab.sections.len() > 1 {
+            self.create_click_channel(settings, hub, &tab, &mut index);
+        }
         for track in tab.tracks.iter() {
             if index >= self.channels.len() {
                 return;
