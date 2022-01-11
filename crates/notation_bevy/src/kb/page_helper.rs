@@ -68,17 +68,15 @@ impl PageHelper {
     }
     pub fn add_syllable_pitch_with_transpose(
         ui: &mut Ui,
-        _theme: &NotationTheme,
-        transpose: i8,
+        theme: &NotationTheme,
         scale: &Scale,
         key: &Key,
+        transpose: i8,
         syllable: &Syllable,
         strong: bool,
     ) {
-        let pitch = scale.calc_pitch(&key, &syllable);
-        let pitch = Pitch::from(Semitones::from(pitch) - Semitones(transpose));
-        let text = pitch.to_string();
-        Self::add_maybe_strong_text(ui, strong, &text);
+        let key = Key::from(Semitones::from(*key) - Semitones(transpose));
+        Self::add_syllable_pitch(ui, theme, scale, &key, syllable, strong);
     }
     pub fn add_interval_syllable(
         ui: &mut Ui,

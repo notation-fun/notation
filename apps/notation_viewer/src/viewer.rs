@@ -6,7 +6,6 @@ use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit
 
 use notation_bevy::prelude::*;
 use notation_bevy::settings::layout_settings::LayoutMode;
-use notation_bevy::notation_midi::prelude::*;
 
 use crate::assets::NotationViewerAssets;
 use crate::help_panel::HelpPanel;
@@ -67,7 +66,7 @@ impl NotationViewer {
         if keyboard_input.just_released(KeyCode::F10) || keyboard_input.just_released(KeyCode::Backslash) {
             app_state.show_control = !app_state.show_control;
             if !ControlPanel::HUD_MODE {
-                window_resized_evts.send(WindowResizedEvent());
+                window_resized_evts.send(WindowResizedEvent::new(&app_state));
             }
         } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::H)
         {

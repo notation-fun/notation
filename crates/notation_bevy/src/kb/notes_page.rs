@@ -96,9 +96,9 @@ impl NotesPage {
                     PageHelper::add_syllable_pitch_with_transpose(
                         ui,
                         theme,
-                        transpose,
                         &scale,
                         &key,
+                        transpose,
                         syllable,
                         index == 0,
                     );

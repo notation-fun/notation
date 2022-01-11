@@ -130,6 +130,12 @@ impl From<Key> for Semitones {
     }
 }
 
+impl From<Semitones> for Key {
+    fn from(v: Semitones) -> Self {
+        Syllable::from(v).into()
+    }
+}
+
 impl From<Syllable> for Key {
     fn from(v: Syllable) -> Self {
         match v {
