@@ -24,12 +24,12 @@ impl PageHelper {
             ui.label(text);
         }
     }
-    pub fn add_key_scale(ui: &mut Ui, key: &Key, scale: &Scale) {
+    pub fn add_scale_key(ui: &mut Ui, scale: &Scale, key: &Key) {
         ui.horizontal(|ui| {
-            ui.label("Key:");
-            Self::add_strong_text(ui, &key.to_string());
             ui.label("Scale:");
             Self::add_strong_text(ui, &scale.to_string());
+            ui.label("Key:");
+            Self::add_strong_text(ui, &key.to_string());
         });
     }
     pub fn add_syllable_color(ui: &mut Ui, theme: &NotationTheme, syllable: &Syllable) {

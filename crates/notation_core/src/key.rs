@@ -32,6 +32,7 @@ impl Key {
 
     pub const C_SHARP: Self = Self::Sharp(PitchName::C);
     pub const D_SHARP: Self = Self::Sharp(PitchName::D);
+    pub const E_SHARP: Self = Self::Sharp(PitchName::E);
     pub const F_SHARP: Self = Self::Sharp(PitchName::F);
     pub const G_SHARP: Self = Self::Sharp(PitchName::G);
     pub const A_SHARP: Self = Self::Sharp(PitchName::A);
@@ -42,10 +43,10 @@ impl Key {
     pub const A_FLAT: Self = Self::Flat(PitchName::A);
     pub const B_FLAT: Self = Self::Flat(PitchName::B);
 
-    pub const ALL: [Key ; 17] = [
+    pub const ALL: [Key ; 18] = [
         Key::C, Key::C_SHARP, Key::D_FLAT,
         Key::D, Key::D_SHARP, Key::E_FLAT,
-        Key::E,
+        Key::E, Key::E_SHARP,
         Key::F, Key::F_SHARP, Key::G_FLAT,
         Key::G, Key::G_SHARP, Key::A_FLAT,
         Key::A, Key::A_SHARP, Key::B_FLAT,
@@ -72,6 +73,7 @@ impl Key {
             "B" => Self::B,
             "#C" => Self::C_SHARP,
             "#D" => Self::D_SHARP,
+            "#E" => Self::E_SHARP,
             "#F" => Self::F_SHARP,
             "#G" => Self::G_SHARP,
             "#A" => Self::A_SHARP,
@@ -104,6 +106,7 @@ impl Key {
             "B" => Self::B,
             "C_SHARP" => Self::C_SHARP,
             "D_SHARP" => Self::D_SHARP,
+            "E_SHARP" => Self::E_SHARP,
             "F_SHARP" => Self::F_SHARP,
             "G_SHARP" => Self::G_SHARP,
             "A_SHARP" => Self::A_SHARP,

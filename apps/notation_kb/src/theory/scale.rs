@@ -30,17 +30,6 @@ impl KbPage for ScalePage {
         let scale = self.scale.clone();
         let key = self.key.clone();
         ui.horizontal(|ui| {
-            ui.label("Key:");
-            egui::ComboBox::from_id_source("key")
-            .width(64.0)
-            .selected_text(key.to_string())
-            .show_ui(ui, |ui| {
-                for k in notation_bevy::prelude::Key::ALL.iter() {
-                    if ui.selectable_label(*k == key, k.to_string()).clicked() {
-                        self.key = k.clone();
-                    }
-                }
-            });
             ui.label("Scale:");
             egui::ComboBox::from_id_source("scale")
             .width(128.0)
@@ -49,6 +38,17 @@ impl KbPage for ScalePage {
                 for s in Scale::ALL.iter() {
                     if ui.selectable_label(*s == scale, s.to_ident()).clicked() {
                         self.scale = s.clone();
+                    }
+                }
+            });
+            ui.label("Key:");
+            egui::ComboBox::from_id_source("key")
+            .width(64.0)
+            .selected_text(key.to_string())
+            .show_ui(ui, |ui| {
+                for k in scale.get_keys().iter() {
+                    if ui.selectable_label(*k == key, k.to_string()).clicked() {
+                        self.key = k.clone();
                     }
                 }
             });

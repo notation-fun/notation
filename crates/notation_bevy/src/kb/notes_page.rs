@@ -33,7 +33,7 @@ impl KbPage for NotesPage {
             .as_ref()
             .map(|x| x.meta.key.clone())
             .unwrap_or_default();
-        PageHelper::add_key_scale(ui, &key, &scale);
+        PageHelper::add_scale_key(ui, &scale, &key);
         ui.separator();
 
         let capo = state.tab.as_ref().and_then(|tab| {

@@ -43,7 +43,7 @@ impl KbPage for ChordsPage {
             .as_ref()
             .map(|x| x.meta.key.clone())
             .unwrap_or_default();
-        PageHelper::add_key_scale(ui, &key, &scale);
+        PageHelper::add_scale_key(ui, &scale, &key);
         ui.separator();
         egui::Grid::new("chords").show(ui, |ui| {
             for chord in chords.iter() {
