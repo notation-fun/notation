@@ -138,8 +138,7 @@ impl MidiChannel {
                     }
                 }
                 None => {
-                    let is_rest = play_control.position.bar.bar_ordinal == 0;
-                    velocity = if !is_rest && settings.click_mute {
+                    velocity = if settings.click_mute {
                         0
                     } else {
                         settings.click_velocity
@@ -351,9 +350,7 @@ impl MidiState {
         self.tab = Some(tab.clone());
         self.reset_channels();
         let mut index: usize = 0;
-        if tab.sections.len() > 1 {
-            self.create_click_channel(settings, hub, &tab, &mut index);
-        }
+        self.create_click_channel(settings, hub, &tab, &mut index);
         for track in tab.tracks.iter() {
             if index >= self.channels.len() {
                 return;
