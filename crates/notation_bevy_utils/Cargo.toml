@@ -1,6 +1,6 @@
 [package]
 name = "notation_bevy_utils"
-version = "0.3.4"
+version = "0.4.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -23,18 +23,18 @@ dev = [
 ]
 
 [dependencies]
-serde = { version = "1.0.126", features = ["derive"] }
+serde = { version = "1.0.133", features = ["derive"] }
 # https://github.com/serde-rs/serde/issues/1937
 serde_arrays = "0.1.0"
 anyhow = "1.0"
-ron = "0.6"
-float_eq = "0.6"
+ron = "0.7"
+float_eq = "0.7"
 
-bevy = { version = "0.5.0", default-features = false }
+bevy = { version = "0.6.0", default-features = false }
 
 rand = "0.8"
 getrandom = { version="0.2", features=["wasm-bindgen"] }
 
-bevy_prototype_lyon = "0.3.1"
-bevy_egui = "0.9"
-bevy_easings = "0.4.1"
+bevy_prototype_lyon = "0.4.0"
+bevy_egui = "0.10.0"
+bevy_easings = "0.5.0"

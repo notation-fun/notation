@@ -13,14 +13,14 @@ pub type MiniMapDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, MiniMap>;
 pub struct MiniPlugin;
 
 impl Plugin for MiniPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         MiniMapDoLayoutEvent::setup(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(on_bar_playing_changed.system())
-                .with_system(MiniMap::do_layout.system())
-                .with_system(MiniMap::update_debug_str.system())
-                .with_system(MiniBar::on_layout_changed.system()),
+                .with_system(on_bar_playing_changed)
+                .with_system(MiniMap::do_layout)
+                .with_system(MiniMap::update_debug_str)
+                .with_system(MiniBar::on_layout_changed),
         );
     }
 }

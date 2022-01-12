@@ -4,7 +4,7 @@ use notation_bevy_utils::prelude::{BevyUtil, FillRectangle, LayoutSize, ShapeOp}
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct GuitarCapoData {
     pub capo: u8,
     pub view_size: LayoutSize,

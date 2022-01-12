@@ -5,10 +5,10 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::prelude::{BevyUtil, FillRectangle, LayoutAnchor, LayoutData, ShapeOp, SingleBundle};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct HasColorBackground;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct ColorBackground {
     layout: LayoutData,
     z: f32,
@@ -43,8 +43,8 @@ impl ShapeOp<(), FillRectangle> for ColorBackground {
 }
 
 impl ColorBackground {
-    pub fn setup(app: &mut AppBuilder) {
-        app.add_system(Self::on_layout_changed.system());
+    pub fn setup(app: &mut App) {
+        app.add_system(Self::on_layout_changed);
     }
     pub fn on_layout_changed(
         mut commands: Commands,

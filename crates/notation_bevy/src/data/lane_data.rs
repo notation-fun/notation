@@ -1,8 +1,9 @@
 use std::fmt::Display;
+use bevy::prelude::*;
 
 use notation_model::prelude::{BarLane, BarLaneProps, TabBarProps};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct LaneData<T: Send + Sync + 'static> {
     pub bar_props: TabBarProps,
     pub lane_props: BarLaneProps,

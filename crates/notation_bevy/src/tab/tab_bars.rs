@@ -21,6 +21,7 @@ use crate::prelude::NotationLayout;
 
 use super::tab_events::{TabBarsDoLayoutEvent, TabBarsResizedEvent, TabBarsResizedPreEvent};
 
+#[derive(Clone, Debug, Component)]
 pub struct TabBars {
     pub tab: Arc<Tab>,
     pub bar_layouts: Arc<Vec<BarLayoutData>>,
@@ -235,7 +236,7 @@ impl TabBars {
     pub fn on_resized_pre(
         mut evts: EventReader<TabBarsResizedPreEvent>,
         theme: Res<NotationTheme>,
-        cell_query: Query<(&Parent, &Arc<BarView>, &LayoutData)>,
+        cell_query: Query<(&Parent, &BarView, &LayoutData)>,
         mut tab_resized_evts: EventWriter<TabBarsResizedEvent>,
     ) {
         if theme._bypass_systems {

@@ -5,7 +5,7 @@ use std::fmt::Display;
 
 use crate::prelude::{EntryData, NotationTheme, SingleBundle};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct WordTextValue {
     pub word: LyricWord,
     pub playing_state: PlayingState,

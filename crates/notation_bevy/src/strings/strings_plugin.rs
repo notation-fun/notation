@@ -1,23 +1,21 @@
 use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-use std::sync::Arc;
-
 use super::pick_bundle::PickBundle;
 
 use super::strings_grid::{StringsGrid4, StringsGrid6};
-use crate::prelude::{NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme};
+use crate::prelude::{NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, SingleData};
 use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6, LaneEntry, TrackKind};
 
 pub struct StringsPlugin;
 
 impl Plugin for StringsPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(on_add_fretted_grid6.system())
-                .with_system(on_add_fretted_grid4.system())
-                .with_system(super::pick_systems::on_entry_playing_changed.system()),
+                .with_system(on_add_fretted_grid6)
+                .with_system(on_add_fretted_grid4)
+                .with_system(super::pick_systems::on_entry_playing_changed),
         );
     }
 }
@@ -39,13 +37,13 @@ macro_rules! impl_strings_plugin {
         fn $on_add_fretted_grid(
             mut commands: Commands,
             theme: Res<NotationTheme>,
-            query: Query<(Entity, &Arc<BarLane>, &$strings_grid), Added<$strings_grid>>,
+            query: Query<(Entity, &SingleData<BarLane>, &$strings_grid), Added<$strings_grid>>,
         ) {
             if theme._bypass_systems {
                 return;
             }
             for (entity, lane, strings_grid) in query.iter() {
-                strings_grid.add_strings(&mut commands, &theme, entity, lane);
+                strings_grid.add_strings(&mut commands, &theme, entity, &lane.0);
             }
         }
 

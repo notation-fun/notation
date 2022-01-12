@@ -4,7 +4,7 @@ use notation_model::prelude::Finger;
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct ShapeFingerData {
     pub string: u8,
     pub fret: Option<u8>,

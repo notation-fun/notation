@@ -11,6 +11,7 @@ use crate::prelude::NotationLayout;
 use super::tab_events::TabContentDoLayoutEvent;
 use super::tab_header::TabHeader;
 
+#[derive(Clone, Debug, Component)]
 pub struct TabContent {
     pub tab: Arc<Tab>,
 }

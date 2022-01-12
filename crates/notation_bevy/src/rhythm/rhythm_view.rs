@@ -16,6 +16,7 @@ use super::rhythm_bar::RhythmBarData;
 use super::rhythm_beat::RhythmBeatData;
 use super::rhythm_indicator::RhythmIndicatorData;
 
+#[derive(Clone, Debug, Component)]
 pub struct RhythmView {}
 
 impl Display for RhythmView {

@@ -3,7 +3,7 @@ use notation_bevy_utils::prelude::{FillRectangle, ShapeOp};
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct ShapeBarreData {
     pub barre: u8,
 }

@@ -5,10 +5,10 @@ use bevy::utils::Uuid;
 
 use notation_model::prelude::{PlayControl, PlayState, Position, Tab};
 
-#[derive(Debug)]
+#[derive(Debug, Component)]
 pub struct TabPlayStateChanged();
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct TabState {
     pub tab: Arc<Tab>,
     pub under_control: bool,

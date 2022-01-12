@@ -7,9 +7,9 @@ use notation_audio::prelude::StereoStream;
 use crate::prelude::{MidiPlugin, MidiHub};
 
 impl MidiPlugin {
-    pub fn build_native(&self, app: &mut AppBuilder) {
+    pub fn build_native(&self, app: &mut App) {
         StereoStream::init_streaming(app, true);
-        app.add_system(send_synth_buffer.system());
+        app.add_system(send_synth_buffer);
     }
 }
 

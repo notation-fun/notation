@@ -7,7 +7,7 @@ use notation_model::prelude::{Interval, Syllable};
 
 use crate::prelude::{ModelEntryData, NotationTheme};
 
-use super::interval_dot::IntervalDotData;
+use super::interval_dot::{IntervalDotData, DotQuery};
 
 pub trait ChordNoteExtra: Send + Sync + Clone {
     fn offset(&self, theme: &NotationTheme) -> Vec2;
@@ -105,13 +105,14 @@ impl<T: ChordNoteExtra + 'static> ChordNoteData<T> {
         &self,
         commands: &mut Commands,
         theme: &NotationTheme,
-        dot_query: Option<&Query<&Children>>,
+        dot_query: Option<&mut DotQuery>,
         note_entity: Entity,
     ) {
         if let Some(dot_query) = dot_query {
-            for children in dot_query.get(note_entity) {
-                for child in children.iter() {
-                    commands.entity(*child).despawn();
+            for (parent, entity, mut dot_data) in dot_query.iter_mut() {
+                if !dot_data.is_orphan && parent.0 == note_entity {
+                    dot_data.is_orphan = true;
+                    commands.entity(entity).despawn();
                 }
             }
         }

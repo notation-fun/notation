@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::{GridData, LayoutData};
 use notation_model::prelude::{JumpToBarEvent, PlayControlEvent, TabBarProps};
@@ -39,7 +37,7 @@ use crate::midi::midi_control::MidiControl;
 pub struct TabPlugin;
 
 impl Plugin for TabPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         TabViewDoLayoutEvent::setup(app);
         TabContentDoLayoutEvent::setup(app);
         TabHeaderDoLayoutEvent::setup(app);
@@ -56,25 +54,25 @@ impl Plugin for TabPlugin {
         app.init_asset_loader::<crate::dsl::get_tab_asset::GetTabAssetLoader>();
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(TabView::do_layout.system())
-                .with_system(TabContent::do_layout.system())
-                .with_system(TabHeader::do_layout.system())
-                .with_system(TabControl::do_layout.system())
-                .with_system(RhythmView::do_layout.system())
-                .with_system(RhythmBarData::update_rhythm.system())
-                .with_system(TabChords::do_layout.system())
-                .with_system(TabBars::on_resized_pre.system())
-                .with_system(TabBars::do_layout.system()),
+                .with_system(TabView::do_layout)
+                .with_system(TabContent::do_layout)
+                .with_system(TabHeader::do_layout)
+                .with_system(TabControl::do_layout)
+                .with_system(RhythmView::do_layout)
+                .with_system(RhythmBarData::update_rhythm)
+                .with_system(TabChords::do_layout)
+                .with_system(TabBars::on_resized_pre)
+                .with_system(TabBars::do_layout),
         );
     }
 }
 
 impl TabPlugin {
-    pub fn setup_mouse_input(app: &mut AppBuilder) {
+    pub fn setup_mouse_input(app: &mut App) {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(Self::on_mouse_clicked.system())
-                .with_system(Self::on_mouse_dragged.system())
+                .with_system(Self::on_mouse_clicked)
+                .with_system(Self::on_mouse_dragged)
         );
     }
     pub fn jump_to_bar(jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>, bar_props: TabBarProps) {
@@ -86,12 +84,12 @@ impl TabPlugin {
         mut app_state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,
-        mini_bar_query: Query<(&Arc<MiniBar>, &LayoutData, &GlobalTransform)>,
-        button_query: Query<(&Arc<PlayButton>, &LayoutData, &GlobalTransform)>,
-        rhythm_query: Query<(&Arc<RhythmView>, &LayoutData, &GlobalTransform)>,
-        chord_query: Query<(&Arc<ChordView>, &LayoutData, &GlobalTransform)>,
-        bar_query: Query<(&Arc<BarView>, &LayoutData, &GlobalTransform)>,
-        tab_control_query: Query<(&Arc<TabControl>, &LayoutData, &GlobalTransform)>,
+        mini_bar_query: Query<(&MiniBar, &LayoutData, &GlobalTransform)>,
+        button_query: Query<(&PlayButton, &LayoutData, &GlobalTransform)>,
+        rhythm_query: Query<(&RhythmView, &LayoutData, &GlobalTransform)>,
+        chord_query: Query<(&ChordView, &LayoutData, &GlobalTransform)>,
+        bar_query: Query<(&BarView, &LayoutData, &GlobalTransform)>,
+        tab_control_query: Query<(&TabControl, &LayoutData, &GlobalTransform)>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
         #[cfg(feature = "midi")]
         midi_settings: Res<MidiSettings>,
@@ -172,9 +170,9 @@ impl TabPlugin {
         mut tab_bars_query: Query<(
             Entity,
             &mut Transform,
-            &Arc<TabBars>,
+            &TabBars,
             &LayoutData,
-            &Arc<GridData>,
+            &GridData,
         )>,
     ) {
         if theme._bypass_systems {

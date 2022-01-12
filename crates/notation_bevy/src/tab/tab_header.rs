@@ -15,6 +15,7 @@ use crate::prelude::NotationLayout;
 use super::tab_chords::TabChords;
 use super::tab_events::TabHeaderDoLayoutEvent;
 
+#[derive(Clone, Debug, Component)]
 pub struct TabHeader {
     pub tab: Arc<Tab>,
     pub chords: Vec<TabChord>,

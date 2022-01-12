@@ -1,6 +1,6 @@
 //https://github.com/ostwilkens/bevy_web_fullscreen
 
-use bevy::prelude::{AppBuilder, IntoSystem, Plugin, Res, ResMut};
+use bevy::prelude::{App, IntoSystem, Plugin, Res, ResMut};
 use bevy::window::Windows;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::Mutex;
@@ -11,15 +11,15 @@ type OnResizeReceiver = Receiver<()>;
 pub struct FullViewportPlugin;
 
 impl Plugin for FullViewportPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         let channel = std::sync::mpsc::channel();
         let resize_sender: OnResizeSender = channel.0;
         let resize_receiver: OnResizeReceiver = channel.1;
 
         app.insert_resource(Mutex::new(resize_sender))
             .insert_resource(Mutex::new(resize_receiver))
-            .add_startup_system(setup_viewport_resize_system.system())
-            .add_system(viewport_resize_system.system());
+            .add_startup_system(setup_viewport_resize_system)
+            .add_system(viewport_resize_system);
     }
 }
 

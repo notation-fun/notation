@@ -8,7 +8,7 @@ use super::single_string::{SingleStringData, SingleStringValue};
 
 macro_rules! impl_strings_grid {
     ($type:ident, $strings: literal) => {
-        #[derive(Debug, Default)]
+        #[derive(Debug, Default, Component)]
         pub struct $type();
 
         impl $type {

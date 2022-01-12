@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 use bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
 use bevy_egui::EguiContext;
@@ -46,7 +44,7 @@ impl ControlPanel {
         state: &NotationState,
         settings: &mut NotationSettings,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
-        guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
+        guitar_view_query: &mut Query<&mut Transform, With<GuitarView>>,
         #[cfg(feature = "midi")]
         midi_state: &MidiState,
         jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
@@ -620,7 +618,7 @@ impl ControlPanel {
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
-        mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
+        mut guitar_view_query: Query<&mut Transform, With<GuitarView>>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
     ) {
         if !state.show_control {

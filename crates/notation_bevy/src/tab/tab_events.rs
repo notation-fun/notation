@@ -19,7 +19,7 @@ use super::tab_view::TabView;
 #[derive(Debug)]
 pub struct AddTabEvent(pub Arc<Tab>);
 pub struct TabBarsResizedPreEvent(pub Entity);
-pub struct TabBarsResizedEvent(pub Arc<Vec<(Arc<BarView>, LayoutData)>>);
+pub struct TabBarsResizedEvent(pub Arc<Vec<(BarView, LayoutData)>>);
 
 pub type TabViewDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabView>;
 pub type TabContentDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabContent>;

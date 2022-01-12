@@ -14,7 +14,7 @@ pub struct LaneEntryProps {
     pub duration: Duration,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct LaneEntry {
     pub lane: Weak<BarLane>,
     pub model: Arc<ModelEntry>,

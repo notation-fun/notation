@@ -14,7 +14,7 @@ use notation_bevy_utils::prelude::{
 use super::mini_bar::MiniBar;
 use super::mini_plugin::MiniMapDoLayoutEvent;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct MiniMap {
     pub tab: Arc<Tab>,
 }

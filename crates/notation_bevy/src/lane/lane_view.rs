@@ -43,7 +43,7 @@ impl LaneView {
         lane_layout: &LaneLayoutData,
     ) {
         if let Some(lane) = &lane_layout.lane {
-            let lane_bundle = LaneBundle::new(lane.clone(), lane_layout.clone());
+            let lane_bundle = LaneBundle::new(&lane, lane_layout.clone());
             let lane_entity = BevyUtil::spawn_child_bundle(commands, bar_entity, lane_bundle);
             if Self::setup_lane(commands, settings, lane, lane_entity) {
                 if Self::DEBUGGING_LANE_LAYOUT {

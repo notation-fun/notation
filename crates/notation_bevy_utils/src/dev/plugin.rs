@@ -7,10 +7,10 @@ use super::theme::BevyUtilsTheme;
 pub struct BevyUtilsPlugin;
 
 impl Plugin for BevyUtilsPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.init_resource::<BevyUtilsTheme>();
-        app.add_system(on_add_layout_data.system());
-        app.add_system(on_layout_data_changed.system());
+        app.add_system(on_add_layout_data);
+        app.add_system(on_layout_data_changed);
     }
 }
 

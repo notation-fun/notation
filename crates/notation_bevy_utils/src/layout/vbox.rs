@@ -10,7 +10,7 @@ pub trait VBoxCell<TE: LayoutEnv>: View<TE> {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct VBoxCellData {
     pub index: usize,
 }

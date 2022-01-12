@@ -1,11 +1,12 @@
 use std::fmt::Display;
 use std::sync::Arc;
+use bevy::prelude::*;
 
 use notation_model::prelude::TabBarProps;
 
 use crate::prelude::LaneLayoutData;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct BarLayoutData {
     pub min_height: f32,
     pub bar_props: TabBarProps,

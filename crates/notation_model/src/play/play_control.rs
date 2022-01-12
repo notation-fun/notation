@@ -45,7 +45,7 @@ impl PlaySpeed {
 #[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
 pub struct UnitsToSeconds(pub f32);
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct PlayControl {
     pub position: Position,
     pub bars: usize,

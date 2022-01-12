@@ -15,6 +15,7 @@ use super::tab_control::TabControl;
 use super::tab_events::TabViewDoLayoutEvent;
 use super::tab_header::TabHeader;
 
+#[derive(Clone, Debug, Component)]
 pub struct TabView {
     pub tab: Arc<Tab>,
 }
@@ -34,7 +35,6 @@ impl<'a> DockView<NotationLayout<'a>, TabControl, TabContent> for TabView {}
 impl TabView {
     pub fn spawn(
         commands: &mut Commands,
-        materials: &mut ResMut<Assets<ColorMaterial>>,
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
@@ -45,7 +45,7 @@ impl TabView {
         //let tab_view = tab_bundle.view.clone();
         let tab_entity = BevyUtil::spawn_child_bundle(commands, entity, tab_bundle);
         TabControl::spawn(
-            commands, materials, assets, theme, settings, tab_entity, &tab,
+            commands, assets, theme, settings, tab_entity, &tab,
         );
         let content_entity = BevyUtil::spawn_child_bundle(
             commands,

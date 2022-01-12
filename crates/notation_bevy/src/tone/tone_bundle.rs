@@ -1,5 +1,4 @@
 use notation_model::prelude::Tone;
+use crate::prelude::{SingleData, SingleBundle};
 
-use crate::prelude::SingleBundle;
-
-pub type ToneBundle = SingleBundle<Tone>;
+pub type ToneBundle = SingleBundle<SingleData<Tone>>;

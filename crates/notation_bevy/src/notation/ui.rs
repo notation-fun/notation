@@ -7,9 +7,9 @@ use super::state::NotationState;
 pub struct NotationUiPlugin;
 
 impl Plugin for NotationUiPlugin {
-    fn build(&self, app: &mut AppBuilder) {
-        app.add_system(update_window_scale_factor.system());
-        app.add_startup_system_to_stage(StartupStage::Startup, setup_egui_fonts.system());
+    fn build(&self, app: &mut App) {
+        app.add_system(update_window_scale_factor);
+        app.add_startup_system_to_stage(StartupStage::Startup, setup_egui_fonts);
     }
 }
 

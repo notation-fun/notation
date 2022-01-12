@@ -2,7 +2,6 @@ use bevy::prelude::*;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
 use float_eq::float_ne;
 use notation_bevy_utils::prelude::{GridData, LayoutData};
-use std::sync::Arc;
 
 use notation_model::prelude::Position;
 use serde::{Deserialize, Serialize};
@@ -75,7 +74,6 @@ impl LayoutSettings {
     }
     pub fn bar_layout_of_pos(
         &self,
-        //bar_layouts: &Arc<Vec<BarLayoutData>>,
         _pos: Position,
     ) -> Option<BarLayoutData> {
         //bar_layouts.get(pos.bar.bar_ordinal).map(|x| x.clone())
@@ -87,14 +85,14 @@ impl LayoutSettings {
         tab_bars_query: &mut Query<(
             Entity,
             &mut Transform,
-            &Arc<TabBars>,
+            &TabBars,
             &LayoutData,
-            &Arc<GridData>,
+            &GridData,
         )>,
         delta_x: f32,
         delta_y: f32,
     ) {
-        if let Ok((_, mut camera_transform, _bars, layout, grid_data)) = tab_bars_query.single_mut()
+        if let Ok((_, mut camera_transform, _bars, layout, grid_data)) = tab_bars_query.get_single_mut()
         {
             let trans = camera_transform.translation;
             let (x, y) = match self.mode {
@@ -264,9 +262,9 @@ impl LayoutSettings {
         tab_bars_query: &mut Query<(
             Entity,
             &mut Transform,
-            &Arc<TabBars>,
+            &TabBars,
             &LayoutData,
-            &Arc<GridData>,
+            &GridData,
         )>,
         pos_data: &PosIndicatorData,
     ) {
@@ -276,7 +274,7 @@ impl LayoutSettings {
             return;
         }
         if let Ok((bars_entity, mut bars_transform, bars, layout, grid_data)) =
-            tab_bars_query.single_mut()
+            tab_bars_query.get_single_mut()
         {
             self.focusing_bar_ordinal = pos_data.bar_props.bar_ordinal;
             match self.mode {

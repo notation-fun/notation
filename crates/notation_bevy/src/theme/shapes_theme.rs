@@ -91,7 +91,7 @@ impl ShapesTheme {
         };
         let alignment = TextAlignment {
             vertical: VerticalAlign::Center,
-            horizontal: HorizontalAlign::Right,
+            horizontal: HorizontalAlign::Left,
         };
         let shape_text = ProtoEntry::trim_comments(text);
         entity_commands.insert_bundle(Text2dBundle {
@@ -118,7 +118,7 @@ impl ShapesTheme {
         };
         let alignment = TextAlignment {
             vertical: VerticalAlign::Center,
-            horizontal: HorizontalAlign::Right,
+            horizontal: HorizontalAlign::Left,
         };
         entity_commands.insert_bundle(Text2dBundle {
             text: Text::with_section(barre.to_string(), style, alignment),

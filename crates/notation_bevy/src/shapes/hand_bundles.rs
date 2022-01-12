@@ -1,9 +1,9 @@
-use crate::prelude::SingleBundle;
+use crate::prelude::{SingleData, SingleBundle};
 use notation_model::prelude::{HandShape4, HandShape6};
 
 macro_rules! impl_hand_shape_bundle {
     ($type:ident, $hand_shape:ident) => {
-        pub type $type = SingleBundle<$hand_shape>;
+        pub type $type = SingleBundle<SingleData<$hand_shape>>;
     };
 }
 

@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy::window::WindowResized;
@@ -47,8 +45,8 @@ pub struct NotationApp;
 impl NotationApp {
     pub const TITLE: &'static str = "Fun Notation";
 
-    pub fn new_builder<A: ExtraAssets>(title: &str) -> AppBuilder {
-        let mut app = App::build();
+    pub fn new_app<A: ExtraAssets>(title: &str) -> App {
+        let mut app = App::new();
         AssetLoader::new(NotationAssetsStates::Loading)
             .continue_to_state(NotationAssetsStates::Loaded)
             .with_collection::<NotationAssets>()
@@ -69,8 +67,8 @@ impl NotationApp {
         app.init_resource::<NotationSettings>();
         app.add_plugins(NotationPlugins);
 
-        #[cfg(target_arch = "wasm32")]
-        app.add_plugin(bevy_webgl2::WebGL2Plugin);
+        //#[cfg(target_arch = "wasm32")]
+        //app.add_plugin(bevy_webgl2::WebGL2Plugin);
 
         // When building for WASM, print panics to the browser console
         #[cfg(target_arch = "wasm32")]
@@ -104,34 +102,34 @@ impl NotationApp {
     pub fn run_with_extra<A, F>(tab_pathes: Vec<String>, extra: F)
     where
         A: ExtraAssets,
-        F: Fn(&mut AppBuilder),
+        F: Fn(&mut App),
     {
-        let mut app = NotationApp::new_builder::<A>(Self::TITLE);
+        let mut app = NotationApp::new_app::<A>(Self::TITLE);
 
         app.insert_resource(TabPathes(tab_pathes));
         app.init_resource::<NotationState>();
 
-        app.add_startup_system(Self::setup_camera.system());
+        app.add_startup_system(Self::setup_camera);
 
         #[cfg(debug_assertions)]
-        app.add_startup_system(Self::setup_hot_reloading.system());
+        app.add_startup_system(Self::setup_hot_reloading);
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
-                .with_system(NotationAssets::add_extra_assets::<A>.system())
-                .with_system(Self::setup_window_size.system()),
+                .with_system(NotationAssets::add_extra_assets::<A>)
+                .with_system(Self::setup_window_size),
         );
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(ControlPanel::control_ui.system())
-                .with_system(TabViewer::on_add_tab.system())
-                .with_system(TabViewer::on_window_resized.system())
-                .with_system(TabViewer::on_added.system()),
+                .with_system(ControlPanel::control_ui)
+                .with_system(TabViewer::on_add_tab)
+                .with_system(TabViewer::on_window_resized)
+                .with_system(TabViewer::on_added),
         );
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(Self::on_window_resized.system())
-                .with_system(Self::on_tab_asset.system()),
+                .with_system(Self::on_window_resized)
+                .with_system(Self::on_tab_asset),
         );
         extra(&mut app);
         app.run();
@@ -142,7 +140,7 @@ impl NotationApp {
 }
 
 impl NotationApp {
-    fn insert_window_descriptor(app: &mut AppBuilder, title: String) {
+    fn insert_window_descriptor(app: &mut App, title: String) {
         app.insert_resource(WindowDescriptor {
             title,
             //width: 1920.,
@@ -224,7 +222,7 @@ impl NotationApp {
         theme: &mut NotationTheme,
         evts: &mut EventWriter<AddTabEvent>,
         entities_query: &Query<Entity, With<GlobalTransform>>,
-        viewer_query: &Query<(Entity, &Arc<TabViewer>), With<Arc<TabViewer>>>,
+        viewer_query: &Query<(Entity, &TabViewer), With<TabViewer>>,
         load_tab: F,
     ) {
         if state.window_width > 0.0

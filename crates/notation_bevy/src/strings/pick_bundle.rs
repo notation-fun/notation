@@ -1,22 +1,5 @@
-use bevy::prelude::*;
+use crate::prelude::{SingleData, SingleBundle};
 
 use notation_model::prelude::Pick;
 
-#[derive(Bundle)]
-pub struct PickBundle {
-    pub name: Name,
-    pub pick: Pick,
-    pub transform: Transform,
-    pub global_cransform: GlobalTransform,
-}
-
-impl From<Pick> for PickBundle {
-    fn from(v: Pick) -> Self {
-        PickBundle {
-            name: v.to_string().as_str().into(),
-            pick: v,
-            transform: Transform::default(),
-            global_cransform: GlobalTransform::default(),
-        }
-    }
-}
+pub type PickBundle = SingleBundle<SingleData<Pick>>;

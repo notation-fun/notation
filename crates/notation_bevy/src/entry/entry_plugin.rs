@@ -19,14 +19,14 @@ use notation_model::prelude::{CoreEntry, LaneEntry, ProtoEntry};
 pub struct EntryPlugin;
 
 impl Plugin for EntryPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(crate::tone::tone_systems::on_entry_playing_changed.system())
-                .with_system(crate::word::word_systems::on_entry_playing_changed.system())
-                .with_system(ChordView::on_layout_changed.system())
-                .with_system(ChordView::on_chord_playing_changed.system())
-                .with_system(on_tab_bars_resized.system()),
+                .with_system(crate::tone::tone_systems::on_entry_playing_changed)
+                .with_system(crate::word::word_systems::on_entry_playing_changed)
+                .with_system(ChordView::on_layout_changed)
+                .with_system(ChordView::on_chord_playing_changed)
+                .with_system(on_tab_bars_resized),
         );
     }
 }

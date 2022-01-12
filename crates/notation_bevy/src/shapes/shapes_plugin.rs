@@ -10,7 +10,7 @@ use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6, LaneEntry};
 pub struct ShapesPlugin;
 
 impl Plugin for ShapesPlugin {
-    fn build(&self, _app: &mut AppBuilder) {
+    fn build(&self, _app: &mut App) {
         /*
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)

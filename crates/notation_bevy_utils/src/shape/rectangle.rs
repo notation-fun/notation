@@ -22,16 +22,12 @@ impl Shape for FillRectangle {
 impl SingleShape<shapes::Rectangle> for FillRectangle {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.width,
-            height: self.height,
+            extents: Vec2::new(self.width, self.height),
             origin: self.origin,
         }
     }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.color)
-    }
     fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillOptions::default())
+        DrawMode::Fill(FillMode::color(self.color))
     }
     fn get_transform(&self) -> Transform {
         if self.width <= 0.0 || self.height <= 0.0 {
@@ -59,16 +55,12 @@ impl Shape for StrokeRectangle {
 impl SingleShape<shapes::Rectangle> for StrokeRectangle {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.width,
-            height: self.height,
+            extents: Vec2::new(self.width, self.height),
             origin: self.origin,
         }
     }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.color)
-    }
     fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(self.line_width))
+        DrawMode::Stroke(StrokeMode::new(self.color, self.line_width))
     }
     fn get_transform(&self) -> Transform {
         if self.width <= 0.0 || self.height <= 0.0 {
@@ -97,26 +89,18 @@ impl Shape for OutlineRectangle {
 impl SingleShape<shapes::Rectangle> for OutlineRectangle {
     fn get_shape(&self) -> shapes::Rectangle {
         shapes::Rectangle {
-            width: self.width,
-            height: self.height,
+            extents: Vec2::new(self.width, self.height),
             origin: self.origin,
-        }
-    }
-    fn get_colors(&self) -> ShapeColors {
-        if self.outline_width > 0.0 {
-            ShapeColors::outlined(self.color, self.outline_color)
-        } else {
-            ShapeColors::new(self.color)
         }
     }
     fn get_draw_mode(&self) -> DrawMode {
         if self.outline_width > 0.0 {
             DrawMode::Outlined {
-                fill_options: FillOptions::default(),
-                outline_options: StrokeOptions::default().with_line_width(self.outline_width),
+                fill_mode: FillMode::color(self.color),
+                outline_mode: StrokeMode::new(self.outline_color, self.outline_width),
             }
         } else {
-            DrawMode::Fill(FillOptions::default())
+            DrawMode::Fill(FillMode::color(self.color))
         }
     }
     fn get_transform(&self) -> Transform {

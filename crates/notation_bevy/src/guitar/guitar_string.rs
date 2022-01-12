@@ -9,7 +9,7 @@ use notation_model::prelude::{
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct GuitarStringData {
     pub string: u8,
     pub upper: bool,

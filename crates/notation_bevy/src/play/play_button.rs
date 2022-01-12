@@ -75,7 +75,7 @@ impl From<usize> for PlayButtonAction {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct PlayButton {
     pub action: PlayButtonAction,
 }
@@ -85,7 +85,7 @@ impl Display for PlayButton {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct PlayButtonShape {
     pub action: PlayButtonAction,
     pub width: f32,

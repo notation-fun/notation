@@ -1,6 +1,6 @@
 [package]
 name = "notation_guitar"
-version = "0.3.4"
+version = "0.4.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -11,7 +11,7 @@ description = "Fun notation - definition for guitar"
 [lib]
 
 [dependencies]
-notation_core = { version = "0.3.4", path = "../notation_core" }
-notation_fretted = { version = "0.3.4", path = "../notation_fretted" }
+notation_core = { version = "0.4.0", path = "../notation_core" }
+notation_fretted = { version = "0.4.0", path = "../notation_fretted" }
 
 serde = { version = "1.0.126", features = ["derive"] }

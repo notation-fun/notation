@@ -1,6 +1,6 @@
 [package]
 name = "notation_bevy"
-version = "0.3.4"
+version = "0.4.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -25,7 +25,7 @@ dev = [
 ]
 
 native = [
-    "bevy/bevy_wgpu",
+#    "bevy/bevy_wgpu",
 ]
 
 midi = [
@@ -40,33 +40,32 @@ chinese = [
 ]
 
 [dependencies]
-notation_bevy_utils = { version = "0.3.4", path = "../notation_bevy_utils" }
+notation_bevy_utils = { version = "0.4.0", path = "../notation_bevy_utils" }
 
-notation_model = { version = "0.3.4", path = "../notation_model" }
+notation_model = { version = "0.4.0", path = "../notation_model" }
 
-notation_midi = { version = "0.3.4", path = "../notation_midi", optional = true }
-notation_dsl = { version = "0.3.4", path = "../notation_dsl", optional = true }
+notation_midi = { version = "0.4.0", path = "../notation_midi", optional = true }
+notation_dsl = { version = "0.4.0", path = "../notation_dsl", optional = true }
 
-serde = {version = "1.0.126", features = ["derive"]}
+serde = { version = "1.0.133", features = ["derive"] }
 # https://github.com/serde-rs/serde/issues/1937
 serde_arrays = "0.1.0"
 anyhow = "1.0"
-ron = "0.6"
-float_eq = "0.6"
+ron = "0.7"
+float_eq = "0.7"
 
-bevy = { version = "0.5.0", default-features = false }
+bevy = { version = "0.6.0", default-features = false }
 
 rand = "0.8"
 getrandom = {version="0.2", features=["wasm-bindgen"]}
 
-bevy_prototype_lyon = "0.3.1"
-bevy_asset_loader = "0.7.0"
-bevy_egui = "0.9"
-bevy_easings = "0.4.1"
-# bevy_svg = "0.3"
-# bevy_svg_map = "0.2"
+bevy_prototype_lyon = "0.4.0"
+bevy_egui = "0.10.0"
+bevy_easings = "0.5.0"
 
-rfd = "0.6.2"
+bevy_asset_loader = "0.8.0"
+
+rfd = "0.6.3"
 
 #[target."cfg(not(target_arch = "wasm32"))".dependencies]
 # Can not enable bevy_wgpu in this way, so the actually binary crate
@@ -76,12 +75,11 @@ rfd = "0.6.2"
 # wrapper crate, though think having these features benefits more
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen = "0.2.69"
-bevy_webgl2 = "0.5.0"
+wasm-bindgen = "0.2.78"
 console_error_panic_hook = "0.1"
 gloo-events = "0.1.1"
 futures = "0.3"
-web-sys = { version = "0.3.45", features = [
+web-sys = { version = "0.3.55", features = [
     "Element", "Document", "Window", "Location", "console", "TouchEvent",
     #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
     "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",

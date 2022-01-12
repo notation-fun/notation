@@ -17,6 +17,7 @@ use crate::prelude::NotationLayout;
 
 use super::tab_events::TabControlDoLayoutEvent;
 
+#[derive(Clone, Debug, Component)]
 pub struct TabControl {
     pub tab: Arc<Tab>,
 }
@@ -61,7 +62,6 @@ impl<'a> DockView<NotationLayout<'a>, PlayPanel, GuitarView> for TabControl {}
 impl TabControl {
     pub fn spawn(
         commands: &mut Commands,
-        materials: &mut ResMut<Assets<ColorMaterial>>,
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
@@ -82,7 +82,7 @@ impl TabControl {
                 .colors
                 .of_syllable(tab.meta.scale.calc_root_syllable()),
         );
-        GuitarView::spawn(commands, materials, assets, theme, control_entity, tab);
+        GuitarView::spawn(commands, assets, theme, control_entity, tab);
         PlayPanel::spawn(commands, assets, theme, settings, control_entity, tab);
         control_entity
     }

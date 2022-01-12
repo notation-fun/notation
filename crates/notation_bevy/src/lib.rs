@@ -8,9 +8,6 @@ pub use notation_midi;
 
 pub use {bevy, bevy_prototype_lyon, bevy_egui, bevy_asset_loader};
 
-#[cfg(target_arch = "wasm32")]
-pub use bevy_webgl2;
-
 #[cfg(feature = "inspector")]
 pub use bevy_inspector_egui;
 

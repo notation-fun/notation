@@ -47,7 +47,6 @@ impl TabTexts {
         entity: Entity,
         text: &str,
     ) {
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
             commands,
             entity,
@@ -55,7 +54,7 @@ impl TabTexts {
             assets.latin_font.clone(),
             self.bar_font_size,
             self.bar_font_color,
-            HorizontalAlign::Left,
+            HorizontalAlign::Right,
             VerticalAlign::Center,
             self.bar_x,
             self.bar_y,
@@ -94,7 +93,6 @@ impl ChordTexts {
         text: &str,
         z: f32,
     ) {
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
             commands,
             entity,
@@ -102,8 +100,8 @@ impl ChordTexts {
             assets.latin_font.clone(),
             self.bars_font_size,
             self.bars_font_color,
-            HorizontalAlign::Right,
-            VerticalAlign::Bottom,
+            HorizontalAlign::Left,
+            VerticalAlign::Top,
             self.bars_x,
             self.bars_y,
             z,
@@ -139,7 +137,6 @@ impl RhythmTexts {
         entity: Entity,
         text: &str,
     ) {
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
             commands,
             entity,
@@ -184,7 +181,6 @@ impl LyricsTexts {
         assets: &NotationAssets,
         text: &str,
     ) {
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
             commands,
             entity,
@@ -192,7 +188,7 @@ impl LyricsTexts {
             assets.lyrics_font.clone(),
             self.word_font_size,
             self.word_font_color,
-            HorizontalAlign::Right,
+            HorizontalAlign::Left,
             VerticalAlign::Center,
             self.text_x,
             self.text_y,
@@ -247,14 +243,7 @@ impl MelodyTexts {
         syllable: &Syllable,
         size_scale: f32,
     ) {
-        let text = if settings.show_syllable_as_pitch {
-            scale.calc_pitch(key, syllable).to_text()
-        } else if settings.show_syllable_as_num {
-            syllable.to_text()
-        } else {
-            syllable.to_ident()
-        };
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
+        let text = Self::calc_text(settings, scale, key, syllable);
         BevyUtil::spawn_text(
             commands,
             entity,
@@ -265,13 +254,27 @@ impl MelodyTexts {
             if self.horizontal_center {
                 HorizontalAlign::Center
             } else {
-                HorizontalAlign::Right
+                HorizontalAlign::Left
             },
             VerticalAlign::Center,
             self.text_x * size_scale,
             self.text_y * size_scale,
             self.text_z,
         );
+    }
+    pub fn calc_text(
+        settings: &NotationSettings,
+        scale: &Scale,
+        key: &Key,
+        syllable: &Syllable,
+    ) -> String {
+        if settings.show_syllable_as_pitch {
+            scale.calc_pitch(key, syllable).to_text()
+        } else if settings.show_syllable_as_num {
+            syllable.to_text()
+        } else {
+            syllable.to_ident()
+        }
     }
 }
 
@@ -304,7 +307,6 @@ impl StringsTexts {
         fret: u8,
     ) {
         let text = format!("{}", fret);
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
             commands,
             entity,
@@ -312,7 +314,7 @@ impl StringsTexts {
             assets.latin_font.clone(),
             self.fret_font_size,
             self.fret_font_color,
-            HorizontalAlign::Right,
+            HorizontalAlign::Left,
             VerticalAlign::Center,
             self.text_x,
             self.text_y,
@@ -343,7 +345,6 @@ impl MiniMapTexts {
         entity: Entity,
         text: &str,
     ) {
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
             commands,
             entity,
@@ -355,7 +356,7 @@ impl MiniMapTexts {
             VerticalAlign::Center,
             0.0,
             0.0,
-            1.0,
+            5.0,
         );
     }
     pub fn spawn_debug_text(
@@ -365,7 +366,6 @@ impl MiniMapTexts {
         assets: &NotationAssets,
         text: &str,
     ) {
-        //NOTE: not sure why, using HorizontalAlign::Right here got the left behaviour
         BevyUtil::spawn_text(
             commands,
             entity,

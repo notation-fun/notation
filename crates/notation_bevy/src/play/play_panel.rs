@@ -14,6 +14,8 @@ use crate::prelude::NotationLayout;
 use super::play_button::{PlayButton, PlayButtonShape};
 use super::play_plugin::PlayPanelDoLayoutEvent;
 
+
+#[derive(Clone, Debug, Component)]
 pub struct PlayPanel {
     pub playing: bool,
     pub should_loop: bool,

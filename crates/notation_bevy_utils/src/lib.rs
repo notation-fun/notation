@@ -16,7 +16,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::asset::markdown_asset::MarkDownAsset;
     #[doc(hidden)]
-    pub use crate::bundle::single_bundle::{SingleArcBundle, SingleBundle};
+    pub use crate::bundle::single_bundle::{SingleBundle, SingleData};
     #[doc(hidden)]
     pub use crate::bundle::view_bundle::ViewBundle;
     #[doc(hidden)]

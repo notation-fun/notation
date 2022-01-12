@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 use bevy::{prelude::*, asset::{AssetPath, HandleId, Asset}};
 use bevy_asset_loader::{AssetCollection};
-use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 
 #[derive(AssetCollection)]
 pub struct NotationAssets {
@@ -19,7 +18,7 @@ pub struct NotationAssets {
     //#[asset(path = "gltf/guitar.gltf#Scene0")]
     //pub guitar: Handle<Scene>,
     #[asset(path = "png/fretboard.png")]
-    pub fretboard: Handle<Texture>,
+    pub fretboard: Handle<Image>,
 
     //Not using the folder way, which is not supported under wasm
     //#[asset(folder = "extra")]

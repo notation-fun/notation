@@ -8,6 +8,7 @@ use notation_model::prelude::{
 
 use crate::chord::chord_note::{ChordNoteData, ChordNoteExtra, ChordNoteValue};
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
+use crate::theme::theme_texts::MelodyTexts;
 
 #[derive(Clone, Debug)]
 pub struct FretFingerExtra {
@@ -160,6 +161,7 @@ impl FretFingerData {
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
+        font_query: &mut Query<(&Parent, &mut Text)>,
         entity: Entity,
         meta: &TabMeta,
     ) {
@@ -171,15 +173,27 @@ impl FretFingerData {
             meta.key.transpose(Semitones(self.value.extra.capo as i8))
         };
         if settings.show_guitar_syllable && self.value.extra.fret.is_some() {
-            theme.guitar.syllable_text.spawn_scaled_syllable_text(
-                commands,
-                entity,
-                assets,
-                settings,
-                &meta.scale, &key,
-                &self.value.calc_syllable(),
-                size_scale,
-            )
+            let syllable = self.value.calc_syllable();
+            let mut exist = false;
+            for (parent, mut text) in font_query.iter_mut() {
+                if parent.0 == entity {
+                    exist = true;
+                    let v = MelodyTexts::calc_text(settings, &meta.scale, &key, &syllable);
+                    BevyUtil::set_text_value(&mut text, v);
+                    break;
+                }
+            }
+            if !exist {
+                theme.guitar.syllable_text.spawn_scaled_syllable_text(
+                    commands,
+                    entity,
+                    assets,
+                    settings,
+                    &meta.scale, &key,
+                    &syllable,
+                    size_scale,
+                )
+            }
         }
     }
 }

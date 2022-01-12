@@ -4,7 +4,7 @@ use notation_model::prelude::Chord;
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct ChordColorBackground;
 
 impl ChordColorBackground {

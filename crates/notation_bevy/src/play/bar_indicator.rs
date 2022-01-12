@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct BarIndicatorData {
     pub tab: Arc<Tab>,
     pub bar_props: TabBarProps,
@@ -74,7 +74,7 @@ impl BarIndicatorData {
         bar_props: TabBarProps,
         in_bar_pos: Units,
     ) -> Option<BarIndicatorData> {
-        if let Ok((entity, mut data)) = bar_indicator_query.single_mut() {
+        if let Ok((entity, mut data)) = bar_indicator_query.get_single_mut() {
             data.update_chord(bar_props, Some(in_bar_pos));
             data.update(commands, theme, entity);
             Some(data.clone())

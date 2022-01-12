@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use notation_bevy_utils::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp};
+use notation_bevy_utils::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp, SingleData};
 use notation_model::prelude::{PlayControlEvent, LaneEntry, PlayState, PlayingState, Position, Tab, TickResult, SwitchTabEvent, JumpToBarEvent};
 
 use bevy::prelude::*;
@@ -29,20 +29,20 @@ pub type PlayPanelDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, PlayPan
 pub struct PlayPlugin;
 
 impl Plugin for PlayPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_event::<SwitchTabEvent>();
         app.add_event::<JumpToBarEvent>();
         app.add_event::<PlayControlEvent>();
         PlayPanelDoLayoutEvent::setup(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(PlayPanel::do_layout.system())
-                .with_system(PlayPanel::on_play_control_evt.system())
-                .with_system(PlayButton::on_layout_changed.system())
-                .with_system(on_bar_playing_changed.system())
-                .with_system(on_tab_play_state_changed.system())
-                .with_system(on_play_control_evt.system())
-                .with_system(on_tab_resized.system()),
+                .with_system(PlayPanel::do_layout)
+                .with_system(PlayPanel::on_play_control_evt)
+                .with_system(PlayButton::on_layout_changed)
+                .with_system(on_bar_playing_changed)
+                .with_system(on_tab_play_state_changed)
+                .with_system(on_play_control_evt)
+                .with_system(on_tab_resized),
         );
     }
 }
@@ -74,9 +74,9 @@ fn update_indicators(
     tab_bars_query: &mut Query<(
         Entity,
         &mut Transform,
-        &Arc<TabBars>,
+        &TabBars,
         &LayoutData,
-        &Arc<GridData>,
+        &GridData,
     )>,
     bar_playing: &BarPlaying,
     bar_layout: LayoutData,
@@ -110,7 +110,7 @@ fn on_tab_resized(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     mut settings: ResMut<NotationSettings>,
-    mut query: Query<(Entity, &BarPlaying, &Arc<BarView>, &LayoutData)>,
+    mut query: Query<(Entity, &BarPlaying, &BarView, &LayoutData)>,
     mut chord_color_background_query: Query<
         (Entity, &mut ColorBackground),
         With<ChordColorBackground>,
@@ -120,9 +120,9 @@ fn on_tab_resized(
     mut tab_bars_query: Query<(
         Entity,
         &mut Transform,
-        &Arc<TabBars>,
+        &TabBars,
         &LayoutData,
-        &Arc<GridData>,
+        &GridData,
     )>,
 ) {
     if theme._bypass_systems {
@@ -169,7 +169,7 @@ fn on_bar_playing_changed(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     mut settings: ResMut<NotationSettings>,
-    mut query: Query<(Entity, &BarPlaying, &Arc<BarView>, &LayoutData), Changed<BarPlaying>>,
+    mut query: Query<(Entity, &BarPlaying, &BarView, &LayoutData), Changed<BarPlaying>>,
     mut chord_color_background_query: Query<
         (Entity, &mut ColorBackground),
         With<ChordColorBackground>,
@@ -179,9 +179,9 @@ fn on_bar_playing_changed(
     mut tab_bars_query: Query<(
         Entity,
         &mut Transform,
-        &Arc<TabBars>,
+        &TabBars,
         &LayoutData,
-        &Arc<GridData>,
+        &GridData,
     )>,
 ) {
     if theme._bypass_systems {
@@ -213,15 +213,15 @@ fn on_tab_play_state_changed(
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
     mut entry_playing_query: Query<
-        (Entity, &Arc<LaneEntry>, &mut EntryPlaying),
+        (Entity, &SingleData<LaneEntry>, &mut EntryPlaying),
         With<EntryPlaying>,
     >,
     mut tab_bars_query: Query<(
         Entity,
         &mut Transform,
-        &Arc<TabBars>,
+        &TabBars,
         &LayoutData,
-        &Arc<GridData>,
+        &GridData,
     )>,
 ) {
     if theme._bypass_systems {
@@ -259,16 +259,16 @@ fn on_tick(
     pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     bar_playing_query: &mut Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
     entry_playing_query: &mut Query<
-        (Entity, &Arc<LaneEntry>, &mut EntryPlaying),
+        (Entity, &SingleData<LaneEntry>, &mut EntryPlaying),
         With<EntryPlaying>,
     >,
     chord_playing_query: &mut Query<(Entity, &mut ChordPlaying), With<ChordPlaying>>,
     tab_bars_query: &mut Query<(
         Entity,
         &mut Transform,
-        &Arc<TabBars>,
+        &TabBars,
         &LayoutData,
-        &Arc<GridData>,
+        &GridData,
     )>,
     state_entity: Entity,
     tab_state: &mut TabState,
@@ -336,16 +336,16 @@ fn on_play_control_evt(
     mut pos_indicator_query: Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
     mut bar_playing_query: Query<(Entity, &mut BarPlaying), With<BarPlaying>>,
     mut entry_playing_query: Query<
-        (Entity, &Arc<LaneEntry>, &mut EntryPlaying),
+        (Entity, &SingleData<LaneEntry>, &mut EntryPlaying),
         With<EntryPlaying>,
     >,
     mut chord_playing_query: Query<(Entity, &mut ChordPlaying), With<ChordPlaying>>,
     mut tab_bars_query: Query<(
         Entity,
         &mut Transform,
-        &Arc<TabBars>,
+        &TabBars,
         &LayoutData,
-        &Arc<GridData>,
+        &GridData,
     )>,
     mut beat_query: Query<(Entity, &mut BarBeatData)>,
 ) {

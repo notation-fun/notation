@@ -6,13 +6,16 @@ use notation_model::prelude::IntervalQuality;
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct IntervalDotData {
     pub quality: IntervalQuality,
     pub total: usize,
     pub index: usize,
     pub note_radius: f32,
+    pub is_orphan: bool,
 }
+
+pub type DotQuery<'w, 's, 'p, 'd> = Query<'w, 's, (&'p Parent, Entity, &'d mut IntervalDotData)>;
 
 impl IntervalDotData {
     pub fn new(quality: IntervalQuality, total: usize, index: usize, note_radius: f32) -> Self {
@@ -21,6 +24,7 @@ impl IntervalDotData {
             total,
             index,
             note_radius,
+            is_orphan: false,
         }
     }
     fn circle_offset(total: usize, index: usize, note_radius: f32, factor: f32) -> Vec3 {

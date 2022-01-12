@@ -18,23 +18,21 @@ pub trait Shape {
 
 pub trait SingleShape<T: Geometry>: Shape {
     fn get_shape(&self) -> T;
-    fn get_colors(&self) -> ShapeColors;
     fn get_draw_mode(&self) -> DrawMode;
     fn get_transform(&self) -> Transform;
     fn _do_create(&self, commands: &mut Commands, entity: Entity) {
         let shape = self.get_shape();
-        let colors = self.get_colors();
         let draw_mode = self.get_draw_mode();
         let transform = self.get_transform();
         commands
             .entity(entity)
             .insert_bundle(GeometryBuilder::build_as(
-                &shape, colors, draw_mode, transform,
+                &shape, draw_mode, transform,
             ));
     }
 }
 
-pub trait ShapeOp<Theme, S: Shape>: Clone + Send + Sync + 'static {
+pub trait ShapeOp<Theme, S: Shape>: Clone + Component {
     fn get_shape(&self, theme: &Theme) -> S;
     fn create(&self, commands: &mut Commands, theme: &Theme, parent: Entity) -> Entity {
         let shape = self.get_shape(theme);

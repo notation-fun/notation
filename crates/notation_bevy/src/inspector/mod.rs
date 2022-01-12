@@ -19,11 +19,11 @@ impl PluginGroup for NotationInspectorPlugins {
 pub struct InspectPlugin;
 
 impl Plugin for InspectPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_plugin(InspectorPlugin::<crate::prelude::NotationTheme>::new());
         app.add_plugin(InspectorPlugin::<crate::prelude::NotationSettings>::new());
         app.add_plugin(InspectorPlugin::<notation_midi::prelude::MidiSettings>::new());
-        app.add_startup_system(register_inspectors.system());
+        app.add_startup_system(register_inspectors);
     }
 }
 

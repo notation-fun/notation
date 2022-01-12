@@ -10,7 +10,7 @@ use super::lyrics_grid::LyricsGrid;
 pub struct LyricsPlugin;
 
 impl Plugin for LyricsPlugin {
-    fn build(&self, _app: &mut AppBuilder) {}
+    fn build(&self, _app: &mut App) {}
 }
 
 impl LyricsPlugin {

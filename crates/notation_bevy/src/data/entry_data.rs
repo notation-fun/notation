@@ -1,6 +1,7 @@
+use bevy::prelude::*;
 use notation_model::prelude::{BarLaneProps, BarPosition, LaneEntry, LaneEntryProps, TabBarProps};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct EntryData<T: Send + Sync + 'static> {
     pub bar_props: TabBarProps,
     pub lane_props: BarLaneProps,

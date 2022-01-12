@@ -1,8 +1,9 @@
 use std::fmt::Display;
+use bevy::prelude::*;
 
 use notation_model::prelude::{ModelEntry, ModelEntryProps};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct ModelEntryData<T: Send + Sync + 'static> {
     pub entry_props: ModelEntryProps,
     pub value: T,

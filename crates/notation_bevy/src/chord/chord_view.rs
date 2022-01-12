@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use std::sync::Arc;
 
 use bevy::prelude::*;
 
@@ -17,7 +16,7 @@ use super::chord_interval::ChordIntervalData;
 use super::chord_playing::ChordPlaying;
 use super::interval_dot::IntervalDotData;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct ChordView {
     pub chord: TabChord,
 }
@@ -115,7 +114,7 @@ impl ChordView {
         mut commands: Commands,
         theme: Res<NotationTheme>,
         mut query: Query<
-            (Entity, &ChordPlaying, &Arc<ChordView>, &Children),
+            (Entity, &ChordPlaying, &ChordView, &Children),
             Changed<ChordPlaying>,
         >,
         mut diagram_query: Query<(Entity, &mut ChordDiagramData)>,

@@ -10,27 +10,27 @@ use super::tab_view::TabView;
 #[derive(Bundle)]
 pub struct TabBundle {
     pub name: Name,
-    pub tab: Arc<Tab>,
+    //pub tab: Arc<Tab>,
     pub state: TabState,
-    pub view: Arc<TabView>,
+    pub view: TabView,
     pub layout: LayoutData,
     pub transform: Transform,
-    pub global_cransform: GlobalTransform,
+    pub global_transform: GlobalTransform,
 }
 
 impl TabBundle {
     pub fn new(tab: Arc<Tab>) -> Self {
         let name = tab.to_string().as_str().into();
         let state = TabState::new(&tab);
-        let view = Arc::new(TabView::new(tab.clone()));
+        let view =TabView::new(tab.clone());
         Self {
             name,
-            tab,
+            //tab,
             state,
             view,
             layout: LayoutData::default(),
             transform: Transform::default(),
-            global_cransform: GlobalTransform::default(),
+            global_transform: GlobalTransform::default(),
         }
     }
 }

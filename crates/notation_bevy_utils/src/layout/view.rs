@@ -1,6 +1,5 @@
 use std::any::Any;
 use std::marker::PhantomData;
-use std::sync::Arc;
 
 use anyhow::{bail, Result};
 use bevy::prelude::*;
@@ -15,7 +14,7 @@ where
 {
     env: PhantomData<TE>,
     pub entity: Entity,
-    pub view: Arc<T>,
+    pub view: T,
 }
 
 #[derive(Debug)]
@@ -26,15 +25,15 @@ where
 {
     env: PhantomData<TE>,
     pub entity: Entity,
-    pub view: Arc<T>,
+    pub view: T,
     pub layout: LayoutData,
 }
 impl<TE, T> DoLayoutEvent<TE, T>
 where
     TE: LayoutEnv + Send + Sync + 'static,
-    T: View<TE>,
+    T: View<TE> + Component,
 {
-    pub fn new(entity: Entity, view: &Arc<T>, layout: &LayoutData) -> Self {
+    pub fn new(entity: Entity, view: &T, layout: &LayoutData) -> Self {
         Self {
             env: PhantomData,
             entity,
@@ -56,21 +55,21 @@ where
             }
         }
     }
-    pub fn setup(app: &mut AppBuilder) {
+    pub fn setup(app: &mut App) {
         app.add_event::<Self>();
-        app.add_system(Self::on_layout_changed.system());
+        app.add_system(Self::on_layout_changed);
     }
 }
 
-pub type LayoutQuery<'w, 'd, 't> = Query<'w, (&'d mut LayoutData, &'t mut Transform)>;
-pub type LayoutChangedQuery<'w, 'v, 'd, T> =
-    Query<'w, (Entity, &'v Arc<T>, &'d LayoutData), Changed<LayoutData>>;
-pub type LayoutChangedWithChildrenQuery<'w, 'v, 'd, 'c, T> =
-    Query<'w, (Entity, &'v Arc<T>, &'d LayoutData, &'c Children), Changed<LayoutData>>;
-pub type ViewQuery<'w, 'p, 'v, T> = Query<'w, (&'p Parent, Entity, &'v Arc<T>)>;
-pub type ViewAddedQuery<'w, 'p, 'v, T> = Query<'w, (&'p Parent, Entity, &'v Arc<T>), Added<Arc<T>>>;
-pub type ViewRootQuery<'w, 'v, T> = Query<'w, (Entity, &'v Arc<T>)>;
-pub type ViewRootAddedQuery<'w, 'v, T> = Query<'w, (Entity, &'v Arc<T>), Added<Arc<T>>>;
+pub type LayoutQuery<'w, 's, 'd, 't> = Query<'w, 's, (&'d mut LayoutData, &'t mut Transform)>;
+pub type LayoutChangedQuery<'w, 's, 'v, 'd, T> =
+    Query<'w, 's, (Entity, &'v T, &'d LayoutData), Changed<LayoutData>>;
+pub type LayoutChangedWithChildrenQuery<'w, 's, 'v, 'd, 'c, T> =
+    Query<'w, 's, (Entity, &'v T, &'d LayoutData, &'c Children), Changed<LayoutData>>;
+pub type ViewQuery<'w, 's, 'p, 'v, T> = Query<'w, 's, (&'p Parent, Entity, &'v T)>;
+pub type ViewAddedQuery<'w, 's, 'p, 'v, T> = Query<'w, 's, (&'p Parent, Entity, &'v T), Added<T>>;
+pub type ViewRootQuery<'w, 's, 'v, T> = Query<'w, 's, (Entity, &'v T)>;
+pub type ViewRootAddedQuery<'w, 's, 'v, T> = Query<'w, 's, (Entity, &'v T), Added<T>>;
 
 pub trait LayoutEnv {
     fn query_child<TE, T>(
@@ -136,7 +135,7 @@ pub trait LayoutEnv {
     }
 }
 
-pub trait View<TE: LayoutEnv>: Any + Send + Sync + ToString + 'static {
+pub trait View<TE: LayoutEnv>: Any + Component + Clone + ToString {
     fn is_root(&self) -> bool {
         false
     }

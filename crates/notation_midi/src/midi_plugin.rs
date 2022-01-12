@@ -12,18 +12,18 @@ pub struct MidiPlugin;
 const DO_TICK_TIMESTEP: f64 = 1.0 / 60.0;
 
 impl Plugin for MidiPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.init_resource::<PlayClock>();
         app.init_resource::<MidiSettings>();
         app.init_resource::<MidiState>();
         app.init_non_send_resource::<MidiHub>();
-        app.add_system(on_switch_tab.system());
-        app.add_system(on_jump_to_bar.system());
-        app.add_system(on_play_control_evt.system());
+        app.add_system(on_switch_tab);
+        app.add_system(on_jump_to_bar);
+        app.add_system(on_play_control_evt);
         app.add_system_set(
             SystemSet::new()
                 .with_run_criteria(FixedTimestep::step(DO_TICK_TIMESTEP))
-                .with_system(do_tick.system()),
+                .with_system(do_tick),
         );
         #[cfg(not(target_arch = "wasm32"))]
         self.build_native(app);

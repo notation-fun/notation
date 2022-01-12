@@ -7,7 +7,7 @@ use notation_model::prelude::BarLane;
 pub struct MelodyPlugin;
 
 impl Plugin for MelodyPlugin {
-    fn build(&self, _app: &mut AppBuilder) {}
+    fn build(&self, _app: &mut App) {}
 }
 
 impl MelodyPlugin {

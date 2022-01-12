@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use bevy::prelude::*;
 
 use crate::prelude::{
@@ -50,14 +48,14 @@ impl GridCellSize {
         }
     }
 }
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct GridCellData {
-    pub grid: Arc<GridData>,
+    pub grid: GridData,
     pub row: usize,
     pub col: usize,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct GridData {
     pub rows: usize,
     pub cols: usize,
@@ -318,7 +316,7 @@ pub trait GridView<TE: LayoutEnv, TC: GridCell<TE>>: View<TE> {
         entity: Entity,
         data: LayoutData,
     ) {
-        let grid_data = Arc::new(self.calc_grid_data(engine, data.size));
+        let grid_data = self.calc_grid_data(engine, data.size);
         let mut cells = engine.get_children(cell_query, entity);
         if self.sort_cells() {
             cells.sort_by(|a, b| a.view.order().cmp(&b.view.order()));

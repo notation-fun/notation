@@ -1,8 +1,9 @@
-use notation_model::prelude::{BarLane, LaneKind, TrackProps};
 use std::fmt::Display;
 use std::sync::{Arc, RwLock};
+use bevy::prelude::*;
+use notation_model::prelude::{BarLane, LaneKind, TrackProps};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct LaneLayoutData {
     pub track_id: String,
     pub track_props: TrackProps,

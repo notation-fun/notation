@@ -1,7 +1,4 @@
-use std::sync::Arc;
-
 use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy::prelude::AppBuilder;
 use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
 use notation_bevy::prelude::*;
@@ -13,17 +10,17 @@ use crate::help_panel::HelpPanel;
 pub struct NotationViewer();
 
 impl NotationViewer {
-    fn extra(app: &mut AppBuilder) {
+    fn extra(app: &mut App) {
         app.init_resource::<HelpPanel>();
         TabPlugin::setup_mouse_input(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(Self::handle_keyboard_inputs.system())
-                .with_system(Self::handle_mouse_inputs.system())
-                .with_system(Self::handle_touch_inputs.system())
-                .with_system(Self::load_tab.system())
-                .with_system(HelpPanel::help_ui.system())
-                .with_system(HelpPanel::handle_link_evts.system())
+                .with_system(Self::handle_keyboard_inputs)
+                .with_system(Self::handle_mouse_inputs)
+                .with_system(Self::handle_touch_inputs)
+                .with_system(Self::load_tab)
+                .with_system(HelpPanel::help_ui)
+                .with_system(HelpPanel::handle_link_evts)
         );
     }
     pub fn run(tabs: Vec<String>) {
@@ -40,7 +37,7 @@ impl NotationViewer {
         mut theme: ResMut<NotationTheme>,
         mut evts: EventWriter<AddTabEvent>,
         entities: Query<Entity, With<GlobalTransform>>,
-        viewer_query: Query<(Entity, &Arc<TabViewer>), With<Arc<TabViewer>>>,
+        viewer_query: Query<(Entity, &TabViewer), With<TabViewer>>,
         asset_server: Res<AssetServer>,
         assets: Res<Assets<TabAsset>>,
     ) {

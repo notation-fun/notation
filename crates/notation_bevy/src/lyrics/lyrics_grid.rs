@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::prelude::NotationTheme;
 use notation_model::prelude::TabBar;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Component)]
 pub struct LyricsGrid();
 
 impl LyricsGrid {

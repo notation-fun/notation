@@ -21,11 +21,8 @@ impl SingleShape<shapes::Line> for StrokeLine {
     fn get_shape(&self) -> shapes::Line {
         shapes::Line(self.from, self.to)
     }
-    fn get_colors(&self) -> ShapeColors {
-        ShapeColors::new(self.color)
-    }
     fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Stroke(StrokeOptions::default().with_line_width(self.line_width))
+        DrawMode::Stroke(StrokeMode::new(self.color, self.line_width))
     }
     fn get_transform(&self) -> Transform {
         Transform::from_xyz(self.offset.x, self.offset.y, self.offset.z)

@@ -11,7 +11,7 @@ pub struct BarLaneProps {
     pub track: TrackProps,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct BarLane {
     pub bar: Weak<TabBar>,
     pub kind: LaneKind,

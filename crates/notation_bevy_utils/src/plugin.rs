@@ -5,7 +5,7 @@ use crate::{asset::markdown_asset::{MarkDownAsset, MarkDownAssetLoader}, prelude
 pub struct UtilsPlugin;
 
 impl Plugin for UtilsPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_asset::<MarkDownAsset>();
         app.init_asset_loader::<MarkDownAssetLoader>();
         app.add_event::<EasyLinkEvent>();

@@ -1,5 +1,5 @@
 use notation_model::prelude::Chord;
 
-use crate::prelude::SingleBundle;
+use crate::prelude::{SingleData, SingleBundle};
 
-pub type ChordBundle = SingleBundle<Chord>;
+pub type ChordBundle = SingleBundle<SingleData<Chord>>;

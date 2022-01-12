@@ -17,6 +17,7 @@ use crate::prelude::NotationLayout;
 
 use super::events::WindowResizedEvent;
 
+#[derive(Clone, Debug, Component)]
 pub struct TabViewer {
     pub tab: Arc<Tab>,
 }
@@ -36,23 +37,21 @@ impl<'a> DockView<NotationLayout<'a>, MiniMap, TabView> for TabViewer {}
 pub struct TabViewerPlugin;
 
 impl Plugin for TabViewerPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         ColorBackground::setup(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(GuitarView::on_layout_changed.system())
+                .with_system(GuitarView::on_layout_changed)
                 .with_system(
                     GuitarView::update_hand_shape6
-                        .system()
                         .label("GuitarView::update_hand_shape6"),
                 )
                 .with_system(
                     GuitarView::update_string_state
-                        .system()
                         .label("GuitarView::update_string_state")
                         .after("GuitarView::update_hand_shape6"),
                 )
-                .with_system(GuitarView::adjust_y_by_barre.system())
+                .with_system(GuitarView::adjust_y_by_barre)
         );
     }
 }
@@ -60,7 +59,6 @@ impl Plugin for TabViewerPlugin {
 impl TabViewer {
     pub fn spawn(
         commands: &mut Commands,
-        materials: &mut ResMut<Assets<ColorMaterial>>,
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
@@ -71,7 +69,6 @@ impl TabViewer {
         MiniMap::spawn(commands, assets, theme, settings, viewer_entity, &tab);
         TabView::spawn(
             commands,
-            materials,
             assets,
             theme,
             settings,
@@ -86,7 +83,7 @@ impl TabViewer {
         panel_query: &ViewQuery<MiniMap>,
         content_query: &ViewQuery<TabView>,
         entity: Entity,
-        view: &Arc<TabViewer>,
+        view: &TabViewer,
     ) {
         if engine.theme._bypass_systems {
             return;
@@ -109,7 +106,6 @@ impl TabViewer {
     pub fn on_add_tab(
         mut evts: EventReader<AddTabEvent>,
         mut commands: Commands,
-        mut materials: ResMut<Assets<ColorMaterial>>,
         assets: Res<NotationAssets>,
         mut theme: ResMut<NotationTheme>,
         mut settings: ResMut<NotationSettings>,
@@ -123,7 +119,6 @@ impl TabViewer {
             theme.sizes.melody.update_with_tab(&tab);
             TabViewer::spawn(
                 &mut commands,
-                &mut materials,
                 &assets,
                 &theme,
                 &settings,

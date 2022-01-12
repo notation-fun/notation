@@ -1,8 +1,9 @@
 use std::fmt::Display;
+use bevy::prelude::*;
 
 use notation_model::prelude::{TabBar, TabBarProps, TabPosition, Units};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct BarData<T: Send + Sync + 'static> {
     pub bar_props: TabBarProps,
     pub value: T,

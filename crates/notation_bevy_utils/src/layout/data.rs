@@ -49,7 +49,7 @@ impl LayoutConstraint {
     }
 }
 
-#[derive(Copy, Clone, Debug, Default)]
+#[derive(Copy, Clone, Debug, Default, Component)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutData {
     pub depth: usize,

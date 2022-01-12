@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy::prelude::AppBuilder;
 //use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
 use notation_bevy::prelude::*;
@@ -12,19 +11,19 @@ use crate::index_panel::IndexPanel;
 pub struct NotationKnowledgeBase();
 
 impl NotationKnowledgeBase {
-    fn extra(app: &mut AppBuilder) {
+    fn extra(app: &mut App) {
         app.init_resource::<IndexPanel>();
-        app.add_startup_system(Self::setup_state.system());
+        app.add_startup_system(Self::setup_state);
         TabPlugin::setup_mouse_input(app);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(IndexPanel::hack_settings.system())
-                .with_system(IndexPanel::check_reload.system())
-                .with_system(IndexPanel::index_ui.system())
-                .with_system(IndexPanel::index_audio.system())
-                .with_system(IndexPanel::handle_link_evts.system())
-                .with_system(Self::load_tab.system())
-                .with_system(Self::on_window_resized.system())
+                .with_system(IndexPanel::hack_settings)
+                .with_system(IndexPanel::check_reload)
+                .with_system(IndexPanel::index_ui)
+                .with_system(IndexPanel::index_audio)
+                .with_system(IndexPanel::handle_link_evts)
+                .with_system(Self::load_tab)
+                .with_system(Self::on_window_resized)
         );
     }
     pub fn run() {

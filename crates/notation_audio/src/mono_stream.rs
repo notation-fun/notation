@@ -54,13 +54,13 @@ impl MonoStream {
         }
     }
     pub fn init_streaming(
-        app: &mut AppBuilder,
+        app: &mut App,
         setup_default_streaming: bool,
     ) {
         app.add_plugin(AudioPlugin);
         app.add_plugin(AudioStreamPlugin::<MonoStreamOutput>::default());
         if setup_default_streaming {
-            app.add_startup_system(Self::setup_default_streaming.system());
+            app.add_startup_system(Self::setup_default_streaming);
         }
     }
     pub fn setup_streaming(

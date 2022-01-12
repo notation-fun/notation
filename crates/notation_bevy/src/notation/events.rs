@@ -25,7 +25,7 @@ pub struct MouseDraggedEvent {
     pub delta: Vec2,
 }
 
-pub fn add_notation_app_events(app: &mut AppBuilder) {
+pub fn add_notation_app_events(app: &mut App) {
     app.add_event::<WindowResizedEvent>();
     app.add_event::<MouseClickedEvent>();
     app.add_event::<MouseDraggedEvent>();

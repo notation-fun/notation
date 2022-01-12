@@ -5,7 +5,7 @@ use notation_model::prelude::{HandShape6, Pick};
 
 use crate::prelude::NotationTheme;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct GuitarBarreData {
     pub capo: u8,
     pub shape: Option<HandShape6>,

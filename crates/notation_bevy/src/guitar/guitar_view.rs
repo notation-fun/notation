@@ -4,13 +4,14 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::{
-    BevyUtil, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle,
+    BevyUtil, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle, SingleData,
 };
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
     Tab, TrackKind, Units,
 };
 
+use crate::chord::interval_dot::DotQuery;
 use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme, TabState};
 use crate::prelude::NotationLayout;
 
@@ -22,7 +23,7 @@ use super::guitar_string::GuitarStringData;
 #[cfg(feature = "midi")]
 use notation_midi::prelude::MidiState;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct GuitarView {
     pub tab: Arc<Tab>,
 }
@@ -47,7 +48,6 @@ impl GuitarView {
     pub const CHECKING_FRETS: bool = false;
     pub fn spawn(
         commands: &mut Commands,
-        materials: &mut ResMut<Assets<ColorMaterial>>,
         assets: &NotationAssets,
         theme: &NotationTheme,
         entity: Entity,
@@ -59,12 +59,15 @@ impl GuitarView {
             ViewBundle::from(GuitarView::new(tab.clone())),
         );
         let sprite_bundle = SpriteBundle {
-            sprite: Sprite::new(Vec2::new(
-                theme.guitar.image_size.0,
-                theme.guitar.image_size.1,
-            )),
+            sprite: Sprite{
+                custom_size: Some(Vec2::new(
+                        theme.guitar.image_size.0,
+                        theme.guitar.image_size.1,
+                    )),
+                ..Default::default()
+                },
             transform: BevyUtil::offscreen_transform(),
-            material: materials.add(assets.fretboard.clone().into()),
+            texture: assets.fretboard.clone(),
             ..Default::default()
         };
         let fretboard = tab
@@ -187,11 +190,12 @@ impl GuitarView {
         midi_state: Res<MidiState>,
         time: Res<Time>,
         theme: Res<NotationTheme>,
-        query: Query<(&Arc<LaneEntry>, &Pick, &EntryPlaying), Changed<EntryPlaying>>,
+        query: Query<(&SingleData<LaneEntry>, &SingleData<Pick>, &EntryPlaying), Changed<EntryPlaying>>,
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
-        dot_query: Query<&Children>,
+        mut dot_query: DotQuery,
+        mut font_query: Query<(&Parent, &mut Text)>,
     ) {
         if Self::CHECKING_FRETS {
             return;
@@ -207,19 +211,19 @@ impl GuitarView {
         let mut hit_strings = [(false, Duration::Zero); 6];
         for (entry, pick, playing) in query.iter() {
             if playing.value.is_current() {
-                current_entry_pick = Some((entry, pick));
+                current_entry_pick = Some((entry.0.clone(), pick.0));
             }
-            for pick_note in pick.get_notes() {
+            for pick_note in pick.0.get_notes() {
                 if pick_note.string >= 1 && pick_note.string <= 6 {
                     string_states[(pick_note.string - 1) as usize] = Some(playing.value);
                     hit_strings[(pick_note.string - 1) as usize] =
-                        (playing.value.is_current(), entry.duration());
+                        (playing.value.is_current(), entry.0.duration());
                 }
             }
         }
-        let fretboard = current_entry_pick
+        let fretboard = current_entry_pick.clone()
             .and_then(|(entry, _)| entry.track().and_then(|x| x.get_fretboard6()));
-        let meta = current_entry_pick.and_then(|(entry, _)| entry.bar().map(|x| x.tab_meta()));
+        let meta = current_entry_pick.clone().and_then(|(entry, _)| entry.bar().map(|x| x.tab_meta()));
 
         for (string_entity, mut string_data) in string_query.iter_mut() {
             if string_data.string >= 1 && string_data.string <= 6 {
@@ -236,7 +240,7 @@ impl GuitarView {
                     string_data.state = state;
                 }
                 if let Some((_, pick)) = current_entry_pick {
-                    string_data.update_pick(fretboard, *pick, meta.clone());
+                    string_data.update_pick(fretboard, pick, meta.clone());
                 }
                 string_data.update(&mut commands, &theme, string_entity);
             }
@@ -244,13 +248,13 @@ impl GuitarView {
         if let Some((entry, pick)) = current_entry_pick {
             let chord = entry.bar().and_then(|x| x.get_chord_of_entry(&entry));
             for (finger_entity, mut finger_data) in finger_query.iter_mut() {
-                let changed = finger_data.update_pick(fretboard, chord, *pick, meta.clone());
+                let changed = finger_data.update_pick(fretboard, chord, pick, meta.clone());
                 if changed {
                     if finger_data.value.extra.pick {
                         finger_data.respawn_dots(
                             &mut commands,
                             &theme,
-                            Some(&dot_query),
+                            Some(&mut dot_query),
                             finger_entity,
                         );
                     }
@@ -259,13 +263,14 @@ impl GuitarView {
                         &assets,
                         &theme,
                         &settings,
+                        &mut font_query,
                         finger_entity,
                         &meta.clone().unwrap_or_default(),
                     );
                 }
             }
             for (_barre_entity, mut barre_data) in barre_query.iter_mut() {
-                barre_data.update_pick(pick);
+                barre_data.update_pick(&pick);
             }
         }
     }
@@ -274,12 +279,13 @@ impl GuitarView {
         assets: Res<NotationAssets>,
         theme: Res<NotationTheme>,
         settings: Res<NotationSettings>,
-        query: Query<(&Arc<LaneEntry>, &HandShape6, &EntryPlaying), Changed<EntryPlaying>>,
+        query: Query<(&SingleData<LaneEntry>, &SingleData<HandShape6>, &EntryPlaying), Changed<EntryPlaying>>,
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut string_query: Query<(Entity, &mut GuitarStringData), With<GuitarStringData>>,
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
-        dot_query: Query<&Children>,
+        mut dot_query: DotQuery,
+        mut font_query: Query<(&Parent, &mut Text)>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     ) {
         if Self::CHECKING_FRETS {
@@ -295,7 +301,7 @@ impl GuitarView {
         for (entry, shape, playing) in query.iter() {
             if playing.value.is_current() {
                 //println!("GuitarView::update_hand_shape6(): found changed playing shape: {}", shape);
-                current_shape = Some((entry, shape));
+                current_shape = Some((entry.0.clone(), shape.0));
             }
         }
         if let Some((entry, shape)) = current_shape {
@@ -317,19 +323,20 @@ impl GuitarView {
             let meta = entry.bar().map(|x| x.tab_meta());
             //println!("GuitarView::update_hand_shape6(): {}, {:#?}, {:#?}", shape, fretboard, chord);
             for (finger_entity, mut finger_data) in finger_query.iter_mut() {
-                finger_data.update_value(shape, fretboard, chord, pick, meta.clone());
-                finger_data.respawn_dots(&mut commands, &theme, Some(&dot_query), finger_entity);
+                finger_data.update_value(&shape, fretboard, chord, pick, meta.clone());
+                finger_data.respawn_dots(&mut commands, &theme, Some(&mut dot_query), finger_entity);
                 finger_data.update_with_syllable(
                     &mut commands,
                     &assets,
                     &theme,
                     &settings,
+                    &mut font_query,
                     finger_entity,
                     &meta.clone().unwrap_or_default(),
                 );
             }
             for (string_entity, mut string_data) in string_query.iter_mut() {
-                string_data.update_value(shape, fretboard, pick, meta.clone());
+                string_data.update_value(&shape, fretboard, pick, meta.clone());
                 string_data.update(&mut commands, &theme, string_entity);
             }
             if let Some(fretboard) = fretboard {
@@ -367,8 +374,8 @@ impl GuitarView {
             }
         }
     }
-    pub fn update_y(guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>, y: f32) {
-        if let Ok(mut transform) = guitar_view_query.single_mut() {
+    pub fn update_y(guitar_view_query: &mut Query<&mut Transform, With<GuitarView>>, y: f32) {
+        if let Ok(mut transform) = guitar_view_query.get_single_mut() {
             let trans = transform.translation;
             if float_ne!(trans.y, y, abs <= 0.01) {
                 println!("GuitarView::update_y {} -> {}", trans.y, y);
@@ -378,7 +385,7 @@ impl GuitarView {
     }
     pub fn adjust_y_by_frets(
         theme: &NotationTheme,
-        guitar_view_query: &mut Query<&mut Transform, With<Arc<GuitarView>>>,
+        guitar_view_query: &mut Query<&mut Transform, With<GuitarView>>,
         view_size: LayoutSize,
         guitar_size: LayoutSize,
         min_fret: u8,
@@ -402,7 +409,7 @@ impl GuitarView {
         theme: Res<NotationTheme>,
         settings: Res<NotationSettings>,
         barre_query: Query<&GuitarBarreData, Changed<GuitarBarreData>>,
-        mut guitar_view_query: Query<&mut Transform, With<Arc<GuitarView>>>,
+        mut guitar_view_query: Query<&mut Transform, With<GuitarView>>,
     ) {
         if Self::CHECKING_FRETS {
             return;
