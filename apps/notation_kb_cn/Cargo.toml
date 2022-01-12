@@ -10,7 +10,6 @@ resources = ["assets"]
 
 [features]
 default = [
-    "notation_bevy/chinese",
 ]
 native = [
     "notation_kb/native",

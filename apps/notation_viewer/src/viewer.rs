@@ -23,8 +23,8 @@ impl NotationViewer {
                 .with_system(HelpPanel::handle_link_evts)
         );
     }
-    pub fn run(tabs: Vec<String>) {
-        notation_bevy::prelude::NotationApp::run_with_extra::<NotationViewerAssets, _>(tabs, Self::extra);
+    pub fn run<A: ExtraAssets>(tabs: Vec<String>) {
+        notation_bevy::prelude::NotationApp::run_with_extra::<A, _>(tabs, Self::extra);
     }
 }
 

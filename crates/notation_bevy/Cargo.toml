@@ -36,9 +36,6 @@ dsl = [
     "notation_dsl",
 ]
 
-chinese = [
-]
-
 [dependencies]
 notation_bevy_utils = { version = "0.4.0", path = "../notation_bevy_utils" }
 
@@ -66,6 +63,7 @@ bevy_easings = "0.5.0"
 bevy_asset_loader = "0.8.0"
 
 rfd = "0.6.3"
+lazy_static = "1.4.0"
 
 #[target."cfg(not(target_arch = "wasm32"))".dependencies]
 # Can not enable bevy_wgpu in this way, so the actually binary crate

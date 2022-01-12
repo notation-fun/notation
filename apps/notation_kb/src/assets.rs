@@ -21,4 +21,10 @@ impl ExtraAssets for NotationKnowledgeBaseAssets {
             self.kb_scale.clone_untyped(),
         ]
     }
+    fn get_latin_font() -> &'static str {
+        "fonts/FiraMono-Medium.ttf.egui"
+    }
+    fn get_lyrics_font() -> &'static str {
+        "fonts/FiraMono-Medium.ttf.egui"
+    }
 }

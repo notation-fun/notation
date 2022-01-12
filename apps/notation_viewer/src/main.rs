@@ -1,4 +1,5 @@
 use notation_bevy::bevy::prelude::bevy_main;
+use notation_viewer::assets::NotationViewerAssets;
 
 #[bevy_main]
 fn main() {
@@ -11,5 +12,5 @@ fn main() {
         "tabs/test.ron".to_owned(),
         "tabs/scarborough_fair.ron".to_owned(),
     ];
-    notation_viewer::viewer::NotationViewer::run(tabs);
+    notation_viewer::viewer::NotationViewer::run::<NotationViewerAssets>(tabs);
 }

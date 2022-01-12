@@ -19,7 +19,7 @@ use super::state::{NotationState, TabPathes};
 pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
     fn build(&mut self, group: &mut PluginGroupBuilder) {
-        group.add(FontPlugin);
+        group.add(EguiPlugin);
         group.add(EntryPlugin);
         group.add(MelodyPlugin);
         group.add(LyricsPlugin);
@@ -52,7 +52,8 @@ impl NotationApp {
             .with_collection::<NotationAssets>()
             .with_collection::<A>()
             .build(&mut app);
-        app.add_state(NotationAssetsStates::Loading);
+        app.add_state(NotationAssetsStates::Loading)
+            .add_startup_system(NotationAssets::setup_keys::<A>);
         Self::insert_window_descriptor(&mut app, String::from(title));
         super::events::add_notation_app_events(&mut app);
 
@@ -117,6 +118,7 @@ impl NotationApp {
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
                 .with_system(NotationAssets::add_extra_assets::<A>)
+                .with_system(crate::egui::egui_fonts::setup_egui_fonts::<A>)
                 .with_system(Self::setup_window_size),
         );
         app.add_system_set(

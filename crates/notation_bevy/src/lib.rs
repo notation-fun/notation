@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate lazy_static;
+
 pub use {notation_model};
 
 #[cfg(feature = "dsl")]
@@ -31,7 +34,7 @@ pub mod shapes;
 pub mod strings;
 
 pub mod data;
-pub mod font;
+pub mod egui;
 pub mod settings;
 pub mod theme;
 pub mod notation;
@@ -83,7 +86,9 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::entry::entry_plugin::EntryPlugin;
     #[doc(hidden)]
-    pub use crate::font::font_plugin::FontPlugin;
+    pub use crate::egui::egui_fonts::EguiFontSizes;
+    #[doc(hidden)]
+    pub use crate::egui::egui_plugin::EguiPlugin;
     #[doc(hidden)]
     pub use crate::guitar::guitar_view::GuitarView;
     #[doc(hidden)]

@@ -2572,6 +2572,7 @@ dependencies = [
  "futures",
  "getrandom",
  "gloo-events",
+ "lazy_static",
  "notation_bevy_utils",
  "notation_dsl",
  "notation_midi",

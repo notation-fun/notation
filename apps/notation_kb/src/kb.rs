@@ -5,7 +5,6 @@ use notation_bevy::bevy::prelude::*;
 
 use notation_bevy::prelude::*;
 
-use crate::assets::NotationKnowledgeBaseAssets;
 use crate::index_panel::IndexPanel;
 
 pub struct NotationKnowledgeBase();
@@ -28,8 +27,8 @@ impl NotationKnowledgeBase {
                 .with_system(Self::on_window_resized)
         );
     }
-    pub fn run() {
-        notation_bevy::prelude::NotationApp::run_with_extra::<NotationKnowledgeBaseAssets, _>(vec![], Self::extra);
+    pub fn run<A: ExtraAssets>() {
+        notation_bevy::prelude::NotationApp::run_with_extra::<A, _>(vec![], Self::extra);
     }
     fn setup_state(
         mut state: ResMut<NotationState>,

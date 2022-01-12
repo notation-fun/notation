@@ -1,15 +1,14 @@
-use bevy::app::StartupStage;
+//use bevy::app::StartupStage;
 use bevy::prelude::*;
 use bevy_egui::{EguiContext, EguiSettings};
 
-use super::state::NotationState;
+use crate::prelude::{NotationState};
 
 pub struct NotationUiPlugin;
 
 impl Plugin for NotationUiPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(update_window_scale_factor);
-        app.add_startup_system_to_stage(StartupStage::Startup, setup_egui_fonts);
     }
 }
 
@@ -31,11 +30,4 @@ pub fn update_window_scale_factor(
              */
         }
     }
-}
-
-pub fn setup_egui_fonts(egui_ctx: Res<EguiContext>) {
-    println!("setup_egui_fonts() ---------------------------------------");
-    egui_ctx
-        .ctx()
-        .set_fonts(crate::font::egui_fonts::embedded_fonts(1.0));
 }
