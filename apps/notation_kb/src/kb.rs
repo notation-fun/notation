@@ -15,6 +15,8 @@ impl NotationKnowledgeBase {
         app.init_resource::<IndexPanel>();
         app.add_startup_system(Self::setup_state);
         TabPlugin::setup_mouse_input(app);
+        #[cfg(target_arch = "wasm32")]
+        notation_bevy::prelude::StereoStream::init_streaming(app, true);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(IndexPanel::hack_settings)

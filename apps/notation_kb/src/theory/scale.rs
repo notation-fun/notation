@@ -147,6 +147,6 @@ impl ScalePage {
         )
     }
     pub fn check_reload(&self, tab: &Tab) -> bool {
-        self.scale != tab.meta.scale || self.key != tab.meta.key
+        self.scale != tab.meta.scale || self.key != tab.meta.key || tab.bars.len() == 0
     }
 }
