@@ -29,4 +29,3 @@ opt-level = 's'
 opt-level = 1
 
 [patch.crates-io]
-# winit = { git = "https://github.com/yjpark/winit/", branch = "touch-input_0.24.0" }
