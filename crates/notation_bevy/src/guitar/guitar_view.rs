@@ -195,7 +195,7 @@ impl GuitarView {
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut dot_query: DotQuery,
-        mut font_query: Query<(&Parent, &mut Text)>,
+        text_query: Query<(&Parent, Entity), With<Text>>,
     ) {
         if Self::CHECKING_FRETS {
             return;
@@ -263,7 +263,7 @@ impl GuitarView {
                         &assets,
                         &theme,
                         &settings,
-                        &mut font_query,
+                        &text_query,
                         finger_entity,
                         &meta.clone().unwrap_or_default(),
                     );
@@ -285,7 +285,7 @@ impl GuitarView {
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut dot_query: DotQuery,
-        mut font_query: Query<(&Parent, &mut Text)>,
+        text_query: Query<(&Parent, Entity), With<Text>>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     ) {
         if Self::CHECKING_FRETS {
@@ -330,7 +330,7 @@ impl GuitarView {
                     &assets,
                     &theme,
                     &settings,
-                    &mut font_query,
+                    &text_query,
                     finger_entity,
                     &meta.clone().unwrap_or_default(),
                 );

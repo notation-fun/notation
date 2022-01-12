@@ -161,7 +161,7 @@ impl FretFingerData {
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
-        font_query: &mut Query<(&Parent, &mut Text)>,
+        text_query: &Query<(&Parent, Entity), With<Text>>,
         entity: Entity,
         meta: &TabMeta,
     ) {
@@ -172,28 +172,22 @@ impl FretFingerData {
         } else {
             meta.key.transpose(Semitones(self.value.extra.capo as i8))
         };
+        for (parent, text_entity) in text_query.iter() {
+            if parent.0 == entity {
+                commands.entity(text_entity).despawn();
+            }
+        }
         if settings.show_guitar_syllable && self.value.extra.fret.is_some() {
             let syllable = self.value.calc_syllable();
-            let mut exist = false;
-            for (parent, mut text) in font_query.iter_mut() {
-                if parent.0 == entity {
-                    exist = true;
-                    let v = MelodyTexts::calc_text(settings, &meta.scale, &key, &syllable);
-                    BevyUtil::set_text_value(&mut text, v);
-                    break;
-                }
-            }
-            if !exist {
-                theme.guitar.syllable_text.spawn_scaled_syllable_text(
-                    commands,
-                    entity,
-                    assets,
-                    settings,
-                    &meta.scale, &key,
-                    &syllable,
-                    size_scale,
-                )
-            }
+            theme.guitar.syllable_text.spawn_scaled_syllable_text(
+                commands,
+                entity,
+                assets,
+                settings,
+                &meta.scale, &key,
+                &syllable,
+                size_scale,
+            )
         }
     }
 }
