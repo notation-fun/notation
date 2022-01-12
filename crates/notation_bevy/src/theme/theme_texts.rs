@@ -80,7 +80,7 @@ impl Default for ChordTexts {
             bars_font_size: 16.0,
             bars_font_color: ThemeColors::hex_linear("FFFFFF"),
             bars_x: 6.0,
-            bars_y: -6.0,
+            bars_y: -2.0,
         }
     }
 }
