@@ -1,1 +1,1 @@
-pub mod fretboard;
+pub mod page;

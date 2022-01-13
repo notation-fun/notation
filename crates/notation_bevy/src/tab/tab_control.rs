@@ -30,6 +30,16 @@ impl TabControl {
     pub fn new(tab: Arc<Tab>) -> Self {
         Self { tab }
     }
+    pub fn calc_width(max_width: f32, theme: &NotationTheme) -> f32 {
+        let mut width =
+            max_width * theme.sizes.tab_control.control_width_factor;
+        if width < theme.sizes.tab_control.tab_control_range.0 {
+            width = theme.sizes.tab_control.tab_control_range.0;
+        } else if width > theme.sizes.tab_control.tab_control_range.1 {
+            width = theme.sizes.tab_control.tab_control_range.1;
+        }
+        width
+    }
 }
 impl<'a> View<NotationLayout<'a>> for TabControl {
     fn calc_size(&self, engine: &NotationLayout, constraint: LayoutConstraint) -> LayoutSize {
@@ -39,14 +49,7 @@ impl<'a> View<NotationLayout<'a>> for TabControl {
         let width = match engine.settings.override_guitar_width {
             Some(width) => width,
             None => {
-                let mut width =
-                    constraint.max.width * engine.theme.sizes.tab_control.control_width_factor;
-                if width < engine.theme.sizes.tab_control.tab_control_range.0 {
-                    width = engine.theme.sizes.tab_control.tab_control_range.0;
-                } else if width > engine.theme.sizes.tab_control.tab_control_range.1 {
-                    width = engine.theme.sizes.tab_control.tab_control_range.1;
-                }
-                width
+                Self::calc_width(constraint.max.width, engine.theme)
             }
         };
         LayoutSize::new(width, constraint.max.height)

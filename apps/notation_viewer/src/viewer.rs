@@ -1,6 +1,7 @@
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
+use notation_bevy::bevy_egui::EguiContext;
 use notation_bevy::prelude::*;
 use notation_bevy::settings::layout_settings::LayoutMode;
 
@@ -48,6 +49,7 @@ impl NotationViewer {
 
     fn handle_keyboard_inputs(
         keyboard_input: Res<Input<KeyCode>>,
+        egui_ctx: Res<EguiContext>,
         mut app_state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
@@ -58,6 +60,9 @@ impl NotationViewer {
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
     ) {
         if app_state.tab.is_none() {
+            return;
+        }
+        if egui_ctx.ctx().wants_keyboard_input() {
             return;
         }
         if keyboard_input.just_released(KeyCode::F10) || keyboard_input.just_released(KeyCode::Backslash) {
@@ -121,8 +126,7 @@ impl NotationViewer {
             MidiControl::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
             MidiControl::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::E) {
-            MidiControl::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
-            MidiControl::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
+            MidiControl::set_begin_end_to_section(&mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::Key1) {
             MidiControl::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 0.25);
         } else if keyboard_input.just_released(KeyCode::Key2) {
@@ -137,6 +141,7 @@ impl NotationViewer {
     fn handle_mouse_inputs(
         windows: Res<Windows>,
         mouse_input: Res<Input<MouseButton>>,
+        egui_ctx: Res<EguiContext>,
         app_state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut mouse_motion_events: EventReader<MouseMotion>,
@@ -145,6 +150,9 @@ impl NotationViewer {
         mut mouse_dragged: EventWriter<MouseDraggedEvent>,
     ) {
         if app_state.tab.is_none() {
+            return;
+        }
+        if egui_ctx.ctx().is_pointer_over_area() {
             return;
         }
         let cursor_position = windows.get_primary().and_then(|x| x.cursor_position());
@@ -187,11 +195,15 @@ impl NotationViewer {
     fn handle_touch_inputs(
         windows: Res<Windows>,
         touch_input: Res<Touches>,
+        egui_ctx: Res<EguiContext>,
         mut app_state: ResMut<NotationState>,
         mut mouse_clicked: EventWriter<MouseClickedEvent>,
         //mut mouse_dragged: EventWriter<MouseDraggedEvent>,
     ) {
         if app_state.tab.is_none() {
+            return;
+        }
+        if egui_ctx.ctx().wants_pointer_input() {
             return;
         }
         for (_index, finger) in touch_input.iter().enumerate() {

@@ -6,7 +6,9 @@ use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use notation_bevy::kb::markdown_page::MarkDownPage;
+use notation_bevy::tab::tab_control::TabControl;
 
+use crate::guitar::page::GuitarPage;
 use crate::theory::scale::ScalePage;
 use crate::theory::sound::{SoundPage, SoundSection};
 
@@ -17,6 +19,7 @@ pub struct IndexPanel {
     pub welcome: MarkDownPage,
     pub sound: SoundPage,
     pub scale: ScalePage,
+    pub guitar: GuitarPage,
 }
 
 impl Default for IndexPanel {
@@ -29,6 +32,7 @@ Caused by:
     In CommandEncoder::copy_buffer_to_texture
     Copy error
     copy of Y 0..256 would end up overruning the bounds of the Destination texture of Y size 128
+            TODO: Check whether still needed after upgrade bevy and bevy_egui
              */
             skip_frames: 2,
 
@@ -40,6 +44,7 @@ Caused by:
             welcome: MarkDownPage::new(Self::PATH_WELCOME),
             sound: SoundPage::new(Self::PATH_SOUND),
             scale: ScalePage::new(Self::PATH_SCALE),
+            guitar: GuitarPage::new(Self::PATH_GUITAR),
         }
     }
 }
@@ -48,13 +53,16 @@ impl IndexPanel {
     pub const WELCOME: KbPageId = KbPageId::MarkDown(Self::PATH_WELCOME);
     pub const SOUND: KbPageId = KbPageId::Custom("sound");
     pub const SCALE: KbPageId = KbPageId::Custom("scale");
+    pub const GUITAR: KbPageId = KbPageId::Custom("guitar");
 
     pub const PATH_WELCOME: &'static str = "kb/welcome.md";
     pub const PATH_SOUND: &'static str = "kb/sound.md";
     pub const PATH_SCALE: &'static str = "kb/scale.md";
+    pub const PATH_GUITAR: &'static str = "kb/guitar.md";
 
     pub const LINK_SOUND: &'static str = ":kb:sound";
     pub const LINK_SCALE: &'static str = ":kb:scale";
+    pub const LINK_GUITAR: &'static str = ":kb:guitar";
     pub const LINK_SOUND_SINGLE_STRING: &'static str = ":kb:sound:single_string";
 
     pub const LINK_MIDI_PLAY: &'static str = ":midi:play";
@@ -76,12 +84,14 @@ impl KbPanel for IndexPanel {
             (Self::WELCOME, "Welcome"),
             (Self::SOUND, "Sound"),
             (Self::SCALE, "Scale"),
+            (Self::GUITAR, "Guitar"),
         ]
     }
     fn get_page_mut(&mut self, page_id: KbPageId) -> &mut dyn KbPage {
         match page_id {
             Self::SOUND => &mut self.sound as &mut dyn KbPage,
             Self::SCALE => &mut self.scale as &mut dyn KbPage,
+            Self::GUITAR => &mut self.guitar as &mut dyn KbPage,
             _ => &mut self.welcome as &mut dyn KbPage,
         }
     }
@@ -109,6 +119,7 @@ impl IndexPanel {
         state: Res<NotationState>,
         mut theme: ResMut<NotationTheme>,
         mut settings: ResMut<NotationSettings>,
+        index: Res<IndexPanel>,
     ) {
         theme.sizes.melody.note_height = 8.0;
         theme.sizes.melody.semitone_height = 8.0;
@@ -122,8 +133,9 @@ impl IndexPanel {
             if state.window_width > state.window_height {
                 let width = state.window_width / 3.0 + theme.sizes.layout.page_margin;
                 settings.hide_guitar_view = false;
-                settings.override_guitar_width = Some(width);
                 settings.hide_chords_view = true;
+                settings.override_guitar_width = Some(width);
+                settings.layout.override_tab_width = None;
             } else {
                 settings.hide_guitar_view = true;
                 settings.hide_chords_view = false;

@@ -16,6 +16,9 @@ pub struct NotationKnowledgeBaseAssets {
 
     #[asset(path = "kb/scale.md")]
     pub kb_scale: Handle<MarkDownAsset>,
+
+    #[asset(path = "kb/guitar.md")]
+    pub kb_guitar: Handle<MarkDownAsset>,
 }
 
 impl ExtraAssets for NotationKnowledgeBaseAssets {
@@ -24,6 +27,7 @@ impl ExtraAssets for NotationKnowledgeBaseAssets {
             self.kb_welcome.clone_untyped(),
             self.kb_sound.clone_untyped(),
             self.kb_scale.clone_untyped(),
+            self.kb_guitar.clone_untyped(),
         ]
     }
     fn get_lyrics_font() -> &'static str {

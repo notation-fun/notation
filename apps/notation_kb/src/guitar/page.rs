@@ -8,11 +8,11 @@ use notation_bevy::kb::markdown_page::MarkDownPage;
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, BevyUtil, Syllable};
 
 #[derive(Copy, Clone, Debug)]
-pub struct FretboardPage {
+pub struct GuitarPage {
     pub path: &'static str,
 }
 
-impl KbPage for FretboardPage {
+impl KbPage for GuitarPage {
     fn page_ui(
         &mut self,
         ui: &mut Ui,
@@ -26,7 +26,7 @@ impl KbPage for FretboardPage {
     }
 }
 
-impl KbContent for FretboardPage {
+impl KbContent for GuitarPage {
     fn content_ui(
         &mut self,
         ui: &mut Ui,
@@ -40,7 +40,7 @@ impl KbContent for FretboardPage {
     }
 }
 
-impl FretboardPage {
+impl GuitarPage {
     pub fn new(path: &'static str) -> Self {
         Self {
             path,
