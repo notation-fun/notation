@@ -622,6 +622,7 @@ impl ControlPanel {
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
+        windows: &mut Windows,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
     ) {
         CollapsingHeader::new(format!(
@@ -632,7 +633,7 @@ impl ControlPanel {
         .show(ui, |ui| {
             ui.horizontal(|ui| {
                 if ui.button(Control::PRESET_GUITAR_STRINGS).clicked() {
-                    Control::set_preset(state, settings, theme, window_resized_evts, Control::PRESET_GUITAR_STRINGS);
+                    Control::set_preset(state, settings, theme, windows, window_resized_evts, Control::PRESET_GUITAR_STRINGS);
                 }
             });
         });
@@ -696,7 +697,7 @@ impl ControlPanel {
                             );
                             Self::display_ui(ui, &mut state, &mut settings, &mut theme);
                             ui.separator();
-                            Self::presets_ui(ui, &mut state, &mut settings, &mut theme, &mut window_resized_evts);
+                            Self::presets_ui(ui, &mut state, &mut settings, &mut theme, &mut windows, &mut window_resized_evts);
                             ui.separator();
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(

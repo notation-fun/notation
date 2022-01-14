@@ -92,20 +92,36 @@ impl Control {
         }
         window.set_resolution(width as f32, height as f32);
     }
+    pub fn set_primary_window_size(windows: &mut Windows, width: usize, height: usize) {
+        if let Some(window) = windows.get_primary_mut() {
+            Self::set_window_size(window, width, height);
+        }
+    }
     pub fn set_preset(
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
+        windows: &mut Windows,
         _window_resized_evts: &mut EventWriter<WindowResizedEvent>,
         preset: &'static str,
     ) {
         match preset {
             Self::PRESET_GUITAR_STRINGS => {
                 state.preset = Some(preset.to_owned());
+                settings.add_ready_section = false;
+                settings.hide_indicators = true;
+                settings.hide_guitar_view = true;
+                settings.hide_chords_view = true;
                 settings.hide_shapes_lane = true;
+                settings.always_show_fret = true;
+                settings.override_beat_size = Some(128.0);
                 theme.sizes.strings.string_space = 20.0;
                 theme.sizes.strings.note_height = 9.0;
-                theme.texts.strings.text_y = 6.0;
+                theme.texts.strings.fret_font_size = 20.0;
+                theme.texts.strings.text_y = 8.0;
+                theme.sizes.layout.page_margin = 24.0;
+                #[cfg(not(target_arch = "wasm32"))]
+                Self::set_primary_window_size(windows, 1280, 1920);
                 Self::reload_tab(state, theme);
             },
             _ => {},

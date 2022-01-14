@@ -84,6 +84,7 @@ impl NotationViewer {
             Control::toggle_hide_mini_map(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F5) || keyboard_input.just_released(KeyCode::R)
         {
+            app_state.bars_range = None;
             Control::reload_tab(&mut app_state, &mut theme);
         } else if keyboard_input.just_released(KeyCode::Space) {
             MidiControl::play_or_pause(&mut midi_state, &mut play_control_evts);

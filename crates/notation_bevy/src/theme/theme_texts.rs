@@ -291,7 +291,7 @@ impl Default for StringsTexts {
     fn default() -> Self {
         Self {
             text_x: 2.0,
-            text_y: -2.0,
+            text_y: 6.0,
             text_z: 1.0,
             fret_font_size: 18.0,
             fret_font_color: Color::hex("000000").unwrap(),
