@@ -32,7 +32,11 @@ impl ChordNoteExtra for ChordIntervalExtra {
             * PI
             / 180.0;
         let angle = PI * 2.0 * self.index as f32 / self.total as f32 + angle_offset;
-        let factor = theme.sizes.chord.diagram_interval_offset_factor;
+        let factor = if self.total == 1 {
+            0.0
+        } else {
+            theme.sizes.chord.diagram_interval_offset_factor
+        };
         Vec2::new(
             self.diagram_radius * factor * angle.cos(),
             self.diagram_radius * factor * angle.sin(),
