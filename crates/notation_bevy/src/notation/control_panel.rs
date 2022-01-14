@@ -217,6 +217,11 @@ impl ControlPanel {
                 if hide_bar_number != settings.hide_bar_number {
                     Control::reload_tab(state, theme);
                 }
+                let hide_indicators = settings.hide_indicators;
+                ui.checkbox(&mut settings.hide_indicators, "Hide Indicators");
+                if hide_indicators != settings.hide_indicators {
+                    Control::reload_tab(state, theme);
+                }
                 let always_show_fret = settings.always_show_fret;
                 ui.checkbox(&mut settings.always_show_fret, "Always Show Fret");
                 if always_show_fret != settings.always_show_fret {

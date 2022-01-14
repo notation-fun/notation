@@ -81,6 +81,9 @@ fn update_indicators(
     bar_playing: &BarPlaying,
     bar_layout: LayoutData,
 ) {
+    if settings.hide_indicators {
+        return;
+    }
     let bar_props = bar_playing.bar_props;
     let mut in_bar_pos = None;
     for (entity, mut data) in pos_indicator_query.iter_mut() {

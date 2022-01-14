@@ -96,7 +96,7 @@ impl Control {
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
-        window_resized_evts: &mut EventWriter<WindowResizedEvent>,
+        _window_resized_evts: &mut EventWriter<WindowResizedEvent>,
         preset: &'static str,
     ) {
         match preset {
@@ -105,7 +105,8 @@ impl Control {
                 settings.hide_shapes_lane = true;
                 theme.sizes.strings.string_space = 20.0;
                 theme.sizes.strings.note_height = 9.0;
-                window_resized_evts.send(WindowResizedEvent::new(&state));
+                theme.texts.strings.text_y = 6.0;
+                Self::reload_tab(state, theme);
             },
             _ => {},
         }
