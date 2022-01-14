@@ -39,7 +39,7 @@ impl Default for NotationSettings {
     fn default() -> Self {
         Self {
             layout: LayoutSettings::default(),
-            add_ready_section: true,
+            add_ready_section: false,
             should_loop: false,
             speed_factor: 1.0,
             hide_bar_number: false,
