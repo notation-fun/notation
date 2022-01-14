@@ -6,7 +6,7 @@ use crate::prelude::Bar;
 // https://www.masterclass.com/articles/songwriting-101-learn-common-song-structures
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum SectionKind {
-    Rest,
+    Ready,
     Intro,
     Verse,
     Chorus,
@@ -24,7 +24,7 @@ impl Display for SectionKind {
 impl SectionKind {
     pub fn from_ident(ident: &str) -> Self {
         match ident {
-            "Rest" => Self::Rest,
+            "Ready" => Self::Ready,
             "Intro" => Self::Intro,
             "Verse" => Self::Verse,
             "Chorus" => Self::Chorus,
@@ -55,14 +55,14 @@ impl Display for Section {
     }
 }
 impl Section {
-    pub const REST_ID: &'static str = "REST";
+    pub const READY_ID: &'static str = "READY";
     pub fn new(id: String, kind: SectionKind, bars: Vec<Bar>) -> Self {
         Self { id, kind, bars }
     }
-    pub fn new_rest() -> Self {
+    pub fn new_ready() -> Self {
         let mut bars = Vec::new();
         bars.push(Bar { layers: Vec::new() });
-        Self::new(Self::REST_ID.to_string(), SectionKind::Rest, bars)
+        Self::new(Self::READY_ID.to_string(), SectionKind::Ready, bars)
     }
 }
 

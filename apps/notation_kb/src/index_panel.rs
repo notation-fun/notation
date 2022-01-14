@@ -124,6 +124,7 @@ impl IndexPanel {
         theme.sizes.melody.note_height = 8.0;
         theme.sizes.melody.semitone_height = 8.0;
         theme.texts.melody.text_y = -18.0;
+        settings.add_ready_section = false;
         settings.hide_mini_map = true;
         settings.hide_bar_number = true;
         settings.layout.focus_bar_ease_ms = 0;

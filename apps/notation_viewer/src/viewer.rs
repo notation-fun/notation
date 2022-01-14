@@ -36,17 +36,17 @@ impl NotationViewer {
         mut windows: ResMut<Windows>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
+        settings: Res<NotationSettings>,
         mut evts: EventWriter<AddTabEvent>,
         entities: Query<Entity, With<GlobalTransform>>,
         viewer_query: Query<(Entity, &TabViewer), With<TabViewer>>,
         asset_server: Res<AssetServer>,
         assets: Res<Assets<TabAsset>>,
     ) {
-        NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &mut evts, &entities, &viewer_query, |tab_path| {
+        NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
             NotationApp::load_tab_from_assets(&asset_server, &assets, tab_path)
         })
     }
-
     fn handle_keyboard_inputs(
         keyboard_input: Res<Input<KeyCode>>,
         egui_ctx: Res<EguiContext>,

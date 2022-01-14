@@ -13,6 +13,7 @@ pub struct NotationState {
     pub scale_factor_override: Option<f64>,
     pub tab_path: String,
     pub tab: Option<Arc<Tab>>,
+    pub bars_range: Option<(usize, usize)>,
     pub show_control: bool,
     pub show_kb: bool,
     pub parse_error: Option<ParseError>,
@@ -30,6 +31,7 @@ impl NotationState {
             scale_factor_override: None,
             tab_path,
             tab: None,
+            bars_range: None,
             show_control: false,
 
             #[cfg(debug_assertions)]
@@ -47,6 +49,7 @@ impl NotationState {
     pub fn change_tab(&mut self, theme: &mut NotationTheme, tab_path: String) {
         theme._bypass_systems = true;
         self.tab_path = tab_path;
+        self.bars_range = None;
         self.parse_error = None;
         self.reload_tab()
     }
@@ -60,6 +63,22 @@ impl NotationState {
             pos.x - self.window_width / 2.0,
             pos.y - self.window_height / 2.0,
         )
+    }
+    pub fn calc_bar_number(&self, add_ready_section: bool, bar_ordinal: usize) -> usize {
+        if let Some((begin, _end)) = self.bars_range {
+            if add_ready_section {
+                if bar_ordinal > 0 {
+                    return bar_ordinal + begin - 1;
+                }
+            } else {
+                return bar_ordinal + begin + 1;
+            }
+        } else {
+            if !add_ready_section {
+                return bar_ordinal + 1;
+            }
+        }
+        bar_ordinal
     }
 }
 

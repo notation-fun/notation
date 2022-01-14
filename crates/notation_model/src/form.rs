@@ -12,16 +12,18 @@ impl Display for Form {
         write!(f, "<Form>(S:{})", self.sections.len())
     }
 }
-impl From<(notation_proto::prelude::Form, &Vec<Arc<Section>>)> for Form {
-    fn from(v: (notation_proto::prelude::Form, &Vec<Arc<Section>>)) -> Self {
+impl Form {
+    pub fn new(add_ready_section: bool, proto: notation_proto::prelude::Form, tab_section: &Vec<Arc<Section>>) -> Self {
         let mut sections = Vec::new();
         let mut add_section =
-            |section_id: String| match v.1.iter().find(|x| x.id == section_id).cloned() {
+            |section_id: String| match tab_section.iter().find(|x| x.id == section_id).cloned() {
                 Some(section) => sections.push(section),
-                None => println!("Form::from(), bad setion: {}", section_id),
+                None => println!("Form::from(), bad section: {}", section_id),
             };
-        add_section(notation_proto::prelude::Section::REST_ID.to_string());
-        for section_id in v.0.sections {
+        if add_ready_section {
+            add_section(notation_proto::prelude::Section::READY_ID.to_string());
+        }
+        for section_id in proto.sections {
             add_section(section_id);
         }
         Self { sections }

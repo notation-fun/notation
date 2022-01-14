@@ -41,12 +41,13 @@ impl NotationKnowledgeBase {
         mut windows: ResMut<Windows>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
+        settings: Res<NotationSettings>,
         mut evts: EventWriter<AddTabEvent>,
         entities: Query<Entity, With<GlobalTransform>>,
         viewer_query: Query<(Entity, &TabViewer), With<TabViewer>>,
         index: Res<IndexPanel>,
     ) {
-        NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &mut evts, &entities, &viewer_query, |tab_path| {
+        NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
             index.make_tab(tab_path)
         })
     }

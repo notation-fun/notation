@@ -92,7 +92,7 @@ impl PlayControl {
             play_speed: PlaySpeed::new(tab_meta),
         }
     }
-    pub fn get_last_car_ordinal(&self) -> usize {
+    pub fn get_last_bar_ordinal(&self) -> usize {
         if self.bars > 0 {
             self.bars - 1
         } else {
@@ -178,5 +178,15 @@ impl PlayControl {
             self.begin_bar_ordinal,
             Units(0.0),
         )
+    }
+    pub fn has_selection(&self, add_ready_section: bool) -> bool {
+        if add_ready_section {
+            if self.begin_bar_ordinal == 0 && self.end_bar_ordinal == 0 {
+                return false;
+            } else if self.begin_bar_ordinal == 1 && self.end_bar_ordinal == self.get_last_bar_ordinal() {
+                return false;
+            }
+        }
+        self.begin_bar_ordinal > 0 || self.end_bar_ordinal < self.get_last_bar_ordinal()
     }
 }

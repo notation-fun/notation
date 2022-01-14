@@ -48,6 +48,8 @@ impl TabPlugin {
 impl ControlPanel {
     pub fn play_control_ui(
         ui: &mut Ui,
+        state: &mut NotationState,
+        theme: &mut NotationTheme,
         settings: &mut NotationSettings,
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
@@ -55,6 +57,12 @@ impl ControlPanel {
         CollapsingHeader::new("Play Control")
             .default_open(true)
             .show(ui, |ui| {
+                let add_ready_section = settings.add_ready_section;
+                ui.checkbox(&mut settings.add_ready_section, "Add Empty Bar");
+                if add_ready_section != settings.add_ready_section {
+                    state.bars_range = None;
+                    Control::reload_tab(state, theme);
+                }
                 let play_title = if midi_state.play_control.play_state.is_playing() {
                     "Pause"
                 } else {
@@ -69,24 +77,26 @@ impl ControlPanel {
                             MidiControl::send_play_state_evt(midi_state, play_control_evts);
                         }
                     }
-                });
-                let should_loop = settings.should_loop;
-                ui.horizontal(|ui| {
+                    let should_loop = settings.should_loop;
                     ui.checkbox(&mut settings.should_loop, "Loop");
                     if should_loop != settings.should_loop {
                         MidiControl::sync_should_loop(settings, midi_state, play_control_evts)
                     }
+                });
+                let begin_bar_number = state.calc_bar_number(settings.add_ready_section, midi_state.play_control.begin_bar_ordinal);
+                let end_bar_number = state.calc_bar_number(settings.add_ready_section, midi_state.play_control.end_bar_ordinal);
+                ui.horizontal(|ui| {
                     if ui
                         .button(format!(
                             "Begin: {}",
-                            midi_state.play_control.begin_bar_ordinal
+                            begin_bar_number
                         ))
                         .clicked()
                     {
                         MidiControl::set_begin_bar_ordinal(midi_state, play_control_evts);
                     }
                     if ui
-                        .button(format!("End: {}", midi_state.play_control.end_bar_ordinal))
+                        .button(format!("End: {}", end_bar_number))
                         .clicked()
                     {
                         MidiControl::set_end_bar_ordinal(midi_state, play_control_evts);
@@ -95,6 +105,23 @@ impl ControlPanel {
                         MidiControl::clear_begin_end(midi_state, play_control_evts);
                     }
                 });
+                if let Some((begin, end)) = state.bars_range {
+                    let (begin, end) = if settings.add_ready_section {
+                        (begin, end)
+                    } else {
+                        (begin + 1, end + 1)
+                    };
+                    if ui.button(format!("Clear Visible Bars: {} - {}", begin, end)).clicked() {
+                        state.bars_range = None;
+                        Control::reload_tab(state, theme);
+                    }
+                } else if midi_state.play_control.has_selection(settings.add_ready_section) {
+                    let bars_range = (midi_state.play_control.begin_bar_ordinal, midi_state.play_control.end_bar_ordinal);
+                    if ui.button(format!("Set Visible Bars: {} - {}", begin_bar_number, end_bar_number)).clicked() {
+                        state.bars_range = Some(bars_range);
+                        Control::reload_tab(state, theme);
+                    }
+                }
                 ui.separator();
                 let mut speed_factor = settings.speed_factor;
                 ui.add(Slider::new(&mut speed_factor, 0.1..=2.0).text("Speed"));

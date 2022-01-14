@@ -105,9 +105,4 @@ impl Tab {
             Form { sections: vec![] },
         )
     }
-    pub fn need_rest(&self) -> bool {
-        self.sections.get(0).map(|section|
-            section.kind != SectionKind::Rest
-        ).unwrap_or(false)
-    }
 }

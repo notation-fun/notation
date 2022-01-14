@@ -355,7 +355,7 @@ impl GuitarView {
             }
         } else {
             let position = TabState::get_position(&tab_state_query, None);
-            if position.is_some() && position.unwrap().bar.bar_ordinal == 0 {
+            if settings.add_ready_section && position.is_some() && position.unwrap().bar.bar_ordinal == 0 {
                 for (finger_entity, mut finger_data) in finger_query.iter_mut() {
                     finger_data.reset();
                     finger_data.update(&mut commands, &theme, finger_entity);

@@ -222,6 +222,7 @@ impl NotationApp {
         windows: &mut Windows,
         state: &mut NotationState,
         theme: &mut NotationTheme,
+        settings: &NotationSettings,
         evts: &mut EventWriter<AddTabEvent>,
         entities_query: &Query<Entity, With<GlobalTransform>>,
         viewer_query: &Query<(Entity, &TabViewer), With<TabViewer>>,
@@ -274,7 +275,7 @@ impl NotationApp {
             }
             println!("\nload_tab(): Loading: {}", state.tab_path);
             if let Some(tab) = load_tab(state.tab_path.clone()) {
-                match Tab::try_parse_arc(tab) {
+                match Tab::try_parse_arc(tab, settings.add_ready_section, state.bars_range) {
                     Ok(tab) => {
                         state.tab = Some(tab.clone());
                         if let Some(window) = windows.get_primary_mut() {

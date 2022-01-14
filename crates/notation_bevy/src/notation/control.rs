@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
 use crate::settings::layout_settings::LayoutMode;
-use crate::tab::tab_plugin::{TabPlugin};
 
 use crate::prelude::{NotationState, NotationSettings, NotationTheme};
 

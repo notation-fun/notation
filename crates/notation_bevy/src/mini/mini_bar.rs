@@ -7,7 +7,7 @@ use notation_bevy_utils::prelude::{
     BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View,
     ViewBundle,
 };
-use notation_model::prelude::{PlayingState, Syllable, TabBar};
+use notation_model::prelude::{PlayingState, Syllable, TabBar, SectionKind};
 
 use crate::prelude::{BarData, BarPlaying, NotationAssets, NotationTheme};
 use crate::prelude::NotationLayout;
@@ -105,7 +105,7 @@ impl MiniBar {
         commands
             .entity(shape_entity)
             .insert(BarPlaying::new(bar, PlayingState::Idle));
-        if bar.props.bar_index == 0 && bar.props.section_ordinal > 0 {
+        if bar.props.bar_index == 0 && bar.section.kind != SectionKind::Ready {
             let section_separator_data =
                 MiniSectionSeparatorData::new(bar, MiniSectionSeparatorValue::new(0.0));
             section_separator_data.create(commands, theme, bar_entity);
@@ -113,7 +113,7 @@ impl MiniBar {
                 commands,
                 assets,
                 shape_entity,
-                bar.props.bar_ordinal.to_string().as_str(),
+                bar.props.bar_number.to_string().as_str(),
             );
         }
         bar_entity

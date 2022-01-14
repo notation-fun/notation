@@ -313,7 +313,7 @@ impl ControlPanel {
         ui: &mut Ui,
         pathes: &mut TabPathes,
         state: &mut NotationState,
-        _settings: &mut NotationSettings,
+        settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
         if theme._bypass_systems {
@@ -322,6 +322,7 @@ impl ControlPanel {
         }
         ui.horizontal(|ui| {
             if ui.button("Reload Tab").clicked() {
+                state.bars_range = None;
                 Control::reload_tab(state, theme);
             }
             ui.separator();
@@ -643,6 +644,8 @@ impl ControlPanel {
                     {
                         Self::play_control_ui(
                             ui,
+                            &mut state,
+                            &mut theme,
                             &mut settings,
                             &mut midi_state,
                             &mut play_control_evts,

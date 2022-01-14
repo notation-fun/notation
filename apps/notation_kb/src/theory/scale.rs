@@ -137,7 +137,7 @@ impl ScalePage {
             new_bar(8),
             new_bar(12),
         ];
-        let section = ProtoSection::new("notes".to_owned(), SectionKind::Rest, bars);
+        let section = ProtoSection::new("notes".to_owned(), SectionKind::Ready, bars);
         ProtoTab::new(
             ProtoTab::new_uuid().as_str(),
             meta,

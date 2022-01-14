@@ -17,9 +17,8 @@ pub enum ParseError {
 
 impl Tab {
     #[throws(ParseError)]
-    pub fn try_parse_arc(proto: notation_proto::prelude::Tab) -> Arc<Self> {
+    pub fn try_parse_arc(proto: notation_proto::prelude::Tab, add_ready_section: bool, bars_range:Option<(usize, usize)>) -> Arc<Self> {
         Arc::<Tab>::new_cyclic(|weak_self| {
-            let need_rest = proto.need_rest();
             let uuid = proto.uuid;
             let meta = Arc::new(proto.meta);
             let tracks = proto
@@ -34,19 +33,53 @@ impl Tab {
                 match Section::try_new(weak_self.clone(), index, section, &tracks).map(Arc::new) {
                     Ok(section) => sections.push(section),
                     Err(err) => println!(
-                        "Tab::try_parse_arc(), bad setion: {} {} -> {}",
+                        "Tab::try_parse_arc(), bad section: {} {} -> {}",
                         index, section_id, err
                     ),
                 }
             };
-            if need_rest {
-                add_section(0, notation_proto::prelude::Section::new_rest());
+            if add_ready_section {
+                add_section(0, notation_proto::prelude::Section::new_ready());
             }
             for (index, section) in proto.sections.into_iter().enumerate() {
                 add_section(index, section);
             }
-            let form = Form::from((proto.form, &sections));
-            let bars = Self::new_tab_bars(weak_self, &meta, &form);
+            let form = Form::new(add_ready_section, proto.form, &sections);
+            let all_bars = Self::new_tab_bars(add_ready_section, weak_self, &meta, &form);
+            let bars = if let Some((begin, end)) = bars_range {
+                if begin < all_bars.len() && end < all_bars.len() && end >= begin {
+                    let ready_added = add_ready_section && begin > 0;
+                    let mut bars: Vec<Arc<TabBar>> = all_bars[begin..=end].iter()
+                        .enumerate()
+                        .map(|(index, bar)| {
+                            let bar_ordinal = if ready_added { index + 1 } else { index };
+                            let bar_number = if ready_added {
+                                begin + index
+                            } else {
+                                begin + index + 1
+                            };
+                            TabBar::new_arc(
+                                bar.tab.clone(),
+                                bar.section.clone(),
+                                bar.proto.clone(),
+                                bar.props.section_round,
+                                bar.props.section_ordinal,
+                                bar.props.bar_index,
+                                bar_ordinal,
+                                bar_number,
+                                bar.props.bar_units,
+                            )
+                        }).collect();
+                    if ready_added {
+                        bars.insert(0, all_bars[0].clone());
+                    }
+                    bars
+                } else {
+                    all_bars
+                }
+            } else {
+                all_bars
+            };
             Self {
                 uuid,
                 meta,
@@ -57,7 +90,7 @@ impl Tab {
             }
         })
     }
-    fn new_tab_bars(weak_self: &Weak<Tab>, meta: &TabMeta, form: &Form) -> Vec<Arc<TabBar>> {
+    fn new_tab_bars(add_ready_section: bool, weak_self: &Weak<Tab>, meta: &TabMeta, form: &Form) -> Vec<Arc<TabBar>> {
         let mut section_rounds: HashMap<String, usize> = HashMap::new();
         let mut section_ordinal: usize = 0;
         let mut bar_ordinal: usize = 0;
@@ -69,6 +102,7 @@ impl Tab {
             };
             section_rounds.insert(section.id.clone(), section_round);
             bars.extend(section.new_tab_bars(
+                add_ready_section,
                 section.clone(),
                 weak_self.clone(),
                 section_round,
@@ -92,6 +126,7 @@ impl Tab {
 impl Section {
     pub fn new_tab_bars(
         &self,
+        add_ready_section: bool,
         arc_section: Arc<Section>,
         tab: Weak<Tab>,
         section_round: usize,
@@ -103,6 +138,12 @@ impl Section {
             .iter()
             .enumerate()
             .map(|(bar_index, bar)| {
+                let bar_ordinal = section_bar_ordinal + bar_index;
+                let bar_number = if !add_ready_section {
+                    bar_ordinal + 1
+                } else {
+                    bar_ordinal
+                };
                 TabBar::new_arc(
                     tab.clone(),
                     arc_section.clone(),
@@ -110,7 +151,8 @@ impl Section {
                     section_round,
                     section_ordinal,
                     bar_index,
-                    section_bar_ordinal + bar_index,
+                    bar_ordinal,
+                    bar_number,
                     bar_units,
                 )
             })

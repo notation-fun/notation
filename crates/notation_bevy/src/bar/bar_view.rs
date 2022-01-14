@@ -137,7 +137,7 @@ impl BarView {
                 commands,
                 assets,
                 bar_entity,
-                &bar.props.bar_ordinal.to_string(),
+                bar.props.bar_number.to_string().as_str(),
             );
         }
         bar_entity

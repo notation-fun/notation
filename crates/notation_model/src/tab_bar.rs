@@ -18,6 +18,7 @@ pub struct TabBarProps {
     pub section_ordinal: usize,
     pub bar_index: usize,
     pub bar_ordinal: usize,
+    pub bar_number: usize,
     pub bar_units: Units,
 }
 
@@ -44,7 +45,7 @@ pub struct TabBar {
     pub tab: Weak<Tab>,
     pub section: Arc<Section>,
     pub lanes: Vec<Arc<BarLane>>,
-    pub model: Arc<Bar>,
+    pub proto: Arc<Bar>,
     pub props: TabBarProps,
 }
 impl Display for TabBar {
@@ -69,6 +70,7 @@ impl TabBar {
         section_ordinal: usize,
         bar_index: usize,
         bar_ordinal: usize,
+        bar_number: usize,
         bar_units: Units,
     ) -> Arc<Self> {
         Arc::<Self>::new_cyclic(|weak_self| {
@@ -95,12 +97,13 @@ impl TabBar {
                 section_ordinal,
                 bar_index,
                 bar_ordinal,
+                bar_number,
                 bar_units,
             };
             Self {
                 tab: tab,
                 section: section,
-                model: bar,
+                proto: bar,
                 lanes,
                 props,
             }

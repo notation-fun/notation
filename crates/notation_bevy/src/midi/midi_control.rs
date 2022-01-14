@@ -6,10 +6,9 @@ use notation_model::play::play_control::TickResult;
 use notation_model::prelude::{JumpToBarEvent, PlayControlEvent, BarPosition, Tab, Units};
 use notation_model::tab_bar::TabBar;
 
-use crate::settings::layout_settings::LayoutMode;
 use crate::tab::tab_plugin::{TabPlugin};
 
-use crate::prelude::{NotationState, NotationSettings, NotationTheme};
+use crate::prelude::{NotationSettings};
 
 pub struct MidiControl();
 
@@ -236,7 +235,7 @@ impl MidiControl {
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
         midi_state.play_control.begin_bar_ordinal = 0;
-        midi_state.play_control.end_bar_ordinal = midi_state.play_control.get_last_car_ordinal();
+        midi_state.play_control.end_bar_ordinal = midi_state.play_control.get_last_bar_ordinal();
         Self::send_begin_end_evt(midi_state, play_control_evts);
     }
     pub fn set_begin_bar_ordinal(
