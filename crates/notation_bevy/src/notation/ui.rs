@@ -1,6 +1,6 @@
 //use bevy::app::StartupStage;
 use bevy::prelude::*;
-use bevy_egui::{EguiContext, EguiSettings};
+use bevy_egui::{EguiSettings};
 
 use crate::prelude::{NotationState};
 

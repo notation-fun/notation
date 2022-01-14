@@ -191,17 +191,17 @@ impl ControlPanel {
                 if show_guitar_syllable != settings.show_guitar_syllable {
                     Control::reload_tab(state, theme);
                 }
+                let show_melody_pitch = settings.show_melody_pitch;
+                ui.checkbox(
+                    &mut settings.show_melody_pitch,
+                    "Show Melody Pitch",
+                );
+                if show_melody_pitch != settings.show_melody_pitch {
+                    Control::reload_tab(state, theme);
+                }
                 let show_melody_syllable = settings.show_melody_syllable;
                 ui.checkbox(&mut settings.show_melody_syllable, "Show Melody Syllable");
                 if show_melody_syllable != settings.show_melody_syllable {
-                    Control::reload_tab(state, theme);
-                }
-                let show_syllable_as_pitch = settings.show_syllable_as_pitch;
-                ui.checkbox(
-                    &mut settings.show_syllable_as_pitch,
-                    "Show Syllable as Pitches",
-                );
-                if show_syllable_as_pitch != settings.show_syllable_as_pitch {
                     Control::reload_tab(state, theme);
                 }
                 let show_syllable_as_num = settings.show_syllable_as_num;
@@ -631,11 +631,11 @@ impl ControlPanel {
         ))
         .default_open(true)
         .show(ui, |ui| {
-            ui.horizontal(|ui| {
-                if ui.button(Control::PRESET_GUITAR_STRINGS).clicked() {
-                    Control::set_preset(state, settings, theme, windows, window_resized_evts, Control::PRESET_GUITAR_STRINGS);
+            for preset in Control::ALL_PRESETS.iter() {
+                if ui.button(*preset).clicked() {
+                    Control::set_preset(state, settings, theme, windows, window_resized_evts, *preset);
                 }
-            });
+            }
         });
     }
     pub fn control_ui(
@@ -697,8 +697,6 @@ impl ControlPanel {
                             );
                             Self::display_ui(ui, &mut state, &mut settings, &mut theme);
                             ui.separator();
-                            Self::presets_ui(ui, &mut state, &mut settings, &mut theme, &mut windows, &mut window_resized_evts);
-                            ui.separator();
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(
                                 ui,
@@ -737,6 +735,8 @@ impl ControlPanel {
                                 *theme = NotationTheme::default();
                                 Control::reload_tab(&mut state, &mut theme);
                             }
+                            ui.separator();
+                            Self::presets_ui(ui, &mut state, &mut settings, &mut theme, &mut windows, &mut window_resized_evts);
                         });
                     });
                 });

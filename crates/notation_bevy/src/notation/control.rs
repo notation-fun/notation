@@ -10,6 +10,11 @@ pub struct Control();
 
 impl Control {
     pub const PRESET_GUITAR_STRINGS: &'static str = "guitar_strings";
+    pub const PRESET_MELODY: &'static str = "melody";
+    pub const ALL_PRESETS: [&'static str ; 2 ] = [
+        Self::PRESET_GUITAR_STRINGS,
+        Self::PRESET_MELODY,
+    ];
 
     pub fn reload_tab(state: &mut NotationState, theme: &mut NotationTheme) {
         state.reload_tab();
@@ -67,12 +72,12 @@ impl Control {
         settings.show_melody_syllable = !settings.show_melody_syllable;
         Self::reload_tab(state, theme);
     }
-    pub fn toggle_show_syllable_as_pitch(
+    pub fn toggle_show_melody_pitch(
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
-        settings.show_syllable_as_pitch = !settings.show_syllable_as_pitch;
+        settings.show_melody_pitch = !settings.show_melody_pitch;
         Self::reload_tab(state, theme);
     }
     pub fn toggle_always_show_fret(
@@ -105,26 +110,37 @@ impl Control {
         _window_resized_evts: &mut EventWriter<WindowResizedEvent>,
         preset: &'static str,
     ) {
+        state.show_kb = false;
+        state.preset = Some(preset.to_owned());
+        #[cfg(not(target_arch = "wasm32"))]
+        Self::set_primary_window_size(windows, 1080, 1920);
         match preset {
             Self::PRESET_GUITAR_STRINGS => {
-                state.preset = Some(preset.to_owned());
-                settings.add_ready_section = false;
-                settings.hide_indicators = true;
-                settings.hide_guitar_view = true;
-                settings.hide_chords_view = true;
-                settings.hide_shapes_lane = true;
+                settings.hack_for_screenshot();
+                settings.hide_strings_lane = false;
                 settings.always_show_fret = true;
-                settings.override_beat_size = Some(128.0);
+                theme.sizes.layout.page_margin = 24.0;
                 theme.sizes.strings.string_space = 20.0;
                 theme.sizes.strings.note_height = 9.0;
                 theme.texts.strings.fret_font_size = 20.0;
                 theme.texts.strings.text_y = 8.0;
-                theme.sizes.layout.page_margin = 24.0;
-                #[cfg(not(target_arch = "wasm32"))]
-                Self::set_primary_window_size(windows, 1080, 1920);
-                Self::reload_tab(state, theme);
             },
-            _ => {},
+            Self::PRESET_MELODY => {
+                settings.hack_for_screenshot();
+                settings.hide_melody_lane = false;
+                settings.show_melody_pitch = true;
+                settings.show_melody_syllable = true;
+                settings.show_syllable_as_num = true;
+                theme.sizes.layout.page_margin = 24.0;
+                theme.sizes.melody.note_height = 9.0;
+                theme.sizes.melody.semitone_height = 9.0;
+                theme.texts.melody.text_y = -18.0;
+                theme.texts.melody.syllable_font_size = 20.0;
+            },
+            _ => {
+                println!("Control::set_preset() Invalid Preset: {}", preset);
+            },
         }
+        Self::reload_tab(state, theme);
     }
 }

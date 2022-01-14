@@ -220,7 +220,7 @@ impl Default for MelodyTexts {
     }
 }
 impl MelodyTexts {
-    pub fn spawn_syllable_text(
+    pub fn spawn_note_text(
         &self,
         commands: &mut Commands,
         entity: Entity,
@@ -230,9 +230,9 @@ impl MelodyTexts {
         key: &Key,
         syllable: &Syllable,
     ) {
-        self.spawn_scaled_syllable_text(commands, entity, assets, settings, scale, key, syllable, 1.0);
+        self.spawn_scaled_note_text(commands, entity, assets, settings, scale, key, syllable, 1.0);
     }
-    pub fn spawn_scaled_syllable_text(
+    pub fn spawn_scaled_note_text(
         &self,
         commands: &mut Commands,
         entity: Entity,
@@ -268,13 +268,25 @@ impl MelodyTexts {
         key: &Key,
         syllable: &Syllable,
     ) -> String {
-        if settings.show_syllable_as_pitch {
-            scale.calc_pitch(key, syllable).to_text()
-        } else if settings.show_syllable_as_num {
-            syllable.to_text()
+        let pitch_text = if settings.show_melody_pitch {
+            Some(scale.calc_pitch(key, syllable).to_text())
         } else {
-            syllable.to_ident()
-        }
+            None
+        };
+        let syllable_text = if settings.show_melody_syllable {
+            Some(if settings.show_syllable_as_num {
+                syllable.to_text()
+            } else {
+                syllable.to_ident()
+            })
+        } else {
+            None
+        };
+        format!("{}{}{}",
+            pitch_text.unwrap_or("".to_owned()),
+            if settings.show_melody_pitch && settings.show_melody_syllable { " " } else { "" },
+            syllable_text.unwrap_or("".to_owned())
+        )
     }
 }
 

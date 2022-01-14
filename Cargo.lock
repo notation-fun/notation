@@ -2648,6 +2648,7 @@ name = "notation_kb"
 version = "0.4.0"
 dependencies = [
  "notation_bevy",
+ "notation_viewer",
 ]
 
 [[package]]

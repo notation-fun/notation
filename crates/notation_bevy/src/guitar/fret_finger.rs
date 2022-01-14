@@ -8,7 +8,6 @@ use notation_model::prelude::{
 
 use crate::chord::chord_note::{ChordNoteData, ChordNoteExtra, ChordNoteValue};
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
-use crate::theme::theme_texts::MelodyTexts;
 
 #[derive(Clone, Debug)]
 pub struct FretFingerExtra {
@@ -179,7 +178,7 @@ impl FretFingerData {
         }
         if settings.show_guitar_syllable && self.value.extra.fret.is_some() {
             let syllable = self.value.calc_syllable();
-            theme.guitar.syllable_text.spawn_scaled_syllable_text(
+            theme.guitar.syllable_text.spawn_scaled_note_text(
                 commands,
                 entity,
                 assets,

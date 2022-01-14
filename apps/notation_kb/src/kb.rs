@@ -4,6 +4,7 @@ use notation_bevy::bevy::prelude::*;
 use notation_bevy::prelude::*;
 
 use crate::index_panel::IndexPanel;
+use notation_viewer::viewer::NotationViewer;
 
 pub struct NotationKnowledgeBase();
 
@@ -21,6 +22,9 @@ impl NotationKnowledgeBase {
                 .with_system(IndexPanel::index_ui)
                 .with_system(IndexPanel::index_audio)
                 .with_system(IndexPanel::handle_link_evts)
+                .with_system(NotationViewer::handle_keyboard_inputs)
+                .with_system(NotationViewer::handle_mouse_inputs)
+                .with_system(NotationViewer::handle_touch_inputs)
                 .with_system(Self::load_tab)
                 .with_system(Self::on_window_resized)
         );
@@ -39,12 +43,13 @@ impl NotationKnowledgeBase {
         mut windows: ResMut<Windows>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
-        settings: Res<NotationSettings>,
+        mut settings: ResMut<NotationSettings>,
         mut evts: EventWriter<AddTabEvent>,
         entities: Query<Entity, With<GlobalTransform>>,
         viewer_query: Query<(Entity, &TabViewer), With<TabViewer>>,
         index: Res<IndexPanel>,
     ) {
+        settings.add_ready_section = false;
         NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
             Some(TabAsset::from(index.make_tab(tab_path)))
         })

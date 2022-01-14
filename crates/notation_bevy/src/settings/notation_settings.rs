@@ -15,8 +15,8 @@ pub struct NotationSettings {
     pub hide_bar_number: bool,
     pub hide_indicators: bool,
     pub show_guitar_syllable: bool,
+    pub show_melody_pitch: bool,
     pub show_melody_syllable: bool,
-    pub show_syllable_as_pitch: bool,
     pub show_syllable_as_num: bool,
     pub always_show_fret: bool,
     pub melody_piano_mode: bool,
@@ -45,8 +45,8 @@ impl Default for NotationSettings {
             hide_bar_number: false,
             hide_indicators: false,
             show_guitar_syllable: true,
+            show_melody_pitch: false,
             show_melody_syllable: true,
-            show_syllable_as_pitch: false,
             show_syllable_as_num: true,
             always_show_fret: false,
             melody_piano_mode: false,
@@ -64,5 +64,26 @@ impl Default for NotationSettings {
             override_guitar_width: None,
             override_guitar_y: None,
         }
+    }
+}
+
+impl NotationSettings {
+    pub fn show_melody_note(&self) -> bool {
+        self.show_melody_pitch || self.show_melody_syllable
+    }
+    pub fn hide_all_lanes(&mut self) {
+        self.hide_shapes_lane = true;
+        self.hide_strings_lane = true;
+        self.hide_melody_lane = true;
+        self.hide_lyrics_lane = true;
+    }
+    pub fn hack_for_screenshot(&mut self) {
+        self.add_ready_section = false;
+        self.hide_indicators = true;
+        self.hide_guitar_view = true;
+        self.hide_chords_view = true;
+        self.hide_mini_map = false;
+        self.override_beat_size = Some(128.0);
+        self.hide_all_lanes();
     }
 }

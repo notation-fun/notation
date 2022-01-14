@@ -47,7 +47,7 @@ impl NotationViewer {
             NotationApp::load_tab_from_assets(&asset_server, &assets, tab_path)
         })
     }
-    fn handle_keyboard_inputs(
+    pub fn handle_keyboard_inputs(
         keyboard_input: Res<Input<KeyCode>>,
         egui_ctx: Res<EguiContext>,
         mut app_state: ResMut<NotationState>,
@@ -111,7 +111,7 @@ impl NotationViewer {
         } else if keyboard_input.just_released(KeyCode::M) {
             Control::toggle_show_melody_syllable(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::P) {
-            Control::toggle_show_syllable_as_pitch(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_show_melody_pitch(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F) {
             Control::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::L) {
@@ -139,7 +139,7 @@ impl NotationViewer {
         }
     }
 
-    fn handle_mouse_inputs(
+    pub fn handle_mouse_inputs(
         windows: Res<Windows>,
         mouse_input: Res<Input<MouseButton>>,
         egui_ctx: Res<EguiContext>,
@@ -193,7 +193,7 @@ impl NotationViewer {
         }
     }
 
-    fn handle_touch_inputs(
+    pub fn handle_touch_inputs(
         windows: Res<Windows>,
         touch_input: Res<Touches>,
         egui_ctx: Res<EguiContext>,
