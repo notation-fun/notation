@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use notation_bevy::bevy::prelude::*;
 //use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
@@ -48,7 +46,7 @@ impl NotationKnowledgeBase {
         index: Res<IndexPanel>,
     ) {
         NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
-            index.make_tab(tab_path)
+            Some(TabAsset::from(index.make_tab(tab_path)))
         })
     }
     fn on_window_resized(

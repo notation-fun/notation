@@ -246,13 +246,13 @@ impl IndexPanel {
     ) {
         (&mut index)._index_audio(&mut stream);
     }
-    pub fn make_tab(&self, _tab_path: String) -> Option<ProtoTab> {
-        Some(match self.current_page_id {
+    pub fn make_tab(&self, _tab_path: String) -> ProtoTab {
+        match self.current_page_id {
             Self::SCALE => {
                 self.scale.make_tab()
             },
             _ => Self::make_default_tab(),
-        })
+        }
     }
     pub fn make_default_tab() -> ProtoTab {
         ProtoTab::new_empty()
