@@ -3,7 +3,7 @@ use bevy::utils::BoxedFuture;
 
 use notation_dsl::prelude::parse_get_tab;
 
-use crate::tab::tab_asset::TabAsset;
+use crate::tab::tab_asset::{TabAsset, TabError};
 
 #[derive(Default)]
 pub struct GetTabAssetLoader;
@@ -16,8 +16,11 @@ impl AssetLoader for GetTabAssetLoader {
     ) -> BoxedFuture<'a, Result<(), anyhow::Error>> {
         Box::pin(async move {
             let text = String::from_utf8(bytes.to_vec())?;
-            let tab = parse_get_tab(&text)?;
-            load_context.set_default_asset(LoadedAsset::new(TabAsset::from(tab)));
+            let tab_asset = match parse_get_tab(&text) {
+                Ok(tab) => TabAsset::from(tab),
+                Err(err) => TabAsset::from(TabError::GetTabFailed(err.to_string())),
+            };
+            load_context.set_default_asset(LoadedAsset::new(tab_asset));
             Ok(())
         })
     }

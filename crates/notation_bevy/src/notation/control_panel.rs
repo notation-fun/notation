@@ -313,12 +313,18 @@ impl ControlPanel {
         ui: &mut Ui,
         pathes: &mut TabPathes,
         state: &mut NotationState,
-        settings: &mut NotationSettings,
+        _settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
         if theme._bypass_systems {
-            ui.label("Loading Tab ...");
-            return;
+            if state.tab_error.is_some() {
+                ui.label("Load Tab Failed");
+                ui.separator();
+                ui.label(format!("{:?}", state.tab_error.as_ref().unwrap()));
+            } else {
+                ui.label("Loading Tab ...");
+            }
+            ui.separator();
         }
         ui.horizontal(|ui| {
             if ui.button("Reload Tab").clicked() {
@@ -606,6 +612,26 @@ impl ControlPanel {
             ui.separator();
         }
     }
+    pub fn presets_ui(
+        ui: &mut Ui,
+        state: &mut NotationState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+        window_resized_evts: &mut EventWriter<WindowResizedEvent>,
+    ) {
+        CollapsingHeader::new(format!(
+            "Preset: {}",
+            state.preset.clone().unwrap_or("".to_string())
+        ))
+        .default_open(true)
+        .show(ui, |ui| {
+            ui.horizontal(|ui| {
+                if ui.button(Control::PRESET_GUITAR_STRINGS).clicked() {
+                    Control::set_preset(state, settings, theme, window_resized_evts, Control::PRESET_GUITAR_STRINGS);
+                }
+            });
+        });
+    }
     pub fn control_ui(
         egui_ctx: Res<EguiContext>,
         mut windows: ResMut<Windows>,
@@ -664,6 +690,8 @@ impl ControlPanel {
                                 &mut play_control_evts,
                             );
                             Self::display_ui(ui, &mut state, &mut settings, &mut theme);
+                            ui.separator();
+                            Self::presets_ui(ui, &mut state, &mut settings, &mut theme, &mut window_resized_evts);
                             ui.separator();
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(

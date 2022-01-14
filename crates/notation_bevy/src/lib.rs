@@ -116,7 +116,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::strings::strings_plugin::StringsPlugin;
     #[doc(hidden)]
-    pub use crate::tab::tab_asset::TabAsset;
+    pub use crate::tab::tab_asset::{TabAsset, TabError};
     #[doc(hidden)]
     pub use crate::tab::tab_bars::TabBars;
     #[doc(hidden)]

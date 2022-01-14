@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::prelude::*;
+use crate::{prelude::*, tab::tab_asset::TabError};
 use bevy::prelude::*;
 use notation_model::prelude::*;
 
@@ -16,7 +16,8 @@ pub struct NotationState {
     pub bars_range: Option<(usize, usize)>,
     pub show_control: bool,
     pub show_kb: bool,
-    pub parse_error: Option<ParseError>,
+    pub preset: Option<String>,
+    pub tab_error: Option<TabError>,
     pub debug_str: Option<String>,
     pub _despawn_delay_seconds: f32,
     pub _load_tab_delay_seconds: f32,
@@ -40,7 +41,8 @@ impl NotationState {
             #[cfg(not(debug_assertions))]
             show_kb: true,
 
-            parse_error: None,
+            preset: None,
+            tab_error: None,
             debug_str: None,
             _despawn_delay_seconds: 0.0,
             _load_tab_delay_seconds: 0.0,
@@ -50,11 +52,11 @@ impl NotationState {
         theme._bypass_systems = true;
         self.tab_path = tab_path;
         self.bars_range = None;
-        self.parse_error = None;
         self.reload_tab()
     }
     pub fn reload_tab(&mut self) {
         self.tab = None;
+        self.tab_error = None;
         self._despawn_delay_seconds = 0.1;
         self._load_tab_delay_seconds = 0.2;
     }

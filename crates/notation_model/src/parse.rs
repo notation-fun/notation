@@ -7,7 +7,7 @@ use thiserror::Error;
 use crate::prelude::{BarLane, Form, LaneEntry, ModelEntry, Section, Tab, TabBar, TabMeta, Track};
 use notation_proto::prelude::{Duration, Entry, ProtoEntry, Units};
 
-#[derive(Error, Debug)]
+#[derive(Error, Clone, Debug)]
 pub enum ParseError {
     #[error("track not found")]
     TrackNotFound(String),

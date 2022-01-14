@@ -2582,6 +2582,7 @@ dependencies = [
  "ron 0.7.0",
  "serde",
  "serde_arrays",
+ "thiserror",
  "wasm-bindgen",
  "web-sys",
 ]

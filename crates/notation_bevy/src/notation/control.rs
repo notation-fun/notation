@@ -4,13 +4,14 @@ use crate::settings::layout_settings::LayoutMode;
 
 use crate::prelude::{NotationState, NotationSettings, NotationTheme};
 
+use super::events::WindowResizedEvent;
+
 pub struct Control();
 
 impl Control {
+    pub const PRESET_GUITAR_STRINGS: &'static str = "guitar_strings";
+
     pub fn reload_tab(state: &mut NotationState, theme: &mut NotationTheme) {
-        if state.tab.is_none() {
-            return;
-        }
         state.reload_tab();
         theme._bypass_systems = true;
     }
@@ -90,5 +91,23 @@ impl Control {
             window.set_resolution(width as f32, (height / 2) as f32);
         }
         window.set_resolution(width as f32, height as f32);
+    }
+    pub fn set_preset(
+        state: &mut NotationState,
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+        window_resized_evts: &mut EventWriter<WindowResizedEvent>,
+        preset: &'static str,
+    ) {
+        match preset {
+            Self::PRESET_GUITAR_STRINGS => {
+                state.preset = Some(preset.to_owned());
+                settings.hide_shapes_lane = true;
+                theme.sizes.strings.string_space = 20.0;
+                theme.sizes.strings.note_height = 9.0;
+                window_resized_evts.send(WindowResizedEvent::new(&state));
+            },
+            _ => {},
+        }
     }
 }

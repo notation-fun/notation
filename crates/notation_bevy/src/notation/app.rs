@@ -216,7 +216,7 @@ impl NotationApp {
             }
         }
     }
-    pub fn load_tab<F: Fn(String) -> Option<ProtoTab>>(
+    pub fn load_tab<F: Fn(String) -> Option<TabAsset>>(
         commands: &mut Commands,
         time: &Time,
         windows: &mut Windows,
@@ -231,7 +231,7 @@ impl NotationApp {
         if state.window_width > 0.0
             && state.window_height > 0.0
             && state.tab.is_none()
-            && state.parse_error.is_none()
+            && state.tab_error.is_none()
         {
             let mut count = 0;
             for _ in entities_query.iter() {
@@ -274,20 +274,29 @@ impl NotationApp {
                 return;
             }
             println!("\nload_tab(): Loading: {}", state.tab_path);
-            if let Some(tab) = load_tab(state.tab_path.clone()) {
-                match Tab::try_parse_arc(tab, settings.add_ready_section, state.bars_range) {
-                    Ok(tab) => {
-                        state.tab = Some(tab.clone());
-                        if let Some(window) = windows.get_primary_mut() {
-                            let title = format!("{} - {}", NotationApp::TITLE, state.tab_path);
-                            window.set_title(title);
-                        }
-                        theme._bypass_systems = false;
-                        evts.send(AddTabEvent(tab));
-                    }
-                    Err(err) => {
-                        println!("nload_tab(): Parse Tab Failed: {:?}", err);
-                        state.parse_error = Some(err);
+            if state.tab_error.is_none() {
+                if let Some(tab_asset) = load_tab(state.tab_path.clone()) {
+                    match tab_asset.tab {
+                        Ok(tab) => {
+                            match Tab::try_parse_arc(tab, settings.add_ready_section, state.bars_range) {
+                                Ok(tab) => {
+                                    state.tab = Some(tab.clone());
+                                    if let Some(window) = windows.get_primary_mut() {
+                                        let title = format!("{} - {}", NotationApp::TITLE, state.tab_path);
+                                        window.set_title(title);
+                                    }
+                                    theme._bypass_systems = false;
+                                    evts.send(AddTabEvent(tab));
+                                }
+                                Err(err) => {
+                                    println!("nload_tab(): Parse Tab Failed: {:?}", err);
+                                    state.tab_error = Some(TabError::ParseFailed(err));
+                                }
+                            }
+                        },
+                        Err(err) => {
+                            state.tab_error = Some(err);
+                        },
                     }
                 }
             }
@@ -297,10 +306,10 @@ impl NotationApp {
         asset_server: &AssetServer,
         assets: &Assets<TabAsset>,
         tab_path: String,
-    ) -> Option<ProtoTab> {
+    ) -> Option<TabAsset> {
         let tab_asset: Handle<TabAsset> = asset_server.load(tab_path.as_str());
         if let Some(asset) = assets.get(&tab_asset) {
-            Some(asset.tab.clone())
+            Some(asset.clone())
         } else {
             None
         }
