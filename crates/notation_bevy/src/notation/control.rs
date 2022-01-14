@@ -121,7 +121,7 @@ impl Control {
                 theme.texts.strings.text_y = 8.0;
                 theme.sizes.layout.page_margin = 24.0;
                 #[cfg(not(target_arch = "wasm32"))]
-                Self::set_primary_window_size(windows, 1280, 1920);
+                Self::set_primary_window_size(windows, 1080, 1920);
                 Self::reload_tab(state, theme);
             },
             _ => {},
