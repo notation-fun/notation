@@ -173,6 +173,12 @@ impl ControlPanel {
                     settings.hide_strings_lane = hide_strings_lane;
                     Control::reload_tab(state, theme);
                 }
+                let mut hide_harmony_lane = settings.hide_harmony_lane;
+                ui.checkbox(&mut hide_harmony_lane, "Hide Guitar Notes");
+                if settings.hide_harmony_lane != hide_harmony_lane {
+                    settings.hide_harmony_lane = hide_harmony_lane;
+                    Control::reload_tab(state, theme);
+                }
                 let mut hide_lyrics_lane = settings.hide_lyrics_lane;
                 ui.checkbox(&mut hide_lyrics_lane, "Hide Lyrics ");
                 if settings.hide_lyrics_lane != hide_lyrics_lane {

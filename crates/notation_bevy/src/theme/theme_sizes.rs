@@ -31,17 +31,34 @@ impl PlayingSize {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeSizes {
     pub bar: BarSizes,
     pub chord: ChordSizes,
-    pub melody: MelodySizes,
+    pub melody: NotesSizes,
+    pub harmony: NotesSizes,
     pub lyrics: LyricsSizes,
     pub strings: StringsSizes,
     pub mini_map: MiniMapSizes,
     pub tab_control: TabControlSizes,
     pub layout: LayoutSizes,
+}
+
+impl Default for ThemeSizes {
+    fn default() -> Self {
+        Self {
+            bar: Default::default(),
+            chord: Default::default(),
+            melody: Default::default(),
+            harmony: NotesSizes::default_harmony(),
+            lyrics: Default::default(),
+            strings: Default::default(),
+            mini_map: Default::default(),
+            tab_control: Default::default(),
+            layout: Default::default(),
+        }
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
@@ -109,18 +126,18 @@ impl Default for ChordSizes {
         }
     }
 }
-
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
-pub struct MelodySizes {
+pub struct NotesSizes {
     pub note_height: f32,
     pub note_outline: PlayingSize,
     pub semitone_height: f32,
     pub lowest: Semitones,
     pub highest: Semitones,
-    pub syllable_height: f32,
+    pub top_margin: f32,
+    pub bottom_margin: f32,
 }
-impl Default for MelodySizes {
+impl Default for NotesSizes {
     fn default() -> Self {
         Self {
             note_height: 4.0,
@@ -128,12 +145,22 @@ impl Default for MelodySizes {
             semitone_height: 2.0,
             lowest: Semitones(i8::MAX),
             highest: Semitones(i8::MIN),
-            syllable_height: 16.0,
+            top_margin: 2.0,
+            bottom_margin: 16.0,
         }
     }
 }
-impl MelodySizes {
-    pub fn update_with_tab(&mut self, tab: &Tab) {
+impl NotesSizes {
+    pub fn default_harmony() -> Self {
+        Self {
+            note_height: 4.0,
+            semitone_height: 5.0,
+            top_margin: 12.0,
+            bottom_margin: 4.0,
+            ..Default::default()
+        }
+    }
+    pub fn update_with_tab_vocal(&mut self, tab: &Tab) {
         let default = Self::default();
         self.lowest = default.lowest;
         self.highest = default.highest;
@@ -154,30 +181,61 @@ impl MelodySizes {
                 }
             }
             println!(
-                "MelodySizes::update_with_tab: {} - {}",
+                "NotesSizes::update_with_tab_vocal: {} - {}",
                 self.lowest.0, self.highest.0
             );
         }
     }
+    pub fn update_with_tab_guitar(
+        &mut self,
+        tab: &Tab,
+        track_index: Option<usize>,
+    ) {
+        let default = Self::default();
+        self.lowest = default.lowest;
+        self.highest = default.highest;
+        for bar in tab.bars.iter() {
+            if let Some(lane) = bar.get_lane_of_kind(LaneKind::Strings, track_index) {
+                for entry in lane.entries.iter() {
+                    if let Some(fretted_entry) = entry.model.proto.as_fretted6() {
+                        if let Some(pick) = fretted_entry.as_pick() {
+                            if let Some((fretboard, shape)) = bar.get_fretted_shape6(entry) {
+                                let tone = fretboard.pick_tone(&shape, pick);
+                                for note in tone.get_notes() {
+                                    let v = Semitones::from(note);
+                                    if v < self.lowest {
+                                        self.lowest = v
+                                    }
+                                    if v > self.highest {
+                                        self.highest = v
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        println!(
+            "NotesSizes::update_with_tab_guitar: {} - {}",
+            self.lowest.0, self.highest.0
+        );
+    }
     pub fn calc_note_y(&self, note: Note) -> f32 {
         let offset_semitones = self.highest - Semitones::from(note);
-        -1.0 * self.semitone_height * offset_semitones.0 as f32 - self.note_height
+        let y = -1.0 * self.semitone_height * offset_semitones.0 as f32 - self.note_height;
+        y - self.top_margin
     }
-    pub fn layout_height(&self, settings: &NotationSettings) -> f32 {
+    pub fn layout_height(&self, _settings: &NotationSettings) -> f32 {
         let range = if self.highest > self.lowest {
             self.highest.0 - self.lowest.0 + 1
         } else {
             1
         };
         let height = range as f32 * self.semitone_height + self.note_height;
-        if settings.show_melody_syllable {
-            height + self.syllable_height
-        } else {
-            height
-        }
+        height + self.top_margin + self.bottom_margin
     }
 }
-
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LyricsSizes {
@@ -329,6 +387,13 @@ impl ThemeSizes {
                     0.0
                 } else {
                     self.melody.layout_height(settings)
+                }
+            }
+            LaneKind::Harmony => {
+                if settings.hide_harmony_lane {
+                    0.0
+                } else {
+                    self.harmony.layout_height(settings)
                 }
             }
             LaneKind::Strings => {

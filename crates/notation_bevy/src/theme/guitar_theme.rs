@@ -6,7 +6,7 @@ use notation_model::prelude::GUITAR_STRING_NUM;
 #[cfg(feature = "inspector")]
 use bevy_inspector_egui::Inspectable;
 
-use super::theme_texts::MelodyTexts;
+use super::theme_texts::NoteTexts;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
@@ -25,7 +25,7 @@ pub struct GuitarTheme {
     pub barre_height_factor: f32,
     pub guitar_width: f32,
     pub hit_string_seconds_range: (f32, f32),
-    pub syllable_text: MelodyTexts,
+    pub syllable_text: NoteTexts,
     pub syllable_base_width: f32,
 }
 
@@ -52,7 +52,7 @@ impl Default for GuitarTheme {
             barre_height_factor: 0.016,
             guitar_width: 128.0,
             hit_string_seconds_range: (0.05, 0.15),
-            syllable_text: MelodyTexts {
+            syllable_text: NoteTexts {
                 text_x: 0.0,
                 text_y: 24.0,
                 text_z: 1.0,

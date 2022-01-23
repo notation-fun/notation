@@ -27,6 +27,7 @@ pub struct NotationSettings {
     pub hide_mini_map: bool,
     pub hide_shapes_lane: bool,
     pub hide_strings_lane: bool,
+    pub hide_harmony_lane: bool,
     pub hide_lyrics_lane: bool,
     pub hide_melody_lane: bool,
     pub override_beat_size: Option<f32>,
@@ -54,6 +55,7 @@ impl Default for NotationSettings {
             panning_line_size: 32.0,
             hide_shapes_lane: false,
             hide_strings_lane: false,
+            hide_harmony_lane: false,
             hide_lyrics_lane: false,
             hide_melody_lane: false,
             hide_guitar_view: false,
@@ -74,8 +76,9 @@ impl NotationSettings {
     pub fn hide_all_lanes(&mut self) {
         self.hide_shapes_lane = true;
         self.hide_strings_lane = true;
-        self.hide_melody_lane = true;
+        self.hide_harmony_lane = true;
         self.hide_lyrics_lane = true;
+        self.hide_melody_lane = true;
     }
     pub fn hack_for_screenshot(&mut self) {
         self.add_ready_section = false;

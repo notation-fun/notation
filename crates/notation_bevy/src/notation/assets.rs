@@ -6,6 +6,12 @@ use crate::egui::egui_fonts::EguiFontSizes;
 
 #[derive(AssetCollection)]
 pub struct NotationAssets {
+    #[asset(key = "syllable_font")]
+    pub syllable_font: Handle<Font>,
+
+    #[asset(key = "fret_font")]
+    pub fret_font: Handle<Font>,
+
     #[asset(key = "latin_font")]
     pub latin_font: Handle<Font>,
 
@@ -22,6 +28,12 @@ pub struct NotationAssets {
 
 pub trait ExtraAssets : AssetCollection {
     fn get_assets(&self) -> Vec<HandleUntyped>;
+    fn get_syllable_font() -> &'static str {
+        "fonts/uchiyama.ttf"
+    }
+    fn get_fret_font() -> &'static str {
+        "fonts/Bitter-Bold.ttf"
+    }
     fn get_latin_font() -> &'static str {
         "fonts/FiraMono-Medium.ttf"
     }
@@ -46,6 +58,8 @@ impl NotationAssets {
     pub fn setup_keys<A: ExtraAssets>(
         mut asset_keys: ResMut<AssetKeys>,
     ) {
+        asset_keys.set_asset_key("syllable_font", A::get_syllable_font());
+        asset_keys.set_asset_key("fret_font", A::get_fret_font());
         asset_keys.set_asset_key("latin_font", A::get_latin_font());
         asset_keys.set_asset_key("lyrics_font", A::get_lyrics_font());
         asset_keys.set_asset_key("fretboard_image", A::get_fretboard_image());

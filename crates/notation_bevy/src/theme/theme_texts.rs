@@ -9,16 +9,32 @@ use bevy_inspector_egui::Inspectable;
 
 use crate::prelude::{NotationAssets, NotationSettings, ThemeColors};
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeTexts {
     pub tab: TabTexts,
     pub chord: ChordTexts,
     pub rhythm: RhythmTexts,
     pub lyrics: LyricsTexts,
-    pub melody: MelodyTexts,
+    pub melody: NoteTexts,
+    pub harmony: NoteTexts,
     pub strings: StringsTexts,
     pub mini_map: MiniMapTexts,
+}
+
+impl Default for ThemeTexts {
+    fn default() -> Self {
+        Self {
+            tab: Default::default(),
+            chord: Default::default(),
+            rhythm: Default::default(),
+            lyrics: Default::default(),
+            melody: Default::default(),
+            harmony: NoteTexts::default_harmony(),
+            strings: Default::default(),
+            mini_map: Default::default(),
+        }
+    }
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
@@ -199,7 +215,7 @@ impl LyricsTexts {
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
-pub struct MelodyTexts {
+pub struct NoteTexts {
     pub text_x: f32,
     pub text_y: f32,
     pub text_z: f32,
@@ -207,7 +223,7 @@ pub struct MelodyTexts {
     pub syllable_font_size: f32,
     pub syllable_font_color: Color,
 }
-impl Default for MelodyTexts {
+impl Default for NoteTexts {
     fn default() -> Self {
         Self {
             text_x: 4.0,
@@ -219,7 +235,14 @@ impl Default for MelodyTexts {
         }
     }
 }
-impl MelodyTexts {
+impl NoteTexts {
+    pub fn default_harmony() -> Self {
+        Self {
+            text_y: 7.0,
+            syllable_font_size: 18.0,
+            ..Default::default()
+        }
+    }
     pub fn spawn_note_text(
         &self,
         commands: &mut Commands,
@@ -248,7 +271,7 @@ impl MelodyTexts {
             commands,
             entity,
             text.as_str(),
-            assets.latin_font.clone(),
+            assets.syllable_font.clone(),
             self.syllable_font_size * size_scale,
             self.syllable_font_color,
             if self.horizontal_center {
@@ -302,11 +325,11 @@ pub struct StringsTexts {
 impl Default for StringsTexts {
     fn default() -> Self {
         Self {
-            text_x: 2.0,
-            text_y: 6.0,
+            text_x: 3.0,
+            text_y: -2.0,
             text_z: 1.0,
             fret_font_size: 18.0,
-            fret_font_color: Color::hex("000000").unwrap(),
+            fret_font_color: super::theme_colors::hex_linear("000000"),
         }
     }
 }
@@ -323,7 +346,7 @@ impl StringsTexts {
             commands,
             entity,
             text.as_str(),
-            assets.latin_font.clone(),
+            assets.fret_font.clone(),
             self.fret_font_size,
             self.fret_font_color,
             HorizontalAlign::Left,

@@ -5,7 +5,7 @@ use super::pick_bundle::PickBundle;
 
 use super::strings_grid::{StringsGrid4, StringsGrid6};
 use crate::prelude::{NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, SingleData};
-use notation_model::prelude::{BarLane, FrettedEntry4, FrettedEntry6, LaneEntry, TrackKind};
+use notation_model::prelude::{LaneKind, BarLane, FrettedEntry4, FrettedEntry6, LaneEntry, TrackKind};
 
 pub struct StringsPlugin;
 
@@ -31,7 +31,8 @@ impl StringsPlugin {
 
 macro_rules! impl_strings_plugin {
     ($on_add_fretted_grid:ident,
-        $insert_lane_extra:ident, $insert_entry_extra:ident, $create_pick_notes:ident,
+        $insert_lane_extra:ident, $insert_entry_extra:ident,
+        $create_pick_notes:ident, $create_pick_tones:ident,
         $fretted_entry:ident, $strings_grid:ident
     ) => {
         fn $on_add_fretted_grid(
@@ -56,18 +57,29 @@ macro_rules! impl_strings_plugin {
                 assets: &NotationAssets,
                 theme: &NotationTheme,
                 settings: &NotationSettings,
+                lane_kind: LaneKind,
                 entity: Entity,
                 entry: &LaneEntry,
                 fretted_entry: &$fretted_entry,
             ) {
                 match fretted_entry {
                     $fretted_entry::Pick(pick, _duration) => {
-                        commands
-                            .entity(entity)
-                            .insert_bundle(PickBundle::from(*pick));
-                        super::pick_systems::$create_pick_notes(
-                            commands, assets, theme, settings, entity, entry, pick,
-                        );
+                        match lane_kind {
+                            LaneKind::Strings => {
+                                commands
+                                    .entity(entity)
+                                    .insert_bundle(PickBundle::from(*pick));
+                                super::pick_systems::$create_pick_notes(
+                                    commands, assets, theme, settings, entity, entry, pick,
+                                );
+                            },
+                            LaneKind::Harmony => {
+                                super::pick_systems::$create_pick_tones(
+                                    commands, assets, theme, settings, entity, entry, pick,
+                                );
+                            },
+                            _ => (),
+                        }
                     }
                     _ => (),
                 }
@@ -81,6 +93,7 @@ impl_strings_plugin!(
     insert_lane_extra6,
     insert_entry_extra6,
     create_pick_notes6,
+    create_pick_tones6,
     FrettedEntry6,
     StringsGrid6
 );
@@ -89,6 +102,7 @@ impl_strings_plugin!(
     insert_lane_extra4,
     insert_entry_extra4,
     create_pick_notes4,
+    create_pick_tones4,
     FrettedEntry4,
     StringsGrid4
 );

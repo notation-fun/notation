@@ -34,7 +34,10 @@ impl Display for BarLane {
 
 impl BarLane {
     pub fn id(&self) -> String {
-        format!("{}:{}", self.track.id, self.kind)
+        self.kind_id(self.kind)
+    }
+    pub fn kind_id(&self, kind: LaneKind) -> String {
+        format!("{}:{}", self.track.id, kind)
     }
     pub fn order(&self) -> (usize, LaneKind) {
         (self.track.props.index, self.kind)

@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::{BevyUtil, ShapeOp};
 use notation_model::prelude::LaneEntry;
 
-use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme};
+use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme, ToneBundle, ToneMode};
 use notation_model::prelude::Pick;
 
 use super::pick_note::{PickNoteData, PickNoteValue};
@@ -44,7 +44,7 @@ pub fn on_entry_playing_changed(
 }
 
 macro_rules! impl_pick_system {
-    ($create_pick_notes:ident, $fretboard:ident, $hand_shape:ident, $get_fretted_shape:ident
+    ($create_pick_notes:ident, $create_pick_tones:ident, $fretboard:ident, $hand_shape:ident, $get_fretted_shape:ident
     ) => {
         pub fn $create_pick_notes(
             commands: &mut Commands,
@@ -85,17 +85,45 @@ macro_rules! impl_pick_system {
                 }
             }
         }
+        pub fn $create_pick_tones(
+            commands: &mut Commands,
+            assets: &NotationAssets,
+            theme: &NotationTheme,
+            settings: &NotationSettings,
+            entity: Entity,
+            entry: &LaneEntry,
+            pick: &Pick,
+        ) {
+            /* TODO: check whether is the first bar in row
+            if entry.as_ref().prev_is_tie() {
+                continue;
+            }
+            */
+            if let Some(bar) = entry.bar() {
+                if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
+                    let tone = fretboard.pick_tone(&shape, pick);
+                    commands
+                        .entity(entity)
+                        .insert_bundle(ToneBundle::from(tone));
+                    crate::tone::tone_systems::create_tone_notes(
+                        commands, assets, theme, settings, ToneMode::Harmony, entity, entry, &tone,
+                    );
+                }
+            }
+        }
     };
 }
 
 impl_pick_system!(
     create_pick_notes6,
+    create_pick_tones6,
     Fretboard6,
     HandShape6,
     get_fretted_shape6
 );
 impl_pick_system!(
     create_pick_notes4,
+    create_pick_tones4,
     Fretboard4,
     HandShape4,
     get_fretted_shape4

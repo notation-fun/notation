@@ -116,7 +116,8 @@ impl TabViewer {
             tab = Some(evt.0.clone());
         }
         if let Some(tab) = tab {
-            theme.sizes.melody.update_with_tab(&tab);
+            theme.sizes.melody.update_with_tab_vocal(&tab);
+            theme.sizes.harmony.update_with_tab_guitar(&tab, None);
             TabViewer::spawn(
                 &mut commands,
                 &assets,

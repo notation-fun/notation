@@ -8,6 +8,8 @@ use notation_bevy_utils::prelude::{
     BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery,
     LayoutSize, View, ViewBundle, ViewQuery,
 };
+use notation_model::bar_lane::BarLane;
+use notation_model::lane_kind::LaneKind;
 use notation_model::prelude::{Tab, TabBar};
 
 use crate::bar::bar_layout::BarLayoutData;
@@ -58,7 +60,7 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
             Some(width) => width,
             None => grid_size.width,
         };
-        let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
+        let (rows, cols, cell_width) = GridData::calc_fixed_rows_cols_by_width(
             tab_width - bar_margin * 2.0,
             bar_width_range,
             0.0,
@@ -146,33 +148,40 @@ impl TabBars {
         theme: &NotationTheme,
         settings: &NotationSettings,
         tab: &Tab,
-    ) -> Vec<LaneLayoutData> {
-        let mut lane_layouts: HashMap<String, LaneLayoutData> = HashMap::new();
+    ) -> Vec<(LaneKind, LaneLayoutData)> {
+        let mut lane_layouts: HashMap<String, (LaneKind, LaneLayoutData)> = HashMap::new();
         for bar in tab.bars.iter() {
             for lane in bar.lanes.iter() {
                 let lane_id = lane.id();
                 if !lane_layouts.contains_key(&lane_id) {
                     let height = theme.sizes.calc_lane_height(settings, lane.kind);
                     let margin = theme.sizes.layout.lane_margin;
-                    lane_layouts.insert(lane_id, LaneLayoutData::new(&lane, height, margin));
+                    lane_layouts.insert(lane_id, (lane.kind, LaneLayoutData::new(&lane, height, margin)));
+                    if lane.kind == LaneKind::Strings && !settings.hide_harmony_lane {
+                        let lane_id = lane.kind_id(LaneKind::Harmony);
+                        if !lane_layouts.contains_key(&lane_id) {
+                            let height = theme.sizes.calc_lane_height(settings, LaneKind::Harmony);
+                            let margin = theme.sizes.layout.lane_margin;
+                            lane_layouts.insert(lane_id, (lane.kind, LaneLayoutData::new_virtual(&lane, LaneKind::Harmony, height, margin)));
+                        }
+                    }
                 }
             }
         }
         let result = lane_layouts
             .into_iter()
-            .map(|(_, lane_layout)| lane_layout)
-            .collect::<Vec<LaneLayoutData>>();
+            .map(|(_, (lane_kind, lane_layout))| (lane_kind, lane_layout))
+            .collect::<Vec<(LaneKind, LaneLayoutData)>>();
         settings.layout.sort_lane_layouts(&result)
     }
     fn calc_bar_layout_data(
         theme: &NotationTheme,
-        all_lane_layouts: &Vec<LaneLayoutData>,
+        all_lane_layouts: &Vec<(LaneKind, LaneLayoutData)>,
         bar: &TabBar,
     ) -> BarLayoutData {
         let mut lane_layouts = Vec::new();
-        for lane_layout in all_lane_layouts.iter() {
-            let lane =
-                bar.get_lane_of_kind(lane_layout.lane_kind, Some(lane_layout.track_props.index));
+        for (lane_kind, lane_layout) in all_lane_layouts.iter() {
+            let lane = bar.get_lane_of_kind(*lane_kind, Some(lane_layout.track_props.index));
             lane_layouts.push(Arc::new(LaneLayoutData {
                 lane,
                 visible: Arc::new(RwLock::new(lane_layout.height > 0.0)),

@@ -2,8 +2,10 @@ use std::sync::Arc;
 
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::ShapeOp;
+use notation_model::lane_kind::LaneKind;
 
 use crate::chord::chord_view::ChordView;
+use crate::lane::lane_layout::LaneLayoutData;
 use crate::prelude::{
     BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates,
     NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle,
@@ -36,12 +38,13 @@ pub fn create_entry(
     assets: &NotationAssets,
     theme: &NotationTheme,
     settings: &NotationSettings,
-    entity: Entity,
+    lane_layout: &LaneLayoutData,
+    lane_entity: Entity,
     entry: &Arc<LaneEntry>,
 ) {
     let entry_bundle = EntryBundle::from(entry.clone());
-    let entry_entity = BevyUtil::spawn_child_bundle(commands, entity, entry_bundle);
-    insert_entry_extra(commands, assets, theme, settings, entry_entity, entry);
+    let entry_entity = BevyUtil::spawn_child_bundle(commands, lane_entity, entry_bundle);
+    insert_entry_extra(commands, assets, theme, settings, lane_layout, entry_entity, entry);
 }
 
 fn insert_entry_extra(
@@ -49,19 +52,20 @@ fn insert_entry_extra(
     assets: &NotationAssets,
     theme: &NotationTheme,
     settings: &NotationSettings,
-    entity: Entity,
+    lane_layout: &LaneLayoutData,
+    entry_entity: Entity,
     entry: &LaneEntry,
 ) {
     match entry.model.proto.as_ref() {
         ProtoEntry::Core(core_entry) => {
-            insert_core_entry_extra(commands, assets, theme, settings, entity, entry, core_entry)
+            insert_core_entry_extra(commands, assets, theme, settings, lane_layout.lane_kind, entry_entity, entry, core_entry)
         }
         ProtoEntry::Lyric(lyric_entry) => LyricsPlugin::insert_entry_extra(
             commands,
             assets,
             theme,
             settings,
-            entity,
+            entry_entity,
             entry,
             lyric_entry,
         ),
@@ -71,7 +75,7 @@ fn insert_entry_extra(
                 assets,
                 theme,
                 settings,
-                entity,
+                entry_entity,
                 entry,
                 fretted_entry,
             );
@@ -80,7 +84,8 @@ fn insert_entry_extra(
                 assets,
                 theme,
                 settings,
-                entity,
+                lane_layout.lane_kind,
+                entry_entity,
                 entry,
                 fretted_entry,
             );
@@ -91,7 +96,7 @@ fn insert_entry_extra(
                 assets,
                 theme,
                 settings,
-                entity,
+                entry_entity,
                 entry,
                 fretted_entry,
             );
@@ -100,7 +105,8 @@ fn insert_entry_extra(
                 assets,
                 theme,
                 settings,
-                entity,
+                lane_layout.lane_kind,
+                entry_entity,
                 entry,
                 fretted_entry,
             );
@@ -114,6 +120,7 @@ fn insert_core_entry_extra(
     assets: &NotationAssets,
     theme: &NotationTheme,
     settings: &NotationSettings,
+    lane_kind: LaneKind,
     entity: Entity,
     entry: &LaneEntry,
     core_entry: &CoreEntry,
@@ -126,7 +133,7 @@ fn insert_core_entry_extra(
                 .entity(entity)
                 .insert_bundle(ToneBundle::from(*tone));
             crate::tone::tone_systems::create_tone_notes(
-                commands, assets, theme, settings, entity, entry, tone,
+                commands, assets, theme, settings, lane_kind.into(), entity, entry, tone,
             );
         }
         CoreEntry::Chord(chord, _) => {

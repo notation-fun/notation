@@ -37,7 +37,7 @@ impl From<LaneKind> for ToneMode {
     fn from(v: LaneKind) -> Self {
         match v {
             LaneKind::Melody => Self::Melody,
-            LaneKind::Harmany => Self::Harmony,
+            LaneKind::Harmony => Self::Harmony,
             LaneKind::Keyboard => Self::Piano,
             _ => Self::None,
         }

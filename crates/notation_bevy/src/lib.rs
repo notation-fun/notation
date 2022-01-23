@@ -29,6 +29,7 @@ pub mod guitar;
 pub mod kb;
 pub mod lyrics;
 pub mod melody;
+pub mod harmony;
 pub mod rhythm;
 pub mod shapes;
 pub mod strings;
@@ -103,6 +104,10 @@ pub mod prelude {
     pub use crate::melody::melody_grid::MelodyGrid;
     #[doc(hidden)]
     pub use crate::melody::melody_plugin::MelodyPlugin;
+    #[doc(hidden)]
+    pub use crate::harmony::harmony_grid::HarmonyGrid;
+    #[doc(hidden)]
+    pub use crate::harmony::harmony_plugin::HarmonyPlugin;
     #[doc(hidden)]
     pub use crate::mini::mini_plugin::MiniPlugin;
     #[doc(hidden)]

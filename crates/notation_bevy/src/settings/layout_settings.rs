@@ -3,6 +3,7 @@ use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
 use float_eq::float_ne;
 use notation_bevy_utils::prelude::{GridData, LayoutData};
 
+use notation_model::lane_kind::LaneKind;
 use notation_model::prelude::Position;
 use serde::{Deserialize, Serialize};
 
@@ -67,9 +68,9 @@ impl Default for LayoutSettings {
 }
 
 impl LayoutSettings {
-    pub fn sort_lane_layouts(&self, lanes: &Vec<LaneLayoutData>) -> Vec<LaneLayoutData> {
-        let mut sorted: Vec<LaneLayoutData> = lanes.clone();
-        sorted.sort_by(|a, b| a.order().cmp(&b.order()));
+    pub fn sort_lane_layouts(&self, lanes: &Vec<(LaneKind, LaneLayoutData)>) -> Vec<(LaneKind, LaneLayoutData)> {
+        let mut sorted: Vec<(LaneKind, LaneLayoutData)> = lanes.clone();
+        sorted.sort_by(|a, b| a.1.order().cmp(&b.1.order()));
         sorted
     }
     pub fn bar_layout_of_pos(

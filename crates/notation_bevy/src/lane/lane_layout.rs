@@ -25,6 +25,17 @@ impl LaneLayoutData {
             visible: Arc::new(RwLock::new(false)),
         }
     }
+    pub fn new_virtual(lane: &BarLane, lane_kind: LaneKind, height: f32, margin: f32) -> Self {
+        Self {
+            track_id: lane.track.id.clone(),
+            track_props: lane.track.props,
+            lane_kind,
+            height,
+            margin,
+            lane: None,
+            visible: Arc::new(RwLock::new(false)),
+        }
+    }
     pub fn id(&self) -> String {
         format!("{}:{}", self.track_id, self.lane_kind)
     }
@@ -33,6 +44,9 @@ impl LaneLayoutData {
     }
     pub fn is_ghost(&self) -> bool {
         self.lane.is_none()
+    }
+    pub fn is_virtual(&self) -> bool {
+        self.lane.is_some() && self.lane.as_ref().unwrap().kind != self.lane_kind
     }
     pub fn visible(&self) -> bool {
         self.height > 0.0 && *self.visible.read().unwrap()

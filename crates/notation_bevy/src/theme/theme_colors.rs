@@ -263,6 +263,7 @@ impl Default for LyricsColors {
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsColors {
+    pub background: Color,
     pub outline: PlayingColors,
     pub hit: Color,
     pub muted: Color,
@@ -274,6 +275,7 @@ pub struct StringsColors {
 impl Default for StringsColors {
     fn default() -> Self {
         Self {
+            background: hex_linear("563E3B44"),
             outline: PlayingColors::default(),
             hit: hex_linear("FFFFFF"),
             muted: hex_linear("333333"),
@@ -285,7 +287,7 @@ impl Default for StringsColors {
             fret: PlayingColors::new(
                 hex_linear("000000"),
                 hex_linear("000000"),
-                hex_linear("555555"),
+                hex_linear("444444"),
             ),
             capo: hex_linear("333333"),
             barre: hex_linear("442211"),

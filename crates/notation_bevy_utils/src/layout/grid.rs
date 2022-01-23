@@ -211,7 +211,7 @@ impl GridData {
         }
         rows
     }
-    pub fn cals_fixed_rows_cols_by_width(
+    pub fn calc_fixed_rows_cols_by_width(
         grid_width: f32,
         cell_width_range: (f32, f32),
         margin_width: f32,
@@ -221,7 +221,7 @@ impl GridData {
             Self::cals_fixed_cells_by_side(grid_width, cell_width_range, margin_width, total);
         (Self::calc_rows(total, cols), cols, cell_width)
     }
-    pub fn cals_fixed_rows_cols_by_height(
+    pub fn calc_fixed_rows_cols_by_height(
         grid_height: f32,
         cell_height_range: (f32, f32),
         margin_height: f32,

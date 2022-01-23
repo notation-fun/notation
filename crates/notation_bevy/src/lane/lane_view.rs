@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::entry::entry_plugin;
+use crate::harmony::harmony_plugin::HarmonyPlugin;
 use crate::lyrics::lyrics_plugin::LyricsPlugin;
 use crate::prelude::{
     BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin, NotationAssets, NotationSettings,
@@ -45,16 +46,24 @@ impl LaneView {
         if let Some(lane) = &lane_layout.lane {
             let lane_bundle = LaneBundle::new(&lane, lane_layout.clone());
             let lane_entity = BevyUtil::spawn_child_bundle(commands, bar_entity, lane_bundle);
-            if Self::setup_lane(commands, settings, lane, lane_entity) {
+            if Self::setup_lane(commands, settings, lane_layout, lane, lane_entity) {
                 if Self::DEBUGGING_LANE_LAYOUT {
                     let color = match lane_layout.lane_kind {
                         LaneKind::Shapes => ThemeColors::hex_linear("FF000033"),
                         LaneKind::Strings => ThemeColors::hex_linear("00FF0033"),
                         LaneKind::Lyrics => ThemeColors::hex_linear("0000FF33"),
                         LaneKind::Melody => ThemeColors::hex_linear("00FFFF33"),
+                        LaneKind::Harmony => ThemeColors::hex_linear("FF00FF33"),
                         _ => ThemeColors::hex_linear("00000033"),
                     };
                     ColorBackground::spawn(commands, lane_entity, 30.0, color);
+                } else {
+                    if let Some(color) = match lane_layout.lane_kind {
+                        LaneKind::Strings => Some(theme.colors.strings.background),
+                        _ => None,
+                    } {
+                        ColorBackground::spawn(commands, lane_entity, 0.0, color);
+                    }
                 }
                 for entry in lane.entries.iter() {
                     entry_plugin::create_entry(
@@ -62,6 +71,7 @@ impl LaneView {
                         assets,
                         theme,
                         settings,
+                        lane_layout,
                         lane_entity,
                         entry,
                     );
@@ -75,10 +85,11 @@ impl LaneView {
     pub fn setup_lane(
         commands: &mut Commands,
         settings: &NotationSettings,
+        lane_layout: &LaneLayoutData,
         lane: &BarLane,
         lane_entity: Entity,
     ) -> bool {
-        match lane.kind {
+        match lane_layout.lane_kind {
             LaneKind::Lyrics => {
                 if !settings.hide_lyrics_lane {
                     LyricsPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
@@ -88,6 +99,12 @@ impl LaneView {
             LaneKind::Melody => {
                 if !settings.hide_melody_lane {
                     MelodyPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
+                }
+                !settings.hide_melody_lane
+            }
+            LaneKind::Harmony => {
+                if !settings.hide_harmony_lane {
+                    HarmonyPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
                 }
                 !settings.hide_melody_lane
             }

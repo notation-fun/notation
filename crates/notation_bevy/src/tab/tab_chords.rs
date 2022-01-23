@@ -44,7 +44,7 @@ impl TabChords {
             None => engine.theme.sizes.chord.chord_size_range,
         };
         let (mut rows, mut cols, cell_width) =
-            GridData::cals_fixed_rows_cols_by_width(grid_size.width, chord_size_range, 0.0, chords);
+            GridData::calc_fixed_rows_cols_by_width(grid_size.width, chord_size_range, 0.0, chords);
         if rows == 1 && cols > chords {
             cols = chords;
         }

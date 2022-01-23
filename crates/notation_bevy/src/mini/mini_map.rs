@@ -29,7 +29,7 @@ impl MiniMap {
     }
     pub fn calc_grid_data(&self, engine: &NotationLayout, grid_size: LayoutSize) -> GridData {
         let sizes = engine.theme.sizes.mini_map;
-        let (rows, cols, cell_width) = GridData::cals_fixed_rows_cols_by_width(
+        let (rows, cols, cell_width) = GridData::calc_fixed_rows_cols_by_width(
             grid_size.width - sizes.bar_margin.1 * 2.0,
             sizes.bar_width_range,
             sizes.bar_margin().width,

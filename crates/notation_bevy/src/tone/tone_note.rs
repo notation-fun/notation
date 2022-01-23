@@ -5,6 +5,7 @@ use notation_model::prelude::{Note, PlayingState, Syllable, SyllableNote};
 
 use crate::prelude::{EntryData, NotationTheme};
 use notation_model::prelude::TabBar;
+use crate::theme::theme_sizes::NotesSizes;
 
 use super::tone_mode::ToneMode;
 
@@ -50,11 +51,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
         } else {
             let x =
                 self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.in_bar_pos.0;
-            let mut y = if self.value.mode.is_melody() {
-                theme.sizes.melody.calc_note_y(self.value.note)
-            } else {
-                0.0
-            };
+            let mut y = self.get_sizes(theme).calc_note_y(self.value.note);
             if self.value.playing_state.is_current() {
                 let outline = self.calc_outline(theme);
                 y -= outline / 2.0;
@@ -81,18 +78,22 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for ToneNoteData {
 }
 
 impl ToneNoteData {
+    fn get_sizes(&self, theme: &NotationTheme) -> NotesSizes {
+        if self.value.mode.is_melody() {
+            theme.sizes.melody
+        } else {
+            theme.sizes.harmony
+        }
+    }
     fn calc_outline(&self, theme: &NotationTheme) -> f32 {
-        theme
-            .sizes
-            .melody
-            .note_outline
+        self.get_sizes(theme).note_outline
             .of_state(&self.value.playing_state)
     }
     fn calc_width_height(&self, theme: &NotationTheme) -> (f32, f32) {
         let outline = self.calc_outline(theme);
         let width =
             self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.tied_units.0;
-        let mut height = theme.sizes.melody.note_height;
+        let mut height = self.get_sizes(theme).note_height;
         if self.value.playing_state.is_current() {
             height += outline;
         }

@@ -12,7 +12,7 @@ pub enum LaneKind {
     Chord,
     Lyrics,
     Melody,
-    Harmany,
+    Harmony,
     Keyboard,
     Shapes,
     Strings,
@@ -36,7 +36,7 @@ impl LaneKind {
             LaneKind::Chord => 2,
             LaneKind::Lyrics => 3,
             LaneKind::Melody => 4,
-            LaneKind::Harmany => 5,
+            LaneKind::Harmony => 5,
             LaneKind::Keyboard => 6,
             LaneKind::Shapes => 7,
             LaneKind::Strings => 8,
@@ -109,11 +109,11 @@ impl LaneKind {
         matches!(self, Self::Melody)
     }
 
-    /// Returns `true` if the lane kind is [`Harmany`].
+    /// Returns `true` if the lane kind is [`Harmony`].
     ///
-    /// [`Harmany`]: LaneKind::Harmany
-    pub fn is_harmany(&self) -> bool {
-        matches!(self, Self::Harmany)
+    /// [`Harmony`]: LaneKind::Harmony
+    pub fn is_harmony(&self) -> bool {
+        matches!(self, Self::Harmony)
     }
 
     /// Returns `true` if the lane kind is [`Keyboard`].
