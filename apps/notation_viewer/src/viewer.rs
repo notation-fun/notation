@@ -59,9 +59,6 @@ impl NotationViewer {
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
     ) {
-        if app_state.tab.is_none() {
-            return;
-        }
         if egui_ctx.ctx().wants_keyboard_input() {
             return;
         }
