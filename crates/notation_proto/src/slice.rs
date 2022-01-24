@@ -19,6 +19,15 @@ pub struct Slice {
     pub end: SliceEnd,
     pub rounds: Option<Vec<usize>>,
 }
+impl Default for Slice {
+    fn default() -> Self {
+        Self {
+            begin: SliceBegin::Index(0),
+            end: SliceEnd::Count(0),
+            rounds: None,
+        }
+    }
+}
 impl Slice {
     pub fn new(begin: SliceBegin, end: SliceEnd, rounds: Option<Vec<usize>>) -> Self {
         Self { begin, end, rounds }

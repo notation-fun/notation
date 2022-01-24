@@ -1,5 +1,6 @@
 use std::fmt::Display;
 use std::sync::{Arc, Weak};
+use std::collections::HashMap;
 
 use notation_proto::prelude::{
     BarPosition, Chord, Fretboard4, Fretboard6, HandShape4, HandShape6, Note, Position,
@@ -44,7 +45,7 @@ impl TabBarProps {
 pub struct TabBar {
     pub tab: Weak<Tab>,
     pub section: Arc<Section>,
-    pub lanes: Vec<Arc<BarLane>>,
+    pub lanes: HashMap<(LaneKind, usize), Arc<BarLane>>,
     pub proto: Arc<Bar>,
     pub props: TabBarProps,
 }
@@ -74,19 +75,27 @@ impl TabBar {
         bar_units: Units,
     ) -> Arc<Self> {
         Arc::<Self>::new_cyclic(|weak_self| {
-            let mut lanes = Vec::new();
+            let mut lanes: HashMap<(LaneKind, usize), Arc<BarLane>> = HashMap::new();
             let mut index = 0;
             for layer in bar.layers.iter() {
                 for slice in layer.slices.iter() {
                     if slice.in_round(section_round) {
-                        if let Some(lane) = BarLane::try_new_arc(
+                        if let Some(new_lane) = BarLane::try_new_arc(
                             weak_self.clone(),
                             index,
                             &layer.track,
                             slice.clone(),
                         ) {
-                            lanes.push(lane);
-                            index += 1;
+                            let new_lane = match lanes.get(&(new_lane.kind, new_lane.track.props.index)) {
+                                Some(lane) => {
+                                    lane.merge_lane(&new_lane)
+                                },
+                                None => {
+                                    index += 1;
+                                    new_lane
+                                }
+                            };
+                            lanes.insert((new_lane.kind, new_lane.track.props.index), new_lane);
                         }
                     }
                 }
@@ -149,14 +158,20 @@ impl TabBar {
         kind: LaneKind,
         track_index: Option<usize>,
     ) -> Option<Arc<BarLane>> {
-        for lane in self.lanes.iter() {
-            if lane.kind == kind {
-                if track_index.is_none() || track_index.unwrap() == lane.track.props.index {
-                    return Some(lane.clone());
+        match track_index {
+            Some(track_index) => {
+                self.lanes.get(&(kind, track_index)).map(|x| x.clone())
+            },
+            None => {
+                for ((k, _i), lane) in self.lanes.iter() {
+                    if *k == kind {
+                        return Some(lane.clone());
+                    }
                 }
+                None
             }
+
         }
-        None
     }
     pub fn get_next_entries<T, F: Fn(&LaneEntry) -> Option<T>>(
         &self,
@@ -165,7 +180,7 @@ impl TabBar {
     ) -> Vec<T> {
         self.lanes
             .iter()
-            .filter_map(|lane| {
+            .filter_map(| ((_k, _i), lane) | {
                 lane.get_entry(&|x: &LaneEntry| {
                     if x.props.in_bar_pos.is_bigger_than(&in_bar_pos) {
                         predicate(x)
@@ -183,7 +198,7 @@ impl TabBar {
     ) -> Option<T> {
         let mut result_in_bar_pos = Units(f32::MAX);
         let mut result = None;
-        for lane in self.lanes.iter() {
+        for ((_k, _i), lane) in self.lanes.iter() {
             if let Some((in_bar_pos, entry)) = lane.get_entry(&|x: &LaneEntry| {
                 if result_in_bar_pos < x.props.in_bar_pos {
                     None

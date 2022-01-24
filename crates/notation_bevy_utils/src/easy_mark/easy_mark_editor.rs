@@ -53,7 +53,7 @@ impl epi::App for EasyMarkEditor {
  */
 
 impl EasyMarkEditor {
-    fn ui(&mut self, ui: &mut egui::Ui, link_evts: &mut EventWriter<EasyLinkEvent>) {
+    pub fn ui(&mut self, ui: &mut egui::Ui, link_evts: &mut EventWriter<EasyLinkEvent>) {
         egui::Grid::new("controls").show(ui, |ui| {
             ui.checkbox(&mut self.highlight_editor, "Highlight editor");
             egui::reset_button(ui, self);
@@ -85,7 +85,7 @@ impl EasyMarkEditor {
         }
     }
 
-    fn editor_ui(&mut self, ui: &mut egui::Ui) {
+    pub fn editor_ui(&mut self, ui: &mut egui::Ui) {
         let Self {
             code, highlighter, ..
         } = self;
@@ -119,7 +119,7 @@ impl EasyMarkEditor {
     }
 }
 
-fn shortcuts(ui: &Ui, code: &mut dyn TextBuffer, ccursor_range: &mut CCursorRange) -> bool {
+pub fn shortcuts(ui: &Ui, code: &mut dyn TextBuffer, ccursor_range: &mut CCursorRange) -> bool {
     let mut any_change = false;
     for event in &ui.input().events {
         if let Event::Key {
@@ -174,7 +174,7 @@ fn shortcuts(ui: &Ui, code: &mut dyn TextBuffer, ccursor_range: &mut CCursorRang
 }
 
 /// E.g. toggle *strong* with `toggle(&mut text, &mut cursor, "*")`
-fn toggle_surrounding(
+pub fn toggle_surrounding(
     code: &mut dyn TextBuffer,
     ccursor_range: &mut CCursorRange,
     surrounding: &str,

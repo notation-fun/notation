@@ -128,7 +128,7 @@
                     (
                         barre: None,
                         frets: (
-                            Some(0),
+                            Some(3),
                             Some(0),
                             Some(0),
                             Some(0),
@@ -151,16 +151,7 @@
                     "T_1_8",
                 ),// [6]
                 Mark("picks"),// [7]
-                Fretted6(Pick(
-                    Single((
-                        string: 6,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Triplet(Eighth),
-                )),// [8]
+                Core(Rest(Triplet(Eighth))),// [8]
                 Fretted6(Pick(
                     Single((
                         string: 3,
@@ -211,16 +202,7 @@
                     )),
                     Triplet(Eighth),
                 )),// [13]
-                Fretted6(Pick(
-                    Single((
-                        string: 6,
-                        fret: None,
-                        fret_finger: None,
-                        pick_finger: None,
-                        pick_direction: None,
-                    )),
-                    Triplet(Eighth),
-                )),// [14]
+                Core(Rest(Triplet(Eighth))),// [14]
                 Fretted6(Pick(
                     Single((
                         string: 3,
@@ -271,6 +253,32 @@
                     )),
                     Triplet(Eighth),
                 )),// [19]
+                Mark("|"),// [20]
+                Extra(
+                    "dsl::context::duration",
+                    "_1_2",
+                ),// [21]
+                Mark("bass"),// [22]
+                Fretted6(Pick(
+                    Single((
+                        string: 6,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Half),
+                )),// [23]
+                Fretted6(Pick(
+                    Single((
+                        string: 6,
+                        fret: None,
+                        fret_finger: None,
+                        pick_finger: None,
+                        pick_direction: None,
+                    )),
+                    Simple(Half),
+                )),// [24]
                 Mark("|"),
             ],
         ),
@@ -304,6 +312,11 @@
                                     begin: Mark("picks"),
                                     end: Mark("|"),
                                     rounds: None,
+                                ),// [1]
+                                (
+                                    begin: Mark("bass"),
+                                    end: Mark("|"),
+                                    rounds: None,
                                 ),
                             ],
                         ),
@@ -331,6 +344,11 @@
                                 ),// [0]
                                 (
                                     begin: Mark("picks"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),// [1]
+                                (
+                                    begin: Mark("bass"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),
@@ -362,6 +380,11 @@
                                     begin: Mark("picks"),
                                     end: Mark("|"),
                                     rounds: None,
+                                ),// [1]
+                                (
+                                    begin: Mark("bass"),
+                                    end: Mark("|"),
+                                    rounds: None,
                                 ),
                             ],
                         ),
@@ -389,6 +412,11 @@
                                 ),// [0]
                                 (
                                     begin: Mark("picks"),
+                                    end: Mark("|"),
+                                    rounds: None,
+                                ),// [1]
+                                (
+                                    begin: Mark("bass"),
                                     end: Mark("|"),
                                     rounds: None,
                                 ),

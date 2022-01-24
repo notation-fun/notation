@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Weak};
 use thiserror::Error;
 
-use crate::prelude::{BarLane, Form, LaneEntry, ModelEntry, Section, Tab, TabBar, TabMeta, Track};
+use crate::prelude::{BarLane, Form, LaneEntry, ModelEntry, Section, Tab, TabBar, TabMeta, Track, Slice};
 use notation_proto::prelude::{Duration, Entry, ProtoEntry, Units};
 
 #[derive(Error, Clone, Debug)]
@@ -191,14 +191,14 @@ impl ModelEntry {
     }
 }
 impl LaneEntry {
-    pub fn new_entries(v: Vec<Arc<ModelEntry>>, lane: &Weak<BarLane>) -> Vec<Arc<LaneEntry>> {
+    pub fn new_entries(v: Vec<Arc<ModelEntry>>, lane: &Weak<BarLane>, slice: Slice) -> Vec<Arc<LaneEntry>> {
         let mut pos = 0.0;
         v.into_iter()
             .enumerate()
             .map(|(index, entry)| {
                 let in_bar_pos = pos;
                 pos += Units::from(entry.as_ref().duration()).0;
-                LaneEntry::new(lane.clone(), index, entry, Units(in_bar_pos))
+                LaneEntry::new(lane.clone(), slice.clone(), index, index, entry, Units(in_bar_pos))
             })
             .map(Arc::new)
             .collect()

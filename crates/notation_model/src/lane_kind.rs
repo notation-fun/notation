@@ -5,7 +5,7 @@ use notation_proto::prelude::{FrettedEntry6, ProtoEntry, TrackKind};
 
 use crate::prelude::ModelEntry;
 
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug, Hash)]
 pub enum LaneKind {
     None,
     Meta,

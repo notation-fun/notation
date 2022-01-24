@@ -79,7 +79,7 @@ impl TabBar {
         &self,
         predicate: &F,
     ) -> Option<T> {
-        for lane in self.lanes.iter() {
+        for ((_k, _i), lane) in self.lanes.iter() {
             if let Some(x) = lane.get_entry(predicate) {
                 return Some(x);
             }

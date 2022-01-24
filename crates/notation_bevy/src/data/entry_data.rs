@@ -14,7 +14,7 @@ impl<T: Send + Sync + 'static> EntryData<T> {
         Self {
             bar_props: entry.bar_props(),
             lane_props: entry.lane_props(),
-            entry_props: entry.props,
+            entry_props: entry.props.clone(),
             value,
         }
     }

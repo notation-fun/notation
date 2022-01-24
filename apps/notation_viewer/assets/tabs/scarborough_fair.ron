@@ -2302,7 +2302,7 @@
                 )),// [28]
                 Core(Tone(
                     Single((
-                        octave: P5,
+                        octave: P4,
                         pitch: (
                             name: C,
                             sign: Sharp,

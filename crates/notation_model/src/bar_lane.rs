@@ -3,7 +3,7 @@ use std::sync::{Arc, Weak};
 
 use notation_proto::prelude::Units;
 
-use crate::prelude::{LaneEntry, LaneKind, Slice, Tab, TabBar, TabBarProps, Track, TrackProps};
+use crate::prelude::{LaneEntry, LaneKind, Slice, Tab, TabBar, TabBarProps, Track, TrackProps, LaneEntryProps};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct BarLaneProps {
@@ -16,7 +16,6 @@ pub struct BarLane {
     pub bar: Weak<TabBar>,
     pub kind: LaneKind,
     pub track: Arc<Track>,
-    pub slice: Slice,
     pub entries: Vec<Arc<LaneEntry>>,
     pub props: BarLaneProps,
 }
@@ -24,9 +23,8 @@ impl Display for BarLane {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "<BarLane>({} {}, E:{})",
+            "<BarLane>({} E:{})",
             self.id(),
-            self.slice,
             self.entries.len()
         )
     }
@@ -56,12 +54,11 @@ impl BarLane {
                     index,
                     track: track.props,
                 };
-                let entries = LaneEntry::new_entries(model_entries, weak_self);
+                let entries = LaneEntry::new_entries(model_entries, weak_self, slice);
                 Self {
                     bar,
                     kind,
                     track: track.clone(),
-                    slice,
                     entries,
                     props,
                 }
@@ -69,6 +66,38 @@ impl BarLane {
         } else {
             None
         }
+    }
+    pub fn merge_lane(&self, lane: &BarLane) -> Arc<Self> {
+        Arc::<Self>::new_cyclic(|weak_self| {
+            let mut entries = Vec::new();
+            for entry in self.entries.iter() {
+                let merged_entry = LaneEntry {
+                    props: entry.props.clone(),
+                    lane: weak_self.clone(),
+                    model: entry.model.clone(),
+                };
+                entries.push(Arc::new(merged_entry));
+            }
+            for entry in lane.entries.iter() {
+                let merged_entry = LaneEntry {
+                    props: LaneEntryProps {
+                        slice: entry.props.slice.clone(),
+                        index: entries.len(),
+                        ..entry.props
+                    },
+                    lane: weak_self.clone(),
+                    model: entry.model.clone(),
+                };
+                entries.push(Arc::new(merged_entry));
+            }
+            Self {
+                bar: self.bar.clone(),
+                kind: self.kind,
+                track: self.track.clone(),
+                entries,
+                props: self.props,
+            }
+        })
     }
     pub fn bar(&self) -> Option<Arc<TabBar>> {
         self.bar.upgrade().map(|x| x.clone())

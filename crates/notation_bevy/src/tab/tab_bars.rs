@@ -8,7 +8,6 @@ use notation_bevy_utils::prelude::{
     BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery,
     LayoutSize, View, ViewBundle, ViewQuery,
 };
-use notation_model::bar_lane::BarLane;
 use notation_model::lane_kind::LaneKind;
 use notation_model::prelude::{Tab, TabBar};
 
@@ -151,7 +150,7 @@ impl TabBars {
     ) -> Vec<(LaneKind, LaneLayoutData)> {
         let mut lane_layouts: HashMap<String, (LaneKind, LaneLayoutData)> = HashMap::new();
         for bar in tab.bars.iter() {
-            for lane in bar.lanes.iter() {
+            for ((_k, _i), lane) in bar.lanes.iter() {
                 let lane_id = lane.id();
                 if !lane_layouts.contains_key(&lane_id) {
                     let height = theme.sizes.calc_lane_height(settings, lane.kind);

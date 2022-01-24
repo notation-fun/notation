@@ -3,7 +3,7 @@ use uuid::Uuid;
 
 use std::fmt::Display;
 
-use crate::prelude::{Form, Section, Track, SectionKind};
+use crate::prelude::{Form, Section, Track};
 use notation_core::prelude::{
     Key, Note, Pitch, Scale, Signature, Syllable, SyllableNote, Tempo, Units,
 };

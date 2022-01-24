@@ -3,11 +3,13 @@ use std::sync::{Arc, Weak};
 
 use crate::prelude::{BarLane, BarLaneProps, ModelEntry, Tab, TabBar, TabBarProps, Track};
 use notation_proto::prelude::{
-    BarPosition, Duration, Entry, EntryPassMode, ProtoEntry, TrackKind, Units,
+    BarPosition, Duration, Entry, EntryPassMode, ProtoEntry, TrackKind, Units, Slice,
 };
 
-#[derive(Copy, Clone, Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct LaneEntryProps {
+    pub slice: Slice,
+    pub slice_index: usize,
     pub index: usize,
     pub in_bar_pos: Units,
     pub tied_units: Units,
@@ -28,11 +30,15 @@ impl Display for LaneEntry {
 impl LaneEntry {
     pub fn new(
         lane: Weak<BarLane>,
+        slice: Slice,
+        slice_index: usize,
         index: usize,
         model: Arc<ModelEntry>,
         in_bar_pos: Units,
     ) -> Self {
         let props = LaneEntryProps {
+            slice,
+            slice_index,
             index,
             in_bar_pos,
             tied_units: model.tied_units(),
