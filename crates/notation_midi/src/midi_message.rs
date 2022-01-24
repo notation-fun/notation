@@ -10,6 +10,7 @@ pub struct MidiMessage {
     pub midi: StructuredShortMessage,
 }
 impl MidiMessage {
+    pub const DELAY_GAP: Units = Units(Units::_MIN_ACCURACY * 2.0);
     pub fn new(
         pass_mode: EntryPassMode,
         pos: BarPosition,
@@ -39,7 +40,7 @@ impl MidiMessage {
     }
     pub fn effect_position(&self) -> BarPosition {
         if self.delay {
-            self.pos.with_delay(self.duration)
+            self.pos.with_delay(self.duration - Self::DELAY_GAP)
         } else {
             self.pos
         }

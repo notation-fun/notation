@@ -85,7 +85,7 @@ impl Units {
     pub const _MIN_ACCURACY: f32 = 0.00001;
     pub const MIN_ACCURACY: Units = Units(Self::_MIN_ACCURACY);
     /*
-     * This i quite messy here, the pasition passed checking needs some cleanup,
+     * This is quite messy here, the pasition passed checking needs some cleanup,
      * mainly for control the guitar view timing, and seeking next note
      */
     pub const HALF_MIN_ACCURACY: Units = Units(Self::_MIN_ACCURACY * 0.5);
