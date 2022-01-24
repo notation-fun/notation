@@ -5,6 +5,7 @@ use notation_bevy_utils::prelude::ShapeOp;
 use notation_model::lane_kind::LaneKind;
 
 use crate::chord::chord_view::ChordView;
+use crate::tone::tone_line::ToneLineData;
 use crate::lane::lane_layout::LaneLayoutData;
 use crate::prelude::{
     BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates,
@@ -150,6 +151,7 @@ fn on_tab_bars_resized(
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     mut tone_note_query: Query<(Entity, &mut ToneNoteData), With<ToneNoteData>>,
+    mut tone_line_query: Query<(Entity, &mut ToneLineData), With<ToneLineData>>,
     mut pick_note_query: Query<(Entity, &mut PickNoteData), With<PickNoteData>>,
     mut single_string_query: Query<(Entity, &mut SingleStringData), With<SingleStringData>>,
     mut word_text_query: Query<(Entity, &mut WordTextData), With<WordTextData>>,
@@ -162,6 +164,14 @@ fn on_tab_bars_resized(
     for evt in evts.iter() {
         let bars = &evt.0;
         for (entity, mut data) in tone_note_query.iter_mut() {
+            for (view, layout) in bars.iter() {
+                if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
+                    data.value.bar_size = layout.size.width;
+                    data.update(&mut commands, &theme, entity);
+                }
+            }
+        }
+        for (entity, mut data) in tone_line_query.iter_mut() {
             for (view, layout) in bars.iter() {
                 if data.bar_props.bar_ordinal == view.bar_props.bar_ordinal {
                     data.value.bar_size = layout.size.width;

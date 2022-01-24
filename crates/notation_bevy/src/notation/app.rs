@@ -24,6 +24,8 @@ impl PluginGroup for NotationPlugins {
         group.add(MelodyPlugin);
         group.add(LyricsPlugin);
         group.add(BarPlugin);
+        group.add(MelodyPlugin);
+        group.add(HarmonyPlugin);
         group.add(StringsPlugin);
         group.add(ShapesPlugin);
         group.add(MiniPlugin);

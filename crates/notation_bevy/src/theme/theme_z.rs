@@ -7,6 +7,7 @@ use bevy_inspector_egui::Inspectable;
 #[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeZ {
     pub beat: f32,
+    pub grid: f32,
     pub string: f32,
     pub tone: f32,
     pub word: f32,
@@ -34,6 +35,7 @@ impl Default for ThemeZ {
     fn default() -> Self {
         Self {
             beat: 0.0,
+            grid: 1.0,
             string: 1.0,
             tone: 8.0,
             word: 9.0,

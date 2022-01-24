@@ -71,6 +71,8 @@ pub struct BarSizes {
     pub pos_indicator_size: f32,
     pub pos_indicator_outline: f32,
     pub pos_indicator_extra: f32,
+    pub grid_line_width: f32,
+    pub grid_root_line_width: f32,
 }
 impl Default for BarSizes {
     fn default() -> Self {
@@ -82,6 +84,8 @@ impl Default for BarSizes {
             pos_indicator_size: 2.0,
             pos_indicator_outline: 0.5,
             pos_indicator_extra: 8.0,
+            grid_line_width: 0.5,
+            grid_root_line_width: 2.0,
         }
     }
 }
