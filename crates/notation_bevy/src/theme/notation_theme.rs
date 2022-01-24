@@ -7,11 +7,7 @@ use super::theme_sizes::ThemeSizes;
 use super::theme_texts::ThemeTexts;
 use super::theme_z::ThemeZ;
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotationTheme {
     pub _bypass_systems: bool,
     pub z: ThemeZ,

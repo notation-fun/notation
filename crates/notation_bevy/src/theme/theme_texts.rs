@@ -4,13 +4,9 @@ use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 use crate::prelude::{NotationAssets, NotationSettings, ThemeColors};
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeTexts {
     pub tab: TabTexts,
     pub chord: ChordTexts,
@@ -38,7 +34,6 @@ impl Default for ThemeTexts {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct TabTexts {
     pub bar_font_size: f32,
     pub bar_font_color: Color,
@@ -83,7 +78,6 @@ impl TabTexts {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ChordTexts {
     pub bars_font_size: f32,
     pub bars_font_color: Color,
@@ -130,7 +124,6 @@ impl ChordTexts {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct RhythmTexts {
     pub bar_font_size: f32,
     pub bar_font_color: Color,
@@ -170,7 +163,6 @@ impl RhythmTexts {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LyricsTexts {
     pub text_x: f32,
     pub text_y: f32,
@@ -214,7 +206,6 @@ impl LyricsTexts {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NoteTexts {
     pub text_x: f32,
     pub text_y: f32,
@@ -314,7 +305,6 @@ impl NoteTexts {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsTexts {
     pub text_x: f32,
     pub text_y: f32,
@@ -359,7 +349,6 @@ impl StringsTexts {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MiniMapTexts {
     pub bar_font_size: f32,
     pub bar_font_color: Color,

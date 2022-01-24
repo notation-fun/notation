@@ -3,13 +3,9 @@ use serde::{Deserialize, Serialize};
 use bevy::prelude::*;
 use notation_model::prelude::GUITAR_STRING_NUM;
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 use super::theme_texts::NoteTexts;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct GuitarTheme {
     #[serde(with = "serde_arrays")]
     pub string_widthes: [f32; GUITAR_STRING_NUM],

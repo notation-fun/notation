@@ -5,11 +5,7 @@ use bevy::prelude::*;
 
 use crate::prelude::NotationAssets;
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ShapesTheme {
     pub shape_x: f32,
     pub shape_y: f32,

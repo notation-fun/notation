@@ -1,10 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeZ {
     pub beat: f32,
     pub grid: f32,

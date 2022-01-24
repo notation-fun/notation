@@ -50,10 +50,6 @@ dependencies = ["build-web", "basic-http-server"]
 [tasks.test]
 disabled = true
 
-[tasks.release-inspector]
-args = ["bundle", "--features", "inspector", "@@split(CARGO_RELEASE_ARGS, )"]
-command = "cargo"
-
 [tasks.release-native]
 args = ["bundle", "--features", "native", "@@split(CARGO_RELEASE_ARGS, )"]
 command = "cargo"

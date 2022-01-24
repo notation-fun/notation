@@ -2,13 +2,9 @@ use notation_bevy_utils::prelude::LayoutSize;
 use notation_model::prelude::{LaneKind, Note, PlayingState, Semitones, Tab, TrackKind};
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 use crate::prelude::NotationSettings;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct PlayingSize {
     pub idle: f32,
     pub current: f32,
@@ -32,7 +28,6 @@ impl PlayingSize {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeSizes {
     pub bar: BarSizes,
     pub chord: ChordSizes,
@@ -62,7 +57,6 @@ impl Default for ThemeSizes {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct BarSizes {
     pub beat_size_range: (f32, f32),
     pub bar_separator_extra: f32,
@@ -91,7 +85,6 @@ impl Default for BarSizes {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ChordSizes {
     pub max_chord_rows: usize,
     pub chord_size_range: (f32, f32),
@@ -131,7 +124,6 @@ impl Default for ChordSizes {
     }
 }
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotesSizes {
     pub note_height: f32,
     pub note_outline: PlayingSize,
@@ -241,7 +233,6 @@ impl NotesSizes {
     }
 }
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LyricsSizes {
     pub line_height: PlayingSize,
     pub word_gap: f32,
@@ -261,7 +252,6 @@ impl LyricsSizes {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsSizes {
     pub string_space: f32,
     pub note_height: f32,
@@ -286,7 +276,6 @@ impl StringsSizes {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct TabControlSizes {
     pub control_width_factor: f32,
     pub tab_control_range: (f32, f32),
@@ -321,7 +310,6 @@ impl Default for TabControlSizes {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MiniMapSizes {
     pub bar_height: f32,
     pub bar_width_range: (f32, f32),
@@ -348,7 +336,6 @@ impl MiniMapSizes {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutSizes {
     pub page_margin: f32,
     pub bar_margin: f32,

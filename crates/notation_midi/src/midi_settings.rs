@@ -1,11 +1,7 @@
 use midi_msg::GMSoundSet;
 use notation_model::prelude::{Octave, TrackKind};
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 #[derive(Copy, Clone, PartialEq, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MidiSettings {
     pub bypass_hub: bool,
     pub click_mute: bool,

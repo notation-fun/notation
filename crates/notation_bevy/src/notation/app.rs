@@ -86,9 +86,6 @@ impl NotationApp {
         #[cfg(feature = "dev")]
         app.add_plugins(crate::dev::NotationDevPlugins);
 
-        #[cfg(feature = "inspector")]
-        app.add_plugins(crate::inspector::NotationInspectorPlugins);
-
         app
     }
 

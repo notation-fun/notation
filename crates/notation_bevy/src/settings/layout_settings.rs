@@ -7,16 +7,12 @@ use notation_model::lane_kind::LaneKind;
 use notation_model::prelude::Position;
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 use crate::bar::bar_layout::BarLayoutData;
 use crate::lane::lane_layout::LaneLayoutData;
 use crate::play::pos_indicator::PosIndicatorData;
 use crate::prelude::{NotationTheme, TabBars};
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub enum LayoutMode {
     Grid,
     Line,
@@ -28,7 +24,6 @@ impl Default for LayoutMode {
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub enum GridAlignMode {
     Center,
     ForceCenter,
@@ -42,7 +37,6 @@ impl Default for GridAlignMode {
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutSettings {
     pub mode: LayoutMode,
     pub grid_align_mode: GridAlignMode,

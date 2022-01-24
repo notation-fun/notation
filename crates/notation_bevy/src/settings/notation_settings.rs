@@ -1,12 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 use super::layout_settings::LayoutSettings;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct NotationSettings {
     pub layout: LayoutSettings,
     pub add_ready_section: bool,

@@ -11,9 +11,6 @@ pub use notation_midi;
 
 pub use {bevy, bevy_prototype_lyon, bevy_egui, bevy_asset_loader};
 
-#[cfg(feature = "inspector")]
-pub use bevy_inspector_egui;
-
 pub mod chord;
 pub mod entry;
 pub mod tone;
@@ -42,9 +39,6 @@ pub mod notation;
 
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
-
-#[cfg(feature = "inspector")]
-pub mod inspector;
 
 #[cfg(feature = "dev")]
 pub mod dev;

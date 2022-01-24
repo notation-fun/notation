@@ -3,22 +3,17 @@ use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 pub fn color_of_hex(hex: &str) -> Color {
     let color = Color::hex(hex).unwrap();
     color.as_rgba_linear()
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct BevyUtilsTheme {
     pub layout: LayoutTheme,
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutTheme {
     pub pivot_color: Color,
     pub anchor_color: Color,

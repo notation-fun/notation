@@ -1,11 +1,7 @@
 use bevy::prelude::*;
 use std::fmt::Display;
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub enum LayoutHAnchor {
     Left,
     Center,
@@ -23,7 +19,6 @@ impl Default for LayoutHAnchor {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub enum LayoutVAnchor {
     Top,
     Center,
@@ -41,7 +36,6 @@ impl Default for LayoutVAnchor {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LayoutAnchor {
     pub v: LayoutVAnchor,
     pub h: LayoutHAnchor,

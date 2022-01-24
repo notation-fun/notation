@@ -5,11 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
 
-#[cfg(feature = "inspector")]
-use bevy_inspector_egui::Inspectable;
-
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct PlayingColors {
     pub idle: Color,
     pub current: Color,
@@ -42,7 +38,6 @@ impl Default for PlayingColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct IntervalColors {
     pub perfect: Color,
     pub major: Color,
@@ -82,7 +77,6 @@ pub fn hex_linear(hex: &str) -> Color {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ThemeColors {
     pub syllables: SyllableColors,
     pub bar: BarColors,
@@ -102,7 +96,6 @@ impl ThemeColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct SyllableColors {
     pub outline: PlayingColors,
     pub syllables: [Color; 12],
@@ -133,7 +126,6 @@ impl Default for SyllableColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct BarColors {
     pub bar_indicator: Color,
     pub bar_separator_color: Color,
@@ -216,7 +208,6 @@ impl BarColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct ChordColors {
     pub background: Color,
     pub diagram_outline: PlayingColors,
@@ -246,7 +237,6 @@ impl Default for ChordColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct LyricsColors {
     pub line: PlayingColors,
 }
@@ -263,7 +253,6 @@ impl Default for LyricsColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct StringsColors {
     pub background: Color,
     pub outline: PlayingColors,
@@ -298,7 +287,6 @@ impl Default for StringsColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct SectionColors {
     pub sections: [Color; 12],
 }
@@ -327,7 +315,6 @@ impl Default for SectionColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct RhythmColors {
     pub beats: [Color; 3],
     pub indicator: Color,
@@ -373,7 +360,6 @@ impl RhythmColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct MiniMapColors {
     pub back: Color,
     pub bar_outline_current: Color,
@@ -436,7 +422,6 @@ impl ThemeColors {
 }
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
-#[cfg_attr(feature = "inspector", derive(Inspectable))]
 pub struct UiColors {
     pub app_background: Color,
     pub control_background: Color,
