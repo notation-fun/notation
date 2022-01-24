@@ -106,7 +106,7 @@ impl LaneView {
                 if !settings.hide_harmony_lane {
                     HarmonyPlugin::insert_lane_extra(&mut commands.entity(lane_entity), lane)
                 }
-                !settings.hide_melody_lane
+                !settings.hide_harmony_lane
             }
             LaneKind::Strings => {
                 if !settings.hide_strings_lane {

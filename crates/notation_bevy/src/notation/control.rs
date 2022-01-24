@@ -9,9 +9,13 @@ use super::events::WindowResizedEvent;
 pub struct Control();
 
 impl Control {
+    pub const PRESET_GUITAR_TAB: &'static str = "guitar_tab";
+    pub const PRESET_GUITAR_NOTES: &'static str = "guitar_notes";
     pub const PRESET_GUITAR_STRINGS: &'static str = "guitar_strings";
     pub const PRESET_MELODY: &'static str = "melody";
-    pub const ALL_PRESETS: [&'static str ; 2 ] = [
+    pub const ALL_PRESETS: [&'static str ; 4 ] = [
+        Self::PRESET_GUITAR_TAB,
+        Self::PRESET_GUITAR_NOTES,
         Self::PRESET_GUITAR_STRINGS,
         Self::PRESET_MELODY,
     ];
@@ -102,6 +106,45 @@ impl Control {
             Self::set_window_size(window, width, height);
         }
     }
+    fn set_preset_strings(
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+        always_show_fret: bool,
+    ) {
+        settings.hide_strings_lane = false;
+        settings.always_show_fret = always_show_fret;
+        theme.sizes.layout.page_margin = 24.0;
+        theme.sizes.strings.string_space = 20.0;
+        theme.sizes.strings.note_height = 9.0;
+        theme.texts.strings.text_y = -4.0;
+        theme.texts.strings.fret_font_size = 20.0;
+    }
+    fn set_preset_harmony(
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.hide_harmony_lane = false;
+        theme.sizes.layout.page_margin = 24.0;
+        theme.sizes.harmony.note_height = 6.0;
+        theme.sizes.harmony.semitone_height = 6.0;
+        theme.texts.harmony.text_y = 9.0;
+        theme.texts.harmony.syllable_font_size = 20.0;
+    }
+    fn set_preset_melody(
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+        show_melody_pitch: bool,
+    ) {
+        settings.hide_melody_lane = false;
+        settings.show_melody_pitch = show_melody_pitch;
+        settings.show_melody_syllable = true;
+        settings.show_syllable_as_num = true;
+        theme.sizes.layout.page_margin = 24.0;
+        theme.sizes.melody.note_height = 9.0;
+        theme.sizes.melody.semitone_height = 9.0;
+        theme.texts.melody.text_y = -18.0;
+        theme.texts.melody.syllable_font_size = 20.0;
+    }
     pub fn set_preset(
         state: &mut NotationState,
         settings: &mut NotationSettings,
@@ -115,27 +158,23 @@ impl Control {
         #[cfg(not(target_arch = "wasm32"))]
         Self::set_primary_window_size(windows, 1080, 1920);
         match preset {
+            Self::PRESET_GUITAR_TAB => {
+                settings.hack_for_screenshot();
+                Self::set_preset_strings(settings, theme, true);
+                Self::set_preset_harmony(settings, theme);
+                settings.hide_shapes_lane = false;
+            },
+            Self::PRESET_GUITAR_NOTES => {
+                settings.hack_for_screenshot();
+                Self::set_preset_harmony(settings, theme);
+            },
             Self::PRESET_GUITAR_STRINGS => {
                 settings.hack_for_screenshot();
-                settings.hide_strings_lane = false;
-                settings.always_show_fret = true;
-                theme.sizes.layout.page_margin = 24.0;
-                theme.sizes.strings.string_space = 20.0;
-                theme.sizes.strings.note_height = 9.0;
-                theme.texts.strings.fret_font_size = 20.0;
-                theme.texts.strings.text_y = 8.0;
+                Self::set_preset_strings(settings, theme, true);
             },
             Self::PRESET_MELODY => {
                 settings.hack_for_screenshot();
-                settings.hide_melody_lane = false;
-                settings.show_melody_pitch = true;
-                settings.show_melody_syllable = true;
-                settings.show_syllable_as_num = true;
-                theme.sizes.layout.page_margin = 24.0;
-                theme.sizes.melody.note_height = 9.0;
-                theme.sizes.melody.semitone_height = 9.0;
-                theme.texts.melody.text_y = -18.0;
-                theme.texts.melody.syllable_font_size = 20.0;
+                Self::set_preset_melody(settings, theme, true);
             },
             _ => {
                 println!("Control::set_preset() Invalid Preset: {}", preset);

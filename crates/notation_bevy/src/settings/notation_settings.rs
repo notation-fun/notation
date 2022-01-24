@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::layout_settings::LayoutSettings;
+use super::layout_settings::{LayoutSettings, LayoutMode, GridAlignMode};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct NotationSettings {
@@ -77,6 +77,8 @@ impl NotationSettings {
         self.hide_melody_lane = true;
     }
     pub fn hack_for_screenshot(&mut self) {
+        self.layout.mode = LayoutMode::Grid;
+        self.layout.grid_align_mode = GridAlignMode::ForceTop;
         self.add_ready_section = false;
         self.hide_indicators = true;
         self.hide_guitar_view = true;

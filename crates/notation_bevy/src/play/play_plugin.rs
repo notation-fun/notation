@@ -81,12 +81,10 @@ fn update_indicators(
     bar_playing: &BarPlaying,
     bar_layout: LayoutData,
 ) {
-    if settings.hide_indicators {
-        return;
-    }
     let bar_props = bar_playing.bar_props;
     let mut in_bar_pos = None;
     for (entity, mut data) in pos_indicator_query.iter_mut() {
+        data.hidden = settings.hide_indicators;
         data.bar_props = bar_props;
         data.bar_layout = bar_layout;
         data.update(commands, &theme, entity);
@@ -94,6 +92,9 @@ fn update_indicators(
             .layout
             .focus_bar(commands, theme, tab_bars_query, &data);
         in_bar_pos = Some(data.bar_position.in_bar_pos);
+    }
+    if settings.hide_indicators {
+        return;
     }
     for (entity, mut data) in bar_indicator_query.iter_mut() {
         data.bar_props = bar_props;

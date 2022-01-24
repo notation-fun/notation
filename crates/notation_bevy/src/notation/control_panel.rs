@@ -161,6 +161,12 @@ impl ControlPanel {
         CollapsingHeader::new("Display Options")
             .default_open(true)
             .show(ui, |ui| {
+                let mut hide_harmony_lane = settings.hide_harmony_lane;
+                ui.checkbox(&mut hide_harmony_lane, "Hide Guitar Notes");
+                if settings.hide_harmony_lane != hide_harmony_lane {
+                    settings.hide_harmony_lane = hide_harmony_lane;
+                    Control::reload_tab(state, theme);
+                }
                 let mut hide_shapes_lane = settings.hide_shapes_lane;
                 ui.checkbox(&mut hide_shapes_lane, "Hide Guitar Chords");
                 if settings.hide_shapes_lane != hide_shapes_lane {
@@ -171,12 +177,6 @@ impl ControlPanel {
                 ui.checkbox(&mut hide_strings_lane, "Hide Guitar Strings");
                 if settings.hide_strings_lane != hide_strings_lane {
                     settings.hide_strings_lane = hide_strings_lane;
-                    Control::reload_tab(state, theme);
-                }
-                let mut hide_harmony_lane = settings.hide_harmony_lane;
-                ui.checkbox(&mut hide_harmony_lane, "Hide Guitar Notes");
-                if settings.hide_harmony_lane != hide_harmony_lane {
-                    settings.hide_harmony_lane = hide_harmony_lane;
                     Control::reload_tab(state, theme);
                 }
                 let mut hide_lyrics_lane = settings.hide_lyrics_lane;

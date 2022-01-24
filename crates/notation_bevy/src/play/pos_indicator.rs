@@ -7,6 +7,7 @@ use crate::prelude::NotationTheme;
 
 #[derive(Clone, Debug, Component)]
 pub struct PosIndicatorData {
+    pub hidden: bool,
     pub bar_props: TabBarProps,
     pub bar_layout: LayoutData,
     pub bar_units: Units,
@@ -16,6 +17,7 @@ pub struct PosIndicatorData {
 impl PosIndicatorData {
     pub fn new(bar_units: Units) -> Self {
         PosIndicatorData {
+            hidden: false,
             bar_props: TabBarProps::default(),
             bar_layout: LayoutData::ZERO,
             bar_units,
@@ -36,7 +38,11 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for PosIndicatorData {
     fn get_shape(&self, theme: &NotationTheme) -> OutlineRectangle {
         let width = theme.sizes.bar.pos_indicator_size;
         let height = self.bar_layout.size.height + theme.sizes.bar.bar_separator_extra * 2.0;
-        let color = theme.colors.of_section(self.bar_props.section_ordinal);
+        let color = if self.hidden {
+            crate::theme::theme_colors::hex_linear("00000000")
+        } else {
+            theme.colors.of_section(self.bar_props.section_ordinal)
+        };
         let outline_color = theme.colors.bar.pos_indicator_color;
         let outline_width = theme.sizes.bar.pos_indicator_outline;
         let offset = if self.bar_layout.size.width <= 0.0 {

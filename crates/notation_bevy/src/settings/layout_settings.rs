@@ -176,10 +176,21 @@ impl LayoutSettings {
         let grid_size = layout.size;
         let content_size = grid_data.content_size;
         if self.video_recording_mode || self.grid_align_mode == GridAlignMode::ForceTop {
-            y += self.override_focus_offset_y.unwrap_or(0.0);
+            match self.override_focus_offset_y {
+                Some(offset_y) => {
+                    y += offset_y;
+                },
+                None => {
+                    if grid_size.height > content_size.height {
+                        y += (content_size.height - grid_size.height) / 2.0;
+                    }
+                }
+            }
         } else {
             if grid_size.height > content_size.height {
-                y = -(grid_size.height - content_size.height);
+                if self.grid_align_mode != GridAlignMode::ForceCenter {
+                    y = -(grid_size.height - content_size.height);
+                }
             } else {
                 /* try to show as 2nd row
                 let last_row_height = grid_data.calc_cell_size(row - 1, col).height;
@@ -196,9 +207,7 @@ impl LayoutSettings {
                         / 2.0
                         + self.override_focus_offset_y.unwrap_or(0.0);
                 }
-                if self.grid_align_mode != GridAlignMode::ForceCenter
-                    && self.grid_align_mode != GridAlignMode::ForceTop
-                {
+                if self.grid_align_mode != GridAlignMode::ForceCenter {
                     let min_y = grid_size.height
                         - content_size.height
                         - theme.sizes.layout.page_margin * 2.0;
