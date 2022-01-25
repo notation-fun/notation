@@ -7,9 +7,9 @@ use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 use super::kb_page::{KbPage};
 use notation_bevy_utils::prelude::{MarkDownAsset, easy_mark, EasyLinkEvent};
 
-#[derive(Copy, Clone, PartialEq, Eq, Debug, Default)]
+#[derive(Clone, PartialEq, Eq, Debug, Default)]
 pub struct MarkDownPage {
-    path: &'static str,
+    path: String,
 }
 
 impl KbPage for MarkDownPage {
@@ -22,12 +22,12 @@ impl KbPage for MarkDownPage {
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        Self::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path);
+        Self::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
     }
 }
 
 impl MarkDownPage {
-    pub fn new(path: &'static str) -> Self {
+    pub fn new(path: String) -> Self {
         Self { path }
     }
     pub fn markdown_ui(

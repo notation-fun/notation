@@ -60,9 +60,9 @@ impl Default for SingleStringData {
 }
 
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct SoundPage {
-    pub path: &'static str,
+    pub path: String,
     pub section: SoundSection,
 }
 
@@ -76,7 +76,7 @@ impl KbPage for SoundPage {
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path);
+        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
         ui.separator();
         match self.section {
             SoundSection::SingleString(ref mut data) => {
@@ -105,7 +105,7 @@ impl KbContent for SoundPage {
 }
 
 impl SoundPage {
-    pub fn new(path: &'static str) -> Self {
+    pub fn new(path: String) -> Self {
         Self {
             path,
             section: SoundSection::SingleString(Default::default()),

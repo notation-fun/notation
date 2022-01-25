@@ -1,15 +1,12 @@
-use std::f64::consts::{PI, FRAC_PI_2};
-
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::egui::*;
-use notation_bevy::bevy_egui::egui::plot::*;
 
 use notation_bevy::kb::markdown_page::MarkDownPage;
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, BevyUtil, Syllable};
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct GuitarPage {
-    pub path: &'static str,
+    pub path: String,
 }
 
 impl KbPage for GuitarPage {
@@ -22,7 +19,7 @@ impl KbPage for GuitarPage {
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path);
+        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
     }
 }
 
@@ -41,7 +38,7 @@ impl KbContent for GuitarPage {
 }
 
 impl GuitarPage {
-    pub fn new(path: &'static str) -> Self {
+    pub fn new(path: String) -> Self {
         Self {
             path,
         }

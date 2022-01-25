@@ -1,9 +1,14 @@
 use serde::{Deserialize, Serialize};
+use unic_langid::LanguageIdentifier;
+use unic_langid::langid;
+
+use crate::lane::lane_bundle::LaneBundle;
 
 use super::layout_settings::{LayoutSettings, LayoutMode, GridAlignMode};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct NotationSettings {
+    pub lang: String,
     pub layout: LayoutSettings,
     pub add_ready_section: bool,
     pub should_loop: bool,
@@ -35,6 +40,7 @@ pub struct NotationSettings {
 impl Default for NotationSettings {
     fn default() -> Self {
         Self {
+            lang: "zh-CN".to_owned(),
             layout: LayoutSettings::default(),
             add_ready_section: false,
             should_loop: false,
@@ -66,6 +72,16 @@ impl Default for NotationSettings {
 }
 
 impl NotationSettings {
+    pub const EN_US: LanguageIdentifier = langid!("en-US");
+    pub const ZH_CN: LanguageIdentifier = langid!("zh-CN");
+
+    pub fn lang(&self) -> LanguageIdentifier {
+        if self.lang == "zh-CN" {
+            Self::ZH_CN
+        } else {
+            Self::EN_US
+        }
+    }
     pub fn show_melody_note(&self) -> bool {
         self.show_melody_pitch || self.show_melody_syllable
     }

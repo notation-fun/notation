@@ -1,12 +1,14 @@
 use notation_bevy::bevy::prelude::*;
 use notation_bevy::bevy_egui::EguiContext;
 
-use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent};
+use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings};
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use notation_bevy::kb::chords_page::ChordsPage;
 use notation_bevy::kb::notes_page::NotesPage;
 use notation_bevy::kb::markdown_page::MarkDownPage;
+
+use crate::assets::NotationViewerAssets;
 
 #[derive(Clone, Debug)]
 pub struct HelpPanel {
@@ -19,25 +21,24 @@ pub struct HelpPanel {
     pub usage: MarkDownPage,
 }
 
-impl Default for HelpPanel {
-    fn default() -> Self {
+impl FromWorld for HelpPanel {
+    fn from_world(world: &mut World) -> Self {
+        let settings = world.get_resource::<NotationSettings>().unwrap();
         Self {
             skip_frames: 2,
             open_times: 0,
             current_page_id: Self::WELCOME,
-            welcome: MarkDownPage::new(Self::WELCOME_PATH),
+            welcome: MarkDownPage::new(NotationViewerAssets::get_welcome_path(&settings)),
             notes: Default::default(),
             chords: Default::default(),
-            usage: MarkDownPage::new(Self::USAGE_PATH),
+            usage: MarkDownPage::new(NotationViewerAssets::get_usage_path(&settings)),
         }
     }
 }
 
 impl HelpPanel {
-    pub const WELCOME_PATH: &'static str = "kb/welcome.md";
-    pub const WELCOME: KbPageId = KbPageId::MarkDown(Self::WELCOME_PATH);
-    pub const USAGE_PATH: &'static str = "kb/usage.md";
-    pub const USAGE: KbPageId = KbPageId::MarkDown(Self::USAGE_PATH);
+    pub const WELCOME: KbPageId = KbPageId::MarkDown("kb_welcome");
+    pub const USAGE: KbPageId = KbPageId::MarkDown("kb_usage");
 
     pub const LINK_NOTES: &'static str = ":kb:notes";
     pub const LINK_CHORDS: &'static str = ":kb:chords";

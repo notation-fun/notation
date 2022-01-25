@@ -3,7 +3,7 @@ use std::sync::RwLock;
 use bevy::prelude::*;
 use bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, TextStyle}, EguiContext};
 
-use crate::notation::assets::{ExtraAssets, NotationAssets};
+use crate::{notation::assets::{ExtraAssets, NotationAssets}, settings::notation_settings::NotationSettings};
 
 lazy_static! {
     static ref EGUI_FONT: RwLock<EguiFont> = RwLock::new(EguiFont::default());
@@ -105,13 +105,14 @@ pub fn get_font_definitions(
 }
 
 pub fn setup_egui_fonts<A: ExtraAssets>(
+    settings: Res<NotationSettings>,
     extra_assets: Res<A>,
     egui_ctx: Res<EguiContext>,
 ) {
     println!("setup_egui_fonts() ---------------------------------------");
     let fonts = get_font_definitions(
         EguiFont::get_font(),
-        extra_assets.get_egui_font_sizes());
+        extra_assets.get_egui_font_sizes(&settings));
     egui_ctx
         .ctx()
         .set_fonts(fonts);

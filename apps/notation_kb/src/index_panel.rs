@@ -6,8 +6,8 @@ use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel
 use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use notation_bevy::kb::markdown_page::MarkDownPage;
-use notation_bevy::tab::tab_control::TabControl;
 
+use crate::assets::NotationKnowledgeBaseAssets;
 use crate::guitar::page::GuitarPage;
 use crate::theory::scale::ScalePage;
 use crate::theory::sound::{SoundPage, SoundSection};
@@ -22,18 +22,19 @@ pub struct IndexPanel {
     pub guitar: GuitarPage,
 }
 
-impl Default for IndexPanel {
-    fn default() -> Self {
-        Self {
-            /* if the first page displayed is using the chinese font, will crash, this is a hack around this
-            wgpu error: Validation Error
+/* if the first page displayed is using the chinese font, will crash, this is a hack around this
+wgpu error: Validation Error
 
 Caused by:
-    In CommandEncoder::copy_buffer_to_texture
-    Copy error
-    copy of Y 0..256 would end up overruning the bounds of the Destination texture of Y size 128
-            TODO: Check whether still needed after upgrade bevy and bevy_egui
-             */
+In CommandEncoder::copy_buffer_to_texture
+Copy error
+copy of Y 0..256 would end up overruning the bounds of the Destination texture of Y size 128
+TODO: Check whether still needed after upgrade bevy and bevy_egui
+    */
+impl FromWorld for IndexPanel {
+    fn from_world(world: &mut World) -> Self {
+        let settings = world.get_resource::<NotationSettings>().unwrap();
+        Self {
             skip_frames: 2,
 
             #[cfg(debug_assertions)]
@@ -41,24 +42,19 @@ Caused by:
             #[cfg(not(debug_assertions))]
             current_page_id: Self::WELCOME,
 
-            welcome: MarkDownPage::new(Self::PATH_WELCOME),
-            sound: SoundPage::new(Self::PATH_SOUND),
-            scale: ScalePage::new(Self::PATH_SCALE),
-            guitar: GuitarPage::new(Self::PATH_GUITAR),
+            welcome: MarkDownPage::new(NotationKnowledgeBaseAssets::get_welcome_path(&settings)),
+            sound: SoundPage::new(NotationKnowledgeBaseAssets::get_sound_path(&settings)),
+            scale: ScalePage::new(NotationKnowledgeBaseAssets::get_scale_path(&settings)),
+            guitar: GuitarPage::new(NotationKnowledgeBaseAssets::get_guitar_path(&settings)),
         }
     }
 }
 
 impl IndexPanel {
-    pub const WELCOME: KbPageId = KbPageId::MarkDown(Self::PATH_WELCOME);
-    pub const SOUND: KbPageId = KbPageId::Custom("sound");
-    pub const SCALE: KbPageId = KbPageId::Custom("scale");
-    pub const GUITAR: KbPageId = KbPageId::Custom("guitar");
-
-    pub const PATH_WELCOME: &'static str = "kb/welcome.md";
-    pub const PATH_SOUND: &'static str = "kb/sound.md";
-    pub const PATH_SCALE: &'static str = "kb/scale.md";
-    pub const PATH_GUITAR: &'static str = "kb/guitar.md";
+    pub const WELCOME: KbPageId = KbPageId::MarkDown("kb_welcome");
+    pub const SOUND: KbPageId = KbPageId::Custom("kb_sound");
+    pub const SCALE: KbPageId = KbPageId::Custom("kb_scale");
+    pub const GUITAR: KbPageId = KbPageId::Custom("kb_guitar");
 
     pub const LINK_SOUND: &'static str = ":kb:sound";
     pub const LINK_SCALE: &'static str = ":kb:scale";

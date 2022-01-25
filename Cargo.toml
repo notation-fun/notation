@@ -13,10 +13,8 @@ members = [
     "crates/notation_midi",
     "crates/notation_bevy",
     "apps/notation_kb",
-    "apps/notation_kb_cn",
     "apps/notation_tabs",
     "apps/notation_viewer",
-    "apps/notation_viewer_cn",
 ]
 
 # https://rustwasm.github.io/book/reference/code-size.html

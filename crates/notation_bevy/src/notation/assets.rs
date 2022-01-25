@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use bevy::{prelude::*, asset::{AssetPath, HandleId, Asset}};
 use bevy_asset_loader::{AssetCollection, AssetKeys};
 
-use crate::egui::egui_fonts::EguiFontSizes;
+use crate::{egui::egui_fonts::EguiFontSizes, settings::notation_settings::NotationSettings};
 
 #[derive(AssetCollection)]
 pub struct NotationAssets {
@@ -28,24 +28,31 @@ pub struct NotationAssets {
 
 pub trait ExtraAssets : AssetCollection {
     fn get_assets(&self) -> Vec<HandleUntyped>;
-    fn get_syllable_font() -> &'static str {
+    fn get_syllable_font(_settings: &NotationSettings) -> &'static str {
         "fonts/uchiyama.ttf"
     }
-    fn get_fret_font() -> &'static str {
+    fn get_fret_font(_settings: &NotationSettings) -> &'static str {
         "fonts/Bitter-Bold.ttf"
     }
-    fn get_latin_font() -> &'static str {
+    fn get_latin_font(_settings: &NotationSettings) -> &'static str {
         "fonts/FiraMono-Medium.ttf"
     }
-    fn get_lyrics_font() -> &'static str {
-        "fonts/FiraMono-Medium.ttf"
+    fn get_lyrics_font(settings: &NotationSettings) -> &'static str {
+        if settings.lang() == NotationSettings::ZH_CN {
+            return "fonts/zh-CN/NotoSansSC-Medium.otf.egui"
+        }
+        "fonts/en-US/FiraMono-Medium.ttf.egui"
     }
-    fn get_fretboard_image() -> &'static str {
+    fn get_fretboard_image(_settings: &NotationSettings) -> &'static str {
         "png/fretboard.png"
     }
-    fn get_egui_font_sizes(&self) -> EguiFontSizes {
+    fn get_egui_font_sizes(&self, settings: &NotationSettings) -> EguiFontSizes {
+        if settings.lang() == NotationSettings::ZH_CN {
+            return EguiFontSizes::BIGGER;
+        }
         EguiFontSizes::default()
     }
+    fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut AssetKeys);
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
@@ -56,13 +63,15 @@ pub enum NotationAssetsStates {
 
 impl NotationAssets {
     pub fn setup_keys<A: ExtraAssets>(
+        settings: Res<NotationSettings>,
         mut asset_keys: ResMut<AssetKeys>,
     ) {
-        asset_keys.set_asset_key("syllable_font", A::get_syllable_font());
-        asset_keys.set_asset_key("fret_font", A::get_fret_font());
-        asset_keys.set_asset_key("latin_font", A::get_latin_font());
-        asset_keys.set_asset_key("lyrics_font", A::get_lyrics_font());
-        asset_keys.set_asset_key("fretboard_image", A::get_fretboard_image());
+        asset_keys.set_asset_key("syllable_font", A::get_syllable_font(&settings));
+        asset_keys.set_asset_key("fret_font", A::get_fret_font(&settings));
+        asset_keys.set_asset_key("latin_font", A::get_latin_font(&settings));
+        asset_keys.set_asset_key("lyrics_font", A::get_lyrics_font(&settings));
+        asset_keys.set_asset_key("fretboard_image", A::get_fretboard_image(&settings));
+        A::setup_extra_keys(&settings, &mut asset_keys);
     }
     pub fn get_extra<A: Asset>(&self, path: PathBuf) -> Option<Handle<A>> {
         let handle_id = HandleId::from(AssetPath::new(path, None));
@@ -95,5 +104,7 @@ pub struct NoExtraAssets {
 impl ExtraAssets for NoExtraAssets {
     fn get_assets(&self) -> Vec<HandleUntyped> {
         Vec::new()
+    }
+    fn setup_extra_keys(_settings: &NotationSettings, _asset_keys: &mut AssetKeys) {
     }
 }

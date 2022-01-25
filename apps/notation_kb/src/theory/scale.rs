@@ -7,9 +7,9 @@ use notation_bevy::prelude::*;
 
 use crate::index_panel::IndexPanel;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct ScalePage {
-    pub path: &'static str,
+    pub path: String,
     pub scale: Scale,
     pub key: notation_bevy::prelude::Key,
     pub transpose: i8,
@@ -25,7 +25,7 @@ impl KbPage for ScalePage {
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path);
+        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
         ui.separator();
         let scale = self.scale.clone();
         let key = self.key.clone();
@@ -82,7 +82,7 @@ impl KbContent for ScalePage {
 }
 
 impl ScalePage {
-    pub fn new(path: &'static str) -> Self {
+    pub fn new(path: String) -> Self {
         Self {
             path,
             scale: Default::default(),
