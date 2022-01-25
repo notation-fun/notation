@@ -2,8 +2,6 @@ use serde::{Deserialize, Serialize};
 use unic_langid::LanguageIdentifier;
 use unic_langid::langid;
 
-use crate::lane::lane_bundle::LaneBundle;
-
 use super::layout_settings::{LayoutSettings, LayoutMode, GridAlignMode};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -40,7 +38,7 @@ pub struct NotationSettings {
 impl Default for NotationSettings {
     fn default() -> Self {
         Self {
-            lang: "zh-CN".to_owned(),
+            lang: Self::EN_US.to_string(),
             layout: LayoutSettings::default(),
             add_ready_section: false,
             should_loop: false,
