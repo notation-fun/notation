@@ -62,9 +62,10 @@ macro_rules! impl_pick_system {
             */
             if let Some(bar) = entry.bar() {
                 if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
+                    let meta = bar.tab_meta();
                     for pick_note in pick.get_notes() {
                         if let Some((fret, note)) =
-                            fretboard.shape_pick_fret_note(&shape, pick_note)
+                            fretboard.shape_pick_fret_note(&meta.scale, &meta.key, &shape, pick_note)
                         {
                             let syllable = bar.calc_syllable(&note.pitch);
                             let data =
@@ -101,7 +102,8 @@ macro_rules! impl_pick_system {
             */
             if let Some(bar) = entry.bar() {
                 if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
-                    let tone = fretboard.pick_tone(&shape, pick);
+                    let meta = bar.tab_meta();
+                    let tone = fretboard.pick_tone(&meta.scale, &meta.key, &shape, pick);
                     commands
                         .entity(entity)
                         .insert_bundle(ToneBundle::from(tone));

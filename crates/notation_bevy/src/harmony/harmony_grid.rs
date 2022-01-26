@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use notation_bevy_utils::prelude::ShapeOp;
 
 use crate::{prelude::{NotationTheme, NotationSettings}, tone::tone_mode::ToneMode};
-use notation_model::{bar_lane::BarLane, prelude::{Note, Semitones}};
+use notation_model::{bar_lane::BarLane, prelude::{Semitones}};
 
 use crate::tone::tone_line::{ToneLineValue, ToneLineData};
 
@@ -23,14 +23,12 @@ impl HarmonyGrid {
             let key = bar.tab_meta().key;
             let syllables = scale.get_syllables();
             for semitones in theme.sizes.harmony.lowest.0 ..= theme.sizes.harmony.highest.0 {
-                let note = Note::from(Semitones(semitones));
-                let syllable_note = scale.calc_syllable_note(&key, &note);
-                if syllables.contains(&syllable_note.syllable) {
+                let note = scale.calc_note_from_semitones(&key, Semitones(semitones));
+                if syllables.contains(&note.syllable) {
                     let data = ToneLineData::new(lane, ToneLineValue {
                         mode: ToneMode::Harmony,
-                        is_root: syllables[0] == syllable_note.syllable,
+                        is_root: syllables[0] == note.syllable,
                         note,
-                        syllable_note,
                         bar_size: 0.0,
                     });
                     data.create(commands, theme, entity);

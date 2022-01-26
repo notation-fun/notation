@@ -196,7 +196,7 @@ impl NotesSizes {
                     if let Some(fretted_entry) = entry.model.proto.as_fretted6() {
                         if let Some(pick) = fretted_entry.as_pick() {
                             if let Some((fretboard, shape)) = bar.get_fretted_shape6(entry) {
-                                let tone = fretboard.pick_tone(&shape, pick);
+                                let tone = fretboard.pick_tone(&tab.meta.scale, &tab.meta.key, &shape, pick);
                                 for note in tone.get_notes() {
                                     let v = Semitones::from(note);
                                     if v < self.lowest {

@@ -4,7 +4,7 @@ use crate::core::duration::DurationTweakDsl;
 use crate::core::octave::OctaveTweakDsl;
 use fehler::{throw, throws};
 use notation_proto::prelude::{
-    Duration, Key, Note, Octave, Scale, Syllable, SyllableNote, GUITAR_STRING_NUM,
+    Duration, Key, Note, Octave, Scale, Syllable, GUITAR_STRING_NUM, Pitch,
 };
 use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
@@ -130,19 +130,17 @@ impl Context {
             Octave::from_ident(#ident)
         }
     }
-    pub fn calc_note(tweak: &Option<OctaveTweakDsl>, syllable: &Syllable) -> Note {
+    pub fn calc_note_from_pitch(tweak: &Option<OctaveTweakDsl>, pitch: &Pitch) -> Note {
         let octave = Self::tweaked_octave(tweak);
         let key = Self::key();
         let scale = Self::scale();
-        scale.calc_note(&key, &SyllableNote::new(octave, *syllable))
+        scale.calc_note_from_pitch(&key, pitch, &octave)
     }
-    pub fn calc_note_quote(tweak: &Option<OctaveTweakDsl>, syllable: &Syllable) -> TokenStream {
-        let note = Self::calc_note(tweak, syllable);
-        let octave_ident = note.octave.to_ident();
-        let pitch_text = note.pitch.to_text();
-        quote! {
-            Note::new(Octave::from_ident(#octave_ident), Pitch::from_text(#pitch_text))
-        }
+    pub fn calc_note_from_syllable(tweak: &Option<OctaveTweakDsl>, syllable: &Syllable) -> Note {
+        let octave = Self::tweaked_octave(tweak);
+        let key = Self::key();
+        let scale = Self::scale();
+        scale.calc_note_from_syllable(&key, syllable, &octave)
     }
 }
 

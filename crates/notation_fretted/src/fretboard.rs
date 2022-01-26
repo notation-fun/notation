@@ -5,7 +5,7 @@ use crate::pick::PickNote;
 use crate::prelude::Pick;
 
 use super::prelude::{HandShape4, HandShape6};
-use notation_core::prelude::{Note, Semitones, Tone};
+use notation_core::prelude::{Note, Semitones, Tone, Scale, Key};
 
 macro_rules! impl_fretboard {
     ($type:ident, $strings:literal, $hand_shape:ident) => {
@@ -13,7 +13,7 @@ macro_rules! impl_fretboard {
         pub struct $type {
             pub total_fret_num: usize,
             #[serde(with = "serde_arrays")]
-            pub string_notes: [Note; $strings],
+            pub string_notes: [Semitones; $strings],
             pub capo: u8,
         }
         impl Display for $type {
@@ -27,7 +27,7 @@ macro_rules! impl_fretboard {
         }
 
         impl $type {
-            pub fn new(total_fret_num: usize, string_notes: [Note; $strings], capo: u8) -> Self {
+            pub fn new(total_fret_num: usize, string_notes: [Semitones; $strings], capo: u8) -> Self {
                 Self {
                     total_fret_num,
                     string_notes,
@@ -37,14 +37,11 @@ macro_rules! impl_fretboard {
             pub fn with_capo(&self, capo: u8) -> Self {
                 Self { capo, ..*self }
             }
-            pub fn fretted_note(&self, string: u8, fret: u8) -> Option<Note> {
+            pub fn fretted_note(&self, scale: &Scale, key: &Key, string: u8, fret: u8) -> Option<Note> {
                 if fret as usize >= self.fret_num() {
                     None
-                } else if fret == 0 {
-                    self.open_note(string)
                 } else {
-                    self.open_note(string)
-                        .map(|note| (Semitones::from(note) + Semitones(fret as i8)).into())
+                    self.open_note(scale, key, string)
                 }
             }
             pub fn string_num(&self) -> usize {
@@ -53,60 +50,57 @@ macro_rules! impl_fretboard {
             pub fn fret_num(&self) -> usize {
                 self.total_fret_num - self.capo as usize
             }
-            fn get_capo_note(&self, note: Note) -> Note {
-                (Semitones::from(note) + Semitones(self.capo as i8)).into()
+            fn get_capo_note(&self, scale: &Scale, key: &Key, note: Semitones) -> Note {
+                scale.calc_note_from_semitones(key, note + Semitones(self.capo as i8))
             }
-            pub fn open_notes(&self) -> [Note; $strings] {
-                if self.capo == 0 {
-                    return self.string_notes;
-                }
-                self.string_notes.map(|x| self.get_capo_note(x))
+            pub fn open_notes(&self, scale: &Scale, key: &Key) -> [Note; $strings] {
+                self.string_notes.map(|x| self.get_capo_note(scale, key, x))
             }
             /// string is 1-based.
-            pub fn open_note(&self, string: u8) -> Option<Note> {
+            pub fn open_note(&self, scale: &Scale, key: &Key, string: u8) -> Option<Note> {
                 if string == 0 || string as usize > self.string_notes.len() {
                     None
                 } else {
-                    Some(self.get_capo_note(self.string_notes[(string - 1) as usize]))
+                    Some(self.get_capo_note(scale, key, self.string_notes[(string - 1) as usize]))
                 }
             }
-            pub fn shape_note(&self, shape: &$hand_shape, string: u8) -> Option<Note> {
+            pub fn shape_note(&self, scale: &Scale, key: &Key, shape: &$hand_shape, string: u8) -> Option<Note> {
                 shape
                     .string_fret_with_barre(string)
-                    .and_then(|fret| self.fretted_note(string, fret))
+                    .and_then(|fret| self.fretted_note(scale, key, string, fret))
             }
-            pub fn shape_fret_note(&self, shape: &$hand_shape, string: u8) -> Option<(u8, Note)> {
+            pub fn shape_fret_note(&self, scale: &Scale, key: &Key, shape: &$hand_shape, string: u8) -> Option<(u8, Note)> {
                 shape
                     .string_fret_with_barre(string)
-                    .and_then(|fret| self.fretted_note(string, fret).map(|n| (fret, n)))
+                    .and_then(|fret| self.fretted_note(scale, key, string, fret).map(|n| (fret, n)))
             }
             pub fn shape_pick_note(
-                &self,
+                &self, scale: &Scale, key: &Key,
                 shape: &$hand_shape,
                 pick_note: PickNote,
             ) -> Option<Note> {
                 match pick_note.fret {
-                    Some(fret) => self.fretted_note(pick_note.string, fret),
-                    None => self.shape_note(shape, pick_note.string),
+                    Some(fret) => self.fretted_note(scale, key, pick_note.string, fret),
+                    None => self.shape_note(scale, key, shape, pick_note.string),
                 }
             }
             pub fn shape_pick_fret_note(
-                &self,
+                &self, scale: &Scale, key: &Key,
                 shape: &$hand_shape,
                 pick_note: PickNote,
             ) -> Option<(u8, Note)> {
                 match pick_note.fret {
                     Some(fret) => self
-                        .fretted_note(pick_note.string, fret)
+                        .fretted_note(scale, key, pick_note.string, fret)
                         .map(|note| (fret, note)),
-                    None => self.shape_fret_note(shape, pick_note.string),
+                    None => self.shape_fret_note(scale, key, shape, pick_note.string),
                 }
             }
-            pub fn pick_tone(&self, shape: &$hand_shape, pick: &Pick) -> Tone {
+            pub fn pick_tone(&self, scale: &Scale, key: &Key, shape: &$hand_shape, pick: &Pick) -> Tone {
                 let notes: Vec<Option<Note>> = pick
                     .get_notes()
                     .into_iter()
-                    .map(|x| self.shape_pick_note(shape, x))
+                    .map(|x| self.shape_pick_note(scale, key, shape, x))
                     .collect();
                 notes.into()
             }

@@ -10,10 +10,10 @@ pub mod meta_entry;
 pub mod note;
 pub mod octave;
 pub mod pitch;
+pub mod semitones;
 pub mod scale;
 pub mod signature;
 pub mod syllable;
-pub mod syllable_note;
 pub mod tempo;
 pub mod tone;
 
@@ -41,15 +41,15 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::octave::Octave;
     #[doc(hidden)]
-    pub use crate::pitch::{Pitch, PitchName, PitchSign, Semitones};
+    pub use crate::pitch::{Pitch, PitchName, PitchSign};
+    #[doc(hidden)]
+    pub use crate::semitones::Semitones;
     #[doc(hidden)]
     pub use crate::scale::Scale;
     #[doc(hidden)]
     pub use crate::signature::{Beats, Signature};
     #[doc(hidden)]
     pub use crate::syllable::Syllable;
-    #[doc(hidden)]
-    pub use crate::syllable_note::SyllableNote;
     #[doc(hidden)]
     pub use crate::tempo::{Bpm, BpmRange, Tempo};
     #[doc(hidden)]

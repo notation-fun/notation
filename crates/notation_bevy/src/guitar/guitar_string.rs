@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use notation_bevy_utils::prelude::{BevyUtil, LayoutSize, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{
-    Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, SyllableNote, TabMeta, Units,
+    Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, Note, TabMeta, Units,
 };
 
 use crate::prelude::NotationTheme;
@@ -16,7 +16,7 @@ pub struct GuitarStringData {
     pub fret: Option<u8>,
     pub pick_fret: Option<u8>,
     pub capo: u8,
-    pub note: Option<SyllableNote>,
+    pub note: Option<Note>,
     pub state: PlayingState,
     pub hit: bool,
     pub hit_duration: Duration,
@@ -101,9 +101,9 @@ impl GuitarStringData {
     }
     fn set_note(&mut self, fretboard: Option<Fretboard6>, meta: Option<Arc<TabMeta>>) {
         self.note = None;
-        if let Some(fretboard) = fretboard {
-            if let Some(note) = fretboard.fretted_note(self.string, self.fret()) {
-                self.note = meta.map(|x| x.calc_syllable_note(&note));
+        if let (Some(meta), Some(fretboard)) = (meta, fretboard) {
+            if let Some(note) = fretboard.fretted_note(&meta.scale, &meta.key, self.string, self.fret()) {
+                self.note = Some(note);
             }
         }
     }

@@ -51,48 +51,12 @@
                 Fretted6(Fretboard((
                     total_fret_num: 20,
                     string_notes: (
-                        (
-                            octave: P4,
-                            pitch: (
-                                name: E,
-                                sign: Natural,
-                            ),
-                        ),
-                        (
-                            octave: P3,
-                            pitch: (
-                                name: B,
-                                sign: Natural,
-                            ),
-                        ),
-                        (
-                            octave: P3,
-                            pitch: (
-                                name: G,
-                                sign: Natural,
-                            ),
-                        ),
-                        (
-                            octave: P3,
-                            pitch: (
-                                name: D,
-                                sign: Natural,
-                            ),
-                        ),
-                        (
-                            octave: P2,
-                            pitch: (
-                                name: A,
-                                sign: Natural,
-                            ),
-                        ),
-                        (
-                            octave: P2,
-                            pitch: (
-                                name: E,
-                                sign: Natural,
-                            ),
-                        ),
+                        (52),
+                        (47),
+                        (43),
+                        (38),
+                        (33),
+                        (28),
                     ),
                     capo: 0,
                 ))),// [0]

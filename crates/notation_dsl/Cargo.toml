@@ -1,6 +1,6 @@
 [package]
 name = "notation_dsl"
-version = "0.4.2"
+version = "0.4.3"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -12,7 +12,7 @@ description = "Fun notation - DSL to create notation files"
 [lib]
 
 [dependencies]
-notation_proto = { version = "0.4.2", path = "../notation_proto" }
+notation_proto = { version = "0.4.3", path = "../notation_proto" }
 
 syn = { version = "1.0", features = ["full"] }
 quote = "1.0"

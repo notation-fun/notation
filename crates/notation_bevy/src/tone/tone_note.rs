@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use notation_bevy_utils::prelude::{BevyUtil, OutlineRectangle, ShapeOp};
-use notation_model::prelude::{Note, PlayingState, Syllable, SyllableNote};
+use notation_model::prelude::{Note, PlayingState, Syllable};
 
 use crate::prelude::{EntryData, NotationTheme};
 use notation_model::prelude::TabBar;
@@ -15,24 +15,21 @@ pub type ToneNoteData = EntryData<ToneNoteValue>;
 pub struct ToneNoteValue {
     pub note: Note,
     pub mode: ToneMode,
-    pub syllable_note: SyllableNote,
     pub playing_state: PlayingState,
     pub bar_size: f32,
 }
 
 impl ToneNoteValue {
     pub fn new(tab_bar: &TabBar, note: Note, mode: ToneMode) -> Self {
-        let syllable_note = tab_bar.calc_syllable_note(&note);
         Self {
             note,
             mode,
-            syllable_note,
             playing_state: PlayingState::Idle,
             bar_size: 0.0,
         }
     }
     pub fn syllable(&self) -> Syllable {
-        self.syllable_note.syllable
+        self.note.syllable
     }
 }
 

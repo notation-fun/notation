@@ -38,23 +38,13 @@ impl NoteDsl {
 
 impl ToTokens for NoteDsl {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let NoteDsl {
-            octave_tweak,
-            pitch_name,
-            pitch_sign,
-        } = self;
-        if pitch_name.from_syllable {
-            let syllable = Syllable::from((pitch_sign.sign, pitch_name.name));
-            let note_quote = Context::calc_note_quote(octave_tweak, &syllable);
-            tokens.extend(note_quote);
-        } else {
-            let octave_quote = Context::octave_quote(octave_tweak);
-            let pitch = Pitch::new(pitch_name.name, pitch_sign.sign);
-            let pitch_text = pitch.to_text();
-            tokens.extend(quote! {
-                Note::new(#octave_quote, Pitch::from_text(#pitch_text))
-            });
-        }
+        let note = self.to_proto();
+        let octave_ident = note.octave.to_ident();
+        let pitch_text = note.pitch.to_text();
+        let syllable_text = note.syllable.to_text();
+        tokens.extend(quote! {
+            Note::new(Octave::from_ident(#octave_ident), Pitch::from_text(#pitch_text), Syllable::from_text(#syllable_text))
+        });
     }
 }
 
@@ -67,11 +57,10 @@ impl NoteDsl {
         } = self;
         if pitch_name.from_syllable {
             let syllable = Syllable::from((pitch_sign.sign, pitch_name.name));
-            Context::calc_note(octave_tweak, &syllable)
+            Context::calc_note_from_syllable(octave_tweak, &syllable)
         } else {
-            let octave = Context::tweaked_octave(octave_tweak);
             let pitch = Pitch::new(pitch_name.name, pitch_sign.sign);
-            Note::new(octave, pitch)
+            Context::calc_note_from_pitch(octave_tweak, &pitch)
         }
     }
 }

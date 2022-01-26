@@ -11,12 +11,8 @@ pub fn main() {
         "../notation_viewer/assets/tabs/scarborough_fair.ron",
     );
     write_tab(
-        &test::new_tab(),
-        "../notation_viewer_cn/assets/tabs/test.ron",
-    );
-    write_tab(
         &long_juan_feng::new_tab(),
-        "../notation_viewer_cn/assets/tabs/long_juan_feng.ron",
+        "../notation_viewer/assets/tabs/zh-CN/long_juan_feng.ron",
     );
     let result = parse_get_tab_file("src/test.rs");
     println!("{:?}", result);

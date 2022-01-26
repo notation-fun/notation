@@ -64,21 +64,19 @@ impl FretFingerData {
     fn set_chord_note(&mut self, chord: &Chord, meta: &TabMeta, note: &Note) {
         self.value.extra.visible = true;
         self.value.root = chord.root;
-        let syllable_note = meta.calc_syllable_note(&note);
-        if let Some(interval) = chord.calc_interval(syllable_note.syllable) {
+        if let Some(interval) = chord.calc_interval(note.syllable) {
             self.value.interval = interval;
             self.value.extra.in_chord = true;
         } else {
-            self.value.interval = Interval::from((chord.root, syllable_note.syllable));
+            self.value.interval = Interval::from((chord.root, note.syllable));
             self.value.extra.in_chord = false;
         }
         //println!("set_chord_note {}, {} -> {} {}", chord, note, self.value.interval, self.value.extra.in_chord);
     }
-    fn set_note(&mut self, meta: &TabMeta, note: &Note) {
+    fn set_note(&mut self, _meta: &TabMeta, note: &Note) {
         self.value.extra.visible = true;
         self.value.extra.in_chord = false;
-        let syllable_note = meta.calc_syllable_note(&note);
-        self.value.root = syllable_note.syllable;
+        self.value.root = note.syllable;
     }
     fn set_chord_meta_note(
         &mut self,
@@ -112,10 +110,13 @@ impl FretFingerData {
             self.value.extra.fret = pick_note.and_then(|x| x.fret);
             if let Some(fretboard) = fretboard {
                 self.value.extra.capo = fretboard.capo;
-                let note = pick_note.and_then(|x| {
-                    x.fret
-                        .and_then(|f| fretboard.fretted_note(self.value.extra.string, f))
-                });
+                let note = match (meta.as_ref(), pick_note) {
+                    (Some(meta), Some(pick_note)) => {
+                        pick_note.fret
+                            .and_then(|f| fretboard.fretted_note(&meta.scale, &meta.key, self.value.extra.string, f))
+                    },
+                    _ => None,
+                };
                 self.set_chord_meta_note(chord, meta, note);
                 true
             } else {
@@ -146,10 +147,15 @@ impl FretFingerData {
         }
         if let Some(fretboard) = fretboard {
             self.value.extra.capo = fretboard.capo;
-            let note = if self.value.extra.pick {
-                pick_note.and_then(|x| x.fret.and_then(|_| fretboard.shape_pick_note(shape, x)))
-            } else {
-                fretboard.shape_note(shape, self.value.extra.string)
+            let note = match meta.as_ref() {
+                Some(meta) => {
+                    if self.value.extra.pick {
+                        pick_note.and_then(|x| x.fret.and_then(|_| fretboard.shape_pick_note(&meta.scale, &meta.key, shape, x)))
+                    } else {
+                        fretboard.shape_note(&meta.scale, &meta.key, shape, self.value.extra.string)
+                    }
+                },
+                None => None,
             };
             self.set_chord_meta_note(chord, meta, note);
         }

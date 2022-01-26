@@ -5,7 +5,7 @@ use std::fmt::Display;
 
 use crate::prelude::{Form, Section, Track};
 use notation_core::prelude::{
-    Key, Note, Pitch, Scale, Signature, Syllable, SyllableNote, Tempo, Units,
+    Key, Note, Pitch, Scale, Signature, Syllable, Tempo, Units, Octave,
 };
 
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
@@ -22,8 +22,11 @@ impl TabMeta {
     pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
         self.scale.calc_syllable(&self.key, pitch)
     }
-    pub fn calc_syllable_note(&self, note: &Note) -> SyllableNote {
-        self.scale.calc_syllable_note(&self.key, note)
+    pub fn calc_note_from_pitch(&self, pitch: &Pitch, octave: &Octave) -> Note {
+        self.scale.calc_note_from_pitch(&self.key, pitch, octave)
+    }
+    pub fn calc_note_from_syllable(&self, syllable: &Syllable, octave: &Octave) -> Note {
+        self.scale.calc_note_from_syllable(&self.key, syllable, octave)
     }
 }
 impl Display for TabMeta {

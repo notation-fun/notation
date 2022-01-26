@@ -1,7 +1,7 @@
 use fehler::throws;
 use notation_proto::prelude::{
-    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, GuitarTuning, Note,
-    GUITAR_FRET_NUM_ACOUSTIC,
+    Fretboard4, Fretboard6, FrettedEntry4, FrettedEntry6, GuitarTuning,
+    GUITAR_FRET_NUM_ACOUSTIC, Pitch, Octave,
 };
 use notation_proto::proto_entry::ProtoEntry;
 use proc_macro2::TokenStream;
@@ -103,7 +103,7 @@ impl FretboardDsl {
         let capo = capo.unwrap_or(0);
         match string_num {
             4 => {
-                let tuning = [Note::E_2; 4]; //todo;
+                let tuning = [(Pitch::E, Octave::P2).into(); 4]; //todo;
                 ProtoEntry::from(FrettedEntry4::from(Fretboard4::new(fret_num, tuning, capo)))
             }
             _ => {

@@ -1,5 +1,5 @@
 use crate::tuning::GuitarTuning;
-use notation_core::prelude::Note;
+use notation_core::prelude::Semitones;
 use notation_fretted::prelude::Fretboard6;
 
 pub const GUITAR_STRING_NUM: usize = 6;
@@ -11,7 +11,7 @@ pub const GUITAR_FRET_NUM_ELECTRIC: usize = 22;
 pub struct GuitarUtil();
 
 impl GuitarUtil {
-    pub fn new_guitar_fretboard(total_fret_num: usize, strings: [Note; 6]) -> Fretboard6 {
+    pub fn new_guitar_fretboard(total_fret_num: usize, strings: [Semitones; 6]) -> Fretboard6 {
         Fretboard6 {
             total_fret_num,
             string_notes: strings,

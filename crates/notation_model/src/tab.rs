@@ -1,7 +1,7 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use notation_proto::prelude::{BarPosition, Note, SyllableNote, TrackKind};
+use notation_proto::prelude::{BarPosition, Note, TrackKind, Octave};
 use uuid::Uuid;
 
 use crate::prelude::{
@@ -46,8 +46,11 @@ impl Tab {
     pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
         self.meta.calc_syllable(pitch)
     }
-    pub fn calc_syllable_note(&self, note: &Note) -> SyllableNote {
-        self.meta.calc_syllable_note(note)
+    pub fn calc_note_from_pitch(&self, pitch: &Pitch, octave: &Octave) -> Note {
+        self.meta.calc_note_from_pitch(pitch, octave)
+    }
+    pub fn calc_note_from_syllable(&self, syllable: &Syllable, octave: &Octave) -> Note {
+        self.meta.calc_note_from_syllable(syllable, octave)
     }
     pub fn get_track_of_kind(&self, kind: TrackKind) -> Option<Arc<Track>> {
         for track in self.tracks.iter() {

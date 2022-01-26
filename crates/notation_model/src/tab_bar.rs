@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use notation_proto::prelude::{
     BarPosition, Chord, Fretboard4, Fretboard6, HandShape4, HandShape6, Note, Position,
-    SyllableNote, TabPosition,
+    TabPosition, Octave,
 };
 
 use crate::prelude::{
@@ -145,8 +145,8 @@ impl TabBar {
     pub fn calc_syllable(&self, pitch: &Pitch) -> Syllable {
         self.tab_meta().calc_syllable(pitch)
     }
-    pub fn calc_syllable_note(&self, note: &Note) -> SyllableNote {
-        self.tab_meta().calc_syllable_note(note)
+    pub fn calc_note(&self, pitch: &Pitch, octave: &Octave) -> Note {
+        self.tab_meta().calc_note_from_pitch(pitch, octave)
     }
 }
 impl TabBar {

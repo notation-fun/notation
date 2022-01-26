@@ -1,9 +1,8 @@
 use std::fmt::Display;
-use std::ops::{Add, Sub};
 
 use serde::{Deserialize, Serialize};
 
-use crate::prelude::Key;
+use crate::prelude::{Key, Semitones};
 
 // https://hellomusictheory.com/learn/
 // http://openmusictheory.com/pitches.html
@@ -214,31 +213,6 @@ impl Pitch {
 impl Pitch {
     pub fn new(name: PitchName, sign: PitchSign) -> Self {
         Self { name, sign }
-    }
-}
-
-#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Debug)]
-pub struct Semitones(pub i8);
-
-impl Add for Semitones {
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        Semitones(self.0 + rhs.0)
-    }
-}
-
-impl Sub for Semitones {
-    type Output = Self;
-
-    fn sub(self, rhs: Self) -> Self::Output {
-        Semitones(self.0 - rhs.0)
-    }
-}
-
-impl From<i8> for Semitones {
-    fn from(v: i8) -> Self {
-        Self(v)
     }
 }
 

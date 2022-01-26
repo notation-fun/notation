@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
-use crate::prelude::{Chord, Key, Note, Octave, Pitch, Semitones, Syllable, SyllableNote};
+use crate::prelude::{Chord, Key, Note, Octave, Pitch, Semitones, Syllable};
 use crate::tone::Tone;
 
 // https://hellomusictheory.com/learn/music-scales-beginners-guide/
@@ -296,16 +296,22 @@ impl Scale {
             (Semitones::from(*syllable) + self.calc_do_semitones(key)).into()
         }
     }
-    pub fn calc_syllable_note(&self, key: &Key, note: &Note) -> SyllableNote {
-        (Semitones::from(*note) - self.calc_do_semitones(key)).into()
+    pub fn calc_note_from_pitch(&self, key: &Key, pitch: &Pitch, octave: &Octave) -> Note {
+        let syllable = self.calc_syllable(key, pitch);
+        Note::new(*octave, *pitch, syllable)
     }
-    pub fn calc_note(&self, key: &Key, syllable_note: &SyllableNote) -> Note {
-        let pitch = self.calc_pitch(key, &syllable_note.syllable);
-        Note::new(syllable_note.octave, pitch)
+    pub fn calc_note_from_syllable(&self, key: &Key, syllable: &Syllable, octave: &Octave) -> Note {
+        let semitones = Semitones::from(*octave) + self.calc_do_semitones(key) + Semitones::from(*syllable);
+        let pitch = self.calc_pitch(key, syllable);
+        Note::new(Octave::from(semitones), pitch, *syllable)
+    }
+    pub fn calc_note_from_semitones(&self, key: &Key, semitones: Semitones) -> Note {
+        let (pitch, octave) = semitones.as_pitch_octave();
+        self.calc_note_from_pitch(key, &pitch, &octave)
     }
     pub fn calc_click_note(&self, key: &Key, octave: &Octave, syllable: &Syllable) -> Note {
         let pitch = self.calc_pitch(key, syllable);
-        Note::new(*octave, pitch)
+        Note::new(*octave, pitch, *syllable)
     }
     pub fn calc_click_tone(&self, key: &Key, octave: &Octave, syllable: &Syllable) -> Tone {
         Tone::Single(self.calc_click_note(key, octave, syllable))

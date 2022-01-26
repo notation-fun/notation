@@ -110,7 +110,8 @@ macro_rules! impl_get_pick_midi_msgs {
                 pick: &Pick,
             ) -> Option<Vec<(bool, StructuredShortMessage)>> {
                 if let Some((fretboard, shape)) = bar.$get_fretted_shape(entry) {
-                    let tone = fretboard.pick_tone(&shape, pick);
+                    let meta = bar.tab_meta();
+                    let tone = fretboard.pick_tone(&meta.scale, &meta.key, &shape, pick);
                     Self::get_tone_midi_msgs(channel, bar, entry, &tone)
                 } else {
                     None

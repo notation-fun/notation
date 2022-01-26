@@ -13,7 +13,7 @@ pub enum Syllable {
     Re,
     Ri, //Sharp
     Me, //Flat
-    Mi, //Sharp
+    Mi,
     Fa,
     Fi, //Sharp
     Se, //Flat
@@ -50,17 +50,17 @@ impl Syllable {
             Syllable::La => "6",
             Syllable::Ti => "7",
             //Sharp
-            Syllable::Di => "#1",
-            Syllable::Ri => "#2",
-            Syllable::Fi => "#4",
-            Syllable::Si => "#5",
-            Syllable::Li => "#6",
+            Syllable::Di => "1#",
+            Syllable::Ri => "2#",
+            Syllable::Fi => "4#",
+            Syllable::Si => "5#",
+            Syllable::Li => "6#",
             //Flat
-            Syllable::Ra => "b2",
-            Syllable::Me => "b3",
-            Syllable::Se => "b5",
-            Syllable::Le => "b6",
-            Syllable::Te => "b7",
+            Syllable::Ra => "2b",
+            Syllable::Me => "3b",
+            Syllable::Se => "5b",
+            Syllable::Le => "6b",
+            Syllable::Te => "7b",
         }
         .to_owned()
     }
@@ -75,17 +75,17 @@ impl Syllable {
             "6" => Syllable::La,
             "7" => Syllable::Ti,
             //Sharp
-            "#1" => Syllable::Di,
-            "#2" => Syllable::Ri,
-            "#4" => Syllable::Fi,
-            "#5" => Syllable::Si,
-            "#6" => Syllable::Li,
+            "1#" => Syllable::Di,
+            "2#" => Syllable::Ri,
+            "4#" => Syllable::Fi,
+            "5#" => Syllable::Si,
+            "6#" => Syllable::Li,
             //Flat
-            "b2" => Syllable::Ra,
-            "b3" => Syllable::Me,
-            "b5" => Syllable::Se,
-            "b6" => Syllable::Le,
-            "b7" => Syllable::Te,
+            "2b" => Syllable::Ra,
+            "3b" => Syllable::Me,
+            "5b" => Syllable::Se,
+            "6b" => Syllable::Le,
+            "7b" => Syllable::Te,
             _ => Syllable::Do,
         }
     }

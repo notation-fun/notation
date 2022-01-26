@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use notation_bevy_utils::prelude::{ShapeOp, StrokeLine};
 
-use crate::prelude::{LaneData, NotationTheme, Note, Scale, SyllableNote};
+use crate::prelude::{LaneData, NotationTheme, Note};
 
 use super::tone_mode::ToneMode;
 
@@ -10,7 +10,6 @@ pub struct ToneLineValue {
     pub mode: ToneMode,
     pub is_root: bool,
     pub note: Note,
-    pub syllable_note: SyllableNote,
     pub bar_size: f32,
 }
 
