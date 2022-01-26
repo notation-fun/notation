@@ -13,7 +13,9 @@
 - *Page Down* jump to the first bar of next section
 - *Left* jump to last bar
 - *Right* jump to next bar
-- *Down* play one guitar note (same as clicking on guitar fretboard)
+- *Up* jump to last row
+- *Down* jump to next row
+- *\`* play one guitar note (same as clicking on guitar fretboard)
 
 # Keyboard Shortcuts - Play Control
 - *Space* play or pause

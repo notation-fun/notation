@@ -1,11 +1,13 @@
 use std::sync::Arc;
 
 use bevy::prelude::*;
+use notation_bevy_utils::prelude::GridData;
 use notation_midi::prelude::{MidiSettings, MidiState};
 use notation_model::play::play_control::TickResult;
 use notation_model::prelude::{JumpToBarEvent, PlayControlEvent, BarPosition, Tab, Units};
 use notation_model::tab_bar::TabBar;
 
+use crate::tab::tab_bars::TabBars;
 use crate::tab::tab_plugin::{TabPlugin};
 
 use crate::prelude::{NotationSettings};
@@ -219,6 +221,42 @@ impl MidiControl {
                 );
             }
             None
+        });
+    }
+    pub fn get_grid_cols(
+        tab_bars_query: &Query<(&TabBars, &GridData), With<TabBars>>,
+    ) -> usize {
+        for (_tab_bars, grid_data) in tab_bars_query.iter() {
+            return grid_data.cols;
+        }
+        2
+    }
+    pub fn jump_to_prev_row(
+        midi_state: &MidiState,
+        jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
+        tab_bars_query: &Query<(&TabBars, &GridData), With<TabBars>>,
+    ) {
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
+            let cols = Self::get_grid_cols(tab_bars_query);
+            if pos.bar_ordinal > cols {
+                tab.get_bar_of_ordinal(pos.bar_ordinal - cols)
+            } else {
+                tab.get_bar_of_ordinal(0)
+            }
+        });
+    }
+    pub fn jump_to_next_row(
+        midi_state: &MidiState,
+        jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>,
+        tab_bars_query: &Query<(&TabBars, &GridData), With<TabBars>>,
+    ) {
+        Self::jump_to_bar(midi_state, jump_to_bar_evts, &|tab, pos| {
+            let cols = Self::get_grid_cols(tab_bars_query);
+            if pos.bar_ordinal < tab.bars.len() - cols {
+                tab.get_bar_of_ordinal(pos.bar_ordinal + cols)
+            } else {
+                tab.get_bar_of_ordinal(tab.bars.len() - 1)
+            }
         });
     }
     pub fn send_begin_end_evt(

@@ -57,6 +57,7 @@ impl NotationViewer {
         mut play_control_evts: EventWriter<PlayControlEvent>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
+        tab_bars_query: Query<(&TabBars, &GridData), With<TabBars>>,
     ) {
         if egui_ctx.ctx().wants_keyboard_input() {
             return;
@@ -98,7 +99,11 @@ impl NotationViewer {
             MidiControl::jump_to_prev_bar(&midi_state, &mut jump_to_bar_evts);
         } else if keyboard_input.just_released(KeyCode::Right) {
             MidiControl::jump_to_next_bar(&midi_state, &mut jump_to_bar_evts);
+        } else if keyboard_input.just_released(KeyCode::Up) {
+            MidiControl::jump_to_prev_row(&midi_state, &mut jump_to_bar_evts, &tab_bars_query);
         } else if keyboard_input.just_released(KeyCode::Down) {
+            MidiControl::jump_to_next_row(&midi_state, &mut jump_to_bar_evts, &tab_bars_query);
+        } else if keyboard_input.just_released(KeyCode::Grave) {
             MidiControl::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::Minus) {
             Control::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
