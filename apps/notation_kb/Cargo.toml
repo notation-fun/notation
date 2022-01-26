@@ -1,6 +1,6 @@
 [package]
 name = "notation_kb"
-version = "0.4.2"
+version = "0.4.4"
 edition = "2021"
 description = "Fun Notation Knowledge Base"
 

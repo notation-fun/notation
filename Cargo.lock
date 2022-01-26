@@ -2694,7 +2694,7 @@ dependencies = [
 
 [[package]]
 name = "notation_kb"
-version = "0.4.2"
+version = "0.4.4"
 dependencies = [
  "notation_bevy",
  "notation_viewer",
@@ -2766,7 +2766,7 @@ dependencies = [
 
 [[package]]
 name = "notation_viewer"
-version = "0.4.2"
+version = "0.4.4"
 dependencies = [
  "notation_bevy",
 ]
