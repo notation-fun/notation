@@ -40,8 +40,15 @@ macro_rules! impl_fretboard {
             pub fn fretted_note(&self, scale: &Scale, key: &Key, string: u8, fret: u8) -> Option<Note> {
                 if fret as usize >= self.fret_num() {
                     None
-                } else {
+                } else if fret == 0 {
                     self.open_note(scale, key, string)
+                } else {
+                    if string == 0 || string as usize > self.string_notes.len() {
+                        None
+                    } else {
+                        let semitones = self.string_notes[(string - 1) as usize];
+                        Some(self.get_capo_note(scale, key, semitones + Semitones(fret as i8)))
+                    }
                 }
             }
             pub fn string_num(&self) -> usize {

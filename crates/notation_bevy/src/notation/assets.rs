@@ -29,7 +29,7 @@ pub struct NotationAssets {
 pub trait ExtraAssets : AssetCollection {
     fn get_assets(&self) -> Vec<HandleUntyped>;
     fn get_syllable_font(_settings: &NotationSettings) -> &'static str {
-        "fonts/uchiyama.ttf"
+        "fonts/Sofia_Handwritten.otf"
     }
     fn get_fret_font(_settings: &NotationSettings) -> &'static str {
         "fonts/Bitter-Bold.ttf"
