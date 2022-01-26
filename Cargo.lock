@@ -2606,7 +2606,7 @@ dependencies = [
 
 [[package]]
 name = "notation_bevy"
-version = "0.4.4"
+version = "0.4.5"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2694,7 +2694,7 @@ dependencies = [
 
 [[package]]
 name = "notation_kb"
-version = "0.4.4"
+version = "0.4.5"
 dependencies = [
  "notation_bevy",
  "notation_viewer",
@@ -2709,7 +2709,7 @@ dependencies = [
 
 [[package]]
 name = "notation_midi"
-version = "0.4.4"
+version = "0.4.5"
 dependencies = [
  "bevy",
  "bevy_kira_audio",
@@ -2766,7 +2766,7 @@ dependencies = [
 
 [[package]]
 name = "notation_viewer"
-version = "0.4.4"
+version = "0.4.5"
 dependencies = [
  "notation_bevy",
 ]
