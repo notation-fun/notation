@@ -12,14 +12,13 @@ resources = ["assets"]
 default = [
     "notation_bevy/midi",
 ]
+
 native = [
     "notation_bevy/native",
-]
-dev = [
-    "notation_bevy/dev",
-    "native",
+    "notation_bevy/dsl",
 ]
 
 [dependencies]
 notation_bevy = { path = "../../crates/notation_bevy" }
 notation_viewer = { path = "../notation_viewer" }
+clap = { version = "3.0.12", features = [ "derive" ] }

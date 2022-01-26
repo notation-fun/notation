@@ -3,7 +3,7 @@ use std::sync::RwLock;
 use bevy::prelude::*;
 use bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, TextStyle}, EguiContext};
 
-use crate::{notation::assets::{ExtraAssets, NotationAssets}, settings::notation_settings::NotationSettings};
+use crate::prelude::{ExtraAssets, NotationSettings};
 
 lazy_static! {
     static ref EGUI_FONT: RwLock<EguiFont> = RwLock::new(EguiFont::default());

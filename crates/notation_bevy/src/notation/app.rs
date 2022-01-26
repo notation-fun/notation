@@ -14,8 +14,6 @@ use notation_midi::prelude::{
     MidiPlugin,
 };
 
-use super::state::{NotationState, TabPathes};
-
 pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
     fn build(&mut self, group: &mut PluginGroupBuilder) {
@@ -47,8 +45,9 @@ pub struct NotationApp;
 impl NotationApp {
     pub const TITLE: &'static str = "Fun Notation";
 
-    pub fn new_app<A: ExtraAssets>(title: &str) -> App {
+    pub fn new_app<A: ExtraAssets>(args: NotationArgs, title: &str) -> App {
         let mut app = App::new();
+        app.insert_resource(args);
         AssetLoader::new(NotationAssetsStates::Loading)
             .continue_to_state(NotationAssetsStates::Loaded)
             .with_collection::<NotationAssets>()
@@ -89,24 +88,13 @@ impl NotationApp {
         app
     }
 
-    #[cfg(target_arch = "wasm32")]
-    pub fn get_tab_from_url() -> Result<String, String> {
-        web_sys::window()
-            .ok_or("No_Window".to_owned())
-            .and_then(|x| x.document().ok_or("No_Document".to_owned()))
-            .and_then(|x| x.location().ok_or("No_Location".to_owned()))
-            .and_then(|x| x.search().map_err(|e| format!("No_Search:{:?}", e)))
-            .map(|x| x.trim_start_matches('?').to_owned())
-    }
-
-    pub fn run_with_extra<A, F>(tab_pathes: Vec<String>, extra: F)
+    pub fn run_with_extra<A, F>(args: NotationArgs, extra: F)
     where
         A: ExtraAssets,
         F: Fn(&mut App),
     {
-        let mut app = NotationApp::new_app::<A>(Self::TITLE);
+        let mut app = NotationApp::new_app::<A>(args, Self::TITLE);
 
-        app.insert_resource(TabPathes(tab_pathes));
         app.init_resource::<NotationState>();
 
         app.add_startup_system(Self::setup_camera);
@@ -135,8 +123,8 @@ impl NotationApp {
         extra(&mut app);
         app.run();
     }
-    pub fn run<A: ExtraAssets>(tab_pathes: Vec<String>) {
-        Self::run_with_extra::<A, _>(tab_pathes, |_app|{})
+    pub fn run<A: ExtraAssets>(args: NotationArgs) {
+        Self::run_with_extra::<A, _>(args, |_app|{})
     }
 }
 

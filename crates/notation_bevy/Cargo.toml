@@ -19,13 +19,8 @@ default = [
     "bevy/png",
 ]
 
-dev = [
-    #"bevy/dynamic",
-    "notation_bevy_utils/dev",
-]
-
 native = [
-#    "bevy/bevy_wgpu",
+    "clap",
 ]
 
 midi = [
@@ -67,13 +62,15 @@ rfd = "0.6.3"
 lazy_static = "1.4.0"
 unic-langid = { version = "0.9", features = [ "macros" ] }
 
+clap = { version = "3.0.12", features = [ "derive" ], optional = true }
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = "0.2.78"
 console_error_panic_hook = "0.1"
 gloo-events = "0.1.1"
 futures = "0.3"
 web-sys = { version = "0.3.55", features = [
-    "Element", "Document", "Window", "Location", "console", "TouchEvent",
+    "Element", "Document", "Window", "Location", "Url", "UrlSearchParams", "console", "TouchEvent",
     #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
     "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",
 ]}

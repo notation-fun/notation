@@ -9,7 +9,7 @@ use super::control::Control;
 
 use crate::prelude::{
     GuitarView, NotationState, NotationSettings, NotationTheme, TabAsset,
-    TabPathes, WindowResizedEvent,
+    NotationArgs, WindowResizedEvent,
 };
 
 #[cfg(feature = "midi")]
@@ -322,7 +322,7 @@ impl ControlPanel {
     }
     pub fn tab_ui(
         ui: &mut Ui,
-        pathes: &mut TabPathes,
+        args: &mut NotationArgs,
         state: &mut NotationState,
         _settings: &mut NotationSettings,
         theme: &mut NotationTheme,
@@ -357,7 +357,7 @@ impl ControlPanel {
                     {
                         let path_str = path.clone().into_os_string().into_string();
                         if let Ok(path_str) = path_str {
-                            pathes.0.insert(0, path_str.clone());
+                            args.tab.insert(0, path_str.clone());
                             state.change_tab(theme, path_str.clone());
                         } else {
                             println!(
@@ -369,13 +369,13 @@ impl ControlPanel {
                 }
             });
         });
-        if pathes.0.len() > 1 {
+        if args.tab.len() > 1 {
             let width = Self::calc_width(state.window_width);
             egui::ComboBox::from_id_source("tab")
                 .selected_text(state.tab_path.clone())
                 .width(width - 24.0)
                 .show_ui(ui, |ui| {
-                    for path in pathes.0.iter() {
+                    for path in args.tab.iter() {
                         if ui.selectable_label(*path == state.tab_path, path).clicked() {
                             state.change_tab(theme, path.clone());
                         }
@@ -647,7 +647,7 @@ impl ControlPanel {
     pub fn control_ui(
         egui_ctx: Res<EguiContext>,
         mut windows: ResMut<Windows>,
-        mut pathes: ResMut<TabPathes>,
+        mut args: ResMut<NotationArgs>,
         mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
@@ -676,7 +676,7 @@ impl ControlPanel {
                     }
                     ui.separator();
                      */
-                    Self::tab_ui(ui, &mut pathes, &mut state, &mut settings, &mut theme);
+                    Self::tab_ui(ui, &mut args, &mut state, &mut settings, &mut theme);
                     ui.separator();
                     #[cfg(feature = "midi")]
                     {

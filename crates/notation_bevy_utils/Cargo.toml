@@ -19,9 +19,6 @@ default = [
     "bevy/png",
 ]
 
-dev = [
-]
-
 [dependencies]
 serde = { version = "1.0.133", features = ["derive"] }
 # https://github.com/serde-rs/serde/issues/1937

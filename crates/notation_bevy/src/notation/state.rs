@@ -4,8 +4,6 @@ use crate::{prelude::*, tab::tab_asset::TabError};
 use bevy::prelude::*;
 use notation_model::prelude::*;
 
-pub struct TabPathes(pub Vec<String>);
-
 pub struct NotationState {
     pub window_width: f32,
     pub window_height: f32,
@@ -86,7 +84,7 @@ impl NotationState {
 
 impl FromWorld for NotationState {
     fn from_world(world: &mut World) -> Self {
-        let tab_pathes = world.get_resource::<TabPathes>().unwrap();
-        Self::new(tab_pathes.0.first().unwrap_or(&"".to_owned()).clone())
+        let args = world.get_resource::<NotationArgs>().unwrap();
+        Self::new(args.tab.first().unwrap_or(&"".to_owned()).clone())
     }
 }

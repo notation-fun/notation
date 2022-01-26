@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
+use bevy::prelude::*;
 use unic_langid::LanguageIdentifier;
 use unic_langid::langid;
+
+use crate::notation::args::NotationArgs;
 
 use super::layout_settings::{LayoutSettings, LayoutMode, GridAlignMode};
 
@@ -35,10 +38,11 @@ pub struct NotationSettings {
     pub override_guitar_y: Option<f32>,
 }
 
-impl Default for NotationSettings {
-    fn default() -> Self {
+impl FromWorld for NotationSettings {
+    fn from_world(world: &mut World) -> Self {
+        let args = world.get_resource::<NotationArgs>().unwrap();
         Self {
-            lang: Self::EN_US.to_string(),
+            lang: args.lang.clone(),
             layout: LayoutSettings::default(),
             add_ready_section: false,
             should_loop: false,
@@ -72,13 +76,16 @@ impl Default for NotationSettings {
 impl NotationSettings {
     pub const EN_US: LanguageIdentifier = langid!("en-US");
     pub const ZH_CN: LanguageIdentifier = langid!("zh-CN");
-
-    pub fn lang(&self) -> LanguageIdentifier {
-        if self.lang == "zh-CN" {
+    pub fn parse_lang(lang: &str) -> LanguageIdentifier {
+        if lang == "zh-CN" {
             Self::ZH_CN
         } else {
             Self::EN_US
         }
+    }
+
+    pub fn lang(&self) -> LanguageIdentifier {
+        Self::parse_lang(self.lang.as_str())
     }
     pub fn show_melody_note(&self) -> bool {
         self.show_melody_pitch || self.show_melody_syllable

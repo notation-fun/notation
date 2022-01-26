@@ -141,9 +141,11 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::notation::app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
+    pub use crate::notation::args::{NotationArgs};
+    #[doc(hidden)]
     pub use crate::notation::events::*;
     #[doc(hidden)]
-    pub use crate::notation::state::{NotationState, TabPathes};
+    pub use crate::notation::state::{NotationState};
     #[doc(hidden)]
     pub use crate::notation::assets::{NotationAssets, NotationAssetsStates, ExtraAssets, NoExtraAssets};
     #[doc(hidden)]

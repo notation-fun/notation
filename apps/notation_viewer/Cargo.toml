@@ -17,10 +17,6 @@ native = [
     "notation_bevy/native",
     "notation_bevy/dsl",
 ]
-dev = [
-    "notation_bevy/dev",
-    "native",
-]
 
 [dependencies]
 notation_bevy = { path = "../../crates/notation_bevy" }
