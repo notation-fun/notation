@@ -99,7 +99,11 @@ impl ScalePage {
         let duration = Duration::_1_4;
         let mut add_note = |syllable: &Syllable, add_octave| {
             let octave = if add_octave { Octave::P5 } else { Octave::P4 };
-            let note = self.scale.calc_note_from_syllable(&self.key, syllable, &octave);
+            let semitones =
+                Semitones::from(octave) +
+                Semitones::from(self.key.clone()) +
+                Semitones::from(self.scale.calc_syllable_for_sort(syllable));
+            let note = self.scale.calc_note_from_semitones(&self.key, semitones);
             entries.push(ProtoEntry::from(CoreEntry::from((Tone::from(note), duration))));
         };
         let mut syllables = self.scale.get_syllables();

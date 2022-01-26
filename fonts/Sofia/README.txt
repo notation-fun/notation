@@ -1,1 +1,1 @@
-https://www.dafont.com/sofia-handwritten.font
+https://www.dafont.com/sofia-handwritten.font?text=1234567ABCDEFG%23b
