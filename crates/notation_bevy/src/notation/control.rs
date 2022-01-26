@@ -60,28 +60,20 @@ impl Control {
         settings.hide_mini_map = !settings.hide_mini_map;
         Self::reload_tab(state, theme);
     }
-    pub fn toggle_show_guitar_syllable(
+    pub fn toggle_show_note_syllable(
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
-        settings.show_guitar_syllable = !settings.show_guitar_syllable;
+        settings.show_note_syllable = !settings.show_note_syllable;
         Self::reload_tab(state, theme);
     }
-    pub fn toggle_show_melody_syllable(
+    pub fn toggle_show_note_pitch(
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
     ) {
-        settings.show_melody_syllable = !settings.show_melody_syllable;
-        Self::reload_tab(state, theme);
-    }
-    pub fn toggle_show_melody_pitch(
-        state: &mut NotationState,
-        settings: &mut NotationSettings,
-        theme: &mut NotationTheme,
-    ) {
-        settings.show_melody_pitch = !settings.show_melody_pitch;
+        settings.show_note_pitch = !settings.show_note_pitch;
         Self::reload_tab(state, theme);
     }
     pub fn toggle_always_show_fret(
@@ -136,8 +128,8 @@ impl Control {
         show_melody_pitch: bool,
     ) {
         settings.hide_melody_lane = false;
-        settings.show_melody_pitch = show_melody_pitch;
-        settings.show_melody_syllable = true;
+        settings.show_note_pitch = show_melody_pitch;
+        settings.show_note_syllable = true;
         settings.show_syllable_as_num = true;
         theme.sizes.layout.page_margin = 24.0;
         theme.sizes.melody.note_height = 9.0;

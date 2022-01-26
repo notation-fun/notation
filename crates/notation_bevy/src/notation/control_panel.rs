@@ -192,22 +192,17 @@ impl ControlPanel {
                     Control::reload_tab(state, theme);
                 }
                 ui.separator();
-                let show_guitar_syllable = settings.show_guitar_syllable;
-                ui.checkbox(&mut settings.show_guitar_syllable, "Show Guitar Syllable");
-                if show_guitar_syllable != settings.show_guitar_syllable {
-                    Control::reload_tab(state, theme);
-                }
-                let show_melody_pitch = settings.show_melody_pitch;
+                let show_note_pitch = settings.show_note_pitch;
                 ui.checkbox(
-                    &mut settings.show_melody_pitch,
-                    "Show Melody Pitch",
+                    &mut settings.show_note_pitch,
+                    "Show Note Pitch",
                 );
-                if show_melody_pitch != settings.show_melody_pitch {
+                if show_note_pitch != settings.show_note_pitch {
                     Control::reload_tab(state, theme);
                 }
-                let show_melody_syllable = settings.show_melody_syllable;
-                ui.checkbox(&mut settings.show_melody_syllable, "Show Melody Syllable");
-                if show_melody_syllable != settings.show_melody_syllable {
+                let show_note_syllable = settings.show_note_syllable;
+                ui.checkbox(&mut settings.show_note_syllable, "Show Note Syllable");
+                if show_note_syllable != settings.show_note_syllable {
                     Control::reload_tab(state, theme);
                 }
                 let show_syllable_as_num = settings.show_syllable_as_num;

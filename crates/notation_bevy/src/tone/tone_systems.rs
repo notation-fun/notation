@@ -30,7 +30,7 @@ pub fn create_tone_notes(
         for note in tone.get_notes() {
             let data = ToneNoteData::new(entry, ToneNoteValue::new(&bar, note, mode));
             let note_entity = data.create(commands, theme, entity);
-            if settings.show_melody_note() && !entry.prev_is_tie() {
+            if settings.show_note_text() && !entry.prev_is_tie() {
                 if let Some(text) = match tone_mode {
                     ToneMode::Melody => Some(theme.texts.melody),
                     ToneMode::Harmony => Some(theme.texts.harmony),

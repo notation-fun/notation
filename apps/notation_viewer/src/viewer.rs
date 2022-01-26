@@ -102,12 +102,10 @@ impl NotationViewer {
             MidiControl::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::Minus) {
             Control::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
-        } else if keyboard_input.just_released(KeyCode::G) {
-            Control::toggle_show_guitar_syllable(&mut app_state, &mut settings, &mut theme);
-        } else if keyboard_input.just_released(KeyCode::M) {
-            Control::toggle_show_melody_syllable(&mut app_state, &mut settings, &mut theme);
+        } else if keyboard_input.just_released(KeyCode::S) {
+            Control::toggle_show_note_syllable(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::P) {
-            Control::toggle_show_melody_pitch(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_show_note_pitch(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F) {
             Control::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::L) {

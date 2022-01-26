@@ -126,8 +126,8 @@ impl IndexPanel {
         settings.hide_mini_map = true;
         settings.hide_bar_number = true;
         settings.layout.focus_bar_ease_ms = 0;
-        settings.show_melody_pitch = true;
-        settings.show_melody_syllable = true;
+        settings.show_note_pitch = true;
+        settings.show_note_syllable = true;
         if state.window_width > 0.0 && state.window_height > 0.0 {
             if state.window_width > state.window_height {
                 let width = state.window_width / 3.0 + theme.sizes.layout.page_margin;

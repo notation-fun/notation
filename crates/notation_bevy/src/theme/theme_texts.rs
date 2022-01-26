@@ -282,12 +282,12 @@ impl NoteTexts {
         key: &Key,
         syllable: &Syllable,
     ) -> String {
-        let pitch_text = if settings.show_melody_pitch {
+        let pitch_text = if settings.show_note_pitch {
             Some(scale.calc_pitch(key, syllable).to_text())
         } else {
             None
         };
-        let syllable_text = if settings.show_melody_syllable {
+        let syllable_text = if settings.show_note_syllable {
             Some(if settings.show_syllable_as_num {
                 syllable.to_text()
             } else {
@@ -298,7 +298,7 @@ impl NoteTexts {
         };
         format!("{}{}{}",
             pitch_text.unwrap_or("".to_owned()),
-            if settings.show_melody_pitch && settings.show_melody_syllable { " " } else { "" },
+            if settings.show_note_pitch && settings.show_note_syllable { " " } else { "" },
             syllable_text.unwrap_or("".to_owned())
         )
     }

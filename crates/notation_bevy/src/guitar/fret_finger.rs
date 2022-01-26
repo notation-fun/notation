@@ -176,7 +176,7 @@ impl FretFingerData {
                 commands.entity(text_entity).despawn();
             }
         }
-        if settings.show_guitar_syllable && self.value.extra.fret.is_some() {
+        if settings.show_note_text() && self.value.extra.fret.is_some() {
             let syllable = self.value.calc_syllable();
             theme.guitar.syllable_text.spawn_scaled_note_text(
                 commands,

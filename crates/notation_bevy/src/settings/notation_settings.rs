@@ -16,12 +16,10 @@ pub struct NotationSettings {
     pub speed_factor: f32,
     pub hide_bar_number: bool,
     pub hide_indicators: bool,
-    pub show_guitar_syllable: bool,
-    pub show_melody_pitch: bool,
-    pub show_melody_syllable: bool,
+    pub show_note_pitch: bool,
+    pub show_note_syllable: bool,
     pub show_syllable_as_num: bool,
     pub always_show_fret: bool,
-    pub melody_piano_mode: bool,
     pub allow_panning: bool,
     pub panning_line_size: f32,
     pub hide_guitar_view: bool,
@@ -49,12 +47,10 @@ impl FromWorld for NotationSettings {
             speed_factor: 1.0,
             hide_bar_number: false,
             hide_indicators: false,
-            show_guitar_syllable: true,
-            show_melody_pitch: false,
-            show_melody_syllable: true,
+            show_note_pitch: false,
+            show_note_syllable: true,
             show_syllable_as_num: true,
             always_show_fret: false,
-            melody_piano_mode: false,
             allow_panning: true,
             panning_line_size: 32.0,
             hide_shapes_lane: false,
@@ -87,8 +83,8 @@ impl NotationSettings {
     pub fn lang(&self) -> LanguageIdentifier {
         Self::parse_lang(self.lang.as_str())
     }
-    pub fn show_melody_note(&self) -> bool {
-        self.show_melody_pitch || self.show_melody_syllable
+    pub fn show_note_text(&self) -> bool {
+        self.show_note_pitch || self.show_note_syllable
     }
     pub fn hide_all_lanes(&mut self) {
         self.hide_shapes_lane = true;
