@@ -1,6 +1,6 @@
 [package]
 name = "notation_tab"
-version = "0.4.0"
+version = "0.4.2"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -11,9 +11,9 @@ description = "Fun notation - tab tools"
 [lib]
 
 [dependencies]
-notation_proto = { version = "0.4.0", path = "../notation_proto" }
-notation_dsl  = { version = "0.4.0", path = "../notation_dsl" }
-notation_macro  = { version = "0.4.0", path = "../notation_macro" }
+notation_proto = { version = "0.4.2", path = "../notation_proto" }
+notation_dsl  = { version = "0.4.2", path = "../notation_dsl" }
+notation_macro  = { version = "0.4.2", path = "../notation_macro" }
 
 serde = "1.0.126"
 ron = "0.6"
