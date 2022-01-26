@@ -55,4 +55,14 @@ impl MidiMessage {
             self.midi.data_byte_2().into(),
         ]
     }
+    pub fn should_send_in_seeking(&self) -> bool {
+        match &self.midi {
+            StructuredShortMessage::NoteOn {
+                channel: _,
+                key_number: _,
+                velocity: _,
+            } => true,
+            _ => false,
+        }
+    }
 }

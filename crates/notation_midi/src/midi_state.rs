@@ -157,7 +157,9 @@ impl MidiChannel {
                     self.next_index += 1;
                     count += 1;
                     if !bypass {
-                        hub.send(settings, speed, next, velocity);
+                        if !is_seeking || next.should_send_in_seeking() {
+                            hub.send(settings, speed, next, velocity);
+                        }
                     }
                 } else {
                     if next.effect_position().bar_ordinal < play_control.begin_bar_ordinal {
