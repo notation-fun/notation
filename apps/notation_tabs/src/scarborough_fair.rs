@@ -1,9 +1,3 @@
-#!/usr/bin/env rust-script
-//! ```cargo
-//! [dependencies]
-//! notation_tab = { version = "0.4.0", path = "../../../crates/notation_tab" }
-//! ```
-
 use notation_tab::prelude::*;
 
 pub fn main() {
