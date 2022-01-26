@@ -21,4 +21,3 @@ native = [
 [dependencies]
 notation_bevy = { path = "../../crates/notation_bevy" }
 notation_viewer = { path = "../notation_viewer" }
-clap = { version = "3.0.12", features = [ "derive" ] }

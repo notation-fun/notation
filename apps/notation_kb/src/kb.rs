@@ -29,8 +29,8 @@ impl NotationKnowledgeBase {
                 .with_system(Self::on_window_resized)
         );
     }
-    pub fn run<A: ExtraAssets>() {
-        notation_bevy::prelude::NotationApp::run_with_extra::<A, _>(vec![], Self::extra);
+    pub fn run<A: ExtraAssets>(args: NotationArgs) {
+        notation_bevy::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
     }
     fn setup_state(
         mut state: ResMut<NotationState>,

@@ -3,6 +3,8 @@
 #[macro_use]
 extern crate lazy_static;
 
+pub use notation_proto;
+
 pub use {proc_macro2, quote, syn};
 
 pub mod context;
@@ -12,6 +14,7 @@ pub mod get_tab;
 pub mod helper;
 pub mod proto;
 pub mod util;
+
 
 pub mod prelude {
     #[doc(hidden)]
@@ -34,6 +37,4 @@ pub mod prelude {
     pub use crate::proto::track::TrackDsl;
     #[doc(hidden)]
     pub use crate::context::Context;
-    #[doc(hidden)]
-    pub use notation_proto::prelude::*;
 }

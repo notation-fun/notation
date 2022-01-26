@@ -146,7 +146,7 @@ impl ScalePage {
             ProtoForm{ sections: vec!["notes".to_owned()]},
         )
     }
-    pub fn check_reload(&self, tab: &Tab) -> bool {
+    pub fn check_reload(&self, tab: &notation_bevy::prelude::Tab) -> bool {
         self.scale != tab.meta.scale || self.key != tab.meta.key || tab.bars.len() == 0
     }
 }
