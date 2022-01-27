@@ -49,15 +49,9 @@ impl MidiChannel {
     fn ensure_sorted(&mut self) -> bool {
         if self.need_sort {
             dmsort::sort_by(&mut self.messages, |a, b| {
-                let units_a = a.effect_units().0;
-                let units_b = b.effect_units().0;
-                if units_a == units_b {
-                    Ordering::Equal
-                } else if units_a < units_b {
-                    Ordering::Less
-                } else {
-                    Ordering::Greater
-                }
+                let units_a = a.effect_units();
+                let units_b = b.effect_units();
+                units_a.cmp(&units_b)
             });
             self.need_sort = false;
             true

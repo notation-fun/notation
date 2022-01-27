@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::fmt::Display;
 use std::ops::{Add, Sub};
 
@@ -116,6 +117,19 @@ impl Sub for Units {
         Units(self.0 - rhs.0)
     }
 }
+
+impl Units {
+    pub fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        if self.0 == other.0 {
+            Ordering::Equal
+        } else if self.0 < other.0 {
+            Ordering::Less
+        } else {
+            Ordering::Greater
+        }
+    }
+}
+
 // https://hellomusictheory.com/learn/tuplets/
 #[derive(Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Duration {

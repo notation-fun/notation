@@ -71,25 +71,26 @@ impl BarLane {
         Arc::<Self>::new_cyclic(|weak_self| {
             let mut entries = Vec::new();
             for entry in self.entries.iter() {
-                let merged_entry = LaneEntry {
-                    props: entry.props.clone(),
-                    lane: weak_self.clone(),
-                    model: entry.model.clone(),
-                };
-                entries.push(Arc::new(merged_entry));
+                entries.push(entry.clone());
             }
             for entry in lane.entries.iter() {
+                entries.push(entry.clone());
+            }
+            entries.sort_by(|a, b| {
+                a.props.in_bar_pos.cmp(&b.props.in_bar_pos)
+            });
+            let entries = entries.iter().enumerate().map(|(index, entry)| {
                 let merged_entry = LaneEntry {
                     props: LaneEntryProps {
                         slice: entry.props.slice.clone(),
-                        index: entries.len(),
+                        index,
                         ..entry.props
                     },
                     lane: weak_self.clone(),
                     model: entry.model.clone(),
                 };
-                entries.push(Arc::new(merged_entry));
-            }
+                Arc::new(merged_entry)
+            }).collect();
             Self {
                 bar: self.bar.clone(),
                 kind: self.kind,
