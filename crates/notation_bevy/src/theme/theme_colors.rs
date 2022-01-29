@@ -43,7 +43,7 @@ pub struct IntervalColors {
     pub major: Color,
     pub minor: Color,
     pub augmented: Color,
-    pub diminishd: Color,
+    pub diminished: Color,
     pub tritone: Color,
 }
 impl IntervalColors {
@@ -53,7 +53,7 @@ impl IntervalColors {
             IntervalQuality::Major => self.major,
             IntervalQuality::Minor => self.minor,
             IntervalQuality::Augmented => self.augmented,
-            IntervalQuality::Diminished => self.diminishd,
+            IntervalQuality::Diminished => self.diminished,
             IntervalQuality::Tritone => self.tritone,
         }
     }
@@ -65,7 +65,7 @@ impl Default for IntervalColors {
             major: hex_linear("FFFFFF"),
             minor: hex_linear("666666"),
             augmented: hex_linear("FF00FFAA"),
-            diminishd: hex_linear("66666644"),
+            diminished: hex_linear("66666644"),
             tritone: hex_linear("FF00FFAA"),
         }
     }
@@ -229,7 +229,7 @@ impl Default for ChordColors {
                 major: hex_linear("000000"),
                 minor: hex_linear("FFFFFF"),
                 augmented: hex_linear("FF00FF"),
-                diminishd: hex_linear("333333"),
+                diminished: hex_linear("333333"),
                 tritone: hex_linear("FF00FF"),
             },
         }

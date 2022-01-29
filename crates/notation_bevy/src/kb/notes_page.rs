@@ -81,14 +81,14 @@ impl NotesPage {
             ui.end_row();
             if transpose != 0 {
                 ui.separator();
-                ui.add(label_from_style("guitar", &strong_style));
+                ui.add(label_from_style("with", &strong_style));
                 ui.add(label_from_style("capo", &strong_style));
                 ui.add(label_from_style("at", &strong_style));
                 ui.add(label_from_style(
                     transpose.to_string().as_str(),
                     &strong_style,
                 ));
-                let frets = if transpose == 1 { "fret" } else { "frets" };
+                let frets = "fret";
                 ui.add(label_from_style(frets, &strong_style));
                 ui.separator();
                 ui.end_row();
