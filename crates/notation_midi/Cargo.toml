@@ -28,4 +28,4 @@ fluidlite = { version = "0.2.0" }
 bevy_kira_audio = "0.8.0"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen = "0.2.78"
+wasm-bindgen = "0.2.79"

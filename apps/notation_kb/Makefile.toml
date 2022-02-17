@@ -20,9 +20,9 @@ command = "rustup"
 install_crate = {crate_name = "basic-http-server", binary = "basic-http-server", test_arg="--help"}
 
 [tasks.wasm-bindgen-cli]
-args = ["install", "--force", "wasm-bindgen-cli", "--version=0.2.78"]
+args = ["install", "--force", "wasm-bindgen-cli", "--version=0.2.79"]
 command = "cargo"
-# install_crate = {crate_name = "wasm-bindgen-cli", version = "0.2.78", binary = "wasm-bindgen", test_arg="--force"}
+# install_crate = {crate_name = "wasm-bindgen-cli", version = "0.2.79", binary = "wasm-bindgen", test_arg="--force"}
 
 [tasks.cargo-build-web]
 args = ["build", "--target", "wasm32-unknown-unknown", "@@split(CARGO_RELEASE_ARGS, )"]
