@@ -27,3 +27,5 @@ opt-level = 's'
 opt-level = 1
 
 [patch.crates-io]
+# https://github.com/bevyengine/bevy/issues/3942
+bevy = { git = "https://github.com/bevyengine/bevy/", tag = "v0.6.1" }
