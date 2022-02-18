@@ -204,7 +204,12 @@ impl NotationViewer {
             return;
         }
         if egui_ctx.ctx().wants_pointer_input() {
+            /* bevy_egui not supporting touch properly yet
+            app_state.debug_str = Some(format!(
+                "Touch: egui",
+            ));
             return;
+            */
         }
         for (_index, finger) in touch_input.iter().enumerate() {
             if touch_input.just_pressed(finger.id()) {
@@ -212,32 +217,24 @@ impl NotationViewer {
                     .get_primary()
                     .map(|w| (w.physical_width() as f32, w.physical_height() as f32))
                     .map(|(physical_width, physical_height)| {
+                        /* bevy_egui not supporting touch properly yet */
+                        app_state.show_kb = false;
                         /*
-                        Super hacky way to get the touch input in mobile browsers (WASM).
-                        winit not support it yet, using a pull request version, which seems to have some issues
-                        as well, also the touch event triggering is very unreliable during my test, but at least
-                        it's better than no touch at all.
-                        */
-                        let dpi_x = physical_width / app_state.window_width;
-                        let dpi_y = physical_height / app_state.window_height;
-                        let x = finger.position().x * dpi_x;
-                        let y = app_state.window_height - finger.position().y * dpi_y;
                         app_state.debug_str = Some(format!(
-                            "Touch: {} {:?} -> {} {}",
+                            "Touch: {} {:?}",
                             _index,
                             finger.position(),
-                            x,
-                            y
                         ));
+                        */
                         mouse_clicked.send(MouseClickedEvent {
-                            cursor_position: Vec2::new(x, y),
+                            cursor_position: finger.position(),
                         });
                     });
             } else if touch_input.just_released(finger.id()) {
                 app_state.debug_str = None;
             } else {
-                app_state.debug_str = Some(format!("Touch: {} - {:?}", _index, finger.position()));
                 /*
+                app_state.debug_str = Some(format!("Touch: {} - {:?}", _index, finger.position()));
                 let delta = finger.position() - finger.previous_position();
                 app_state.debug_str = Some(format!("Dragged: {}, {:?}", _index, delta));
                 mouse_dragged.send(MouseDraggedEvent { delta: delta });
