@@ -107,13 +107,12 @@ pub fn get_font_definitions(
 pub fn setup_egui_fonts<A: ExtraAssets>(
     settings: Res<NotationSettings>,
     extra_assets: Res<A>,
-    egui_ctx: Res<EguiContext>,
+    mut egui_ctx: ResMut<EguiContext>,
 ) {
     println!("setup_egui_fonts() ---------------------------------------");
     let fonts = get_font_definitions(
         EguiFont::get_font(),
         extra_assets.get_egui_font_sizes(&settings));
-    egui_ctx
-        .ctx()
+    egui_ctx.ctx_mut()
         .set_fonts(fonts);
 }

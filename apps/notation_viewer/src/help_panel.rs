@@ -80,7 +80,7 @@ impl KbPanel for HelpPanel {
 
 impl HelpPanel {
     pub fn help_ui(
-        egui_ctx: Res<EguiContext>,
+        mut egui_ctx: ResMut<EguiContext>,
         texts: Res<Assets<MarkDownAsset>>,
         assets: Res<NotationAssets>,
         mut state: ResMut<NotationState>,
@@ -92,7 +92,7 @@ impl HelpPanel {
             help.skip_frames -= 1;
             return;
         }
-        (&mut help).window_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts);
+        (&mut help).window_ui(&mut egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts);
     }
     pub fn handle_link_evts(
         mut index: ResMut<HelpPanel>,

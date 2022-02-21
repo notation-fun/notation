@@ -640,7 +640,7 @@ impl ControlPanel {
         });
     }
     pub fn control_ui(
-        egui_ctx: Res<EguiContext>,
+        mut egui_ctx: ResMut<EguiContext>,
         mut windows: ResMut<Windows>,
         mut args: ResMut<NotationArgs>,
         mut state: ResMut<NotationState>,
@@ -662,7 +662,7 @@ impl ControlPanel {
         egui::SidePanel::right("control")
             .min_width(width)
             .max_width(width)
-            .show(egui_ctx.ctx(), |ui| {
+            .show(egui_ctx.ctx_mut(), |ui| {
                 ui.vertical(|ui| {
                     /*
                     if ui.button("Hide Control\n(Press Tab to Show)").clicked() {

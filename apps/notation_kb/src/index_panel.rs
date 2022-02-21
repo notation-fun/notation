@@ -145,7 +145,7 @@ impl IndexPanel {
         }
     }
     pub fn index_ui(
-        egui_ctx: Res<EguiContext>,
+        mut egui_ctx: ResMut<EguiContext>,
         texts: Res<Assets<MarkDownAsset>>,
         assets: Res<NotationAssets>,
         mut state: ResMut<NotationState>,
@@ -159,16 +159,16 @@ impl IndexPanel {
         }
         if state.window_width > state.window_height {
             let width = state.window_width / 3.0;
-            (&mut index).side_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Left, (width, width));
+            (&mut index).side_ui(&mut egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Left, (width, width));
         } else {
             let height = state.window_height / 3.0;
-            (&mut index).side_ui(&egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Top, (height, height));
+            (&mut index).side_ui(&mut egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Top, (height, height));
         }
-        (&mut index).content_ui(&egui_ctx, &texts, &assets, &state, &theme, &mut link_evts);
+        (&mut index).content_ui(&mut egui_ctx, &texts, &assets, &state, &theme, &mut link_evts);
     }
     fn content_ui(
         &mut self,
-        egui_ctx: &EguiContext,
+        egui_ctx: &mut EguiContext,
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
         state: &NotationState,
@@ -185,7 +185,7 @@ impl IndexPanel {
             },
             _ => None,
         } {
-            egui::CentralPanel::default().show(egui_ctx.ctx(), |ui| {
+            egui::CentralPanel::default().show(egui_ctx.ctx_mut(), |ui| {
                 content.content_ui(ui, texts, assets, state, theme, link_evts);
             });
         }

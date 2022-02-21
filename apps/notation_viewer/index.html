@@ -21,6 +21,15 @@
       }
       canvas {
         background-color: white;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
       }
       #audio_enabler {
         display: none;
@@ -30,6 +39,8 @@
         bottom: 25vh;
         right: 25vw;
         background-color: gray;
+        text-align: center;
+        vertical-align: middle;
       }
       /* Safari 11+ */
       @media not all and (min-resolution:.001dpcm)

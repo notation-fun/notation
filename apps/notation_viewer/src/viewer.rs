@@ -48,7 +48,7 @@ impl NotationViewer {
     }
     pub fn handle_keyboard_inputs(
         keyboard_input: Res<Input<KeyCode>>,
-        egui_ctx: Res<EguiContext>,
+        mut egui_ctx: ResMut<EguiContext>,
         mut app_state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
@@ -59,7 +59,7 @@ impl NotationViewer {
         mut jump_to_bar_evts: EventWriter<JumpToBarEvent>,
         tab_bars_query: Query<(&TabBars, &GridData), With<TabBars>>,
     ) {
-        if egui_ctx.ctx().wants_keyboard_input() {
+        if egui_ctx.ctx_mut().wants_keyboard_input() {
             return;
         }
         if keyboard_input.just_released(KeyCode::F10) || keyboard_input.just_released(KeyCode::Backslash) {
@@ -141,7 +141,7 @@ impl NotationViewer {
     pub fn handle_mouse_inputs(
         windows: Res<Windows>,
         mouse_input: Res<Input<MouseButton>>,
-        egui_ctx: Res<EguiContext>,
+        mut egui_ctx: ResMut<EguiContext>,
         app_state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut mouse_motion_events: EventReader<MouseMotion>,
@@ -152,7 +152,7 @@ impl NotationViewer {
         if app_state.tab.is_none() {
             return;
         }
-        if egui_ctx.ctx().is_pointer_over_area() {
+        if egui_ctx.ctx_mut().is_pointer_over_area() {
             return;
         }
         let cursor_position = windows.get_primary().and_then(|x| x.cursor_position());
@@ -195,7 +195,7 @@ impl NotationViewer {
     pub fn handle_touch_inputs(
         windows: Res<Windows>,
         touch_input: Res<Touches>,
-        egui_ctx: Res<EguiContext>,
+        mut egui_ctx: ResMut<EguiContext>,
         mut app_state: ResMut<NotationState>,
         mut mouse_clicked: EventWriter<MouseClickedEvent>,
         //mut mouse_dragged: EventWriter<MouseDraggedEvent>,
@@ -203,7 +203,7 @@ impl NotationViewer {
         if app_state.tab.is_none() {
             return;
         }
-        if egui_ctx.ctx().wants_pointer_input() {
+        if egui_ctx.ctx_mut().wants_pointer_input() {
             /* bevy_egui not supporting touch properly yet
             app_state.debug_str = Some(format!(
                 "Touch: egui",

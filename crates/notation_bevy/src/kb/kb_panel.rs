@@ -59,7 +59,7 @@ pub trait KbPanel {
     }
     fn window_ui(
         &mut self,
-        egui_ctx: &EguiContext,
+        egui_ctx: &mut EguiContext,
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
         state: &mut NotationState,
@@ -74,7 +74,7 @@ pub trait KbPanel {
             .collapsible(false)
             .id(Self::window_id());
         window = window.open(&mut window_open);
-        window.show(egui_ctx.ctx(), |ui| {
+        window.show(egui_ctx.ctx_mut(), |ui| {
             self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
         });
         if !window_open {
@@ -84,7 +84,7 @@ pub trait KbPanel {
     }
     fn side_ui(
         &mut self,
-        egui_ctx: &EguiContext,
+        egui_ctx: &mut EguiContext,
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
         state: &mut NotationState,
@@ -101,28 +101,28 @@ pub trait KbPanel {
                 egui::TopBottomPanel::top(self.get_title())
                     .min_height(size.0)
                     .max_height(size.1)
-                    .show(egui_ctx.ctx(), |ui|{
+                    .show(egui_ctx.ctx_mut(), |ui|{
                         self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
             DockSide::Bottom =>
                 egui::TopBottomPanel::bottom(self.get_title())
                     .min_height(size.0)
                     .max_height(size.1)
-                    .show(egui_ctx.ctx(), |ui|{
+                    .show(egui_ctx.ctx_mut(), |ui|{
                         self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
             DockSide::Left =>
                 egui::SidePanel::left(self.get_title())
                     .min_width(size.0)
                     .max_width(size.1)
-                    .show(egui_ctx.ctx(), |ui|{
+                    .show(egui_ctx.ctx_mut(), |ui|{
                         self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
             DockSide::Right =>
                 egui::SidePanel::right(self.get_title())
                     .min_width(size.0)
                     .max_width(size.1)
-                    .show(egui_ctx.ctx(), |ui|{
+                    .show(egui_ctx.ctx_mut(), |ui|{
                         self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
                     }),
         };
