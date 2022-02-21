@@ -49,7 +49,6 @@
           display: block;
         }
       }}
-      /* Test website on real Safari 11+ */
     </style>
     <script src='https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js'></script>
     <script>
@@ -103,7 +102,7 @@
     </script>
   </head>
   <script type="module">
-    import init from './wasm.js'
+    import init from './target/wasm.js'
     init()
   </script>
   <div id="audio_enabler" onclick="enable_audio()" touchend="enable_audio()">

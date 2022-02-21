@@ -21,34 +21,83 @@
       }
       canvas {
         background-color: white;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
       }
+      #audio_enabler {
+        display: none;
+        position: absolute;
+        top: 25vh;
+        left: 25vw;
+        bottom: 25vh;
+        right: 25vw;
+        background-color: gray;
+        text-align: center;
+        vertical-align: middle;
+      }
+      /* Safari 11+ */
+      @media not all and (min-resolution:.001dpcm)
+      { @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+        #audio_enabler {
+          display: block;
+        }
+      }}
     </style>
     <script src='https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js'></script>
     <script>
-      var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
-      var audioContext = new AudioContextFunc();
-      var player=new WebAudioFontPlayer();
-      var channels = new Map();
+      function init_audio() {
+        console.log('init_audio()');
+        var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+        window.audioContext = new AudioContextFunc();
+        window.player = new WebAudioFontPlayer();
+        window.channels = new Map();
+      }
+
+      function check_audio() {
+        console.log('check_audio()');
+        if (!window.channels) {
+          init_audio();
+        }
+        console.log('check_audio()');
+      }
 
       function play_note(channel, semitones, seconds, volume){
-        const info = channels.get(channel);
+        const info = window.channels.get(channel);
         if (info) {
-          player.queueWaveTable(audioContext, audioContext.destination, window[info.variable], 0, semitones, seconds, volume);
+          window.player.queueWaveTable(audioContext, audioContext.destination, window[info.variable], 0, semitones, seconds, volume);
         }
       }
 
       function init_channel(channel, program) {
-        var nn = player.loader.findInstrument(program);
-        var info = player.loader.instrumentInfo(nn);
-        channels.set(channel, info);
+        check_audio();
+        var nn = window.player.loader.findInstrument(program);
+        var info = window.player.loader.instrumentInfo(nn);
+        window.channels.set(channel, info);
         console.log('init_channel(', channel, program, ') -> info:', info);
-        player.loader.startLoad(audioContext, info.url, info.variable);
+        window.player.loader.startLoad(audioContext, info.url, info.variable);
       }
 
       function load_instruments() {
-        player.loader.waitLoad(function () {
+        check_audio();
+        window.player.loader.waitLoad(function () {
           console.log('load_instruments: finished', channels);
         });
+      }
+
+      check_audio();
+
+      function enable_audio() {
+        check_audio();
+        play_note(1, 33, 0.1, 0.1);
+        var audio_enabler = document.getElementById('audio_enabler');
+        audio_enabler.remove();
       }
     </script>
   </head>
@@ -56,4 +105,7 @@
     import init from './target/wasm.js'
     init()
   </script>
+  <div id="audio_enabler" onclick="enable_audio()" touchend="enable_audio()">
+    Click to enable audio playback.
+  </div>
 </html>
