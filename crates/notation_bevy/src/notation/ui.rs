@@ -1,6 +1,6 @@
 //use bevy::app::StartupStage;
 use bevy::prelude::*;
-use bevy_egui::{EguiSettings};
+//use crate::bevy_egui::{EguiSettings};
 
 use crate::prelude::{NotationState};
 
@@ -13,7 +13,7 @@ impl Plugin for NotationUiPlugin {
 }
 
 pub fn update_window_scale_factor(
-    mut _egui_settings: ResMut<EguiSettings>,
+    //mut _egui_settings: ResMut<EguiSettings>,
     windows: Res<Windows>,
     mut app_state: ResMut<NotationState>,
 ) {

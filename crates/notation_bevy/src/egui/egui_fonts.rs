@@ -1,7 +1,7 @@
 use std::sync::RwLock;
 
 use bevy::prelude::*;
-use bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, TextStyle}, EguiContext};
+use crate::bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, TextStyle}, EguiContext};
 
 use crate::prelude::{ExtraAssets, NotationSettings};
 

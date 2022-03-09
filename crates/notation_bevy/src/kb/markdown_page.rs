@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use bevy::prelude::*;
-use bevy_egui::egui::Ui;
+use crate::bevy_egui::egui::Ui;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 

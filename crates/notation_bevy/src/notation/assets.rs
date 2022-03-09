@@ -2,7 +2,10 @@ use std::path::PathBuf;
 use bevy::{prelude::*, asset::{AssetPath, HandleId, Asset}};
 use bevy_asset_loader::{AssetCollection, AssetKeys};
 
-use crate::{egui::egui_fonts::EguiFontSizes, settings::notation_settings::NotationSettings};
+#[cfg(feature = "egui")]
+use crate::egui::egui_fonts::EguiFontSizes;
+
+use crate::settings::notation_settings::NotationSettings;
 
 #[derive(AssetCollection)]
 pub struct NotationAssets {
@@ -39,13 +42,22 @@ pub trait ExtraAssets : AssetCollection {
     }
     fn get_lyrics_font(settings: &NotationSettings) -> &'static str {
         if settings.lang() == NotationSettings::ZH_CN {
-            return "fonts/zh-CN/NotoSansSC-Medium.otf.egui"
+            #[cfg(feature = "egui")]
+            return "fonts/zh-CN/NotoSansSC-Medium.otf.egui";
+
+            #[cfg(not(feature = "egui"))]
+            return "fonts/zh-CN/NotoSansSC-Medium.otf";
         }
-        "fonts/en-US/FiraMono-Medium.ttf.egui"
+        #[cfg(feature = "egui")]
+        return "fonts/en-US/FiraMono-Medium.ttf.egui";
+
+        #[cfg(not(feature = "egui"))]
+        return "fonts/en-US/FiraMono-Medium.ttf";
     }
     fn get_fretboard_image(_settings: &NotationSettings) -> &'static str {
         "png/fretboard.png"
     }
+    #[cfg(feature = "egui")]
     fn get_egui_font_sizes(&self, settings: &NotationSettings) -> EguiFontSizes {
         if settings.lang() == NotationSettings::ZH_CN {
             return EguiFontSizes::BIGGER;

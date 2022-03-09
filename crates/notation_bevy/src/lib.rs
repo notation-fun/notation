@@ -9,7 +9,10 @@ pub use notation_dsl;
 #[cfg(feature = "midi")]
 pub use notation_midi;
 
-pub use {bevy, bevy_prototype_lyon, bevy_egui, bevy_asset_loader};
+pub use {bevy, bevy_prototype_lyon, bevy_asset_loader};
+
+#[cfg(feature = "egui")]
+pub use notation_bevy_utils::bevy_egui;
 
 pub mod chord;
 pub mod entry;
@@ -23,7 +26,6 @@ pub mod play;
 pub mod tab;
 
 pub mod guitar;
-pub mod kb;
 pub mod lyrics;
 pub mod melody;
 pub mod harmony;
@@ -32,10 +34,15 @@ pub mod shapes;
 pub mod strings;
 
 pub mod data;
-pub mod egui;
 pub mod settings;
 pub mod theme;
 pub mod notation;
+
+#[cfg(feature = "egui")]
+pub mod egui;
+
+#[cfg(feature = "egui")]
+pub mod kb;
 
 #[cfg(target_arch = "wasm32")]
 pub mod wasm;
@@ -80,8 +87,10 @@ pub mod prelude {
     pub use crate::entry::entry_playing::EntryPlaying;
     #[doc(hidden)]
     pub use crate::entry::entry_plugin::EntryPlugin;
+    #[cfg(feature = "egui")]
     #[doc(hidden)]
     pub use crate::egui::egui_fonts::EguiFontSizes;
+    #[cfg(feature = "egui")]
     #[doc(hidden)]
     pub use crate::egui::egui_plugin::EguiPlugin;
     #[doc(hidden)]
@@ -156,12 +165,16 @@ pub mod prelude {
     pub use crate::notation::ui::NotationUiPlugin;
     #[doc(hidden)]
     pub use crate::notation::control::Control;
+    #[cfg(feature = "egui")]
     #[doc(hidden)]
-    pub use crate::notation::control_panel::ControlPanel;
+    pub use crate::notation::egui_control_panel::EguiControlPanel;
+    #[cfg(feature = "egui")]
     #[doc(hidden)]
     pub use crate::kb::kb_page::{KbPage, KbPageId, KbContent};
+    #[cfg(feature = "egui")]
     #[doc(hidden)]
     pub use crate::kb::page_helper::PageHelper;
+    #[cfg(feature = "egui")]
     #[doc(hidden)]
     pub use crate::kb::kb_panel::KbPanel;
     #[cfg(feature = "midi")]

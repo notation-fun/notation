@@ -1,5 +1,3 @@
-#![feature(arc_new_cyclic)]
-
 pub use {notation_core, notation_fretted, notation_guitar};
 
 pub mod bar;

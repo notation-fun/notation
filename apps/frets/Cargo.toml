@@ -1,0 +1,22 @@
+[package]
+name = "frets"
+version = "0.1.0"
+edition = "2021"
+description = "Notation Frets"
+
+[package.metadata.bundle]
+identifier = "fun.notation.frets"
+resources = ["assets"]
+
+[features]
+default = [
+    "notation_bevy/midi",
+]
+
+native = [
+    "notation_bevy/native",
+    "notation_bevy/dsl",
+]
+
+[dependencies]
+notation_bevy = { path = "../../crates/notation_bevy" }

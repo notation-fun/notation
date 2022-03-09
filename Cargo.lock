@@ -1573,6 +1573,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
 
 [[package]]
+name = "frets"
+version = "0.1.0"
+dependencies = [
+ "notation_bevy",
+]
+
+[[package]]
 name = "futures"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2495,7 +2502,6 @@ dependencies = [
  "bevy",
  "bevy_asset_loader",
  "bevy_easings",
- "bevy_egui",
  "bevy_prototype_lyon",
  "clap",
  "console_error_panic_hook",

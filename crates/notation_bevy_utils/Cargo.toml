@@ -19,6 +19,10 @@ default = [
     "bevy/png",
 ]
 
+egui = [
+    "bevy_egui",
+]
+
 [dependencies]
 serde = { version = "1.0.133", features = ["derive"] }
 # https://github.com/serde-rs/serde/issues/1937
@@ -30,8 +34,9 @@ float_eq = "0.7"
 bevy = { version = "0.6.0", default-features = false }
 
 rand = "0.8"
-getrandom = { version="0.2", features=["wasm-bindgen"] }
+getrandom = { version = "0.2", features=["wasm-bindgen"] }
 
 bevy_prototype_lyon = "0.4.0"
-bevy_egui = "0.11.1"
 bevy_easings = "0.5.0"
+
+bevy_egui = { version = "0.11.1", optional = true }

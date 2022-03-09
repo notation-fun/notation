@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_egui::egui::{Ui};
+use crate::bevy_egui::egui::{Ui};
 use notation_bevy_utils::prelude::{MarkDownAsset, EasyLinkEvent};
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};

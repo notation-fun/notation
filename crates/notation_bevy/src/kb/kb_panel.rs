@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use bevy_egui::egui::{self, Ui};
-use bevy_egui::EguiContext;
+use crate::bevy_egui::egui::{self, Ui};
+use crate::bevy_egui::EguiContext;
 use notation_bevy_utils::asset::markdown_asset::MarkDownAsset;
 use notation_bevy_utils::prelude::EasyLinkEvent;
 

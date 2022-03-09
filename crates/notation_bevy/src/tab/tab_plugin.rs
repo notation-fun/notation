@@ -6,7 +6,9 @@ use crate::bar::bar_view::BarView;
 use crate::chord::chord_view::ChordView;
 use crate::mini::mini_bar::MiniBar;
 
-use crate::notation::control_panel::ControlPanel;
+#[cfg(feature = "egui")]
+use crate::notation::egui_control_panel::EguiControlPanel;
+
 use crate::play::play_button::PlayButton;
 use crate::prelude::{
     AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationState, NotationAssetsStates,
@@ -106,7 +108,8 @@ impl TabPlugin {
         }
         if let Some(pos) = pos {
             if app_state.show_control {
-                if !ControlPanel::is_pos_inside(app_state.window_width, pos) {
+                #[cfg(feature = "egui")]
+                if !EguiControlPanel::is_pos_inside(app_state.window_width, pos) {
                     app_state.show_control = false;
                 }
             } else if app_state.show_kb {
@@ -180,7 +183,8 @@ impl TabPlugin {
         }
         for evt in evts.iter() {
             let pos = app_state.convert_pos(evt.cursor_position);
-            if app_state.show_control && ControlPanel::is_pos_inside(app_state.window_width, pos) {
+            #[cfg(feature = "egui")]
+            if app_state.show_control && EguiControlPanel::is_pos_inside(app_state.window_width, pos) {
                 return;
             }
             if app_state.show_kb {
