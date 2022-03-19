@@ -136,7 +136,7 @@ pub struct BarColors {
     pub beat_color1: Color,
     pub beat_color2: Color,
     pub pos_indicator_color: Color,
-    pub grid_color: Color,
+    pub line_color: Color,
 }
 impl Default for BarColors {
     fn default() -> Self {
@@ -150,7 +150,7 @@ impl Default for BarColors {
             beat_color1: ThemeColors::hex_linear("00000010"),
             beat_color2: ThemeColors::hex_linear("00000000"),
             pos_indicator_color: ThemeColors::hex_linear("00000077"),
-            grid_color: ThemeColors::hex_linear("D3B59C88"),
+            line_color: ThemeColors::hex_linear("79554844"),
         }
     }
 }

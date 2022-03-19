@@ -78,8 +78,8 @@ impl Default for BarSizes {
             pos_indicator_size: 2.0,
             pos_indicator_outline: 0.5,
             pos_indicator_extra: 8.0,
-            grid_line_width: 0.5,
-            grid_root_line_width: 2.0,
+            grid_line_width: 1.5,
+            grid_root_line_width: 1.5,
         }
     }
 }

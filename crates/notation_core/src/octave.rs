@@ -23,6 +23,18 @@ pub enum Octave {
 
 impl Octave {
     pub const CENTER: Self = Self::P4;
+
+    pub fn is_even(&self) -> bool {
+        match self {
+            Octave::P0 |
+            Octave::P2 |
+            Octave::P4 |
+            Octave::P6 |
+            Octave::P8 |
+            Octave::P10 => true,
+            _ => false,
+        }
+    }
 }
 
 impl Default for Octave {
