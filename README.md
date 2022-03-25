@@ -96,7 +96,7 @@ Features:
 
 [Youtube: Canon in D](https://youtu.be/RXdFoTSl7R4)
 
-[Try in browser](https://www.amateurguitar.com/songs/scarborough-fair/)
+[Try in browser](https://www.notation.fun/notation/viewer?lang=en-US&tab=tabs/scarborough_fair.ron)
 Note that the web version is only working properly in desktop browser, the audio is not very nice, the touch input is not working reliable on mobile browsers yet, and may have performance issues on certain devices.
 
 [Desktop versions](https://github.com/notation-fun/notation/releases) can be downloaded from releases.
