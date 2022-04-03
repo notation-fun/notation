@@ -24,6 +24,12 @@ impl EguiControlPanel {
                     state.bars_range = None;
                     Control::reload_tab(state, theme);
                 }
+                let new_row_for_section = settings.new_row_for_section;
+                ui.checkbox(&mut settings.new_row_for_section, "New Row for Section");
+                if new_row_for_section != settings.new_row_for_section {
+                    state.bars_range = None;
+                    Control::reload_tab(state, theme);
+                }
                 let play_title = if midi_state.play_control.play_state.is_playing() {
                     "Pause"
                 } else {

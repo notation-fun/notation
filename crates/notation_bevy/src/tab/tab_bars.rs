@@ -43,6 +43,108 @@ impl<'a> View<NotationLayout<'a>> for TabBars {
     }
 }
 
+impl TabBars {
+    fn calc_grid_data_line_mode<'a>(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize, _rows: usize, cols: usize, cell_width: f32, cell_margin: LayoutSize) -> GridData {
+        let bar_margin = engine.theme.sizes.layout.bar_margin;
+        let height = self
+            .bar_layouts
+            .get(0)
+            .map(|x| x.height())
+            .unwrap_or(grid_size.height);
+        let size = if cols >= 2 {
+            LayoutSize::new(cell_width, height)
+        } else {
+            LayoutSize::new(cell_width * 2.0 / 3.0, height)
+        };
+        let grid_data = GridData::new_fixed(
+            1,
+            self.tab.bars.len(),
+            size,
+            cell_margin,
+            LayoutAnchor::TOP_LEFT,
+            grid_size,
+        );
+        GridData {
+            offset: grid_data.offset + Vec2::new(bar_margin, 0.0),
+            ..grid_data
+        }
+    }
+    fn sync_bar_layouts<'a>(&self, engine: &NotationLayout<'a>, begin: usize, count: usize) -> f32 {
+        let mut non_ghost_lanes: HashSet<String> = HashSet::new();
+        for offset in 0..count {
+            if let Some(bar_layout) = self.bar_layouts.get(begin + offset) {
+                for lane_layout in bar_layout.lane_layouts.iter() {
+                    if engine.settings.layout.video_recording_mode
+                        || !lane_layout.is_ghost()
+                    {
+                        non_ghost_lanes.insert(lane_layout.id());
+                    }
+                }
+            }
+        }
+        for offset in 0..count {
+            if let Some(bar_layout) = self.bar_layouts.get(begin + offset) {
+                for lane_layout in bar_layout.lane_layouts.iter() {
+                    if lane_layout.is_ghost() {
+                        let visible = non_ghost_lanes.contains(&lane_layout.id());
+                        lane_layout.set_visible(visible);
+                    }
+                }
+            }
+        }
+        let bar_layout = self.bar_layouts.get(begin).unwrap();
+        bar_layout.height()
+    }
+    fn calc_grid_data_normal_grid<'a>(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize, rows: usize, cols: usize, cell_width: f32, cell_margin: LayoutSize) -> GridData {
+        let mut row_sizes = Vec::new();
+        for row in 0..rows {
+            let height = self.sync_bar_layouts(engine, row * cols, cols);
+            row_sizes.push(LayoutSize::new(cell_width, height));
+        }
+        GridData::new_rows(
+            rows,
+            cols,
+            row_sizes,
+            cell_margin,
+            LayoutAnchor::TOP_LEFT,
+            grid_size,
+        )
+    }
+    fn calc_grid_data_sparse_grid<'a>(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize, _rows: usize, cols: usize, cell_width: f32, cell_margin: LayoutSize) -> GridData {
+        let mut sparse_rows = 0;
+        let mut sparse_row_cols = Vec::new();
+        let mut sparse_row_sizes = Vec::new();
+        let mut begin = 0;
+        let mut count = 0;
+        for bar in self.tab.bars.iter() {
+            if count >= cols || count > 0 && bar.props.bar_index == 0 {
+                sparse_rows += 1;
+                let height = self.sync_bar_layouts(engine, begin, count);
+                sparse_row_sizes.push(LayoutSize::new(cell_width, height));
+                sparse_row_cols.push(count);
+                begin = begin + count - 1;
+                count = 0;
+            }
+            count += 1;
+        }
+        if count > 0 {
+            sparse_rows += 1;
+            let height = self.sync_bar_layouts(engine, begin, count);
+            sparse_row_sizes.push(LayoutSize::new(cell_width, height));
+            sparse_row_cols.push(count);
+        }
+        GridData::new_sparse_rows(
+            sparse_rows,
+            cols,
+            sparse_row_sizes,
+            sparse_row_cols,
+            cell_margin,
+            LayoutAnchor::TOP_LEFT,
+            grid_size,
+        );
+    }
+}
+
 impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
     fn calc_grid_data(&self, engine: &NotationLayout<'a>, grid_size: LayoutSize) -> GridData {
         if self.tab.bars.len() == 0 {
@@ -67,64 +169,13 @@ impl<'a> GridView<NotationLayout<'a>, BarView> for TabBars {
         );
         let cell_margin = engine.theme.sizes.cell_margin(&engine.settings);
         if engine.settings.layout.mode == LayoutMode::Line {
-            let height = self
-                .bar_layouts
-                .get(0)
-                .map(|x| x.height())
-                .unwrap_or(grid_size.height);
-            let size = if cols >= 2 {
-                LayoutSize::new(cell_width, height)
-            } else {
-                LayoutSize::new(cell_width * 2.0 / 3.0, height)
-            };
-            let grid_data = GridData::new_fixed(
-                1,
-                self.tab.bars.len(),
-                size,
-                cell_margin,
-                LayoutAnchor::TOP_LEFT,
-                grid_size,
-            );
-            GridData {
-                offset: grid_data.offset + Vec2::new(bar_margin, 0.0),
-                ..grid_data
-            }
+            self.calc_grid_data_line_mode(engine, grid_size, rows, cols, cell_width, cell_margin)
         } else {
-            let mut row_sizes = Vec::new();
-            for row in 0..rows {
-                let mut non_ghost_lanes: HashSet<String> = HashSet::new();
-                for col in 0..cols {
-                    if let Some(bar_layout) = self.bar_layouts.get(row * cols + col) {
-                        for lane_layout in bar_layout.lane_layouts.iter() {
-                            if engine.settings.layout.video_recording_mode
-                                || !lane_layout.is_ghost()
-                            {
-                                non_ghost_lanes.insert(lane_layout.id());
-                            }
-                        }
-                    }
-                }
-                for col in 0..cols {
-                    if let Some(bar_layout) = self.bar_layouts.get(row * cols + col) {
-                        for lane_layout in bar_layout.lane_layouts.iter() {
-                            if lane_layout.is_ghost() {
-                                let visible = non_ghost_lanes.contains(&lane_layout.id());
-                                lane_layout.set_visible(visible);
-                            }
-                        }
-                    }
-                }
-                let bar_layout = self.bar_layouts.get(row * cols).unwrap();
-                row_sizes.push(LayoutSize::new(cell_width, bar_layout.height()));
-            }
-            let grid_data = GridData::new_rows(
-                rows,
-                cols,
-                row_sizes,
-                cell_margin,
-                LayoutAnchor::TOP_LEFT,
-                grid_size,
-            );
+            let grid_data = if engine.settings.new_row_for_section {
+                self.calc_grid_data_sparse_grid(engine, grid_size, rows, cols, cell_width, cell_margin)
+            } else {
+                self.calc_grid_data_normal_grid(engine, grid_size, rows, cols, cell_width, cell_margin)
+            };
             match engine.settings.layout.override_tab_width {
                 None => grid_data,
                 Some(_) => {

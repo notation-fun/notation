@@ -12,6 +12,7 @@ pub struct NotationSettings {
     pub lang: String,
     pub layout: LayoutSettings,
     pub add_ready_section: bool,
+    pub new_row_for_section: bool,
     pub should_loop: bool,
     pub speed_factor: f32,
     pub hide_bar_number: bool,
@@ -43,6 +44,7 @@ impl FromWorld for NotationSettings {
             lang: args.lang.clone(),
             layout: LayoutSettings::default(),
             add_ready_section: false,
+            new_row_for_section: false,
             should_loop: false,
             speed_factor: 1.0,
             hide_bar_number: false,
@@ -97,6 +99,7 @@ impl NotationSettings {
         self.layout.mode = LayoutMode::Grid;
         self.layout.grid_align_mode = GridAlignMode::ForceTop;
         self.add_ready_section = false;
+        self.new_row_for_section = true;
         self.hide_indicators = true;
         self.hide_guitar_view = true;
         self.hide_chords_view = true;

@@ -10,11 +10,13 @@ pub struct Control();
 
 impl Control {
     pub const PRESET_GUITAR_TAB: &'static str = "guitar_tab";
+    pub const PRESET_GUITAR_CHORDS: &'static str = "guitar_chords";
     pub const PRESET_GUITAR_NOTES: &'static str = "guitar_notes";
     pub const PRESET_GUITAR_STRINGS: &'static str = "guitar_strings";
     pub const PRESET_MELODY: &'static str = "melody";
-    pub const ALL_PRESETS: [&'static str ; 4 ] = [
+    pub const ALL_PRESETS: [&'static str ; 5 ] = [
         Self::PRESET_GUITAR_TAB,
+        Self::PRESET_GUITAR_CHORDS,
         Self::PRESET_GUITAR_NOTES,
         Self::PRESET_GUITAR_STRINGS,
         Self::PRESET_MELODY,
@@ -137,6 +139,19 @@ impl Control {
         theme.texts.melody.text_y = -18.0;
         theme.texts.melody.syllable_font_size = 20.0;
     }
+    fn set_preset_shapes(
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.hide_shapes_lane = false;
+    }
+    fn set_preset_lyrics(
+        settings: &mut NotationSettings,
+        theme: &mut NotationTheme,
+    ) {
+        settings.hide_lyrics_lane = false;
+        theme.sizes.layout.page_margin = 24.0;
+    }
     pub fn set_preset(
         state: &mut NotationState,
         settings: &mut NotationSettings,
@@ -155,6 +170,12 @@ impl Control {
                 Self::set_preset_strings(settings, theme, true);
                 Self::set_preset_harmony(settings, theme);
                 settings.hide_shapes_lane = false;
+            },
+            Self::PRESET_GUITAR_CHORDS => {
+                settings.hack_for_screenshot();
+                settings.override_beat_size = None;
+                Self::set_preset_shapes(settings, theme);
+                Self::set_preset_lyrics(settings, theme);
             },
             Self::PRESET_GUITAR_NOTES => {
                 settings.hack_for_screenshot();

@@ -8,6 +8,7 @@ use crate::prelude::{
 pub enum GridCellSize {
     Fixed(LayoutSize),
     Rows(Vec<LayoutSize>),
+    SparseRows((Vec<LayoutSize>, Vec<usize>)),
 }
 impl GridCellSize {
     pub fn calc_cell_offset(&self, margin: &LayoutSize, row: usize, col: usize) -> Vec2 {
@@ -17,7 +18,8 @@ impl GridCellSize {
                 let y = -(size.height + margin.height) * row as f32;
                 Vec2::new(x, y)
             }
-            Self::Rows(rows) => {
+            Self::Rows(rows) |
+            Self::SparseRows((rows, _)) => {
                 let mut y = 0.0;
                 for i in 0..row {
                     if let Some(size) = rows.get(i) {
@@ -38,7 +40,8 @@ impl GridCellSize {
     pub fn calc_cell_size(&self, _margin: &LayoutSize, row: usize, _col: usize) -> LayoutSize {
         match self {
             Self::Fixed(size) => size.clone(),
-            Self::Rows(rows) => {
+            Self::Rows(rows) |
+            Self::SparseRows((rows, _)) => {
                 if let Some(size) = rows.get(row) {
                     size.clone()
                 } else {
@@ -144,6 +147,26 @@ impl GridData {
             content_size,
         )
     }
+    pub fn new_sparse_rows(
+        rows: usize,
+        cols: usize,
+        row_sizes: Vec<LayoutSize>,
+        row_cols: Vec<usize>,
+        margin: LayoutSize,
+        anchor: LayoutAnchor,
+        grid_size: LayoutSize,
+    ) -> Self {
+        let content_size = Self::calc_rows_content_size(rows, cols, &row_sizes, margin);
+        Self::new(
+            rows,
+            cols,
+            GridCellSize::SparseRows((row_sizes, row_cols)),
+            margin,
+            anchor,
+            grid_size,
+            content_size,
+        )
+    }
     pub fn calc_fixed_content_size(
         rows: usize,
         cols: usize,
@@ -238,7 +261,8 @@ impl GridData {
             GridCellSize::Fixed(size) => {
                 Self::calc_fixed_content_size(self.rows, self.cols, *size, self.margin)
             }
-            GridCellSize::Rows(rows) => {
+            GridCellSize::Rows(rows) |
+            GridCellSize::SparseRows((rows, _)) => {
                 let mut fixed_size = None;
                 let mut content_height = self.margin.height;
                 for row in rows.iter() {
@@ -260,7 +284,7 @@ impl GridData {
             }
         }
     }
-    pub fn calc_row_col(&self, index: usize) -> (usize, usize) {
+    pub fn calc_normal_row_col(&self, index: usize) -> (usize, usize) {
         if self.cols == 0 {
             return (0, 0);
         }
@@ -270,6 +294,36 @@ impl GridData {
             row = self.rows - 1;
         }
         (row, col)
+    }
+    pub fn calc_sparse_row_col(&self, row_cols: &Vec<usize>, index: usize) -> (usize, usize) {
+        let mut row = 0;
+        let mut col = 0;
+        let mut total = 0;
+        for cols in row_cols {
+            if index < total + cols {
+                col = index - total;
+                break;
+            } else {
+                row += 1;
+                total += cols;
+            }
+        }
+        if row > self.rows {
+            row = self.rows - 1;
+            col = 0;
+        }
+        (row, col)
+    }
+    pub fn calc_row_col(&self, index: usize) -> (usize, usize) {
+        match &self.size {
+            GridCellSize::Fixed(_) |
+            GridCellSize::Rows(_) => {
+                self.calc_normal_row_col(index)
+            },
+            GridCellSize::SparseRows((_sizes, row_cols)) => {
+                self.calc_sparse_row_col(row_cols, index)
+            }
+        }
     }
     pub fn calc_cell_offset(&self, row: usize, col: usize) -> Vec2 {
         self.offset + self.size.calc_cell_offset(&self.margin, row, col)
