@@ -72,15 +72,16 @@ pub fn get_font_definitions(
     if let Some((name, data)) = font {
         let font_data = FontData::from_owned(data);
         fonts.font_data.insert(name.clone(), font_data);
-        fonts.fonts_for_family
-            .entry(FontFamily::Monospace)
-            .or_default()
+        fonts.families
+            .get_mut(&FontFamily::Monospace)
+            .unwrap()
             .insert(0, name.clone());
-        fonts.fonts_for_family
-            .entry(FontFamily::Proportional)
-            .or_default()
+        fonts.families
+            .get_mut(&FontFamily::Proportional)
+            .unwrap()
             .insert(0, name.clone());
     }
+    /* 
     fonts.family_and_size.insert(
         TextStyle::Small,
         (FontFamily::Proportional, sizes.small),
@@ -101,6 +102,7 @@ pub fn get_font_definitions(
         TextStyle::Monospace,
         (FontFamily::Monospace, sizes.mono),
     );
+     */
     fonts
 }
 

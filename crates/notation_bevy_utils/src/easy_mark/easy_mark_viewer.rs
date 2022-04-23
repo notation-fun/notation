@@ -1,3 +1,5 @@
+use bevy::prelude::EventWriter;
+use crate::egui::EasyLinkEvent;
 use super::easy_mark_parser as easy_mark;
 use egui::*;
 
@@ -91,7 +93,7 @@ pub fn item_ui(ui: &mut Ui, item: easy_mark::Item<'_>, link_evts: &mut EventWrit
     };
 }
 
-fn rich_text_from_style(text: &str, style: &easy_mark::Style) -> RichText {
+pub fn rich_text_from_style(text: &str, style: &easy_mark::Style) -> RichText {
     let easy_mark::Style {
         heading,
         quoted,

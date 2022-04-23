@@ -1,3 +1,5 @@
+use bevy::prelude::EventWriter;
+use crate::egui::EasyLinkEvent;
 use egui::{text_edit::CCursorRange, *};
 
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]

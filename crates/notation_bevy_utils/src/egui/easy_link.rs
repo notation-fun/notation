@@ -51,10 +51,8 @@ impl EasyLink {
     }
     pub fn ui(self, ui: &mut Ui, link_evts: &mut EventWriter<EasyLinkEvent>) -> Response {
         let EasyLink { url, text, style } = self;
-        let label = super::label_from_style(&text, &style);
-        let color = ui.visuals().hyperlink_color;
-        let label = label.text_color(color);
-        let response = ui.add(label.sense(Sense::click()));
+        let label = super::link_from_style(&text, &style, ui);
+        let response = ui.add(label);
         if response.hovered() {
             ui.ctx().output().cursor_icon = CursorIcon::PointingHand;
         }
