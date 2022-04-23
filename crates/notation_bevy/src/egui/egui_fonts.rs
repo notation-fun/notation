@@ -1,7 +1,7 @@
 use std::sync::RwLock;
 
 use bevy::prelude::*;
-use crate::bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, TextStyle}, EguiContext};
+use crate::bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, FontId, Style, TextStyle}, EguiContext};
 
 use crate::prelude::{ExtraAssets, NotationSettings};
 
@@ -66,7 +66,6 @@ impl EguiFontSizes {
 
 pub fn get_font_definitions(
     font: Option<(String, Vec<u8>)>,
-    sizes: EguiFontSizes,
 ) -> FontDefinitions {
     let mut fonts = FontDefinitions::default();
     if let Some((name, data)) = font {
@@ -81,29 +80,30 @@ pub fn get_font_definitions(
             .unwrap()
             .insert(0, name.clone());
     }
-    /* 
-    fonts.family_and_size.insert(
-        TextStyle::Small,
-        (FontFamily::Proportional, sizes.small),
-    );
-    fonts.family_and_size.insert(
-        TextStyle::Body,
-        (FontFamily::Proportional, sizes.body),
-    );
-    fonts.family_and_size.insert(
-        TextStyle::Button,
-        (FontFamily::Proportional, sizes.button),
-    );
-    fonts.family_and_size.insert(
-        TextStyle::Heading,
-        (FontFamily::Proportional, sizes.heading),
-    );
-    fonts.family_and_size.insert(
-        TextStyle::Monospace,
-        (FontFamily::Monospace, sizes.mono),
-    );
-     */
     fonts
+}
+
+pub fn set_style_font_sizes(style: &mut Style, sizes: EguiFontSizes) {
+    style.text_styles.insert(
+        TextStyle::Small,
+        FontId::new(sizes.small, FontFamily::Proportional),
+    );
+    style.text_styles.insert(
+        TextStyle::Body,
+        FontId::new(sizes.body, FontFamily::Proportional),
+    );
+    style.text_styles.insert(
+        TextStyle::Button,
+        FontId::new(sizes.button, FontFamily::Proportional),
+    );
+    style.text_styles.insert(
+        TextStyle::Heading,
+        FontId::new(sizes.heading, FontFamily::Proportional),
+    );
+    style.text_styles.insert(
+        TextStyle::Monospace,
+        FontId::new(sizes.mono, FontFamily::Monospace),
+    );
 }
 
 pub fn setup_egui_fonts<A: ExtraAssets>(
@@ -112,9 +112,10 @@ pub fn setup_egui_fonts<A: ExtraAssets>(
     mut egui_ctx: ResMut<EguiContext>,
 ) {
     println!("setup_egui_fonts() ---------------------------------------");
-    let fonts = get_font_definitions(
-        EguiFont::get_font(),
-        extra_assets.get_egui_font_sizes(&settings));
-    egui_ctx.ctx_mut()
-        .set_fonts(fonts);
+    let fonts = get_font_definitions(EguiFont::get_font());
+    let mut ctx = egui_ctx.ctx_mut();
+    ctx.set_fonts(fonts);
+    let mut style: Style = (*ctx.style()).clone();
+    set_style_font_sizes(&mut style, extra_assets.get_egui_font_sizes(&settings));
+    ctx.set_style(style);
 }
