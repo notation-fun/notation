@@ -29,6 +29,7 @@ impl Default for EasyMarkEditor {
     }
 }
 
+/*
 impl epi::App for EasyMarkEditor {
     fn name(&self) -> &str {
         "🖹 EasyMark editor"
@@ -47,9 +48,10 @@ impl epi::App for EasyMarkEditor {
         });
     }
 }
+ */
 
 impl EasyMarkEditor {
-    fn ui(&mut self, ui: &mut egui::Ui) {
+    pub fn ui(&mut self, ui: &mut egui::Ui, link_evts: &mut EventWriter<EasyLinkEvent>) {
         egui::Grid::new("controls").show(ui, |ui| {
             ui.checkbox(&mut self.highlight_editor, "Highlight editor");
             egui::reset_button(ui, self);
@@ -71,7 +73,7 @@ impl EasyMarkEditor {
                     .id_source("rendered")
                     .show(&mut columns[1], |ui| {
                         // TODO: we can save some more CPU by caching the rendered output.
-                        crate::easy_mark::easy_mark(ui, &self.code);
+                        crate::easy_mark::easy_mark(ui, &self.code, link_evts);
                     });
             });
         } else {
@@ -81,7 +83,7 @@ impl EasyMarkEditor {
         }
     }
 
-    fn editor_ui(&mut self, ui: &mut egui::Ui) {
+    pub fn editor_ui(&mut self, ui: &mut egui::Ui) {
         let Self {
             code, highlighter, ..
         } = self;

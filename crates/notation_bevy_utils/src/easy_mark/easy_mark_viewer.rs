@@ -2,11 +2,11 @@ use super::easy_mark_parser as easy_mark;
 use egui::*;
 
 /// Parse and display a VERY simple and small subset of Markdown.
-pub fn easy_mark(ui: &mut Ui, easy_mark: &str) {
-    easy_mark_it(ui, easy_mark::Parser::new(easy_mark));
+pub fn easy_mark(ui: &mut Ui, easy_mark: &str, link_evts: &mut EventWriter<EasyLinkEvent>) {
+    easy_mark_it(ui, easy_mark::Parser::new(easy_mark), link_evts);
 }
 
-pub fn easy_mark_it<'em>(ui: &mut Ui, items: impl Iterator<Item = easy_mark::Item<'em>>) {
+pub fn easy_mark_it<'em>(ui: &mut Ui, items: impl Iterator<Item = easy_mark::Item<'em>>, link_evts: &mut EventWriter<EasyLinkEvent>) {
     let initial_size = vec2(
         ui.available_width(),
         ui.spacing().interact_size.y, // Assume there will be
@@ -22,12 +22,12 @@ pub fn easy_mark_it<'em>(ui: &mut Ui, items: impl Iterator<Item = easy_mark::Ite
         ui.set_row_height(row_height);
 
         for item in items {
-            item_ui(ui, item);
+            item_ui(ui, item, link_evts);
         }
     });
 }
 
-pub fn item_ui(ui: &mut Ui, item: easy_mark::Item<'_>) {
+pub fn item_ui(ui: &mut Ui, item: easy_mark::Item<'_>, link_evts: &mut EventWriter<EasyLinkEvent>) {
     let row_height = ui.text_style_height(&TextStyle::Body);
     let one_indent = row_height / 2.0;
 
@@ -43,8 +43,11 @@ pub fn item_ui(ui: &mut Ui, item: easy_mark::Item<'_>) {
             ui.label(rich_text_from_style(text, &style));
         }
         easy_mark::Item::Hyperlink(style, text, url) => {
+            /*
             let label = rich_text_from_style(text, &style);
             ui.add(Hyperlink::from_label_and_url(label, url));
+             */
+            crate::egui::EasyLink::new(url, text, style).ui(ui, link_evts);
         }
 
         easy_mark::Item::Separator => {
