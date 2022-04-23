@@ -31,8 +31,8 @@ dsl = [
     "notation_dsl",
 ]
 
-egui = [
-    "notation_bevy_utils/egui",
+with_egui = [
+    "notation_bevy_utils/with_egui",
 ]
 
 [dependencies]
@@ -51,15 +51,15 @@ thiserror = "1.0"
 ron = "0.7"
 float_eq = "0.7"
 
-bevy = { version = "0.6.0", default-features = false }
+bevy = { version = "0.7.0", default-features = false }
 
 rand = "0.8"
 getrandom = { version = "0.2", features = [ "wasm-bindgen" ] }
 
-bevy_prototype_lyon = "0.4.0"
-bevy_easings = "0.5.0"
+bevy_prototype_lyon = "0.5.0"
+bevy_easings = "0.6.0"
 
-bevy_asset_loader = "0.8.0"
+bevy_asset_loader = "0.10.0"
 
 rfd = "0.6.3"
 lazy_static = "1.4.0"

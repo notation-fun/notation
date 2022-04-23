@@ -13,9 +13,9 @@ pub fn on_entry_playing_changed(
     settings: Res<NotationSettings>,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
-    mut note_query: QuerySet<(
-        QueryState<(Entity, &mut PickNoteData, &Children)>,
-        QueryState<(Entity, &mut PickNoteData)>,
+    mut note_query: ParamSet<(
+        Query<(Entity, &mut PickNoteData, &Children)>,
+        Query<(Entity, &mut PickNoteData)>,
     )>,
     mut font_query: Query<&mut Text>,
 ) {
@@ -27,7 +27,7 @@ pub fn on_entry_playing_changed(
     }
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
-            if let Ok((entity, mut data, note_children)) = note_query.q0().get_mut(*child) {
+            if let Ok((entity, mut data, note_children)) = note_query.p0().get_mut(*child) {
                 data.value.playing_state = playing.value;
                 data.update(&mut commands, &theme, entity);
                 for child in note_children.iter() {
@@ -35,7 +35,7 @@ pub fn on_entry_playing_changed(
                         BevyUtil::set_text_color(&mut text, data.calc_fret_color(&theme));
                     }
                 }
-            } else if let Ok((entity, mut data)) = note_query.q1().get_mut(*child) {
+            } else if let Ok((entity, mut data)) = note_query.p1().get_mut(*child) {
                 data.value.playing_state = playing.value;
                 data.update(&mut commands, &theme, entity);
             }

@@ -13,6 +13,6 @@ description = "Fun notation - audio features"
 [features]
 
 [dependencies]
-bevy = { version = "0.6.0", default-features = false }
-bevy_kira_audio = "0.8.0"
+bevy = { version = "0.7.0", default-features = false }
+bevy_kira_audio = "0.9.0"
 ringbuf = "0.2.6"

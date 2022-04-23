@@ -7,7 +7,7 @@ use crate::prelude::{TabPlugin, NotationSettings, PlayControlEvent};
 use crate::play::play_button::PlayButton;
 use midi_control::MidiControl;
 
-#[cfg(feature = "egui")]
+#[cfg(feature = "with_egui")]
 pub mod egui_midi_control_panel;
 
 impl TabPlugin {

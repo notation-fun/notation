@@ -1,6 +1,4 @@
-use bevy::prelude::EventWriter;
-use bevy_egui::egui::{self, text_edit::CCursorRange, *};
-use crate::egui::EasyLinkEvent;
+use egui::{text_edit::CCursorRange, *};
 
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "serde", serde(default))]
@@ -31,13 +29,8 @@ impl Default for EasyMarkEditor {
     }
 }
 
-/*
 impl epi::App for EasyMarkEditor {
-    fn name(&self) -> &str {
-        "🖹 EasyMark editor"
-    }
-
-    fn update(&mut self, ctx: &egui::CtxRef, _frame: &epi::Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut epi::Frame) {
         egui::TopBottomPanel::bottom("easy_mark_bottom").show(ctx, |ui| {
             let layout = egui::Layout::top_down(egui::Align::Center).with_main_justify(true);
             ui.allocate_ui_with_layout(ui.available_size(), layout, |ui| {
@@ -50,10 +43,9 @@ impl epi::App for EasyMarkEditor {
         });
     }
 }
- */
 
 impl EasyMarkEditor {
-    pub fn ui(&mut self, ui: &mut egui::Ui, link_evts: &mut EventWriter<EasyLinkEvent>) {
+    fn ui(&mut self, ui: &mut egui::Ui) {
         egui::Grid::new("controls").show(ui, |ui| {
             ui.checkbox(&mut self.highlight_editor, "Highlight editor");
             egui::reset_button(ui, self);
@@ -75,7 +67,7 @@ impl EasyMarkEditor {
                     .id_source("rendered")
                     .show(&mut columns[1], |ui| {
                         // TODO: we can save some more CPU by caching the rendered output.
-                        crate::easy_mark::easy_mark(ui, &self.code, link_evts);
+                        crate::easy_mark::easy_mark(ui, &self.code);
                     });
             });
         } else {
@@ -85,22 +77,22 @@ impl EasyMarkEditor {
         }
     }
 
-    pub fn editor_ui(&mut self, ui: &mut egui::Ui) {
+    fn editor_ui(&mut self, ui: &mut egui::Ui) {
         let Self {
             code, highlighter, ..
         } = self;
 
         let response = if self.highlight_editor {
             let mut layouter = |ui: &egui::Ui, easymark: &str, wrap_width: f32| {
-                let mut layout_job = highlighter.highlight(ui.visuals(), easymark);
-                layout_job.wrap_width = wrap_width;
+                let mut layout_job = highlighter.highlight(ui.style(), easymark);
+                layout_job.wrap.max_width = wrap_width;
                 ui.fonts().layout_job(layout_job)
             };
 
             ui.add(
                 egui::TextEdit::multiline(code)
                     .desired_width(f32::INFINITY)
-                    .text_style(egui::TextStyle::Monospace) // for cursor height
+                    .font(egui::TextStyle::Monospace) // for cursor height
                     .layouter(&mut layouter),
             )
         } else {
@@ -119,62 +111,27 @@ impl EasyMarkEditor {
     }
 }
 
-pub fn shortcuts(ui: &Ui, code: &mut dyn TextBuffer, ccursor_range: &mut CCursorRange) -> bool {
+fn shortcuts(ui: &Ui, code: &mut dyn TextBuffer, ccursor_range: &mut CCursorRange) -> bool {
     let mut any_change = false;
-    for event in &ui.input().events {
-        if let Event::Key {
-            key,
-            pressed: true,
-            modifiers,
-        } = event
-        {
-            if modifiers.command_only() {
-                match &key {
-                    // toggle *bold*
-                    Key::B => {
-                        toggle_surrounding(code, ccursor_range, "*");
-                        any_change = true;
-                    }
-                    // toggle `code`
-                    Key::C => {
-                        toggle_surrounding(code, ccursor_range, "`");
-                        any_change = true;
-                    }
-                    // toggle /italics/
-                    Key::I => {
-                        toggle_surrounding(code, ccursor_range, "/");
-                        any_change = true;
-                    }
-                    // toggle $lowered$
-                    Key::L => {
-                        toggle_surrounding(code, ccursor_range, "$");
-                        any_change = true;
-                    }
-                    // toggle ^raised^
-                    Key::R => {
-                        toggle_surrounding(code, ccursor_range, "^");
-                        any_change = true;
-                    }
-                    // toggle ~strikethrough~
-                    Key::S => {
-                        toggle_surrounding(code, ccursor_range, "~");
-                        any_change = true;
-                    }
-                    // toggle _underline_
-                    Key::U => {
-                        toggle_surrounding(code, ccursor_range, "_");
-                        any_change = true;
-                    }
-                    _ => {}
-                }
-            }
-        }
+    for (key, surrounding) in [
+        (Key::B, "*"), // *bold*
+        (Key::C, "`"), // `code`
+        (Key::I, "/"), // /italics/
+        (Key::L, "$"), // $subscript$
+        (Key::R, "^"), // ^superscript^
+        (Key::S, "~"), // ~strikethrough~
+        (Key::U, "_"), // _underline_
+    ] {
+        if ui.input_mut().consume_key(egui::Modifiers::COMMAND, key) {
+            toggle_surrounding(code, ccursor_range, surrounding);
+            any_change = true;
+        };
     }
     any_change
 }
 
-/// E.g. toggle *strong* with `toggle(&mut text, &mut cursor, "*")`
-pub fn toggle_surrounding(
+/// E.g. toggle *strong* with `toggle_surrounding(&mut text, &mut cursor, "*")`
+fn toggle_surrounding(
     code: &mut dyn TextBuffer,
     ccursor_range: &mut CCursorRange,
     surrounding: &str,

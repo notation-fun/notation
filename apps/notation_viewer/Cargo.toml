@@ -11,7 +11,7 @@ resources = ["assets"]
 [features]
 default = [
     "notation_bevy/midi",
-    "notation_bevy/egui",
+    "notation_bevy/with_egui",
 ]
 
 native = [

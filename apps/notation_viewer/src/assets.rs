@@ -1,5 +1,5 @@
 use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy_asset_loader::AssetKeys;
+use notation_bevy::bevy_asset_loader::{DynamicAssets, DynamicAsset};
 use notation_bevy::prelude::{bevy_asset_loader, AssetCollection, MarkDownAsset, ExtraAssets, NotationSettings};
 
 #[derive(AssetCollection)]
@@ -28,8 +28,12 @@ impl ExtraAssets for NotationViewerAssets {
             self.kb_usage.clone_untyped(),
         ]
     }
-    fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut AssetKeys) {
-        asset_keys.set_asset_key("kb_welcome", Self::get_welcome_path(settings).as_str());
-        asset_keys.set_asset_key("kb_usage", Self::get_usage_path(settings).as_str());
+    fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets) {
+        asset_keys.register_asset("kb_welcome", DynamicAsset::File {
+            path: Self::get_welcome_path(settings)
+        });
+        asset_keys.register_asset("kb_usage", DynamicAsset::File {
+            path: Self::get_usage_path(settings)
+        });
     }
 }

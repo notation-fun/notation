@@ -8,5 +8,5 @@ pub mod layout;
 pub mod tab_viewer;
 pub mod control;
 
-#[cfg(feature = "egui")]
+#[cfg(feature = "with_egui")]
 pub mod egui_control_panel;

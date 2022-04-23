@@ -8,7 +8,7 @@ use crate::theme::theme_colors::UiColors;
 use crate::prelude::*;
 use super::tab_viewer::TabViewerPlugin;
 
-#[cfg(feature = "egui")]
+#[cfg(feature = "with_egui")]
 use super::egui_control_panel::EguiControlPanel;
 
 #[cfg(feature = "midi")]
@@ -19,7 +19,7 @@ use notation_midi::prelude::{
 pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
     fn build(&mut self, group: &mut PluginGroupBuilder) {
-        #[cfg(feature = "egui")]
+        #[cfg(feature = "with_egui")]
         group.add(EguiPlugin);
 
         group.add(EntryPlugin);
@@ -83,7 +83,7 @@ impl NotationApp {
         #[cfg(target_arch = "wasm32")]
         app.add_plugin(crate::wasm::bevy_web_fullscreen::FullViewportPlugin);
 
-        #[cfg(feature = "egui")]
+        #[cfg(feature = "with_egui")]
         app.add_plugin(crate::bevy_egui::EguiPlugin);
 
         app.add_plugin(NotationUiPlugin);
@@ -113,7 +113,7 @@ impl NotationApp {
                 .with_system(NotationAssets::add_extra_assets::<A>)
                 .with_system(Self::setup_window_size),
         );
-        #[cfg(feature = "egui")]
+        #[cfg(feature = "with_egui")]
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
                 .with_system(crate::egui::egui_fonts::setup_egui_fonts::<A>),
@@ -129,7 +129,7 @@ impl NotationApp {
                 .with_system(Self::on_window_resized)
                 .with_system(Self::on_tab_asset),
         );
-        #[cfg(feature = "egui")]
+        #[cfg(feature = "with_egui")]
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(EguiControlPanel::control_ui),

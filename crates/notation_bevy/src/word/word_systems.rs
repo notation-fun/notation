@@ -37,7 +37,7 @@ pub fn on_entry_playing_changed_with_font(
     mut commands: Commands,
     theme: Res<NotationTheme>,
     query: Query<(Entity, &EntryPlaying, &Children), Changed<EntryPlaying>>,
-    mut text_query: QuerySet<(
+    mut text_query: ParamSet<(
         Query<(Entity, &mut WordTextData, &Children)>,
         Query<(Entity, &mut WordTextData)>,
     )>,
@@ -45,7 +45,7 @@ pub fn on_entry_playing_changed_with_font(
 ) {
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
-            if let Ok((entity, mut data, text_children)) = text_query.q0_mut().get_mut(*child) {
+            if let Ok((entity, mut data, text_children)) = text_query.p0_mut().get_mut(*child) {
                 data.value.playing_state = playing.value;
                 data.update(&mut commands, &theme, entity);
                 for child in text_children.iter() {
@@ -54,7 +54,7 @@ pub fn on_entry_playing_changed_with_font(
                         BevyUtil::set_text_size_color(&mut text, data.calc_text_font_size(&theme), data.calc_text_color(&theme));
                     }
                 }
-            } else if let Ok((entity, mut data)) = text_query.q1_mut().get_mut(*child) {
+            } else if let Ok((entity, mut data)) = text_query.p1_mut().get_mut(*child) {
                 data.value.playing_state = playing.value;
                 data.update(&mut commands, &theme, entity);
             }

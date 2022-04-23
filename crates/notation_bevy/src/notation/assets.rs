@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 use bevy::{prelude::*, asset::{AssetPath, HandleId, Asset}};
-use bevy_asset_loader::{AssetCollection, AssetKeys};
+use bevy_asset_loader::{AssetCollection, DynamicAssets, DynamicAsset};
 
-#[cfg(feature = "egui")]
+#[cfg(feature = "with_egui")]
 use crate::egui::egui_fonts::EguiFontSizes;
 
 use crate::settings::notation_settings::NotationSettings;
@@ -31,40 +31,40 @@ pub struct NotationAssets {
 
 pub trait ExtraAssets : AssetCollection {
     fn get_assets(&self) -> Vec<HandleUntyped>;
-    fn get_syllable_font(_settings: &NotationSettings) -> &'static str {
-        "fonts/Sofia_Handwritten.otf"
+    fn get_syllable_font(_settings: &NotationSettings) -> String {
+        "fonts/Sofia_Handwritten.otf".to_owned()
     }
-    fn get_fret_font(_settings: &NotationSettings) -> &'static str {
-        "fonts/Bitter-Bold.ttf"
+    fn get_fret_font(_settings: &NotationSettings) -> String {
+        "fonts/Bitter-Bold.ttf".to_owned()
     }
-    fn get_latin_font(_settings: &NotationSettings) -> &'static str {
-        "fonts/FiraMono-Medium.ttf"
+    fn get_latin_font(_settings: &NotationSettings) -> String {
+        "fonts/FiraMono-Medium.ttf".to_owned()
     }
-    fn get_lyrics_font(settings: &NotationSettings) -> &'static str {
+    fn get_lyrics_font(settings: &NotationSettings) -> String {
         if settings.lang() == NotationSettings::ZH_CN {
-            #[cfg(feature = "egui")]
-            return "fonts/zh-CN/NotoSansSC-Medium.otf.egui";
+            #[cfg(feature = "with_egui")]
+            return "fonts/zh-CN/NotoSansSC-Medium.otf.egui".to_owned();
 
-            #[cfg(not(feature = "egui"))]
-            return "fonts/zh-CN/NotoSansSC-Medium.otf";
+            #[cfg(not(feature = "with_egui"))]
+            return "fonts/zh-CN/NotoSansSC-Medium.otf".to_owned();
         }
-        #[cfg(feature = "egui")]
-        return "fonts/en-US/FiraMono-Medium.ttf.egui";
+        #[cfg(feature = "with_egui")]
+        return "fonts/en-US/FiraMono-Medium.ttf.egui".to_owned();
 
-        #[cfg(not(feature = "egui"))]
-        return "fonts/en-US/FiraMono-Medium.ttf";
+        #[cfg(not(feature = "with_egui"))]
+        return "fonts/en-US/FiraMono-Medium.ttf".to_owned();
     }
-    fn get_fretboard_image(_settings: &NotationSettings) -> &'static str {
-        "png/fretboard.png"
+    fn get_fretboard_image(_settings: &NotationSettings) -> String {
+        "png/fretboard.png".to_owned()
     }
-    #[cfg(feature = "egui")]
+    #[cfg(feature = "with_egui")]
     fn get_egui_font_sizes(&self, settings: &NotationSettings) -> EguiFontSizes {
         if settings.lang() == NotationSettings::ZH_CN {
             return EguiFontSizes::BIGGER;
         }
         EguiFontSizes::default()
     }
-    fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut AssetKeys);
+    fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets);
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
@@ -76,13 +76,23 @@ pub enum NotationAssetsStates {
 impl NotationAssets {
     pub fn setup_keys<A: ExtraAssets>(
         settings: Res<NotationSettings>,
-        mut asset_keys: ResMut<AssetKeys>,
+        mut asset_keys: ResMut<DynamicAssets>,
     ) {
-        asset_keys.set_asset_key("syllable_font", A::get_syllable_font(&settings));
-        asset_keys.set_asset_key("fret_font", A::get_fret_font(&settings));
-        asset_keys.set_asset_key("latin_font", A::get_latin_font(&settings));
-        asset_keys.set_asset_key("lyrics_font", A::get_lyrics_font(&settings));
-        asset_keys.set_asset_key("fretboard_image", A::get_fretboard_image(&settings));
+        asset_keys.register_asset("syllable_font", DynamicAsset::File {
+            path: A::get_syllable_font(&settings)
+        });
+        asset_keys.register_asset("fret_font", DynamicAsset::File {
+            path: A::get_fret_font(&settings)
+        });
+        asset_keys.register_asset("latin_font", DynamicAsset::File {
+            path: A::get_latin_font(&settings)
+        });
+        asset_keys.register_asset("lyrics_font", DynamicAsset::File {
+            path: A::get_lyrics_font(&settings)
+        });
+        asset_keys.register_asset("fretboard_image", DynamicAsset::File {
+            path: A::get_fretboard_image(&settings)
+        });
         A::setup_extra_keys(&settings, &mut asset_keys);
     }
     pub fn get_extra<A: Asset>(&self, path: PathBuf) -> Option<Handle<A>> {
@@ -117,6 +127,6 @@ impl ExtraAssets for NoExtraAssets {
     fn get_assets(&self) -> Vec<HandleUntyped> {
         Vec::new()
     }
-    fn setup_extra_keys(_settings: &NotationSettings, _asset_keys: &mut AssetKeys) {
+    fn setup_extra_keys(_settings: &NotationSettings, _asset_keys: &mut DynamicAssets) {
     }
 }

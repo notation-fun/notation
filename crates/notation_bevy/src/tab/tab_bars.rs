@@ -141,7 +141,7 @@ impl TabBars {
             cell_margin,
             LayoutAnchor::TOP_LEFT,
             grid_size,
-        );
+        )
     }
 }
 
