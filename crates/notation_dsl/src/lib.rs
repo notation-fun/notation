@@ -1,4 +1,4 @@
-#![feature(proc_macro_diagnostic)]
+//#![feature(proc_macro_diagnostic)]
 
 #[macro_use]
 extern crate lazy_static;

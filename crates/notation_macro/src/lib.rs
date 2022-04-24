@@ -1,4 +1,4 @@
-#![feature(proc_macro_diagnostic)]
+// #![feature(proc_macro_diagnostic)]
 
 use notation_dsl::quote::ToTokens;
 use proc_macro::TokenStream;
