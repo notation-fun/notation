@@ -1,0 +1,11 @@
+run-native:
+    cargo run --features native
+
+run-native-cn:
+    cargo run --features native -- --lang zh-CN
+
+run-web:
+    cargo make serve
+
+release-web:
+    cargo make --profile release release-web

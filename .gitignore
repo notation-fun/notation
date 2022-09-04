@@ -21,3 +21,5 @@
 
 # Ignore cargo config
 .cargo
+
+.direnv
