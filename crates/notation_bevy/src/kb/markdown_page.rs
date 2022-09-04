@@ -42,7 +42,7 @@ impl MarkDownPage {
         let mut path_buf = PathBuf::new();
         path_buf.push(path);
         if let Some(handle) = assets.get_extra::<MarkDownAsset>(path_buf) {
-            if let Some(text) = texts.get(handle) {
+            if let Some(text) = texts.get(&handle) {
                 easy_mark(ui, text.text.as_str(), link_evts);
                 return;
             }

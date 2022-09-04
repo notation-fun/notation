@@ -1,7 +1,8 @@
-use bevy::prelude::EventWriter;
-use crate::egui::EasyLinkEvent;
 use super::easy_mark_parser as easy_mark;
 use egui::*;
+
+use bevy::prelude::EventWriter;
+use crate::egui::EasyLinkEvent;
 
 /// Parse and display a VERY simple and small subset of Markdown.
 pub fn easy_mark(ui: &mut Ui, easy_mark: &str, link_evts: &mut EventWriter<EasyLinkEvent>) {

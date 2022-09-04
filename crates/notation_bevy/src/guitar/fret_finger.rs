@@ -178,7 +178,7 @@ impl FretFingerData {
             meta.key.transpose(Semitones(self.value.extra.capo as i8))
         };
         for (parent, text_entity) in text_query.iter() {
-            if parent.0 == entity {
+            if parent.get() == entity {
                 commands.entity(text_entity).despawn();
             }
         }

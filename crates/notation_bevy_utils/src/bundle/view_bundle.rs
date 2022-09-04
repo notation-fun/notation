@@ -9,6 +9,8 @@ pub struct ViewBundle<T: Component> {
     pub layout: LayoutData,
     pub transform: Transform,
     pub global_transform: GlobalTransform,
+    pub visibility: Visibility,
+    pub computed_visibility: ComputedVisibility,
 }
 
 impl<T: Component> From<(String, T, Transform)> for ViewBundle<T> {
@@ -19,6 +21,8 @@ impl<T: Component> From<(String, T, Transform)> for ViewBundle<T> {
             layout: LayoutData::default(),
             transform: v.2,
             global_transform: GlobalTransform::default(),
+            visibility: Visibility::default(),
+            computed_visibility: ComputedVisibility::default(),
         }
     }
 }

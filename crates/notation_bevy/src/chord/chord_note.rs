@@ -110,7 +110,7 @@ impl<T: ChordNoteExtra + 'static> ChordNoteData<T> {
     ) {
         if let Some(dot_query) = dot_query {
             for (parent, entity, mut dot_data) in dot_query.iter_mut() {
-                if !dot_data.is_orphan && parent.0 == note_entity {
+                if !dot_data.is_orphan && parent.get() == note_entity {
                     dot_data.is_orphan = true;
                     commands.entity(entity).despawn();
                 }

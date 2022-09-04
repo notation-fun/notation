@@ -1,6 +1,6 @@
 use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy_asset_loader::DynamicAssets;
-use notation_bevy::prelude::{bevy_asset_loader, AssetCollection, MarkDownAsset, ExtraAssets, NotationSettings};
+use notation_bevy::bevy_asset_loader::prelude::*;
+use notation_bevy::prelude::*;
 
 #[derive(AssetCollection)]
 pub struct FretsAssets {

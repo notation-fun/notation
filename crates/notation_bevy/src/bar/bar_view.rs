@@ -88,7 +88,7 @@ impl BarView {
         if !settings.hide_bar_number {
             for evt in evts.iter() {
                 for (parent, mut transform) in text_query.iter_mut() {
-                    if parent.0 == evt.entity {
+                    if parent.get() == evt.entity {
                         theme
                             .texts
                             .tab

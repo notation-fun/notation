@@ -1,6 +1,6 @@
 use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy_asset_loader::{DynamicAssets, DynamicAsset};
-use notation_bevy::prelude::{bevy_asset_loader, AssetCollection, MarkDownAsset, ExtraAssets, NotationSettings};
+use notation_bevy::bevy_asset_loader::prelude::*;
+use notation_bevy::prelude::*;
 
 #[derive(AssetCollection)]
 pub struct NotationViewerAssets {
@@ -29,11 +29,11 @@ impl ExtraAssets for NotationViewerAssets {
         ]
     }
     fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets) {
-        asset_keys.register_asset("kb_welcome", DynamicAsset::File {
+        asset_keys.register_asset("kb_welcome", Box::new(StandardDynamicAsset::File {
             path: Self::get_welcome_path(settings)
-        });
-        asset_keys.register_asset("kb_usage", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("kb_usage", Box::new(StandardDynamicAsset::File {
             path: Self::get_usage_path(settings)
-        });
+        }));
     }
 }

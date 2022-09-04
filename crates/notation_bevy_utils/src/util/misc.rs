@@ -60,7 +60,7 @@ impl BevyUtil {
         let mut current_entity = entity;
         for i in 0..depth {
             if let Ok(parent) = lane_queries.0.get(current_entity) {
-                current_entity = parent.0;
+                current_entity = parent.get();
             } else {
                 println!(
                     "BarPlugin::get_lane({:?}, {}, {}) Parent Not Found: {}",

@@ -124,7 +124,7 @@ impl MiniMap {
         mut font_query: Query<(&Parent, &mut Text)>,
     ) {
         for (parent, mut text) in font_query.iter_mut() {
-            if let Ok(_) = background_query.get(parent.0) {
+            if let Ok(_) = background_query.get(parent.get()) {
                 let str = if let Some(debug_str) = &app_state.debug_str {
                     debug_str.to_string()
                 } else {

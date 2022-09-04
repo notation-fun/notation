@@ -8,6 +8,8 @@ pub struct SingleBundle<T: Component> {
     pub value: T,
     pub transform: Transform,
     pub global_transform: GlobalTransform,
+    pub visibility: Visibility,
+    pub computed_visibility: ComputedVisibility,
 }
 
 impl<T: Component> From<(String, T, Transform)> for SingleBundle<T> {
@@ -17,6 +19,8 @@ impl<T: Component> From<(String, T, Transform)> for SingleBundle<T> {
             value: v.1,
             transform: v.2,
             global_transform: GlobalTransform::default(),
+            visibility: Visibility::default(),
+            computed_visibility: ComputedVisibility::default(),
         }
     }
 }

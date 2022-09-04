@@ -16,6 +16,8 @@ pub struct LaneBundle {
     pub layout: LayoutData,
     pub transform: Transform,
     pub global_transform: GlobalTransform,
+    pub visibility: Visibility,
+    pub computed_visibility: ComputedVisibility,
 }
 
 impl LaneBundle {
@@ -30,6 +32,8 @@ impl LaneBundle {
             layout: LayoutData::ZERO,
             transform: Transform::default(),
             global_transform: GlobalTransform::default(),
+            visibility: Visibility::default(),
+            computed_visibility: ComputedVisibility::default(),
         }
     }
 }

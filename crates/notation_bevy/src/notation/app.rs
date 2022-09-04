@@ -2,7 +2,7 @@ use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy::window::WindowResized;
 
-use bevy_asset_loader::AssetLoader;
+use bevy_asset_loader::prelude::*;
 
 use crate::theme::theme_colors::UiColors;
 use crate::prelude::*;
@@ -52,15 +52,6 @@ impl NotationApp {
     pub fn new_app<A: ExtraAssets>(args: NotationArgs, title: &str) -> App {
         let mut app = App::new();
         app.insert_resource(args);
-        AssetLoader::new(NotationAssetsStates::Loading)
-            .continue_to_state(NotationAssetsStates::Loaded)
-            .with_collection::<NotationAssets>()
-            .with_collection::<A>()
-            .build(&mut app);
-        app.add_state(NotationAssetsStates::Loading)
-            .add_startup_system(NotationAssets::setup_keys::<A>);
-        Self::insert_window_descriptor(&mut app, String::from(title));
-        super::events::add_notation_app_events(&mut app);
 
         app.insert_resource(Msaa { samples: 4 });
         app.add_plugins(DefaultPlugins);
@@ -72,6 +63,16 @@ impl NotationApp {
         app.init_resource::<NotationTheme>();
         app.init_resource::<NotationSettings>();
         app.add_plugins(NotationPlugins);
+
+        app.add_loading_state(LoadingState::new(NotationAssetsStates::Loading)
+            .continue_to_state(NotationAssetsStates::Loaded)
+            .with_collection::<NotationAssets>()
+            .with_collection::<A>()
+        );
+        app.add_state(NotationAssetsStates::Init);
+
+        Self::insert_window_descriptor(&mut app, String::from(title));
+        super::events::add_notation_app_events(&mut app);
 
         //#[cfg(target_arch = "wasm32")]
         //app.add_plugin(bevy_webgl2::WebGL2Plugin);
@@ -107,6 +108,11 @@ impl NotationApp {
 
         #[cfg(debug_assertions)]
         app.add_startup_system(Self::setup_hot_reloading);
+
+        app.add_system_set(
+            SystemSet::on_update(NotationAssetsStates::Init)
+                .with_system(NotationAssets::setup_keys::<A>)
+        );
 
         app.add_system_set(
             SystemSet::on_enter(NotationAssetsStates::Loaded)
@@ -153,7 +159,7 @@ impl NotationApp {
     }
 
     fn setup_camera(mut commands: Commands) {
-        commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+        commands.spawn_bundle(Camera2dBundle::default());
     }
 
     /*

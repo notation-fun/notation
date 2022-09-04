@@ -1,3 +1,4 @@
+#[cfg(feature = "with_egui")]
 use bevy::prelude::*;
 
 #[cfg(feature = "with_egui")]

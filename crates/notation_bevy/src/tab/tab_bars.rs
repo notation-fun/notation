@@ -304,7 +304,7 @@ impl TabBars {
         for evt in evts.iter() {
             let mut bars = Vec::new();
             for (parent, bar_view, layout) in cell_query.iter() {
-                if parent.0 == evt.0 {
+                if parent.get() == evt.0 {
                     bars.push((bar_view.clone(), layout.clone()));
                 }
             }

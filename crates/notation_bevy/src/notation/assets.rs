@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use bevy::{prelude::*, asset::{AssetPath, HandleId, Asset}};
-use bevy_asset_loader::{AssetCollection, DynamicAssets, DynamicAsset};
+use bevy_asset_loader::prelude::*;
 
 #[cfg(feature = "with_egui")]
 use crate::egui::egui_fonts::EguiFontSizes;
@@ -69,6 +69,7 @@ pub trait ExtraAssets : AssetCollection {
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 pub enum NotationAssetsStates {
+    Init,
     Loading,
     Loaded,
 }
@@ -77,23 +78,26 @@ impl NotationAssets {
     pub fn setup_keys<A: ExtraAssets>(
         settings: Res<NotationSettings>,
         mut asset_keys: ResMut<DynamicAssets>,
+        mut state: ResMut<State<NotationAssetsStates>>,
     ) {
-        asset_keys.register_asset("syllable_font", DynamicAsset::File {
+        asset_keys.register_asset("syllable_font", Box::new(StandardDynamicAsset::File {
             path: A::get_syllable_font(&settings)
-        });
-        asset_keys.register_asset("fret_font", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("fret_font", Box::new(StandardDynamicAsset::File {
             path: A::get_fret_font(&settings)
-        });
-        asset_keys.register_asset("latin_font", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("latin_font", Box::new(StandardDynamicAsset::File {
             path: A::get_latin_font(&settings)
-        });
-        asset_keys.register_asset("lyrics_font", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("lyrics_font", Box::new(StandardDynamicAsset::File {
             path: A::get_lyrics_font(&settings)
-        });
-        asset_keys.register_asset("fretboard_image", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("fretboard_image", Box::new(StandardDynamicAsset::File {
             path: A::get_fretboard_image(&settings)
-        });
+        }));
         A::setup_extra_keys(&settings, &mut asset_keys);
+        state.set(NotationAssetsStates::Loading)
+            .expect("Failed to change state");
     }
     pub fn get_extra<A: Asset>(&self, path: PathBuf) -> Option<Handle<A>> {
         let handle_id = HandleId::from(AssetPath::new(path, None));

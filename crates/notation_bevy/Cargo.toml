@@ -21,6 +21,7 @@ default = [
 
 native = [
     "clap",
+    "bevy/x11",
 ]
 
 midi = [
@@ -51,15 +52,15 @@ thiserror = "1.0"
 ron = "0.7"
 float_eq = "0.7"
 
-bevy = { version = "0.7.0", default-features = false }
+bevy = { version = "0.8.0", default-features = false }
 
 rand = "0.8"
 getrandom = { version = "0.2", features = [ "wasm-bindgen" ] }
 
-bevy_prototype_lyon = "0.5.0"
-bevy_easings = "0.6.0"
+bevy_prototype_lyon = "0.6.0"
+bevy_easings = "0.8.1"
 
-bevy_asset_loader = "0.10.0"
+bevy_asset_loader = { version = "0.12.0", features = [ "dynamic_assets" ] }
 
 rfd = "0.6.3"
 lazy_static = "1.4.0"
@@ -68,11 +69,11 @@ unic-langid = { version = "0.9", features = [ "macros" ] }
 clap = { version = "3.0.12", features = [ "derive" ], optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen = "0.2.79"
+wasm-bindgen = "0.2.82"
 console_error_panic_hook = "0.1"
 gloo-events = "0.1.1"
 futures = "0.3"
-web-sys = { version = "0.3.55", features = [
+web-sys = { version = "0.3.59", features = [
     "Element", "Document", "Window", "Location", "Url", "UrlSearchParams", "console", "TouchEvent",
     #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
     "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",

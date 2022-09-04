@@ -1,7 +1,7 @@
 use crate::prelude::{
     MidiHub, MidiSettings, MidiState,
 };
-use bevy::core::FixedTimestep;
+use bevy::time::FixedTimestep;
 use bevy::prelude::*;
 use notation_model::prelude::{
     PlayClock, JumpToBarEvent, PlayControlEvent, SwitchTabEvent,

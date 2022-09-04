@@ -82,7 +82,7 @@ pub trait LayoutEnv {
         T: View<TE>,
     {
         for (parent, child, view) in view_query.iter() {
-            if parent.0 == entity {
+            if parent.get() == entity {
                 return Ok(ViewEntity {
                     env: PhantomData,
                     entity: child,
@@ -123,7 +123,7 @@ pub trait LayoutEnv {
     {
         let mut children = Vec::new();
         for (parent, child, view) in view_query.iter() {
-            if parent.0 == entity {
+            if parent.get() == entity {
                 children.push(ViewEntity {
                     env: PhantomData,
                     entity: child,

@@ -91,7 +91,7 @@ impl ShapesTheme {
         };
         let shape_text = ProtoEntry::trim_comments(text);
         entity_commands.insert_bundle(Text2dBundle {
-            text: Text::with_section(shape_text.as_str(), style, alignment),
+            text: Text::from_section(shape_text.as_str(), style).with_alignment(alignment),
             transform: Transform::from_xyz(self.shape_text_x, self.shape_text_y, self.shape_text_z),
             ..Default::default()
         });
@@ -117,7 +117,7 @@ impl ShapesTheme {
             horizontal: HorizontalAlign::Left,
         };
         entity_commands.insert_bundle(Text2dBundle {
-            text: Text::with_section(barre.to_string(), style, alignment),
+            text: Text::from_section(barre.to_string(), style).with_alignment(alignment),
             transform: Transform::from_xyz(self.barre_text_x, self.barre_text_y, self.barre_text_z),
             ..Default::default()
         });

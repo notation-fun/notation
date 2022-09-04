@@ -65,7 +65,7 @@ impl RhythmView {
         for evt in evts.iter() {
             if evt.layout.size.width > 0.0 && evt.layout.size.height > 0.0 {
                 for (parent, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
-                    if parent.0 == evt.entity {
+                    if parent.get() == evt.entity {
                         let layout = evt.layout;
                         let height = layout.size.height;
                         let radius = height * theme.sizes.tab_control.rhythm_bar_radius_factor

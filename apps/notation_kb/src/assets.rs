@@ -1,6 +1,6 @@
 use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy_asset_loader::{DynamicAssets, DynamicAsset};
-use notation_bevy::prelude::{bevy_asset_loader, AssetCollection, MarkDownAsset, ExtraAssets, NotationSettings};
+use notation_bevy::bevy_asset_loader::prelude::*;
+use notation_bevy::prelude::*;
 
 #[derive(AssetCollection)]
 pub struct NotationKnowledgeBaseAssets {
@@ -46,17 +46,17 @@ impl ExtraAssets for NotationKnowledgeBaseAssets {
         ]
     }
     fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets) {
-        asset_keys.register_asset("kb_welcome", DynamicAsset::File {
+        asset_keys.register_asset("kb_welcome", Box::new(StandardDynamicAsset::File {
             path: Self::get_welcome_path(settings)
-        });
-        asset_keys.register_asset("kb_sound", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("kb_sound", Box::new(StandardDynamicAsset::File {
             path: Self::get_sound_path(settings)
-        });
-        asset_keys.register_asset("kb_scale", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("kb_scale", Box::new(StandardDynamicAsset::File {
             path: Self::get_scale_path(settings)
-        });
-        asset_keys.register_asset("kb_guitar", DynamicAsset::File {
+        }));
+        asset_keys.register_asset("kb_guitar", Box::new(StandardDynamicAsset::File {
             path: Self::get_guitar_path(settings)
-        });
+        }));
     }
 }

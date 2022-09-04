@@ -121,10 +121,11 @@ impl LayoutData {
             && offset.y >= bottom_right.y
     }
     pub fn is_pos_inside(&self, pos: Vec2, global_transform: &GlobalTransform) -> bool {
+        let translation = global_transform.translation();
         let offset = pos
             - Vec2::new(
-                global_transform.translation.x,
-                global_transform.translation.y,
+                translation.x,
+                translation.y,
             );
         self.is_inside(offset)
     }

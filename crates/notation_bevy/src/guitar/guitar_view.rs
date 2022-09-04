@@ -148,33 +148,33 @@ impl GuitarView {
                 layout.size.width * theme.guitar.image_size.1 / theme.guitar.image_size.0;
             let guitar_size = LayoutSize::new(layout.size.width, guitar_height);
             for (parent, mut transform) in sprite_query.iter_mut() {
-                if parent.0 == entity {
+                if parent.get() == entity {
                     let scale = layout.size.width / theme.guitar.image_size.0;
                     transform.translation = Vec3::new(0.0, 0.0, theme.z.guitar_view);
                     transform.scale = Vec3::new(scale, scale, 1.0);
                 }
             }
             for (parent, string_entity, mut string_data) in string_query.iter_mut() {
-                if parent.0 == entity {
+                if parent.get() == entity {
                     string_data.guitar_size = guitar_size;
                     string_data.update(&mut commands, &theme, string_entity);
                 }
             }
             for (parent, finger_entity, mut finger_data) in finger_query.iter_mut() {
-                if parent.0 == entity {
+                if parent.get() == entity {
                     finger_data.value.extra.guitar_size = guitar_size;
                     finger_data.update(&mut commands, &theme, finger_entity);
                 }
             }
             for (parent, capo_entity, mut capo_data) in capo_query.iter_mut() {
-                if parent.0 == entity {
+                if parent.get() == entity {
                     capo_data.view_size = layout.size;
                     capo_data.guitar_size = guitar_size;
                     capo_data.update(&mut commands, &theme, capo_entity);
                 }
             }
             for (parent, barre_entity, mut barre_data) in barre_query.iter_mut() {
-                if parent.0 == entity {
+                if parent.get() == entity {
                     barre_data.view_size = layout.size;
                     barre_data.guitar_size = guitar_size;
                     barre_data.update(&mut commands, &theme, barre_entity);

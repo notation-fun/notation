@@ -1,3 +1,4 @@
+pub use uuid;
 pub use {notation_core, notation_fretted, notation_guitar};
 
 pub mod bar;
@@ -8,8 +9,9 @@ pub mod section;
 pub mod slice;
 pub mod tab;
 pub mod track;
-
 pub mod prelude {
+    #[doc(hidden)]
+    pub use uuid::Uuid;
     #[doc(hidden)]
     pub use crate::bar::{Bar, BarLayer};
     #[doc(hidden)]
