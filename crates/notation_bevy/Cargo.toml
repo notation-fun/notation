@@ -62,7 +62,7 @@ bevy_easings = "0.8.1"
 
 bevy_asset_loader = { version = "0.12.0", features = [ "dynamic_assets" ] }
 
-rfd = "0.6.3"
+rfd = "0.10.0"
 lazy_static = "1.4.0"
 unic-langid = { version = "0.9", features = [ "macros" ] }
 
