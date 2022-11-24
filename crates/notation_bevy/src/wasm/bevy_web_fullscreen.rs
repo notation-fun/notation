@@ -1,12 +1,22 @@
 //https://github.com/ostwilkens/bevy_web_fullscreen
 
-use bevy::prelude::{App, IntoSystem, Plugin, Res, ResMut};
+use bevy::prelude::*;
 use bevy::window::Windows;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::Mutex;
 
 type OnResizeSender = Sender<()>;
 type OnResizeReceiver = Receiver<()>;
+
+#[derive(Resource)]
+pub struct ResizeSender {
+    pub sender: Mutex<OnResizeSender>
+}
+
+#[derive(Resource)]
+pub struct ResizeReceiver {
+    pub receiver: Mutex<OnResizeReceiver>
+}
 
 pub struct FullViewportPlugin;
 
@@ -16,8 +26,12 @@ impl Plugin for FullViewportPlugin {
         let resize_sender: OnResizeSender = channel.0;
         let resize_receiver: OnResizeReceiver = channel.1;
 
-        app.insert_resource(Mutex::new(resize_sender))
-            .insert_resource(Mutex::new(resize_receiver))
+        app.insert_resource(ResizeSender {
+                sender: Mutex::new(resize_sender)
+            })
+            .insert_resource(ResizeReceiver{
+                receiver: Mutex::new(resize_receiver)
+            })
             .add_startup_system(setup_viewport_resize_system)
             .add_system(viewport_resize_system);
     }
@@ -42,9 +56,9 @@ pub fn get_viewport_size() -> (f32, f32) {
     (width as f32, height as f32)
 }
 
-fn setup_viewport_resize_system(resize_sender: Res<Mutex<OnResizeSender>>) {
+fn setup_viewport_resize_system(resize_sender: Res<ResizeSender>) {
     let web_window = web_sys::window().expect("could not get window");
-    let local_sender = resize_sender.lock().unwrap().clone();
+    let local_sender = resize_sender.sender.lock().unwrap().clone();
 
     local_sender.send(()).unwrap();
 
@@ -60,9 +74,9 @@ fn setup_viewport_resize_system(resize_sender: Res<Mutex<OnResizeSender>>) {
 
 fn viewport_resize_system(
     mut windows: ResMut<Windows>,
-    resize_receiver: Res<Mutex<OnResizeReceiver>>,
+    resize_receiver: Res<ResizeReceiver>,
 ) {
-    if resize_receiver.lock().unwrap().try_recv().is_ok() {
+    if resize_receiver.receiver.lock().unwrap().try_recv().is_ok() {
         if let Some(window) = windows.get_primary_mut() {
             let size = get_viewport_size();
             web_log!(
