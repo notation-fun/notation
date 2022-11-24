@@ -170,7 +170,7 @@ impl SoundPage {
         let speed = data.speed;
         let time = data.time;
         let size = data.size;
-        Line::new(Values::from_explicit_callback(
+        Line::new(PlotPoints::from_explicit_callback(
             move |x| {
                 size * (y_offset + Self::calc_harmonic_y(segments, strength, speed, time, x / size))
             }, -size..=size, 256,
@@ -185,7 +185,7 @@ impl SoundPage {
         let time = data.time;
         let size = data.size;
         let strengths = data.strengths;
-        Line::new(Values::from_explicit_callback(
+        Line::new(PlotPoints::from_explicit_callback(
             move |x| {
                 let mut y = 0.0;
                 for segments in 1..=SingleStringData::MAX_SEGMENTS {

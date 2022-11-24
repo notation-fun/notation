@@ -1,4 +1,4 @@
-use notation_bevy::bevy::prelude::*;
+use bevy::prelude::*;
 use notation_bevy::bevy_egui::{egui, EguiContext};
 use notation_bevy::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl};
 
@@ -12,7 +12,7 @@ use crate::guitar::page::GuitarPage;
 use crate::theory::scale::ScalePage;
 use crate::theory::sound::{SoundPage, SoundSection};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Resource)]
 pub struct IndexPanel {
     pub skip_frames: usize,
     pub current_page_id: KbPageId,
