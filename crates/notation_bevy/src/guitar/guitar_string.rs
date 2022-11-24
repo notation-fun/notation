@@ -87,7 +87,7 @@ impl GuitarStringData {
         hit_string_seconds_range: (f32, f32),
         play_speed: PlaySpeed,
     ) {
-        if self.hit && !hit && time.seconds_since_startup() < self.hit_expired_seconds {
+        if self.hit && !hit && time.elapsed_seconds_f64() < self.hit_expired_seconds {
             return;
         }
         self.hit = hit;
@@ -97,7 +97,7 @@ impl GuitarStringData {
         } else {
             0.0
         };
-        self.hit_expired_seconds = time.seconds_since_startup() + self.hit_seconds as f64;
+        self.hit_expired_seconds = time.elapsed_seconds_f64() + self.hit_seconds as f64;
     }
     fn set_note(&mut self, fretboard: Option<Fretboard6>, meta: Option<Arc<TabMeta>>) {
         self.note = None;

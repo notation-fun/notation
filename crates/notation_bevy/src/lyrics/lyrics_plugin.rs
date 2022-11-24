@@ -31,7 +31,7 @@ impl LyricsPlugin {
                 let value = WordTextValue::new(word.clone());
                 commands
                     .entity(entity)
-                    .insert_bundle(WordText::from(value.clone()));
+                    .insert(WordText::from(value.clone()));
                 crate::word::word_systems::create_word_text(
                     commands, assets, theme, settings, entity, entry, &value,
                 );

@@ -18,29 +18,33 @@ use notation_midi::prelude::{
 
 pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
-    fn build(&mut self, group: &mut PluginGroupBuilder) {
+    fn build(self) -> PluginGroupBuilder {
+        let group = PluginGroupBuilder::start::<Self>();
         #[cfg(feature = "with_egui")]
-        group.add(EguiPlugin);
+        let group = group.add(EguiPlugin);
 
-        group.add(EntryPlugin);
-        group.add(MelodyPlugin);
-        group.add(LyricsPlugin);
-        group.add(BarPlugin);
-        group.add(MelodyPlugin);
-        group.add(HarmonyPlugin);
-        group.add(StringsPlugin);
-        group.add(ShapesPlugin);
-        group.add(MiniPlugin);
-        group.add(TabPlugin);
-        group.add(PlayPlugin);
-        group.add(TabViewerPlugin);
+        let group = group
+            .add(EntryPlugin)
+            .add(MelodyPlugin)
+            .add(LyricsPlugin)
+            .add(BarPlugin)
+            .add(MelodyPlugin)
+            .add(HarmonyPlugin)
+            .add(StringsPlugin)
+            .add(ShapesPlugin)
+            .add(MiniPlugin)
+            .add(TabPlugin)
+            .add(PlayPlugin)
+            .add(TabViewerPlugin);
 
         //crates plugins
         #[cfg(feature = "midi")]
-        group.add(MidiPlugin);
+        let group = group.add(MidiPlugin);
+
         //external plugins
-        group.add(bevy_prototype_lyon::prelude::ShapePlugin);
+        let group = group.add(bevy_prototype_lyon::prelude::ShapePlugin);
         //group.add(bevy_svg::prelude::SvgPlugin);
+        group
     }
 }
 
@@ -54,7 +58,13 @@ impl NotationApp {
         app.insert_resource(args);
 
         app.insert_resource(Msaa { samples: 4 });
-        app.add_plugins(DefaultPlugins);
+        app.add_plugins(DefaultPlugins.set(WindowPlugin {
+            window: WindowDescriptor {
+                title: title.to_string(),
+                ..default()
+            },
+            ..default()
+        }));
         app.insert_resource(ClearColor(UiColors::default().app_background));
         app.add_plugin(bevy_easings::EasingsPlugin);
 
@@ -71,7 +81,6 @@ impl NotationApp {
         );
         app.add_state(NotationAssetsStates::Init);
 
-        Self::insert_window_descriptor(&mut app, String::from(title));
         super::events::add_notation_app_events(&mut app);
 
         //#[cfg(target_arch = "wasm32")]
@@ -105,9 +114,6 @@ impl NotationApp {
         app.init_resource::<NotationState>();
 
         app.add_startup_system(Self::setup_camera);
-
-        #[cfg(debug_assertions)]
-        app.add_startup_system(Self::setup_hot_reloading);
 
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Init)
@@ -149,33 +155,8 @@ impl NotationApp {
 }
 
 impl NotationApp {
-    fn insert_window_descriptor(app: &mut App, title: String) {
-        app.insert_resource(WindowDescriptor {
-            title,
-            //width: 1920.,
-            //height: 1080.,
-            ..WindowDescriptor::default()
-        });
-    }
-
     fn setup_camera(mut commands: Commands) {
-        commands.spawn_bundle(Camera2dBundle::default());
-    }
-
-    /*
-    * The open tab logic is using some trick in the asset server, which can load from absolute path
-    * (outside assets folder), but the hot reloading is not working this way.
-    * Ideally can use hot-reloading to update tabs automatically, but that means need to patch bevy
-    * to bypass the assumption with asset path under assets folder in reloading.
-    *
-    * Only enabling for debug build, the hot reloading works really nice for help pages.
-    *
-    * The crash error is:
-    *
-    * thread 'Compute Task Pool (2)' panicked at 'called `Result::unwrap()` on an `Err` value: StripPrefixError(())', C:\Users\yjpark\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\bevy_asset-0.5.1\src\io\file_asset_io.rs:135:84
-    */
-    fn setup_hot_reloading(asset_server: Res<AssetServer>) {
-        asset_server.watch_for_changes().unwrap();
+        commands.spawn(Camera2dBundle::default());
     }
 
     fn on_tab_asset(mut evts: EventReader<AssetEvent<TabAsset>>) {
@@ -184,12 +165,14 @@ impl NotationApp {
         }
     }
 
-    fn setup_window_size(window: Res<WindowDescriptor>, mut app_state: ResMut<NotationState>) {
+    fn setup_window_size(windows: Res<Windows>, mut app_state: ResMut<NotationState>) {
+        let window = windows.primary();
+
         #[cfg(target_arch = "wasm32")]
         let (width, height) = crate::wasm::bevy_web_fullscreen::get_viewport_size();
 
         #[cfg(not(target_arch = "wasm32"))]
-        let (width, height) = (window.width, window.height);
+        let (width, height) = (window.width(), window.height());
 
         println!("setup_window_size(): {} {} ", width, height);
         app_state.window_width = width;
@@ -197,7 +180,7 @@ impl NotationApp {
     }
 
     fn on_window_resized(
-        mut window: ResMut<WindowDescriptor>,
+        windows: Res<Windows>,
         mut evts: EventReader<WindowResized>,
         mut app_state: ResMut<NotationState>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
@@ -205,20 +188,20 @@ impl NotationApp {
         if app_state.tab_path.len() > 0 && app_state.tab.is_none() {
             return;
         }
+        let window = windows.primary();
         for evt in evts.iter() {
-            if evt.width as usize != window.width as usize
-                || evt.height as usize != window.height as usize
+            if window.id() != evt.id { continue }
+            if evt.width as usize != app_state.window_width as usize
+                || evt.height as usize != app_state.window_height as usize
             {
                 println!(
                     "on_window_resized(): {} {} -> {} {} ",
-                    window.width, window.height, evt.width, evt.height
+                    app_state.window_width, app_state.window_height, evt.width, evt.height
                 );
                 let resized_evt = WindowResizedEvent::new(&app_state);
-                window.width = evt.width;
-                window.height = evt.height;
                 app_state.window_width = evt.width;
                 app_state.window_height = evt.height;
-                app_state.scale_factor_override = window.scale_factor_override;
+                app_state.scale_factor_override = window.scale_factor_override();
                 window_resized_evts.send(resized_evt);
             }
         }

@@ -18,6 +18,6 @@ pub trait DoubleShape<T1: Geometry, T2: Geometry>: Shape {
             .add(&shape2);
         commands
             .entity(entity)
-            .insert_bundle(multishape.build(draw_mode, transform));
+            .insert(multishape.build(draw_mode, transform));
     }
 }

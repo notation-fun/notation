@@ -1,8 +1,8 @@
-use notation_bevy::bevy::prelude::*;
+use bevy::prelude::*;
 use notation_bevy::bevy_asset_loader::prelude::*;
 use notation_bevy::prelude::*;
 
-#[derive(AssetCollection)]
+#[derive(AssetCollection, Resource)]
 pub struct NotationViewerAssets {
     #[asset(key = "kb_welcome")]
     pub kb_welcome: Handle<MarkDownAsset>,

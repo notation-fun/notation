@@ -68,7 +68,7 @@ macro_rules! impl_strings_plugin {
                             LaneKind::Strings => {
                                 commands
                                     .entity(entity)
-                                    .insert_bundle(PickBundle::from(*pick));
+                                    .insert(PickBundle::from(*pick));
                                 super::pick_systems::$create_pick_notes(
                                     commands, assets, theme, settings, entity, entry, pick,
                                 );

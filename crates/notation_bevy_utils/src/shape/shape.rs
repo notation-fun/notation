@@ -5,13 +5,13 @@ use bevy_prototype_lyon::prelude::*;
 pub trait Shape {
     fn _create(&self, commands: &mut Commands, entity: Entity);
     fn create(&self, commands: &mut Commands, parent: Entity) -> Entity {
-        let entity = commands.spawn().id();
+        let entity = commands.spawn_empty().id();
         commands.entity(parent).push_children(&[entity]);
         self._create(commands, entity);
         entity
     }
     fn update(&self, commands: &mut Commands, entity: Entity) {
-        commands.entity(entity).remove_bundle::<ShapeBundle>();
+        commands.entity(entity).remove::<ShapeBundle>();
         self._create(commands, entity);
     }
 }
@@ -26,7 +26,7 @@ pub trait SingleShape<T: Geometry>: Shape {
         let transform = self.get_transform();
         commands
             .entity(entity)
-            .insert_bundle(GeometryBuilder::build_as(
+            .insert(GeometryBuilder::build_as(
                 &shape, draw_mode, transform,
             ));
     }

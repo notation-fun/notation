@@ -14,7 +14,7 @@ description = "Fun notation - runtime models"
 notation_proto = { version = "0.5.0", path = "../notation_proto" }
 thiserror = "1.0"
 fehler = "1.0"
-uuid = { version = "0.8", features = ["serde", "v4"] }
+uuid = { version = "1.2", features = ["serde", "v4"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 instant = "0.1"

@@ -26,7 +26,7 @@ impl BevyUtil {
             horizontal,
         };
         let text_entity = commands
-            .spawn_bundle(Text2dBundle {
+            .spawn(Text2dBundle {
                 text: Text::from_section(text, style).with_alignment(alignment),
                 transform: Transform::from_xyz(x, y, z),
                 ..Default::default()

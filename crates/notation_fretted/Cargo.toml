@@ -14,7 +14,7 @@ description = "Fun notation - definition for fretted instruments"
 [dependencies]
 notation_core = { version = "0.5.0", path = "../notation_core" }
 
-serde = { version = "1.0.126", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
 
 # https://github.com/serde-rs/serde/issues/1937
-serde_arrays = "0.1.0"
+serde_arrays = "0.1"

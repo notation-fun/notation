@@ -106,7 +106,7 @@ macro_rules! impl_pick_system {
                     let tone = fretboard.pick_tone(&meta.scale, &meta.key, &shape, pick);
                     commands
                         .entity(entity)
-                        .insert_bundle(ToneBundle::from(tone));
+                        .insert(ToneBundle::from(tone));
                     crate::tone::tone_systems::create_tone_notes(
                         commands, assets, theme, settings, ToneMode::Harmony, entity, entry, &tone,
                     );

@@ -7,7 +7,7 @@ use crate::egui::egui_fonts::EguiFontSizes;
 
 use crate::settings::notation_settings::NotationSettings;
 
-#[derive(AssetCollection)]
+#[derive(AssetCollection, Resource)]
 pub struct NotationAssets {
     #[asset(key = "syllable_font")]
     pub syllable_font: Handle<Font>,
@@ -123,7 +123,7 @@ impl NotationAssets {
     }
 }
 
-#[derive(AssetCollection)]
+#[derive(AssetCollection, Resource)]
 pub struct NoExtraAssets {
 }
 

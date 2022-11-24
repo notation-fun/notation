@@ -8,7 +8,7 @@ pub fn color_of_hex(hex: &str) -> Color {
     color.as_rgba_linear()
 }
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default, Resource)]
 pub struct BevyUtilsTheme {
     pub layout: LayoutTheme,
 }

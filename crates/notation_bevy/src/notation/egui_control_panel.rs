@@ -343,7 +343,7 @@ impl EguiControlPanel {
             }
             egui::warn_if_debug_build(ui);
             #[cfg(not(target_arch = "wasm32"))]
-            ui.with_layout(egui::Layout::right_to_left(), |ui| {
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::BOTTOM), |ui| {
                 ui.separator();
                 if ui.button("Open Tab").clicked() {
                     if let Some(path) = rfd::FileDialog::new()

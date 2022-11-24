@@ -42,7 +42,7 @@ macro_rules! impl_shapes_plugin {
                     $fretted_entry::Shape(shape, _) => {
                         commands
                             .entity(entity)
-                            .insert_bundle($hand_shape_bundle::from(*shape));
+                            .insert($hand_shape_bundle::from(*shape));
                         super::hand_systems::$create_hand_shape(
                             commands, assets, theme, settings, entity, entry, shape,
                         );

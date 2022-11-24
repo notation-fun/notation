@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
 use std::convert::TryInto;
 use std::sync::Arc;
+use bevy::prelude::*;
 
 use helgoboss_midi::{controller_numbers, Channel, StructuredShortMessage, U7};
 use notation_model::play::play_control::TickResult;
@@ -228,6 +229,7 @@ impl MidiChannel {
     }
 }
 
+#[derive(Resource)]
 pub struct MidiState {
     pub tab: Option<Arc<Tab>>,
     pub channels: [MidiChannel; 16],

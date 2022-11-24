@@ -1,7 +1,8 @@
+use bevy::prelude::*;
 use midi_msg::GMSoundSet;
 use notation_model::prelude::{Octave, TrackKind};
 
-#[derive(Copy, Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, PartialEq, Debug, Resource)]
 pub struct MidiSettings {
     pub bypass_hub: bool,
     pub click_mute: bool,

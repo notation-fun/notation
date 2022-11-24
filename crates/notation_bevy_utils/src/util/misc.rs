@@ -34,7 +34,7 @@ impl BevyUtil {
         entity: Entity,
         bundle: T,
     ) -> Entity {
-        let child_entity = commands.spawn_bundle(bundle).id();
+        let child_entity = commands.spawn(bundle).id();
         commands.entity(entity).push_children(&[child_entity]);
         child_entity
     }

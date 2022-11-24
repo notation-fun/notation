@@ -1,7 +1,9 @@
 #[cfg(feature = "native")]
 use clap::Parser;
 
-#[derive(Debug)]
+use bevy::prelude::*;
+
+#[derive(Debug, Resource)]
 #[cfg_attr(feature = "native", derive(Parser))]
 #[cfg_attr(feature = "native", clap(author, version, about, long_about = None))]
 pub struct NotationArgs {

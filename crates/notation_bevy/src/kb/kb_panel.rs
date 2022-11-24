@@ -46,7 +46,7 @@ pub trait KbPanel {
     ) {
         ui.horizontal(|ui| {
             self.topic_tabs_ui(ui);
-            ui.with_layout(egui::Layout::right_to_left(), |ui| {
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::BOTTOM), |ui| {
                 egui::warn_if_debug_build(ui);
             });
         });

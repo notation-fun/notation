@@ -32,6 +32,7 @@ impl Default for StereoStreamOutput {
     }
 }
 
+#[derive(Resource)]
 pub struct StereoStream {
     pub buffer: Producer<(f32, f32)>,
     pub volume: f32,

@@ -78,7 +78,7 @@ impl ShapesTheme {
         entity: Entity,
         text: &String,
     ) {
-        let mut entity_commands = commands.spawn();
+        let mut entity_commands = commands.spawn_empty();
         let font = assets.latin_font.clone();
         let style = TextStyle {
             font,
@@ -90,7 +90,7 @@ impl ShapesTheme {
             horizontal: HorizontalAlign::Left,
         };
         let shape_text = ProtoEntry::trim_comments(text);
-        entity_commands.insert_bundle(Text2dBundle {
+        entity_commands.insert(Text2dBundle {
             text: Text::from_section(shape_text.as_str(), style).with_alignment(alignment),
             transform: Transform::from_xyz(self.shape_text_x, self.shape_text_y, self.shape_text_z),
             ..Default::default()
@@ -105,7 +105,7 @@ impl ShapesTheme {
         entity: Entity,
         barre: u8,
     ) {
-        let mut entity_commands = commands.spawn();
+        let mut entity_commands = commands.spawn_empty();
         let font = assets.latin_font.clone();
         let style = TextStyle {
             font,
@@ -116,7 +116,7 @@ impl ShapesTheme {
             vertical: VerticalAlign::Center,
             horizontal: HorizontalAlign::Left,
         };
-        entity_commands.insert_bundle(Text2dBundle {
+        entity_commands.insert(Text2dBundle {
             text: Text::from_section(barre.to_string(), style).with_alignment(alignment),
             transform: Transform::from_xyz(self.barre_text_x, self.barre_text_y, self.barre_text_z),
             ..Default::default()

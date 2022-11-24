@@ -4,6 +4,7 @@ use crate::{prelude::*, tab::tab_asset::TabError};
 use bevy::prelude::*;
 use notation_model::prelude::*;
 
+#[derive(Resource)]
 pub struct NotationState {
     pub window_width: f32,
     pub window_height: f32,

@@ -15,7 +15,7 @@ pub struct TabAsset {
 #[derive(Clone, Error, Debug)]
 pub enum TabError {
     #[error("decode ron failed")]
-    DecodeRonFailed(ron::Error),
+    DecodeRonFailed(ron::error::SpannedError),
     #[error("get tab failed")]
     GetTabFailed(String),
     #[error("parse tab failed")]

@@ -7,8 +7,8 @@ use notation_proto::prelude::*;
 
 pub fn convert_tab(tab: &Tab) -> String {
     let pretty = PrettyConfig::new()
-        .with_separate_tuple_members(true)
-        .with_enumerate_arrays(true);
+        .separate_tuple_members(true)
+        .enumerate_arrays(true);
     to_string_pretty(&tab, pretty).expect("Serialization failed")
 }
 

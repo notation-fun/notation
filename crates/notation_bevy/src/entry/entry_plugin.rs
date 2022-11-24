@@ -132,7 +132,7 @@ fn insert_core_entry_extra(
         CoreEntry::Tone(tone, _) => {
             commands
                 .entity(entity)
-                .insert_bundle(ToneBundle::from(*tone));
+                .insert(ToneBundle::from(*tone));
             crate::tone::tone_systems::create_tone_notes(
                 commands, assets, theme, settings, lane_kind.into(), entity, entry, tone,
             );
@@ -140,7 +140,7 @@ fn insert_core_entry_extra(
         CoreEntry::Chord(chord, _) => {
             commands
                 .entity(entity)
-                .insert_bundle(ChordBundle::from(*chord));
+                .insert(ChordBundle::from(*chord));
         }
     };
 }

@@ -32,6 +32,7 @@ impl Default for MonoStreamOutput {
     }
 }
 
+#[derive(Resource)]
 pub struct MonoStream {
     pub buffer: Producer<f32>,
     pub volume: f32,

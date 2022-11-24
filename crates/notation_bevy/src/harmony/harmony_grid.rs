@@ -1,10 +1,9 @@
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::ShapeOp;
 
 use crate::{prelude::{NotationTheme, NotationSettings}, tone::tone_mode::ToneMode};
-use notation_model::{bar_lane::BarLane, prelude::{Semitones}};
+use notation_model::prelude::*;
 
-use crate::tone::tone_line::{ToneLineValue, ToneLineData};
+use crate::tone::tone_line::ToneLineData;
 
 #[derive(Debug, Default, Component)]
 pub struct HarmonyGrid();

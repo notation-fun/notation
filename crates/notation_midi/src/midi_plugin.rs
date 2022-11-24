@@ -7,13 +7,18 @@ use notation_model::prelude::{
     PlayClock, JumpToBarEvent, PlayControlEvent, SwitchTabEvent,
 };
 
+#[derive(Default, Resource)]
+pub struct MidiClock {
+    pub clock: PlayClock,
+}
+
 pub struct MidiPlugin;
 
 const DO_TICK_TIMESTEP: f64 = 1.0 / 60.0;
 
 impl Plugin for MidiPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<PlayClock>();
+        app.init_resource::<MidiClock>();
         app.init_resource::<MidiSettings>();
         app.init_resource::<MidiState>();
         app.init_non_send_resource::<MidiHub>();
@@ -114,10 +119,10 @@ fn do_tick(
     settings: Res<MidiSettings>,
     mut state: ResMut<MidiState>,
     mut hub: NonSendMut<MidiHub>,
-    mut clock: ResMut<PlayClock>,
+    mut clock: ResMut<MidiClock>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
-    clock.tick();
+    clock.clock.tick();
     //println!("do_tick() -> {}", clock.delta_seconds());
     _do_tick(
         &settings,
@@ -125,6 +130,6 @@ fn do_tick(
         &mut hub,
         &mut play_control_evts,
         false,
-        clock.delta_seconds(),
+        clock.clock.delta_seconds(),
     );
 }

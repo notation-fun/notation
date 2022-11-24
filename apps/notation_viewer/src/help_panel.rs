@@ -1,4 +1,4 @@
-use notation_bevy::bevy::prelude::*;
+use bevy::prelude::*;
 use notation_bevy::bevy_egui::EguiContext;
 
 use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings};
@@ -10,7 +10,7 @@ use notation_bevy::kb::markdown_page::MarkDownPage;
 
 use crate::assets::NotationViewerAssets;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Resource)]
 pub struct HelpPanel {
     pub skip_frames: usize,
     pub open_times: usize,

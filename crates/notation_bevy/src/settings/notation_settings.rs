@@ -7,7 +7,7 @@ use crate::notation::args::NotationArgs;
 
 use super::layout_settings::{LayoutSettings, LayoutMode, GridAlignMode};
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug, Resource)]
 pub struct NotationSettings {
     pub lang: String,
     pub layout: LayoutSettings,

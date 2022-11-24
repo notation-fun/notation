@@ -1,8 +1,7 @@
 use bevy::prelude::*;
-use notation_bevy_utils::prelude::ShapeOp;
 
-use crate::{prelude::NotationTheme, settings::notation_settings::NotationSettings, tone::{tone_line::{ToneLineData, ToneLineValue}, tone_mode::ToneMode}};
-use notation_model::{prelude::{Semitones}, bar_lane::BarLane};
+use crate::{prelude::NotationTheme, settings::notation_settings::NotationSettings, tone::{tone_line::ToneLineData, tone_mode::ToneMode}};
+use notation_model::prelude::*;
 
 #[derive(Debug, Default, Component)]
 pub struct MelodyGrid();

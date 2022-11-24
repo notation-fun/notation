@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use bevy::prelude::*;
 
 use super::guitar_theme::GuitarTheme;
 use super::shapes_theme::ShapesTheme;
@@ -7,7 +8,7 @@ use super::theme_sizes::ThemeSizes;
 use super::theme_texts::ThemeTexts;
 use super::theme_z::ThemeZ;
 
-#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default)]
+#[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug, Default, Resource)]
 pub struct NotationTheme {
     pub _bypass_systems: bool,
     pub z: ThemeZ,
