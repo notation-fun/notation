@@ -50,6 +50,19 @@
           display: block;
         }
       }}
+      /* https://chrislachance.com/new-css-hacks-to-target-safari/ */
+      /* iOS browsers */
+      @supports(font:-apple-system-body) and (-webkit-touch-callout:default){
+        #audio_enabler {
+          display: block;
+        }
+      }
+      /* Desktop Safari */
+      @supports(font:-apple-system-body) and (not(-webkit-touch-callout:default)){
+        #audio_enabler {
+          display: block;
+        }
+      }
     </style>
     <script src='https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js'></script>
     <script>
