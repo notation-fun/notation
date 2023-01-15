@@ -100,7 +100,7 @@ impl RhythmBarData {
         theme
             .texts
             .rhythm
-            .spawn_bar_text(commands, assets, bar_entity, "0");
+            .spawn_bar_text(commands, assets, bar_entity, "1");
         bar_entity
     }
     pub fn update_rhythm(
@@ -142,7 +142,7 @@ impl RhythmBarData {
                 }
                 for child in bar_children.iter() {
                     if let Ok(mut text) = font_query.get_mut(*child) {
-                        let v = bar_props.bar_ordinal.to_string();
+                        let v = bar_props.bar_number.to_string();
                         BevyUtil::set_text_value(&mut text, v);
                     }
                 }
