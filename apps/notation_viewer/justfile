@@ -1,3 +1,5 @@
+set shell := ["nu", "-c"]
+
 run-native:
     cargo run --features native
 
@@ -9,3 +11,6 @@ run-web:
 
 release-web:
     cargo make --profile release release-web
+
+release-windows:
+    cargo build --release --features native
