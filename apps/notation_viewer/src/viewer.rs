@@ -1,9 +1,9 @@
-use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
+use tab_viewer::bevy::prelude::*;
+use tab_viewer::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
-use notation_bevy::bevy_egui::EguiContext;
-use notation_bevy::prelude::*;
-use notation_bevy::settings::layout_settings::LayoutMode;
+use tab_viewer::bevy_egui::EguiContext;
+use tab_viewer::prelude::*;
+use tab_viewer::settings::layout_settings::LayoutMode;
 
 use crate::help_panel::HelpPanel;
 
@@ -24,7 +24,7 @@ impl NotationViewer {
         );
     }
     pub fn run<A: ExtraAssets>(args: NotationArgs) {
-        notation_bevy::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
+        tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
     }
 }
 

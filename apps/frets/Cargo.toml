@@ -10,13 +10,13 @@ resources = ["assets"]
 
 [features]
 default = [
-    "notation_bevy/midi",
+    "tab_viewer/midi",
 ]
 
 native = [
-    "notation_bevy/native",
-    "notation_bevy/dsl",
+    "tab_viewer/native",
+    "tab_viewer/dsl",
 ]
 
 [dependencies]
-notation_bevy = { path = "../../crates/notation_bevy" }
+tab_viewer = { path = "../../views/tab_viewer" }

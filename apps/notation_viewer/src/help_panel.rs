@@ -1,12 +1,12 @@
 use bevy::prelude::*;
-use notation_bevy::bevy_egui::EguiContext;
+use tab_viewer::bevy_egui::EguiContext;
 
-use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings};
-use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
+use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings};
+use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme};
 
-use notation_bevy::kb::chords_page::ChordsPage;
-use notation_bevy::kb::notes_page::NotesPage;
-use notation_bevy::kb::markdown_page::MarkDownPage;
+use tab_viewer::kb::chords_page::ChordsPage;
+use tab_viewer::kb::notes_page::NotesPage;
+use tab_viewer::kb::markdown_page::MarkDownPage;
 
 use crate::assets::NotationViewerAssets;
 

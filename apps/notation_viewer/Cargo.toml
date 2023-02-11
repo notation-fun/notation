@@ -10,17 +10,17 @@ resources = ["assets"]
 
 [features]
 default = [
-    "notation_bevy/midi",
-    "notation_bevy/with_egui",
+    "tab_viewer/midi",
+    "tab_viewer/with_egui",
 ]
 
 native = [
-    "notation_bevy/native",
-    "notation_bevy/dsl",
+    "tab_viewer/native",
+    "tab_viewer/dsl",
 ]
 
 [dependencies]
-notation_bevy = { path = "../../crates/notation_bevy" }
+tab_viewer = { path = "../../views/tab_viewer" }
 
 bevy = { version = "0.9", default-features = false }
 bevy_asset_loader = { version = "0.14", features = [ "standard_dynamic_assets" ]}

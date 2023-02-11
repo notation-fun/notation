@@ -11,7 +11,7 @@ members = [
     "crates/notation_model",
     "crates/notation_audio",
     "crates/notation_midi",
-    "crates/notation_bevy",
+    "views/tab_viewer",
     "apps/notation_kb",
     "apps/notation_tabs",
     "apps/notation_viewer",

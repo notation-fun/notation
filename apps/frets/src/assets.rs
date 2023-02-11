@@ -1,6 +1,6 @@
-use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy_asset_loader::prelude::*;
-use notation_bevy::prelude::*;
+use tab_viewer::bevy::prelude::*;
+use tab_viewer::bevy_asset_loader::prelude::*;
+use tab_viewer::prelude::*;
 
 #[derive(AssetCollection)]
 pub struct FretsAssets {

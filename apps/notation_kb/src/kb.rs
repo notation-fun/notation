@@ -1,7 +1,7 @@
-use notation_bevy::bevy::prelude::*;
-//use notation_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
+use tab_viewer::bevy::prelude::*;
+//use tab_viewer::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
-use notation_bevy::prelude::*;
+use tab_viewer::prelude::*;
 
 use crate::index_panel::IndexPanel;
 use notation_viewer::viewer::NotationViewer;
@@ -14,7 +14,7 @@ impl NotationKnowledgeBase {
         app.add_startup_system(Self::setup_state);
         TabPlugin::setup_mouse_input(app);
         #[cfg(target_arch = "wasm32")]
-        notation_bevy::prelude::StereoStream::init_streaming(app, true);
+        tab_viewer::prelude::StereoStream::init_streaming(app, true);
         app.add_system_set(
             SystemSet::on_update(NotationAssetsStates::Loaded)
                 .with_system(IndexPanel::hack_settings)
@@ -30,7 +30,7 @@ impl NotationKnowledgeBase {
         );
     }
     pub fn run<A: ExtraAssets>(args: NotationArgs) {
-        notation_bevy::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
+        tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
     }
     fn setup_state(
         mut state: ResMut<NotationState>,

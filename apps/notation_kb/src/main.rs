@@ -1,4 +1,4 @@
-use notation_bevy::{bevy::prelude::bevy_main, prelude::NotationArgs};
+use tab_viewer::{bevy::prelude::bevy_main, prelude::NotationArgs};
 
 use notation_kb::assets::NotationKnowledgeBaseAssets;
 

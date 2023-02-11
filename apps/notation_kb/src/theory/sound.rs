@@ -1,12 +1,12 @@
 use std::f64::consts::{PI, FRAC_PI_2};
 
-use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy_egui::egui::{self, *};
-use notation_bevy::bevy_egui::egui::plot::*;
-use notation_bevy::prelude::{AudioConsts, StereoStream};
+use tab_viewer::bevy::prelude::*;
+use tab_viewer::bevy_egui::egui::{self, *};
+use tab_viewer::bevy_egui::egui::plot::*;
+use tab_viewer::prelude::{AudioConsts, StereoStream};
 
-use notation_bevy::kb::markdown_page::MarkDownPage;
-use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, BevyUtil, Syllable, PageHelper};
+use tab_viewer::kb::markdown_page::MarkDownPage;
+use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, BevyUtil, Syllable, PageHelper};
 
 #[derive(Copy, Clone, Debug)]
 pub enum SoundSection {

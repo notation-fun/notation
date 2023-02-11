@@ -1714,7 +1714,7 @@ dependencies = [
 name = "frets"
 version = "0.1.0"
 dependencies = [
- "notation_bevy",
+ "tab_viewer",
 ]
 
 [[package]]
@@ -2736,37 +2736,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "notation_bevy"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "bevy",
- "bevy_asset_loader",
- "bevy_easings",
- "bevy_prototype_lyon",
- "clap",
- "console_error_panic_hook",
- "float_eq",
- "futures",
- "getrandom",
- "gloo-events",
- "lazy_static",
- "notation_bevy_utils",
- "notation_dsl",
- "notation_midi",
- "notation_model",
- "rand",
- "rfd",
- "ron 0.8.0",
- "serde",
- "serde_arrays",
- "thiserror",
- "unic-langid",
- "wasm-bindgen",
- "web-sys",
-]
-
-[[package]]
 name = "notation_bevy_utils"
 version = "0.4.2"
 dependencies = [
@@ -2829,8 +2798,8 @@ version = "0.5.0"
 dependencies = [
  "bevy",
  "bevy_asset_loader",
- "notation_bevy",
  "notation_viewer",
+ "tab_viewer",
 ]
 
 [[package]]
@@ -2903,7 +2872,7 @@ version = "0.5.0"
 dependencies = [
  "bevy",
  "bevy_asset_loader",
- "notation_bevy",
+ "tab_viewer",
 ]
 
 [[package]]
@@ -3672,6 +3641,37 @@ dependencies = [
  "pkg-config",
  "toml",
  "version-compare",
+]
+
+[[package]]
+name = "tab_viewer"
+version = "0.5.0"
+dependencies = [
+ "anyhow",
+ "bevy",
+ "bevy_asset_loader",
+ "bevy_easings",
+ "bevy_prototype_lyon",
+ "clap",
+ "console_error_panic_hook",
+ "float_eq",
+ "futures",
+ "getrandom",
+ "gloo-events",
+ "lazy_static",
+ "notation_bevy_utils",
+ "notation_dsl",
+ "notation_midi",
+ "notation_model",
+ "rand",
+ "rfd",
+ "ron 0.8.0",
+ "serde",
+ "serde_arrays",
+ "thiserror",
+ "unic-langid",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]

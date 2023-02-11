@@ -1,9 +1,9 @@
-use notation_bevy::bevy::prelude::*;
-use notation_bevy::bevy_egui::egui::{self, *};
+use tab_viewer::bevy::prelude::*;
+use tab_viewer::bevy_egui::egui::{self, *};
 
-use notation_bevy::kb::markdown_page::MarkDownPage;
-use notation_bevy::kb::notes_page::NotesPage;
-use notation_bevy::prelude::*;
+use tab_viewer::kb::markdown_page::MarkDownPage;
+use tab_viewer::kb::notes_page::NotesPage;
+use tab_viewer::prelude::*;
 
 use crate::index_panel::IndexPanel;
 
@@ -11,7 +11,7 @@ use crate::index_panel::IndexPanel;
 pub struct ScalePage {
     pub path: String,
     pub scale: Scale,
-    pub key: notation_bevy::prelude::Key,
+    pub key: tab_viewer::prelude::Key,
     pub transpose: i8,
 }
 
@@ -141,7 +141,7 @@ impl ScalePage {
             ProtoForm{ sections: vec!["notes".to_owned()]},
         )
     }
-    pub fn check_reload(&self, tab: &notation_bevy::prelude::Tab) -> bool {
+    pub fn check_reload(&self, tab: &tab_viewer::prelude::Tab) -> bool {
         self.scale != tab.meta.scale || self.key != tab.meta.key || tab.bars.len() == 0
     }
 }

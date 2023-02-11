@@ -1,11 +1,11 @@
 use bevy::prelude::*;
-use notation_bevy::bevy_egui::{egui, EguiContext};
-use notation_bevy::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl};
+use tab_viewer::bevy_egui::{egui, EguiContext};
+use tab_viewer::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl};
 
-use notation_bevy::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};
-use notation_bevy::prelude::{NotationState, NotationAssets, NotationTheme};
+use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};
+use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme};
 
-use notation_bevy::kb::markdown_page::MarkDownPage;
+use tab_viewer::kb::markdown_page::MarkDownPage;
 
 use crate::assets::NotationKnowledgeBaseAssets;
 use crate::guitar::page::GuitarPage;
