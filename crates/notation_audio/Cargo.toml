@@ -14,5 +14,5 @@ description = "Fun notation - audio features"
 
 [dependencies]
 bevy = { version = "0.9", default-features = false }
-bevy_kira_audio = "0.11"
 ringbuf = "0.2.8"
+bevy_kira_audio = { version = "0.11", git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5" }
