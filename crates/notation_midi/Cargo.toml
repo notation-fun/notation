@@ -14,7 +14,7 @@ description = "Fun notation - midi features"
 
 [dependencies]
 notation_model = { version = "0.6.0", path = "../notation_model" }
-notation_audio = { version = "0.4.0", path = "../notation_audio" }
+notation_audio = { version = "0.6.0", path = "../notation_audio" }
 
 midir = "0.8"
 bevy = { version = "0.9", default-features = false }
