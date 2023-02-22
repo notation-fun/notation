@@ -37,12 +37,12 @@ with_egui = [
 ]
 
 [dependencies]
-notation_bevy_utils = { version = "0.4.2", path = "../../crates/notation_bevy_utils" }
+notation_bevy_utils = { path = "../../crates/notation_bevy_utils" }
 
-notation_model = { version = "0.6.0", path = "../../crates/notation_model" }
+notation_model = { path = "../../crates/notation_model" }
 
-notation_midi = { version = "0.6.0", path = "../../crates/notation_midi", optional = true }
-notation_dsl = { version = "0.6.0", path = "../../crates/notation_dsl", optional = true }
+notation_midi = { path = "../../crates/notation_midi", optional = true }
+notation_dsl = { path = "../../crates/notation_dsl", optional = true }
 
 serde = { version = "1.0", features = [ "derive" ] }
 # https://github.com/serde-rs/serde/issues/1937
