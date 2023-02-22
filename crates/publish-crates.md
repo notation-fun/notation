@@ -34,6 +34,4 @@ cargo publish
 cd ../notation_bevy_utils
 cargo publish
 
-cd ../notation_bevy
-cargo publish
 ```
