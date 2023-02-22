@@ -1,6 +1,6 @@
 [package]
 name = "notation_fretted"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -12,7 +12,7 @@ description = "Fun notation - definition for fretted instruments"
 [lib]
 
 [dependencies]
-notation_core = { version = "0.5.0", path = "../notation_core" }
+notation_core = { version = "0.6.0", path = "../notation_core" }
 
 serde = { version = "1.0", features = ["derive"] }
 

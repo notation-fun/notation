@@ -1,6 +1,6 @@
 [package]
 name = "notation_model"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 homepage = "https://www.notation.fun"
@@ -11,7 +11,7 @@ description = "Fun notation - runtime models"
 [lib]
 
 [dependencies]
-notation_proto = { version = "0.5.0", path = "../notation_proto" }
+notation_proto = { version = "0.6.0", path = "../notation_proto" }
 thiserror = "1.0"
 fehler = "1.0"
 uuid = { version = "1.2", features = ["serde", "v4"] }
