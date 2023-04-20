@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use tab_viewer::bevy_egui::{egui, EguiContext};
-use tab_viewer::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl};
+use tab_viewer::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl, EguiContexts};
 
 use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};
 use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme};
@@ -145,7 +145,7 @@ impl IndexPanel {
         }
     }
     pub fn index_ui(
-        mut egui_ctx: ResMut<EguiContext>,
+        mut egui_ctx: EguiContexts,
         texts: Res<Assets<MarkDownAsset>>,
         assets: Res<NotationAssets>,
         mut state: ResMut<NotationState>,
@@ -168,7 +168,7 @@ impl IndexPanel {
     }
     fn content_ui(
         &mut self,
-        egui_ctx: &mut EguiContext,
+        egui_ctx: &mut EguiContexts,
         texts: &Assets<MarkDownAsset>,
         assets: &NotationAssets,
         state: &NotationState,

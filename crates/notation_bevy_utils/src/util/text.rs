@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, sprite::Anchor};
 
 use super::BevyUtil;
 
@@ -10,8 +10,8 @@ impl BevyUtil {
         font: Handle<Font>,
         font_size: f32,
         color: Color,
-        horizontal: HorizontalAlign,
-        vertical: VerticalAlign,
+        alignment: TextAlignment,
+        anchor: Anchor,
         x: f32,
         y: f32,
         z: f32,
@@ -21,14 +21,11 @@ impl BevyUtil {
             font_size,
             color,
         };
-        let alignment = TextAlignment {
-            vertical,
-            horizontal,
-        };
         let text_entity = commands
             .spawn(Text2dBundle {
                 text: Text::from_section(text, style).with_alignment(alignment),
                 transform: Transform::from_xyz(x, y, z),
+                text_anchor: anchor,
                 ..Default::default()
             })
             .id();

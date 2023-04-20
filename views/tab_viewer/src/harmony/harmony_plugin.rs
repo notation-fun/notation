@@ -12,9 +12,8 @@ pub struct HarmonyPlugin;
 
 impl Plugin for HarmonyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(HarmonyPlugin::on_add_harmony_grid)
+        app.add_system(HarmonyPlugin::on_add_harmony_grid
+            .in_set(OnUpdate(NotationAssetsStates::Loaded))
         );
     }
 }

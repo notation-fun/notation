@@ -1,4 +1,4 @@
-use bevy::app::PluginGroupBuilder;
+use bevy::{app::PluginGroupBuilder, window::PrimaryWindow};
 use bevy::prelude::*;
 use bevy::window::WindowResized;
 
@@ -57,14 +57,8 @@ impl NotationApp {
         let mut app = App::new();
         app.insert_resource(args);
 
-        app.insert_resource(Msaa { samples: 4 });
-        app.add_plugins(DefaultPlugins.set(WindowPlugin {
-            window: WindowDescriptor {
-                title: title.to_string(),
-                ..default()
-            },
-            ..default()
-        }));
+        app.insert_resource(Msaa::Sample4);
+        app.add_plugins(DefaultPlugins);
         app.insert_resource(ClearColor(UiColors::default().app_background));
         app.add_plugin(bevy_easings::EasingsPlugin);
 
@@ -74,12 +68,13 @@ impl NotationApp {
         app.init_resource::<NotationSettings>();
         app.add_plugins(NotationPlugins);
 
+        app.add_state::<NotationAssetsStates>();
+
         app.add_loading_state(LoadingState::new(NotationAssetsStates::Loading)
             .continue_to_state(NotationAssetsStates::Loaded)
-            .with_collection::<NotationAssets>()
-            .with_collection::<A>()
         );
-        app.add_state(NotationAssetsStates::Init);
+        app.add_collection_to_loading_state::<_, NotationAssets>(NotationAssetsStates::Loading);
+        app.add_collection_to_loading_state::<_, A>(NotationAssetsStates::Loading);
 
         super::events::add_notation_app_events(&mut app);
 
@@ -115,37 +110,29 @@ impl NotationApp {
 
         app.add_startup_system(Self::setup_camera);
 
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Init)
-                .with_system(NotationAssets::setup_keys::<A>)
-        );
+        app.add_system(NotationAssets::setup_keys::<A>
+            .in_set(OnUpdate(NotationAssetsStates::Init)));
 
-        app.add_system_set(
-            SystemSet::on_enter(NotationAssetsStates::Loaded)
-                .with_system(NotationAssets::add_extra_assets::<A>)
-                .with_system(Self::setup_window_size),
-        );
+        app.add_systems((
+            NotationAssets::add_extra_assets::<A>,
+            Self::setup_window_size,
+        ).in_schedule(OnEnter(NotationAssetsStates::Loaded)));
         #[cfg(feature = "with_egui")]
-        app.add_system_set(
-            SystemSet::on_enter(NotationAssetsStates::Loaded)
-                .with_system(crate::egui::egui_fonts::setup_egui_fonts::<A>),
-        );
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(TabViewer::on_add_tab)
-                .with_system(TabViewer::on_window_resized)
-                .with_system(TabViewer::on_added),
-        );
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(Self::on_window_resized)
-                .with_system(Self::on_tab_asset),
-        );
+        app.add_system(
+            crate::egui::egui_fonts::setup_egui_fonts::<A>
+            .in_schedule(OnEnter(NotationAssetsStates::Loaded)));
+        app.add_systems((
+            TabViewer::on_add_tab,
+            TabViewer::on_window_resized,
+            TabViewer::on_added,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        app.add_systems((
+            Self::on_window_resized,
+            Self::on_tab_asset,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
         #[cfg(feature = "with_egui")]
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(EguiControlPanel::control_ui),
-        );
+        app.add_system(EguiControlPanel::control_ui
+            .in_set(OnUpdate(NotationAssetsStates::Loaded)));
         extra(&mut app);
         app.run();
     }
@@ -165,8 +152,13 @@ impl NotationApp {
         }
     }
 
-    fn setup_window_size(windows: Res<Windows>, mut app_state: ResMut<NotationState>) {
-        let window = windows.primary();
+    fn setup_window_size(
+        window_query: Query<&Window, With<PrimaryWindow>>,
+        mut app_state: ResMut<NotationState>
+    ) {
+        let Ok(window) = window_query.get_single() else {
+            return;
+        };
 
         #[cfg(target_arch = "wasm32")]
         let (width, height) = crate::wasm::bevy_web_fullscreen::get_viewport_size();
@@ -180,7 +172,7 @@ impl NotationApp {
     }
 
     fn on_window_resized(
-        windows: Res<Windows>,
+        window_query: Query<(Entity, &Window), With<PrimaryWindow>>,
         mut evts: EventReader<WindowResized>,
         mut app_state: ResMut<NotationState>,
         mut window_resized_evts: EventWriter<WindowResizedEvent>,
@@ -188,9 +180,11 @@ impl NotationApp {
         if app_state.tab_path.len() > 0 && app_state.tab.is_none() {
             return;
         }
-        let window = windows.primary();
+        let Ok((window_entity, window)) = window_query.get_single() else {
+            return;
+        };
         for evt in evts.iter() {
-            if window.id() != evt.id { continue }
+            if window_entity != evt.window { continue }
             if evt.width as usize != app_state.window_width as usize
                 || evt.height as usize != app_state.window_height as usize
             {
@@ -201,7 +195,7 @@ impl NotationApp {
                 let resized_evt = WindowResizedEvent::new(&app_state);
                 app_state.window_width = evt.width;
                 app_state.window_height = evt.height;
-                app_state.scale_factor_override = window.scale_factor_override();
+                app_state.scale_factor_override = window.resolution.scale_factor_override();
                 window_resized_evts.send(resized_evt);
             }
         }
@@ -209,7 +203,7 @@ impl NotationApp {
     pub fn load_tab<F: Fn(String) -> Option<TabAsset>>(
         commands: &mut Commands,
         time: &Time,
-        windows: &mut Windows,
+        window_query: &mut Query<&mut Window, With<PrimaryWindow>>,
         state: &mut NotationState,
         theme: &mut NotationTheme,
         settings: &NotationSettings,
@@ -271,9 +265,9 @@ impl NotationApp {
                             match Tab::try_parse_arc(tab, settings.add_ready_section, state.bars_range) {
                                 Ok(tab) => {
                                     state.tab = Some(tab.clone());
-                                    if let Some(window) = windows.get_primary_mut() {
+                                    if let Ok(mut window) = window_query.get_single_mut() {
                                         let title = format!("{} - {}", NotationApp::TITLE, state.tab_path);
-                                        window.set_title(title);
+                                        window.title = title;
                                     }
                                     theme._bypass_systems = false;
                                     evts.send(AddTabEvent(tab));

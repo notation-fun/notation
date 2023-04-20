@@ -206,7 +206,8 @@ impl SoundPage {
         _link_evts: &mut EventWriter<EasyLinkEvent>,
         data: &mut SingleStringData,
     ) {
-        data.time += ui.input().unstable_dt.min(1.0 / 60.0) as f64;
+        let delta = ui.input(|i| i.unstable_dt.min(1.0 / 60.0) as f64);
+        data.time += delta;
         ui.ctx().request_repaint();
         let plot = Plot::new("single_string")
             .include_x(-data.size)

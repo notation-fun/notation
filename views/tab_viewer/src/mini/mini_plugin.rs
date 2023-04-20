@@ -15,13 +15,12 @@ pub struct MiniPlugin;
 impl Plugin for MiniPlugin {
     fn build(&self, app: &mut App) {
         MiniMapDoLayoutEvent::setup(app);
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(on_bar_playing_changed)
-                .with_system(MiniMap::do_layout)
-                .with_system(MiniMap::update_debug_str)
-                .with_system(MiniBar::on_layout_changed),
-        );
+        app.add_systems((
+            on_bar_playing_changed,
+            MiniMap::do_layout,
+            MiniMap::update_debug_str,
+            MiniBar::on_layout_changed,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
 }
 

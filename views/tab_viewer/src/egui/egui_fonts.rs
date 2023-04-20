@@ -1,7 +1,7 @@
 use std::sync::RwLock;
 
 use bevy::prelude::*;
-use crate::bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, FontId, Style, TextStyle}, EguiContext};
+use crate::bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, FontId, Style, TextStyle}, EguiContexts};
 
 use crate::prelude::{ExtraAssets, NotationSettings};
 
@@ -109,7 +109,7 @@ pub fn set_style_font_sizes(style: &mut Style, sizes: EguiFontSizes) {
 pub fn setup_egui_fonts<A: ExtraAssets>(
     settings: Res<NotationSettings>,
     extra_assets: Res<A>,
-    mut egui_ctx: ResMut<EguiContext>,
+    mut egui_ctx: EguiContexts,
 ) {
     println!("setup_egui_fonts() ---------------------------------------");
     let fonts = get_font_definitions(EguiFont::get_font());

@@ -26,8 +26,8 @@ impl SingleShape<shapes::SvgPathShape> for FillPath {
             svg_path_string: self.path.clone(),
         }
     }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillMode::color(self.color))
+    fn get_fill(&self) -> Option<Fill>{
+        Some(Fill::color(self.color))
     }
     fn get_transform(&self) -> Transform {
         Transform {
@@ -61,8 +61,8 @@ impl SingleShape<shapes::SvgPathShape> for StrokePath {
             svg_path_string: self.path.clone(),
         }
     }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Stroke(StrokeMode::new(self.color, self.line_width))
+    fn get_stroke(&self) -> Option<Stroke> {
+        Some(Stroke::new(self.color, self.line_width))
     }
     fn get_transform(&self) -> Transform {
         Transform {
@@ -94,8 +94,11 @@ impl DoubleShape<shapes::Circle, shapes::SvgPathShape> for StrokeCirclePath {
     fn get_shape2(&self) -> shapes::SvgPathShape {
         self.path.get_shape()
     }
-    fn get_draw_mode(&self) -> DrawMode {
-        self.path.get_draw_mode()
+    fn get_fill(&self) -> Option<Fill>{
+        self.path.get_fill()
+    }
+    fn get_stroke(&self) -> Option<Stroke> {
+        self.path.get_stroke()
     }
     fn get_transform(&self) -> Transform {
         self.path.get_transform()
@@ -125,8 +128,11 @@ impl DoubleShape<shapes::Rectangle, shapes::SvgPathShape> for StrokeRectanglePat
     fn get_shape2(&self) -> shapes::SvgPathShape {
         self.path.get_shape()
     }
-    fn get_draw_mode(&self) -> DrawMode {
-        self.path.get_draw_mode()
+    fn get_fill(&self) -> Option<Fill>{
+        self.path.get_fill()
+    }
+    fn get_stroke(&self) -> Option<Stroke> {
+        self.path.get_stroke()
     }
     fn get_transform(&self) -> Transform {
         self.path.get_transform()

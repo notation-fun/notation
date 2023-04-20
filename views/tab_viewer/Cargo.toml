@@ -15,7 +15,7 @@ repository = { workspace = true }
 default = [
     "bevy/bevy_gltf",
     "bevy/bevy_winit",
-    "bevy/render",
+    "bevy/bevy_render",
     "bevy/png",
 ]
 

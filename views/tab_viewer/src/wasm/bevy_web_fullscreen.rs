@@ -73,11 +73,11 @@ fn setup_viewport_resize_system(resize_sender: Res<ResizeSender>) {
 }
 
 fn viewport_resize_system(
-    mut windows: ResMut<Windows>,
+    mut window_query: Query<&mut Window, With<PrimaryWindow>>,
     resize_receiver: Res<ResizeReceiver>,
 ) {
     if resize_receiver.receiver.lock().unwrap().try_recv().is_ok() {
-        if let Some(window) = windows.get_primary_mut() {
+        if let Ok(mut window) = window_query.get_single_mut() {
             let size = get_viewport_size();
             web_log!(
                 "bevy_web_fullscreen::viewport_resize_system() {}, {}",

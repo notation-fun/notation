@@ -34,16 +34,15 @@ impl Plugin for PlayPlugin {
         app.add_event::<JumpToBarEvent>();
         app.add_event::<PlayControlEvent>();
         PlayPanelDoLayoutEvent::setup(app);
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(PlayPanel::do_layout)
-                .with_system(PlayPanel::on_play_control_evt)
-                .with_system(PlayButton::on_layout_changed)
-                .with_system(on_bar_playing_changed)
-                .with_system(on_tab_play_state_changed)
-                .with_system(on_play_control_evt)
-                .with_system(on_tab_resized),
-        );
+        app.add_systems((
+            PlayPanel::do_layout,
+            PlayPanel::on_play_control_evt,
+            PlayButton::on_layout_changed,
+            on_bar_playing_changed,
+            on_tab_play_state_changed,
+            on_play_control_evt,
+            on_tab_resized,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
 }
 

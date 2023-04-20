@@ -2,7 +2,7 @@ use notation_bevy_utils::prelude::{BevyUtil, LayoutData};
 use notation_model::prelude::{Syllable, Scale, Key};
 use serde::{Deserialize, Serialize};
 
-use bevy::prelude::*;
+use bevy::{prelude::*, sprite::Anchor};
 
 use crate::prelude::{NotationAssets, NotationSettings, ThemeColors};
 
@@ -65,8 +65,8 @@ impl TabTexts {
             assets.latin_font.clone(),
             self.bar_font_size,
             self.bar_font_color,
-            HorizontalAlign::Right,
-            VerticalAlign::Center,
+            TextAlignment::Right,
+            Anchor::Center,
             self.bar_x,
             self.bar_y,
             3.0,
@@ -110,8 +110,8 @@ impl ChordTexts {
             assets.latin_font.clone(),
             self.bars_font_size,
             self.bars_font_color,
-            HorizontalAlign::Left,
-            VerticalAlign::Top,
+            TextAlignment::Left,
+            Anchor::TopCenter,
             self.bars_x,
             self.bars_y,
             z,
@@ -153,8 +153,8 @@ impl RhythmTexts {
             assets.lyrics_font.clone(),
             self.bar_font_size,
             self.bar_font_color,
-            HorizontalAlign::Center,
-            VerticalAlign::Center,
+            TextAlignment::Center,
+            Anchor::Center,
             0.0,
             self.bar_y,
             3.0,
@@ -196,8 +196,8 @@ impl LyricsTexts {
             assets.lyrics_font.clone(),
             self.word_font_size,
             self.word_font_color,
-            HorizontalAlign::Left,
-            VerticalAlign::Center,
+            TextAlignment::Left,
+            Anchor::Center,
             self.text_x,
             self.text_y,
             self.text_z,
@@ -266,11 +266,11 @@ impl NoteTexts {
             self.syllable_font_size * size_scale,
             self.syllable_font_color,
             if self.horizontal_center {
-                HorizontalAlign::Center
+                TextAlignment::Center
             } else {
-                HorizontalAlign::Left
+                TextAlignment::Left
             },
-            VerticalAlign::Center,
+            Anchor::Center,
             self.text_x * size_scale,
             self.text_y * size_scale,
             self.text_z,
@@ -339,8 +339,8 @@ impl StringsTexts {
             assets.fret_font.clone(),
             self.fret_font_size,
             self.fret_font_color,
-            HorizontalAlign::Left,
-            VerticalAlign::Center,
+            TextAlignment::Left,
+            Anchor::Center,
             self.text_x,
             self.text_y,
             self.text_z,
@@ -376,8 +376,8 @@ impl MiniMapTexts {
             assets.lyrics_font.clone(),
             self.bar_font_size,
             self.bar_font_color,
-            HorizontalAlign::Center,
-            VerticalAlign::Center,
+            TextAlignment::Center,
+            Anchor::Center,
             0.0,
             0.0,
             5.0,
@@ -397,8 +397,8 @@ impl MiniMapTexts {
             assets.latin_font.clone(),
             24.0,
             ThemeColors::hex_linear("000000"),
-            HorizontalAlign::Center,
-            VerticalAlign::Center,
+            TextAlignment::Center,
+            Anchor::Center,
             0.0,
             0.0,
             10.0,

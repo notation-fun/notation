@@ -1,6 +1,7 @@
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 use crate::bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
-use crate::bevy_egui::EguiContext;
+use crate::bevy_egui::EguiContexts;
 use float_eq::float_ne;
 use notation_model::prelude::{JumpToBarEvent, PlayControlEvent};
 
@@ -578,7 +579,10 @@ impl EguiControlPanel {
                 }
             });
     }
-    pub fn window_size_ui(ui: &mut Ui, window: &mut Window) {
+    pub fn window_size_ui(ui: &mut Ui, window_query: &mut Query<&mut Window, With<PrimaryWindow>>) {
+        let Ok(mut window) = window_query.get_single_mut() else {
+            return;
+        };
         CollapsingHeader::new(format!(
             "Window: {} x {}",
             window.width() as i32,
@@ -588,42 +592,36 @@ impl EguiControlPanel {
         .show(ui, |ui| {
             ui.horizontal(|ui| {
                 if ui.button("1280 x 720").clicked() {
-                    Control::set_window_size(window, 1280, 720);
+                    Control::set_window_size(&mut window, 1280, 720);
                 }
                 if ui.button("720 x 1280").clicked() {
-                    Control::set_window_size(window, 720, 1280);
+                    Control::set_window_size(&mut window, 720, 1280);
                 }
             });
             ui.horizontal(|ui| {
                 if ui.button("1440 x 810").clicked() {
-                    Control::set_window_size(window, 1440, 810);
+                    Control::set_window_size(&mut window, 1440, 810);
                 }
                 if ui.button("810 x 1440").clicked() {
-                    Control::set_window_size(window, 810, 1440);
+                    Control::set_window_size(&mut window, 810, 1440);
                 }
             });
             ui.horizontal(|ui| {
                 if ui.button("1920 x 1080").clicked() {
-                    Control::set_window_size(window, 1920, 1080);
+                    Control::set_window_size(&mut window, 1920, 1080);
                 }
                 if ui.button("1080 x 1920").clicked() {
-                    Control::set_window_size(window, 1080, 1920);
+                    Control::set_window_size(&mut window, 1080, 1920);
                 }
             });
         });
-    }
-    pub fn window_sizes_ui(ui: &mut Ui, windows: &mut Windows) {
-        if let Some(window) = windows.get_primary_mut() {
-            Self::window_size_ui(ui, window);
-            ui.separator();
-        }
     }
     pub fn presets_ui(
         ui: &mut Ui,
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
-        windows: &mut Windows,
+        window_query: &mut Query<&mut Window, With<PrimaryWindow>>,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
     ) {
         CollapsingHeader::new(format!(
@@ -634,14 +632,14 @@ impl EguiControlPanel {
         .show(ui, |ui| {
             for preset in Control::ALL_PRESETS.iter() {
                 if ui.button(*preset).clicked() {
-                    Control::set_preset(state, settings, theme, windows, window_resized_evts, *preset);
+                    Control::set_preset(state, settings, theme, window_query, window_resized_evts, *preset);
                 }
             }
         });
     }
     pub fn control_ui(
-        mut egui_ctx: ResMut<EguiContext>,
-        mut windows: ResMut<Windows>,
+        mut egui_ctx: EguiContexts,
+        mut window_query: Query<&mut Window, With<PrimaryWindow>>,
         mut args: ResMut<NotationArgs>,
         mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
@@ -711,7 +709,7 @@ impl EguiControlPanel {
                             );
                             ui.separator();
                             #[cfg(not(target_arch = "wasm32"))]
-                            Self::window_sizes_ui(ui, &mut windows);
+                            Self::window_size_ui(ui, &mut window_query);
                             ui.label("Override Theme");
                             Self::guitar_tab_display_ui(
                                 ui,
@@ -737,7 +735,7 @@ impl EguiControlPanel {
                                 Control::reload_tab(&mut state, &mut theme);
                             }
                             ui.separator();
-                            Self::presets_ui(ui, &mut state, &mut settings, &mut theme, &mut windows, &mut window_resized_evts);
+                            Self::presets_ui(ui, &mut state, &mut settings, &mut theme, &mut window_query, &mut window_resized_evts);
                         });
                     });
                 });

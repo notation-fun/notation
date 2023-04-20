@@ -18,17 +18,28 @@ pub trait Shape {
 
 pub trait SingleShape<T: Geometry>: Shape {
     fn get_shape(&self) -> T;
-    fn get_draw_mode(&self) -> DrawMode;
+    fn get_fill(&self) -> Option<Fill> {
+        None
+    }
+    fn get_stroke(&self) -> Option<Stroke> {
+        None
+    }
     fn get_transform(&self) -> Transform;
     fn _do_create(&self, commands: &mut Commands, entity: Entity) {
         let shape = self.get_shape();
-        let draw_mode = self.get_draw_mode();
-        let transform = self.get_transform();
-        commands
-            .entity(entity)
-            .insert(GeometryBuilder::build_as(
-                &shape, draw_mode, transform,
-            ));
+        let mut op = commands.entity(entity);
+        op
+            .insert(ShapeBundle {
+                path: GeometryBuilder::build_as(&shape),
+                transform: self.get_transform(),
+                ..default()
+            });
+        if let Some(fill) = self.get_fill() {
+            op.insert(fill);
+        }
+        if let Some(stroke) = self.get_stroke() {
+            op.insert(stroke);
+        }
     }
 }
 

@@ -15,7 +15,8 @@ description = "Fun notation - bevy utils"
 default = [
     "bevy/bevy_gltf",
     "bevy/bevy_winit",
-    "bevy/render",
+    "bevy/bevy_render",
+    "bevy/bevy_text",
     "bevy/png",
 ]
 

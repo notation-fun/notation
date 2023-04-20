@@ -2,7 +2,7 @@
 use bevy::prelude::*;
 
 #[cfg(feature = "with_egui")]
-use bevy_egui::egui::color::Hsva;
+use bevy_egui::egui::ecolor::Hsva;
 
 use super::BevyUtil;
 

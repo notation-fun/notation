@@ -59,6 +59,9 @@ pub mod prelude {
     #[cfg(feature = "with_egui")]
     #[doc(hidden)]
     pub use crate::egui::*;
+    #[cfg(feature = "with_egui")]
+    #[doc(hidden)]
+    pub use crate::bevy_egui::EguiContexts;
 }
 
 /// Create a [`Hyperlink`](crate::Hyperlink) to this egui source code file on github.

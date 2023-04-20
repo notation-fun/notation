@@ -10,10 +10,9 @@ pub struct BarPlugin;
 impl Plugin for BarPlugin {
     fn build(&self, app: &mut App) {
         BarViewDoLayoutEvent::setup(app);
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(BarView::do_layout)
-                .with_system(BarView::update_number_text),
-        );
+        app.add_systems((
+            BarView::do_layout,
+            BarView::update_number_text,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
 }

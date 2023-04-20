@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use tab_viewer::bevy_egui::EguiContext;
 
-use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings};
+use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings, EguiContexts};
 use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use tab_viewer::kb::chords_page::ChordsPage;
@@ -80,7 +80,7 @@ impl KbPanel for HelpPanel {
 
 impl HelpPanel {
     pub fn help_ui(
-        mut egui_ctx: ResMut<EguiContext>,
+        mut egui_ctx: EguiContexts,
         texts: Res<Assets<MarkDownAsset>>,
         assets: Res<NotationAssets>,
         mut state: ResMut<NotationState>,

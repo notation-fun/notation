@@ -67,8 +67,9 @@ pub trait ExtraAssets : AssetCollection {
     fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets);
 }
 
-#[derive(Clone, Eq, PartialEq, Debug, Hash)]
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum NotationAssetsStates {
+    #[default]
     Init,
     Loading,
     Loaded,
@@ -78,7 +79,7 @@ impl NotationAssets {
     pub fn setup_keys<A: ExtraAssets>(
         settings: Res<NotationSettings>,
         mut asset_keys: ResMut<DynamicAssets>,
-        mut state: ResMut<State<NotationAssetsStates>>,
+        mut state: ResMut<NextState<NotationAssetsStates>>,
     ) {
         asset_keys.register_asset("syllable_font", Box::new(StandardDynamicAsset::File {
             path: A::get_syllable_font(&settings)
@@ -96,14 +97,13 @@ impl NotationAssets {
             path: A::get_fretboard_image(&settings)
         }));
         A::setup_extra_keys(&settings, &mut asset_keys);
-        state.set(NotationAssetsStates::Loading)
-            .expect("Failed to change state");
+        state.set(NotationAssetsStates::Loading);
     }
     pub fn get_extra<A: Asset>(&self, path: PathBuf) -> Option<Handle<A>> {
         let handle_id = HandleId::from(AssetPath::new(path, None));
         let mut handle = None;
         for asset in self.extra.iter() {
-            if asset.id == handle_id {
+            if asset.id() == handle_id {
                 handle = Some(asset.clone().typed::<A>());
                 break;
             }

@@ -62,26 +62,26 @@ float_eq = "1.0"
 rand = "0.8"
 getrandom = { version = "0.2", features=["wasm-bindgen"] }
 lazy_static = "1.4"
-rfd = "0.10"
+rfd = "0.11"
 unic-langid = { version = "0.9", features = [ "macros" ] }
 clap = { version = "4.0", features = [ "derive" ] }
 
-bevy = { version = "0.9", default-features = false }
-bevy_prototype_lyon = "0.7"
-bevy_easings = "0.9"
-bevy_asset_loader = { version = "0.14", features = [ "standard_dynamic_assets" ]}
+bevy = { version = "0.10", default-features = false }
+bevy_prototype_lyon = "0.8"
+bevy_easings = "0.10"
+bevy_asset_loader = { version = "0.16", features = [ "standard_dynamic_assets" ]}
 
-bevy_egui = { version = "0.17" }
-egui = { version = "0.19" }
+bevy_egui = { version = "0.20" }
+egui = { version = "0.21" }
 
-bevy_kira_audio = { version = "0.11", git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5" }
+bevy_kira_audio = { version = "0.11", git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5_bevy-0.10" }
 
 # [target.'cfg(target_arch = "wasm32")'.workspace.dependencies]
 wasm-bindgen = "0.2.83"
 console_error_panic_hook = "0.1"
-gloo-events = "0.1.1"
+gloo-events = "0.1"
 futures = "0.3"
-web-sys = { version = "0.3.59", features = [
+web-sys = { version = "0.3", features = [
     "Element", "Document", "Window", "Location", "Url", "UrlSearchParams", "console", "TouchEvent",
     #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
     "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",

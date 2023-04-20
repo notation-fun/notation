@@ -36,23 +36,24 @@ impl<'a> DockView<NotationLayout<'a>, MiniMap, TabView> for TabViewer {}
 
 pub struct TabViewerPlugin;
 
+#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
+enum GuitarViewLabel {
+    UpdateHandShapes,
+    UpdateStringStates,
+}
+
 impl Plugin for TabViewerPlugin {
     fn build(&self, app: &mut App) {
         ColorBackground::setup(app);
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(GuitarView::on_layout_changed)
-                .with_system(
-                    GuitarView::update_hand_shape6
-                        .label("GuitarView::update_hand_shape6"),
-                )
-                .with_system(
-                    GuitarView::update_string_state
-                        .label("GuitarView::update_string_state")
-                        .after("GuitarView::update_hand_shape6"),
-                )
-                .with_system(GuitarView::adjust_y_by_barre)
-        );
+        app.add_systems((
+            GuitarView::on_layout_changed,
+            GuitarView::update_hand_shape6
+                    .in_set(GuitarViewLabel::UpdateHandShapes),
+            GuitarView::update_string_state
+                    .in_set(GuitarViewLabel::UpdateStringStates)
+                    .after(GuitarViewLabel::UpdateHandShapes),
+            GuitarView::adjust_y_by_barre,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
 }
 

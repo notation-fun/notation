@@ -1,5 +1,5 @@
 //use bevy::app::StartupStage;
-use bevy::prelude::*;
+use bevy::{prelude::*, window::PrimaryWindow};
 //use crate::bevy_egui::{EguiSettings};
 
 use crate::prelude::{NotationState};
@@ -14,10 +14,10 @@ impl Plugin for NotationUiPlugin {
 
 pub fn update_window_scale_factor(
     //mut _egui_settings: ResMut<EguiSettings>,
-    windows: Res<Windows>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
     mut app_state: ResMut<NotationState>,
 ) {
-    if let Some(window) = windows.get_primary() {
+    if let Ok(window) = window_query.get_single() {
         let scale_factor = window.scale_factor();
         if scale_factor != app_state.window_scale_factor {
             println!(

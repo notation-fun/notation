@@ -1,7 +1,6 @@
 use crate::prelude::{
     MidiHub, MidiSettings, MidiState,
 };
-use bevy::time::FixedTimestep;
 use bevy::prelude::*;
 use notation_model::prelude::{
     PlayClock, JumpToBarEvent, PlayControlEvent, SwitchTabEvent,
@@ -14,7 +13,7 @@ pub struct MidiClock {
 
 pub struct MidiPlugin;
 
-const DO_TICK_TIMESTEP: f64 = 1.0 / 60.0;
+const DO_TICK_TIMESTEP: f32 = 1.0 / 60.0;
 
 impl Plugin for MidiPlugin {
     fn build(&self, app: &mut App) {
@@ -25,11 +24,8 @@ impl Plugin for MidiPlugin {
         app.add_system(on_switch_tab);
         app.add_system(on_jump_to_bar);
         app.add_system(on_play_control_evt);
-        app.add_system_set(
-            SystemSet::new()
-                .with_run_criteria(FixedTimestep::step(DO_TICK_TIMESTEP))
-                .with_system(do_tick),
-        );
+        app.insert_resource(FixedTime::new_from_secs(DO_TICK_TIMESTEP))
+            .add_system(do_tick.in_schedule(CoreSchedule::FixedUpdate));
         #[cfg(not(target_arch = "wasm32"))]
         self.build_native(app);
     }

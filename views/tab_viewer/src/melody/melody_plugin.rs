@@ -12,9 +12,8 @@ pub struct MelodyPlugin;
 
 impl Plugin for MelodyPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(MelodyPlugin::on_add_melody_grid)
+        app.add_system(MelodyPlugin::on_add_melody_grid
+            .in_set(OnUpdate(NotationAssetsStates::Loaded))
         );
 
     }

@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 
 use crate::settings::layout_settings::LayoutMode;
 
@@ -86,18 +87,18 @@ impl Control {
         settings.always_show_fret = !settings.always_show_fret;
         Self::reload_tab(state, theme);
     }
-    pub fn set_window_size(window: &mut Window, width: usize, height: usize) {
-        /* Bevy is using the requested width and height for a check, so if the window got resized after
-         * set_resolution(), set same value won't trigger update, use a quick hack here for now.
-         */
-        if window.requested_width() == width as f32 && window.requested_height() == height as f32 {
-            window.set_resolution(width as f32, (height / 2) as f32);
-        }
-        window.set_resolution(width as f32, height as f32);
+    pub fn set_window_size(
+        window: &mut Window,
+        width: usize, height: usize
+    ) {
+        window.resolution = (width as f32, height as f32).into();
     }
-    pub fn set_primary_window_size(windows: &mut Windows, width: usize, height: usize) {
-        if let Some(window) = windows.get_primary_mut() {
-            Self::set_window_size(window, width, height);
+    pub fn set_primary_window_size(
+        window_query: &mut Query<&mut Window, With<PrimaryWindow>>,
+        width: usize, height: usize
+    ) {
+        if let Ok(mut window) = window_query.get_single_mut() {
+            Self::set_window_size(&mut window, width, height);
         }
     }
     fn set_preset_strings(
@@ -156,14 +157,14 @@ impl Control {
         state: &mut NotationState,
         settings: &mut NotationSettings,
         theme: &mut NotationTheme,
-        windows: &mut Windows,
+        window_query: &mut Query<&mut Window, With<PrimaryWindow>>,
         _window_resized_evts: &mut EventWriter<WindowResizedEvent>,
         preset: &'static str,
     ) {
         state.show_kb = false;
         state.preset = Some(preset.to_owned());
         #[cfg(not(target_arch = "wasm32"))]
-        Self::set_primary_window_size(windows, 1080, 1920);
+        Self::set_primary_window_size(window_query, 1080, 1920);
         match preset {
             Self::PRESET_GUITAR_TAB => {
                 settings.hack_for_screenshot();

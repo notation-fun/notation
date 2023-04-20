@@ -54,28 +54,26 @@ impl Plugin for TabPlugin {
         app.init_asset_loader::<TabAssetLoader>();
         #[cfg(feature = "dsl")]
         app.init_asset_loader::<crate::dsl::get_tab_asset::GetTabAssetLoader>();
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(TabView::do_layout)
-                .with_system(TabContent::do_layout)
-                .with_system(TabHeader::do_layout)
-                .with_system(TabControl::do_layout)
-                .with_system(RhythmView::do_layout)
-                .with_system(RhythmBarData::update_rhythm)
-                .with_system(TabChords::do_layout)
-                .with_system(TabBars::on_resized_pre)
-                .with_system(TabBars::do_layout),
-        );
+        app.add_systems((
+            TabView::do_layout,
+            TabContent::do_layout,
+            TabHeader::do_layout,
+            TabControl::do_layout,
+            RhythmView::do_layout,
+            RhythmBarData::update_rhythm,
+            TabChords::do_layout,
+            TabBars::on_resized_pre,
+            TabBars::do_layout,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
 }
 
 impl TabPlugin {
     pub fn setup_mouse_input(app: &mut App) {
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(Self::on_mouse_clicked)
-                .with_system(Self::on_mouse_dragged)
-        );
+        app.add_systems((
+            Self::on_mouse_clicked,
+            Self::on_mouse_dragged,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
     pub fn jump_to_bar(jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>, bar_props: TabBarProps) {
         jump_to_bar_evts.send(JumpToBarEvent::new(bar_props));

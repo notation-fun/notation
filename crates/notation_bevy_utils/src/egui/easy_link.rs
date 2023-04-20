@@ -54,35 +54,30 @@ impl EasyLink {
         let label = super::link_from_style(&text, &style, ui);
         let response = ui.add(label);
         if response.hovered() {
-            ui.ctx().output().cursor_icon = CursorIcon::PointingHand;
+            ui.ctx().set_cursor_icon(CursorIcon::PointingHand);
         }
         let is_internal = url.starts_with(EasyLink::INTERNAL_LINK_PREFIX);
-        if response.clicked() {
-            let modifiers = ui.ctx().input().modifiers;
-            let new_tab = modifiers.any();
+        let (clicked, new_tab) =
+            if response.clicked() {
+                let modifiers = ui.ctx().input(|i| i.modifiers);
+                (true, modifiers.any())
+            } else if response.middle_clicked() {
+                (true, true)
+            } else {
+                (false, false)
+            };
+        if clicked {
             if is_internal {
                 link_evts.send(EasyLinkEvent{
                     link: url.clone(),
                     new_tab,
                 });
             } else {
-                ui.ctx().output().open_url = Some(egui::output::OpenUrl {
-                    url: url.clone(),
-                    new_tab,
-                });
-            }
-        }
-        if response.middle_clicked() {
-            let new_tab = true;
-            if is_internal {
-                link_evts.send(EasyLinkEvent{
-                    link: url.clone(),
-                    new_tab,
-                });
-            } else {
-                ui.ctx().output().open_url = Some(egui::output::OpenUrl {
-                    url: url.clone(),
-                    new_tab,
+                ui.ctx().output_mut(|o| {
+                    o.open_url = Some(egui::output::OpenUrl {
+                        url: url.clone(),
+                        new_tab,
+                    });
                 });
             }
         }

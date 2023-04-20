@@ -11,11 +11,6 @@ pub struct ShapesPlugin;
 
 impl Plugin for ShapesPlugin {
     fn build(&self, _app: &mut App) {
-        /*
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-        );
-        */
     }
 }
 

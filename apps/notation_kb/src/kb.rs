@@ -1,3 +1,4 @@
+use bevy::window::PrimaryWindow;
 use tab_viewer::bevy::prelude::*;
 //use tab_viewer::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
@@ -15,19 +16,18 @@ impl NotationKnowledgeBase {
         TabPlugin::setup_mouse_input(app);
         #[cfg(target_arch = "wasm32")]
         tab_viewer::prelude::StereoStream::init_streaming(app, true);
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(IndexPanel::hack_settings)
-                .with_system(IndexPanel::check_reload)
-                .with_system(IndexPanel::index_ui)
-                .with_system(IndexPanel::index_audio)
-                .with_system(IndexPanel::handle_link_evts)
-                .with_system(NotationViewer::handle_keyboard_inputs)
-                .with_system(NotationViewer::handle_mouse_inputs)
-                .with_system(NotationViewer::handle_touch_inputs)
-                .with_system(Self::load_tab)
-                .with_system(Self::on_window_resized)
-        );
+        app.add_systems((
+            IndexPanel::hack_settings,
+            IndexPanel::check_reload,
+            IndexPanel::index_ui,
+            IndexPanel::index_audio,
+            IndexPanel::handle_link_evts,
+            NotationViewer::handle_keyboard_inputs,
+            NotationViewer::handle_mouse_inputs,
+            NotationViewer::handle_touch_inputs,
+            Self::load_tab,
+            Self::on_window_resized,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
     pub fn run<A: ExtraAssets>(args: NotationArgs) {
         tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
@@ -40,7 +40,7 @@ impl NotationKnowledgeBase {
     fn load_tab(
         mut commands: Commands,
         time: Res<Time>,
-        mut windows: ResMut<Windows>,
+        mut window_query: Query<&mut Window, With<PrimaryWindow>>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
         mut settings: ResMut<NotationSettings>,
@@ -50,7 +50,7 @@ impl NotationKnowledgeBase {
         index: Res<IndexPanel>,
     ) {
         settings.add_ready_section = false;
-        NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
+        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
             Some(TabAsset::from(index.make_tab(tab_path)))
         })
     }

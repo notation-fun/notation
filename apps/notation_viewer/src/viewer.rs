@@ -1,3 +1,4 @@
+use bevy::window::PrimaryWindow;
 use tab_viewer::bevy::prelude::*;
 use tab_viewer::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
@@ -13,15 +14,14 @@ impl NotationViewer {
     fn extra(app: &mut App) {
         app.init_resource::<HelpPanel>();
         TabPlugin::setup_mouse_input(app);
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(Self::handle_keyboard_inputs)
-                .with_system(Self::handle_mouse_inputs)
-                .with_system(Self::handle_touch_inputs)
-                .with_system(Self::load_tab)
-                .with_system(HelpPanel::help_ui)
-                .with_system(HelpPanel::handle_link_evts)
-        );
+        app.add_systems((
+            Self::handle_keyboard_inputs,
+            Self::handle_mouse_inputs,
+            Self::handle_touch_inputs,
+            Self::load_tab,
+            HelpPanel::help_ui,
+            HelpPanel::handle_link_evts,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
     pub fn run<A: ExtraAssets>(args: NotationArgs) {
         tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
@@ -32,7 +32,7 @@ impl NotationViewer {
     fn load_tab(
         mut commands: Commands,
         time: Res<Time>,
-        mut windows: ResMut<Windows>,
+        mut window_query: Query<&mut Window, With<PrimaryWindow>>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
         settings: Res<NotationSettings>,
@@ -42,13 +42,13 @@ impl NotationViewer {
         asset_server: Res<AssetServer>,
         assets: Res<Assets<TabAsset>>,
     ) {
-        NotationApp::load_tab(&mut commands, &time, &mut windows, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
+        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
             NotationApp::load_tab_from_assets(&asset_server, &assets, tab_path)
         })
     }
     pub fn handle_keyboard_inputs(
         keyboard_input: Res<Input<KeyCode>>,
-        mut egui_ctx: ResMut<EguiContext>,
+        mut egui_ctx: EguiContexts,
         mut app_state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
@@ -139,9 +139,9 @@ impl NotationViewer {
     }
 
     pub fn handle_mouse_inputs(
-        windows: Res<Windows>,
+        window_query: Query<&Window, With<PrimaryWindow>>,
         mouse_input: Res<Input<MouseButton>>,
-        mut egui_ctx: ResMut<EguiContext>,
+        mut egui_ctx: EguiContexts,
         app_state: Res<NotationState>,
         settings: Res<NotationSettings>,
         mut mouse_motion_events: EventReader<MouseMotion>,
@@ -155,11 +155,12 @@ impl NotationViewer {
         if egui_ctx.ctx_mut().is_pointer_over_area() {
             return;
         }
-        let cursor_position = windows.get_primary().and_then(|x| x.cursor_position());
-        if cursor_position.is_none() {
+        let Ok(window) = window_query.get_single() else {
             return;
-        }
-        let cursor_position = cursor_position.unwrap();
+        };
+        let Some(cursor_position) = window.cursor_position() else {
+            return;
+        };
         if mouse_input.just_released(MouseButton::Left) {
             mouse_clicked.send(MouseClickedEvent { cursor_position });
         } else if mouse_input.just_pressed(MouseButton::Right) {
@@ -193,9 +194,9 @@ impl NotationViewer {
     }
 
     pub fn handle_touch_inputs(
-        windows: Res<Windows>,
+        window_query: Query<&Window, With<PrimaryWindow>>,
         touch_input: Res<Touches>,
-        mut egui_ctx: ResMut<EguiContext>,
+        mut egui_ctx: EguiContexts,
         mut app_state: ResMut<NotationState>,
         mut mouse_clicked: EventWriter<MouseClickedEvent>,
         //mut mouse_dragged: EventWriter<MouseDraggedEvent>,
@@ -211,25 +212,25 @@ impl NotationViewer {
             return;
             */
         }
+        let Ok(window) = window_query.get_single() else {
+            return;
+        };
         for (_index, finger) in touch_input.iter().enumerate() {
             if touch_input.just_pressed(finger.id()) {
-                windows
-                    .get_primary()
-                    .map(|w| (w.physical_width() as f32, w.physical_height() as f32))
-                    .map(|(physical_width, physical_height)| {
-                        /* bevy_egui not supporting touch properly yet */
-                        app_state.show_kb = false;
-                        /*
-                        app_state.debug_str = Some(format!(
-                            "Touch: {} {:?}",
-                            _index,
-                            finger.position(),
-                        ));
-                        */
-                        mouse_clicked.send(MouseClickedEvent {
-                            cursor_position: finger.position(),
-                        });
-                    });
+                let physical_width = window.physical_width() as f32;
+                let physical_height = window.physical_height() as f32;
+                /* bevy_egui not supporting touch properly yet */
+                app_state.show_kb = false;
+                /*
+                app_state.debug_str = Some(format!(
+                    "Touch: {} {:?}",
+                    _index,
+                    finger.position(),
+                ));
+                */
+                mouse_clicked.send(MouseClickedEvent {
+                    cursor_position: finger.position(),
+                });
             } else if touch_input.just_released(finger.id()) {
                 app_state.debug_str = None;
             } else {

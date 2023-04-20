@@ -24,8 +24,8 @@ impl SingleShape<shapes::Circle> for FillCircle {
             radius: self.radius,
         }
     }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Fill(FillMode::color(self.color))
+    fn get_fill(&self) -> Option<Fill>{
+        Some(Fill::color(self.color))
     }
     fn get_transform(&self) -> Transform {
         if self.radius <= 0.0 {
@@ -55,8 +55,8 @@ impl SingleShape<shapes::Circle> for StrokeCircle {
             radius: self.radius,
         }
     }
-    fn get_draw_mode(&self) -> DrawMode {
-        DrawMode::Stroke(StrokeMode::new(self.color, self.line_width))
+    fn get_stroke(&self) -> Option<Stroke> {
+        Some(Stroke::new(self.color, self.line_width))
     }
     fn get_transform(&self) -> Transform {
         if self.radius <= 0.0 {
@@ -87,14 +87,14 @@ impl SingleShape<shapes::Circle> for OutlineCircle {
             radius: self.radius,
         }
     }
-    fn get_draw_mode(&self) -> DrawMode {
+    fn get_fill(&self) -> Option<Fill> {
+        Some(Fill::color(self.color))
+    }
+    fn get_stroke(&self) -> Option<Stroke> {
         if self.outline_width > 0.0 {
-            DrawMode::Outlined {
-                fill_mode: FillMode::color(self.color),
-                outline_mode: StrokeMode::new(self.outline_color, self.outline_width),
-            }
+            Some(Stroke::new(self.outline_color, self.outline_width))
         } else {
-            DrawMode::Fill(FillMode::color(self.color))
+            None
         }
     }
     fn get_transform(&self) -> Transform {

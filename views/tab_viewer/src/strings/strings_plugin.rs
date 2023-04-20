@@ -11,12 +11,11 @@ pub struct StringsPlugin;
 
 impl Plugin for StringsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_set(
-            SystemSet::on_update(NotationAssetsStates::Loaded)
-                .with_system(on_add_fretted_grid6)
-                .with_system(on_add_fretted_grid4)
-                .with_system(super::pick_systems::on_entry_playing_changed),
-        );
+        app.add_systems((
+            on_add_fretted_grid6,
+            on_add_fretted_grid4,
+            super::pick_systems::on_entry_playing_changed,
+        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
     }
 }
 
