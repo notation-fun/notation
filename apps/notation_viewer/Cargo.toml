@@ -1,8 +1,13 @@
 [package]
 name = "notation_viewer"
+publish = false
 version = "0.6.0"
-edition = "2021"
 description = "Notation Viewer"
+
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
 
 [package.metadata.bundle]
 identifier = "fun.notation.viewer"
@@ -22,5 +27,5 @@ native = [
 [dependencies]
 tab_viewer = { path = "../../views/tab_viewer" }
 
-bevy = { version = "0.9", default-features = false }
-bevy_asset_loader = { version = "0.14", features = [ "standard_dynamic_assets" ]}
+bevy = { workspace = true }
+bevy_asset_loader = { workspace = true }

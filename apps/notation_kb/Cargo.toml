@@ -1,8 +1,13 @@
 [package]
 name = "notation_kb"
+publish = false
 version = "0.6.0"
-edition = "2021"
 description = "Fun Notation Knowledge Base"
+
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
 
 [package.metadata.bundle]
 identifier = "fun.notation.kb"
@@ -23,6 +28,6 @@ native = [
 tab_viewer = { path = "../../views/tab_viewer" }
 notation_viewer = { path = "../notation_viewer" }
 
-bevy = { version = "0.9", default-features = false }
-bevy_asset_loader = { version = "0.14", features = [ "standard_dynamic_assets" ]}
+bevy = { workspace = true }
+bevy_asset_loader = { workspace = true }
 

@@ -1,13 +1,13 @@
 [package]
 name = "tab_viewer"
-version = "0.6.0"
-edition = "2021"
-license = "MIT OR Apache-2.0"
-homepage = "https://www.notation.fun"
-repository = "https://github.com/notation-fun/notation"
+publish = false
+version = "0.0.0"
 description = "Fun notation view - tab viewer"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
 
 [lib]
 
@@ -37,44 +37,39 @@ with_egui = [
 ]
 
 [dependencies]
-notation_bevy_utils = { path = "../../crates/notation_bevy_utils" }
+notation_bevy_utils = { workspace = true }
 
-notation_model = { path = "../../crates/notation_model" }
+notation_model = { workspace = true }
 
-notation_midi = { path = "../../crates/notation_midi", optional = true }
-notation_dsl = { path = "../../crates/notation_dsl", optional = true }
+notation_midi = { workspace = true, optional = true }
+notation_dsl = { workspace = true, optional = true }
 
-serde = { version = "1.0", features = [ "derive" ] }
-# https://github.com/serde-rs/serde/issues/1937
-serde_arrays = "0.1"
-anyhow = "1.0"
-thiserror = "1.0"
-ron = "0.8"
-float_eq = "1.0"
+serde = { workspace = true }
+serde_arrays = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+ron = { workspace = true }
+float_eq = { workspace = true }
 
-bevy = { version = "0.9", default-features = false }
+bevy = { workspace = true }
 
-rand = "0.8"
-getrandom = { version = "0.2", features = [ "wasm-bindgen" ] }
+rand = { workspace = true }
+getrandom = { workspace = true }
 
-bevy_prototype_lyon = "0.7"
-bevy_easings = "0.9"
+bevy_prototype_lyon = { workspace = true }
+bevy_easings = { workspace = true }
 
-bevy_asset_loader = { version = "0.14", features = [ "standard_dynamic_assets" ]}
+bevy_asset_loader = { workspace = true }
 
-rfd = "0.10"
-lazy_static = "1.4"
-unic-langid = { version = "0.9", features = [ "macros" ] }
+rfd = { workspace = true }
+lazy_static = { workspace = true }
+unic-langid = { workspace = true }
 
-clap = { version = "4.0", features = [ "derive" ], optional = true }
+clap = { workspace = true, optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen = "0.2.83"
-console_error_panic_hook = "0.1"
-gloo-events = "0.1.1"
-futures = "0.3"
-web-sys = { version = "0.3.59", features = [
-    "Element", "Document", "Window", "Location", "Url", "UrlSearchParams", "console", "TouchEvent",
-    #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
-    "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",
-]}
+wasm-bindgen = { workspace = true }
+console_error_panic_hook = { workspace = true }
+gloo-events = { workspace = true }
+futures = { workspace = true }
+web-sys = { workspace = true }

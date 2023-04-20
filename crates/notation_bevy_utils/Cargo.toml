@@ -25,20 +25,20 @@ with_egui = [
 ]
 
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-# https://github.com/serde-rs/serde/issues/1937
-serde_arrays = "0.1"
-anyhow = "1.0"
-ron = "0.8"
-float_eq = "1.0"
+bevy = { workspace = true }
+bevy_prototype_lyon = { workspace = true }
+bevy_easings = { workspace = true }
 
-bevy = { version = "0.9", default-features = false }
+bevy_egui = { workspace = true, optional = true }
+egui = { workspace = true, optional = true }
 
-rand = "0.8"
-getrandom = { version = "0.2", features=["wasm-bindgen"] }
+serde = { workspace = true }
+serde_arrays = { workspace = true }
+ron = { workspace = true }
+anyhow = { workspace = true }
 
-bevy_prototype_lyon = "0.7"
-bevy_easings = "0.9"
+float_eq = { workspace = true }
 
-bevy_egui = { version = "0.17", optional = true }
-egui = { version = "0.19", optional = true }
+rand = { workspace = true }
+getrandom = { workspace = true }
+

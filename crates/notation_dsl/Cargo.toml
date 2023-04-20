@@ -1,22 +1,22 @@
 [package]
 name = "notation_dsl"
 version = "0.6.0"
-edition = "2021"
-license = "MIT OR Apache-2.0"
-homepage = "https://www.notation.fun"
-repository = "https://github.com/notation-fun/notation"
 description = "Fun notation - DSL to create notation files"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
 
 [lib]
 
 [dependencies]
-notation_proto = { version = "0.6.0", path = "../notation_proto" }
+notation_proto = { workspace = true }
+
+fehler = { workspace = true }
+anyhow = { workspace = true }
+lazy_static = { workspace = true }
 
 syn = { version = "1.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
-fehler = "1.0"
-anyhow = "1.0"
-lazy_static = "1.4.0"

@@ -1,20 +1,20 @@
 [package]
 name = "notation_tab"
 version = "0.6.0"
-edition = "2021"
-license = "MIT OR Apache-2.0"
-homepage = "https://www.notation.fun"
-repository = "https://github.com/notation-fun/notation"
 description = "Fun notation - tab tools"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+
 [lib]
 
 [dependencies]
-notation_proto = { version = "0.6.0", path = "../notation_proto" }
-notation_dsl  = { version = "0.6.0", path = "../notation_dsl" }
-notation_macro  = { version = "0.6.0", path = "../notation_macro" }
+notation_proto = { workspace = true }
+notation_dsl  = { workspace = true }
+notation_macro  = { workspace = true }
 
-serde = "1.0"
-ron = "0.8"
-anyhow = "1.0"
+serde = { workspace = true }
+ron = { workspace = true }
+anyhow = { workspace = true }

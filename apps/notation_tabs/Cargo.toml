@@ -1,9 +1,13 @@
 [package]
 name = "notation_tabs"
+publish = false
 version = "0.4.0"
-edition = "2021"
+description = "Fun notation - tabs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
 
 [dependencies]
-notation_tab = { path = "../../crates/notation_tab" }
+notation_tab = { workspace = true }

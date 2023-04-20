@@ -1,4 +1,11 @@
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace.package]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+homepage = "https://www.notation.fun"
+repository = "https://github.com/notation-fun/notation"
+
 [workspace]
 resolver = "2"
 members = [
@@ -15,7 +22,6 @@ members = [
     "apps/notation_kb",
     "apps/notation_tabs",
     "apps/notation_viewer",
-    "apps/frets",
 ]
 
 # https://rustwasm.github.io/book/reference/code-size.html
@@ -29,3 +35,54 @@ opt-level = 1
 
 [patch.crates-io]
 # bevy_kira_audio = { git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5" }
+
+[workspace.dependencies]
+notation_core = { path = "crates/notation_core", version = "0.6.0" }
+notation_fretted = { path = "crates/notation_fretted", version = "0.6.0" }
+notation_guitar = { path = "crates/notation_guitar", version = "0.6.0" }
+notation_proto = { path = "crates/notation_proto", version = "0.6.0" }
+notation_model = { path = "crates/notation_model", version = "0.6.0" }
+notation_dsl = { path = "crates/notation_dsl", version = "0.6.0" }
+notation_macro = { path = "crates/notation_macro", version = "0.6.0" }
+notation_tab = { path = "crates/notation_tab", version = "0.6.0" }
+notation_audio = { path = "crates/notation_audio", version = "0.6.0" }
+notation_midi = { path = "crates/notation_midi", version = "0.6.0" }
+notation_bevy_utils = { path = "crates/notation_bevy_utils", version = "0.6.0" }
+
+fehler = "1.0"
+serde = { version = "1.0", features = ["derive", "alloc"] }
+# https://github.com/serde-rs/serde/issues/1937
+serde_arrays = "0.1"
+
+uuid = { version = "1.2", features = ["serde", "v4"] }
+ron = "0.8"
+thiserror = "1.0"
+anyhow = "1.0"
+float_eq = "1.0"
+rand = "0.8"
+getrandom = { version = "0.2", features=["wasm-bindgen"] }
+lazy_static = "1.4"
+rfd = "0.10"
+unic-langid = { version = "0.9", features = [ "macros" ] }
+clap = { version = "4.0", features = [ "derive" ] }
+
+bevy = { version = "0.9", default-features = false }
+bevy_prototype_lyon = "0.7"
+bevy_easings = "0.9"
+bevy_asset_loader = { version = "0.14", features = [ "standard_dynamic_assets" ]}
+
+bevy_egui = { version = "0.17" }
+egui = { version = "0.19" }
+
+bevy_kira_audio = { version = "0.11", git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5" }
+
+# [target.'cfg(target_arch = "wasm32")'.workspace.dependencies]
+wasm-bindgen = "0.2.83"
+console_error_panic_hook = "0.1"
+gloo-events = "0.1.1"
+futures = "0.3"
+web-sys = { version = "0.3.59", features = [
+    "Element", "Document", "Window", "Location", "Url", "UrlSearchParams", "console", "TouchEvent",
+    #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
+    "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",
+]}

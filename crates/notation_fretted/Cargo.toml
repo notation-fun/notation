@@ -1,20 +1,17 @@
 [package]
 name = "notation_fretted"
 version = "0.6.0"
-edition = "2021"
-license = "MIT OR Apache-2.0"
-homepage = "https://www.notation.fun"
-repository = "https://github.com/notation-fun/notation"
 description = "Fun notation - definition for fretted instruments"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
 
 [lib]
 
 [dependencies]
-notation_core = { version = "0.6.0", path = "../notation_core" }
+notation_core = { workspace = true }
 
-serde = { version = "1.0", features = ["derive"] }
-
-# https://github.com/serde-rs/serde/issues/1937
-serde_arrays = "0.1"
+serde = { workspace = true }
+serde_arrays = { workspace = true }
