@@ -38,6 +38,7 @@
           vulkan-loader
           wasm-bindgen-cli
           libxkbcommon
+          wayland
         ];
       in with pkgs; {
         devShell = mkShell {
