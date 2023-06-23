@@ -25,7 +25,7 @@
           inherit system overlays;
         };
         buildInputs = with pkgs; [
-          rust-analyzer-nightly
+          #rust-analyzer-nightly
           clang
           pkg-config
           gtk3
