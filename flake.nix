@@ -37,6 +37,7 @@
           alsa-lib
           vulkan-loader
           wasm-bindgen-cli
+          libxkbcommon
         ];
       in with pkgs; {
         devShell = mkShell {

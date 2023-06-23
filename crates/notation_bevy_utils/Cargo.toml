@@ -18,6 +18,7 @@ default = [
     "bevy/bevy_render",
     "bevy/bevy_text",
     "bevy/png",
+    "bevy/wayland",
 ]
 
 with_egui = [

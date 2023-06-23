@@ -17,6 +17,7 @@ default = [
     "bevy/bevy_winit",
     "bevy/bevy_render",
     "bevy/png",
+    "bevy/wayland",
 ]
 
 native = [
