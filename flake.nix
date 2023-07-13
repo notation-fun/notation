@@ -14,20 +14,26 @@
 
   outputs = { self, fenix, flake-utils, naersk, nixpkgs }:
     flake-utils.lib.eachDefaultSystem (system:
-      /*
-      defaultPackage = (naersk.lib.${system}.override {
-        inherit (fenix.packages.${system}.minimal) cargo rustc;
-      }).buildPackage { src = ./.; };
-       */
       let
-        overlays = [ fenix.overlay ];
+        overlays = [ fenix.overlays.default ];
         pkgs = import nixpkgs {
           inherit system overlays;
         };
+        toolchain = fenix.packages.${system}.combine [
+          fenix.packages.${system}.stable.rustc
+          fenix.packages.${system}.stable.cargo
+          fenix.packages.${system}.targets.wasm32-unknown-unknown.stable.rust-std
+        ];
         buildInputs = with pkgs; [
-          #rust-analyzer-nightly
-          clang
+          # rust toolchain
+          toolchain
+          # rust native lib
           pkg-config
+          openssl
+          # utility
+          just
+          binaryen
+          # bevy
           gtk3
           xorg.libX11
           xorg.libxcb
@@ -36,7 +42,6 @@
           xorg.libXi
           alsa-lib
           vulkan-loader
-          wasm-bindgen-cli
           libxkbcommon
           wayland
         ];

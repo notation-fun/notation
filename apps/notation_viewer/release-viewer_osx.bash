@@ -2,8 +2,6 @@
 
 cd `dirname $(readlink -f "$0")`
 
-# cargo make --profile release release-native
-
 cargo build --release --features native
 cargo bundle --release --features native
 

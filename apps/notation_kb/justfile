@@ -4,8 +4,29 @@ run-native:
 run-native-cn:
     cargo run --features native -- --lang zh-CN
 
+install-wasm-bindgen-cli:
+    cargo install --force wasm-bindgen-cli --version=0.2.87
+
+install-basic-http-server:
+    cargo install basic-http-server
+
+build-web:
+    cargo build --target wasm32-unknown-unknown
+    wasm-bindgen --out-dir dist --out-name notation_kb --target web --no-typescript ../../target/wasm32-unknown-unknown/debug/notation_kb.wasm
+
 run-web:
-    cargo make serve
+    just build-web
+    basic-http-server -x -a 0.0.0.0:4001
 
 release-web:
-    cargo make --profile release release-web
+    #!/usr/bin/env bash
+    cargo build --target wasm32-unknown-unknown --release
+    wasm-bindgen --out-dir dist --out-name notation_kb --target web --no-typescript ../../target/wasm32-unknown-unknown/release/notation_kb.wasm
+    wasm-opt -Os -o /tmp/notation_kb_bg.wasm ./dist/notation_kb_bg.wasm
+    DATE=$(date -u +%Y-%m-%d)
+    HASH=$(md5sum /tmp/notation_kb_bg.wasm | cut -d ' ' -f1)
+    echo $HASH
+    mv -v /tmp/notation_kb_bg.wasm ../../public/notation/notation_kb_bg_${DATE}_${HASH}.wasm
+
+release-windows:
+    cargo build --release --features native

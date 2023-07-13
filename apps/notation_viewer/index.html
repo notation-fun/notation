@@ -116,8 +116,8 @@
     </script>
   </head>
   <script type="module">
-    import init from './target/wasm.js'
-    init()
+    import init from './dist/notation_viewer.js'
+    init('./dist/notation_viewer_bg.wasm')
   </script>
   <div id="audio_enabler" onclick="enable_audio()" touchend="enable_audio()">
     Click to enable audio playback.

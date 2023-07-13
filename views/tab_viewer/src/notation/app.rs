@@ -58,7 +58,16 @@ impl NotationApp {
         app.insert_resource(args);
 
         app.insert_resource(Msaa::Sample4);
-        app.add_plugins(DefaultPlugins);
+        
+        // https://github.com/ostwilkens/bevy_web_fullscreen/pull/9
+        app.add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                present_mode: bevy::window::PresentMode::AutoNoVsync,
+                fit_canvas_to_parent: true,
+                ..default()
+            }),
+            ..default()
+        }));
         app.insert_resource(ClearColor(UiColors::default().app_background));
         app.add_plugin(bevy_easings::EasingsPlugin);
 
@@ -84,9 +93,6 @@ impl NotationApp {
         // When building for WASM, print panics to the browser console
         #[cfg(target_arch = "wasm32")]
         console_error_panic_hook::set_once();
-
-        #[cfg(target_arch = "wasm32")]
-        app.add_plugin(crate::wasm::bevy_web_fullscreen::FullViewportPlugin);
 
         #[cfg(feature = "with_egui")]
         app.add_plugin(crate::bevy_egui::EguiPlugin);
@@ -160,10 +166,6 @@ impl NotationApp {
             return;
         };
 
-        #[cfg(target_arch = "wasm32")]
-        let (width, height) = crate::wasm::bevy_web_fullscreen::get_viewport_size();
-
-        #[cfg(not(target_arch = "wasm32"))]
         let (width, height) = (window.width(), window.height());
 
         println!("setup_window_size(): {} {} ", width, height);
