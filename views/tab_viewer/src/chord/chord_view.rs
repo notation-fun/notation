@@ -1,9 +1,9 @@
 use std::fmt::Display;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{
-    BevyUtil, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle,
+use edger_bevy_app::prelude::{
+    entity, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle,
 };
 use notation_model::prelude::TabChord;
 
@@ -78,7 +78,7 @@ impl ChordView {
         entity: Entity,
         chord: &TabChord,
     ) -> Entity {
-        let chord_entity = BevyUtil::spawn_child_bundle(
+        let chord_entity = entity::spawn_child_bundle(
             commands,
             entity,
             ViewBundle::from(ChordView {

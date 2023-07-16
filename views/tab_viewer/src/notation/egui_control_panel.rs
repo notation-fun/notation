@@ -1,9 +1,9 @@
-use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
-use crate::bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
-use crate::bevy_egui::EguiContexts;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy::window::PrimaryWindow;
+use edger_bevy_app::bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
+use edger_bevy_app::bevy_egui::EguiContexts;
 use float_eq::float_ne;
-use notation_model::prelude::{JumpToBarEvent, PlayControlEvent};
+use notation_midi::prelude::{JumpToBarEvent, PlayControlEvent};
 
 use crate::settings::layout_settings::{GridAlignMode, LayoutMode};
 use super::control::Control;

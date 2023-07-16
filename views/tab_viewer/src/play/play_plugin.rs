@@ -1,9 +1,10 @@
 use std::sync::Arc;
 
-use notation_bevy_utils::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp, SingleData};
-use notation_model::prelude::{PlayControlEvent, LaneEntry, PlayState, PlayingState, Position, Tab, TickResult, SwitchTabEvent, JumpToBarEvent};
+use edger_bevy_app::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp, SingleData};
+use notation_model::prelude::{LaneEntry, Position, Tab};
+use notation_midi::prelude::{PlayControlEvent, PlayState, PlayingState, SwitchTabEvent, JumpToBarEvent, TickResult};
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use crate::bar::bar_beat::BarBeatData;
 use crate::bar::bar_view::BarView;
@@ -34,7 +35,7 @@ impl Plugin for PlayPlugin {
         app.add_event::<JumpToBarEvent>();
         app.add_event::<PlayControlEvent>();
         PlayPanelDoLayoutEvent::setup(app);
-        app.add_systems((
+        app.add_systems(Update, (
             PlayPanel::do_layout,
             PlayPanel::on_play_control_evt,
             PlayButton::on_layout_changed,
@@ -42,7 +43,7 @@ impl Plugin for PlayPlugin {
             on_tab_play_state_changed,
             on_play_control_evt,
             on_tab_resized,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
 }
 

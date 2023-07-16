@@ -1,5 +1,3 @@
-#[macro_use]
-
 pub extern crate lazy_static;
 pub extern crate bevy_asset_loader;
 
@@ -11,10 +9,7 @@ pub use notation_dsl;
 #[cfg(feature = "midi")]
 pub use notation_midi;
 
-pub use {bevy, bevy_prototype_lyon};
-
-#[cfg(feature = "with_egui")]
-pub use notation_bevy_utils::bevy_egui;
+pub use edger_bevy_app;
 
 pub mod chord;
 pub mod entry;
@@ -62,7 +57,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use notation_model::prelude::*;
     #[doc(hidden)]
-    pub use notation_bevy_utils::prelude::*;
+    pub use edger_bevy_app::prelude::*;
     #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]

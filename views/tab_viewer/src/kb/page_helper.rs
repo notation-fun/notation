@@ -1,7 +1,6 @@
-use crate::bevy_egui::egui::color_picker::show_color;
-use crate::bevy_egui::egui::{Ui};
-use notation_bevy_utils::egui::{label_from_style, EasyMarkStyle};
-use notation_bevy_utils::prelude::{BevyUtil};
+use edger_bevy_app::egui::color_picker::show_color;
+use edger_bevy_app::egui::{Ui};
+use edger_bevy_app::prelude::{color_to_hsva, label_from_style, EasyMarkStyle};
 use notation_model::prelude::{Interval, Key, Scale, Semitones, Syllable};
 
 use crate::prelude::NotationTheme;
@@ -33,7 +32,7 @@ impl PageHelper {
         });
     }
     pub fn add_syllable_color(ui: &mut Ui, theme: &NotationTheme, syllable: &Syllable) {
-        let color = BevyUtil::rgb_to_egui(&theme.colors.of_syllable(syllable.clone()));
+        let color = color_to_hsva(&theme.colors.of_syllable(syllable.clone()));
         show_color(ui, color, ui.spacing().interact_size);
     }
     pub fn add_syllable(

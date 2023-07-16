@@ -1,6 +1,8 @@
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, ShapeOp, StrokeLine};
-use notation_model::prelude::{LyricWord, PlayingState};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{offscreen, ShapeOp, StrokeLine};
+use notation_model::prelude::LyricWord;
+use notation_midi::prelude::PlayingState;
+
 use std::fmt::Display;
 
 use crate::prelude::{EntryData, NotationTheme, SingleBundle};
@@ -41,7 +43,7 @@ impl ShapeOp<NotationTheme, StrokeLine> for WordTextData {
             .line_height
             .of_state(&self.value.playing_state);
         let offset = if self.value.bar_size <= 0.0 {
-            BevyUtil::offscreen_offset()
+            offscreen::offset()
         } else {
             let x =
                 self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.in_bar_pos.0;

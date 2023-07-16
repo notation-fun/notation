@@ -1,9 +1,11 @@
 use notation_model::prelude::{
-    Chord, IntervalQuality, Octave, PlayingState, Semitones, Signature, Syllable,
+    Chord, IntervalQuality, Octave, Semitones, Signature, Syllable,
 };
+use notation_midi::prelude::PlayingState;
+
 use serde::{Deserialize, Serialize};
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 #[derive(Copy, Clone, PartialEq, Serialize, Deserialize, Debug)]
 pub struct PlayingColors {

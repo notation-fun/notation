@@ -1,7 +1,7 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use crate::prelude::NotationTheme;
-use notation_bevy_utils::prelude::ShapeOp;
+use edger_bevy_app::prelude::ShapeOp;
 use notation_model::prelude::BarLane;
 
 use super::single_string::{SingleStringData, SingleStringValue};

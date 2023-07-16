@@ -1,6 +1,6 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{DoLayoutEvent, ShapeOp};
+use edger_bevy_app::prelude::{DoLayoutEvent, ShapeOp};
 
 use crate::prelude::{BarPlaying, NotationAssetsStates, NotationTheme};
 use crate::prelude::NotationLayout;
@@ -15,12 +15,12 @@ pub struct MiniPlugin;
 impl Plugin for MiniPlugin {
     fn build(&self, app: &mut App) {
         MiniMapDoLayoutEvent::setup(app);
-        app.add_systems((
+        app.add_systems(Update, (
             on_bar_playing_changed,
             MiniMap::do_layout,
             MiniMap::update_debug_str,
             MiniBar::on_layout_changed,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
 }
 

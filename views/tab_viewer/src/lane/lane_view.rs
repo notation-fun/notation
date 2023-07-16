@@ -1,16 +1,16 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use crate::entry::entry_plugin;
 use crate::harmony::harmony_plugin::HarmonyPlugin;
 use crate::lyrics::lyrics_plugin::LyricsPlugin;
 use crate::prelude::{
-    BevyUtil, LaneBundle, LaneLayoutData, MelodyPlugin, NotationAssets, NotationSettings,
+    entity, LaneBundle, LaneLayoutData, MelodyPlugin, NotationAssets, NotationSettings,
     NotationTheme, ThemeColors,
 };
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
 use crate::prelude::NotationLayout;
-use notation_bevy_utils::prelude::{
+use edger_bevy_app::prelude::{
     ColorBackground, LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle,
 };
 use notation_model::prelude::{BarLane, LaneKind, TabBar};
@@ -45,7 +45,7 @@ impl LaneView {
     ) {
         if let Some(lane) = &lane_layout.lane {
             let lane_bundle = LaneBundle::new(&lane, lane_layout.clone());
-            let lane_entity = BevyUtil::spawn_child_bundle(commands, bar_entity, lane_bundle);
+            let lane_entity = entity::spawn_child_bundle(commands, bar_entity, lane_bundle);
             if Self::setup_lane(commands, settings, lane_layout, lane, lane_entity) {
                 if Self::DEBUGGING_LANE_LAYOUT {
                     let color = match lane_layout.lane_kind {
@@ -79,7 +79,7 @@ impl LaneView {
             }
         } else {
             let view_bundle = ViewBundle::from(lane_layout.clone());
-            BevyUtil::spawn_child_bundle(commands, bar_entity, view_bundle);
+            entity::spawn_child_bundle(commands, bar_entity, view_bundle);
         }
     }
     pub fn setup_lane(

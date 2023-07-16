@@ -1,5 +1,5 @@
-use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy::window::PrimaryWindow;
 
 use crate::settings::layout_settings::LayoutMode;
 

@@ -1,6 +1,6 @@
-use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, FillRectangle, LayoutSize, ShapeOp};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy_prototype_lyon::prelude::*;
+use edger_bevy_app::prelude::{offscreen, FillRectangle, LayoutSize, ShapeOp};
 
 use crate::prelude::NotationTheme;
 
@@ -27,7 +27,7 @@ impl ShapeOp<NotationTheme, FillRectangle> for GuitarCapoData {
         let height = self.guitar_size.height * theme.guitar.capo_height_factor;
         let color = theme.colors.strings.capo;
         let offset = if self.capo == 0 || self.guitar_size.width <= 0.0 {
-            BevyUtil::offscreen_offset()
+            offscreen::offset()
         } else {
             let finger_radius = theme.guitar.string_x_factor * self.guitar_size.width / 2.0;
             let y = theme.guitar.calc_fret_y(self.capo, self.guitar_size.height) + height * 0.5

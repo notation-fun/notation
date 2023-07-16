@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
@@ -6,8 +6,8 @@ use std::sync::Arc;
 use crate::prelude::{
     NotationState, NotationAssets, NotationLayout, NotationSettings, NotationTheme,
 };
-use notation_bevy_utils::prelude::{
-    BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
+use edger_bevy_app::prelude::{
+    entity, text, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
 
@@ -78,7 +78,7 @@ impl MiniMap {
         tab: &Arc<Tab>,
     ) -> Entity {
         let minimap = MiniMap::new(tab.clone());
-        let map_entity = BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
+        let map_entity = entity::spawn_child_bundle(commands, entity, ViewBundle::from(minimap));
         if settings.hide_mini_map {
             return map_entity;
         }
@@ -130,7 +130,7 @@ impl MiniMap {
                 } else {
                     "".to_string()
                 };
-                BevyUtil::set_text_value(&mut text, str);
+                text::set_value(&mut text, str);
             }
         }
     }

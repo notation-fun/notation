@@ -1,12 +1,13 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{
-    BevyUtil, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{
+    entity, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
-use notation_model::prelude::{PlayControlEvent, PlayState, Tab};
+use notation_model::prelude::Tab;
+use notation_midi::prelude::{PlayControlEvent, PlayState};
 
 use crate::prelude::{NotationState, NotationAssets, NotationSettings, NotationTheme};
 use crate::prelude::NotationLayout;
@@ -86,7 +87,7 @@ impl PlayPanel {
         tab: &Arc<Tab>,
     ) -> Entity {
         let panel = PlayPanel::default();
-        let panel_entity = BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(panel));
+        let panel_entity = entity::spawn_child_bundle(commands, entity, ViewBundle::from(panel));
         ColorBackground::spawn(
             commands,
             panel_entity,

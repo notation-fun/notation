@@ -2,10 +2,10 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 use std::sync::{Arc, RwLock};
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{
-    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery,
+use edger_bevy_app::prelude::{
+    entity, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery,
     LayoutSize, View, ViewBundle, ViewQuery,
 };
 use notation_model::lane_kind::LaneKind;
@@ -265,7 +265,7 @@ impl TabBars {
         let bar_layouts = TabBars::calc_bar_layouts(&theme, &settings, &tab);
         let view_bundle = ViewBundle::from(TabBars::new(tab.clone(), Arc::new(bar_layouts)));
         let view = view_bundle.view.clone();
-        let bars_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
+        let bars_entity = entity::spawn_child_bundle(commands, entity, view_bundle);
         PlayPlugin::spawn_indicators(commands, theme, bars_entity, tab);
         let bar_bundles: Vec<(&Arc<TabBar>, &BarLayoutData)> = view
             .tab

@@ -1,9 +1,10 @@
-use bevy::prelude::*;
-use notation_model::prelude::{Tab, SwitchTabEvent};
+use edger_bevy_app::bevy_prelude::*;
+use notation_model::prelude::Tab;
+use notation_midi::prelude::SwitchTabEvent;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use notation_bevy_utils::prelude::{
+use edger_bevy_app::prelude::{
     ColorBackground, DockView, LayoutQuery, View, ViewBundle, ViewQuery, LayoutConstraint, ViewRootQuery, ViewRootAddedQuery,
 };
 
@@ -45,7 +46,7 @@ enum GuitarViewLabel {
 impl Plugin for TabViewerPlugin {
     fn build(&self, app: &mut App) {
         ColorBackground::setup(app);
-        app.add_systems((
+        app.add_systems(Update, (
             GuitarView::on_layout_changed,
             GuitarView::update_hand_shape6
                     .in_set(GuitarViewLabel::UpdateHandShapes),
@@ -53,7 +54,7 @@ impl Plugin for TabViewerPlugin {
                     .in_set(GuitarViewLabel::UpdateStringStates)
                     .after(GuitarViewLabel::UpdateHandShapes),
             GuitarView::adjust_y_by_barre,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
 }
 

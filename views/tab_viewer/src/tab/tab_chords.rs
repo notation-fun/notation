@@ -1,10 +1,10 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{
-    BevyUtil, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutQuery,
+use edger_bevy_app::prelude::{
+    entity, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutConstraint, LayoutQuery,
     LayoutSize, View, ViewBundle, ViewQuery,
 };
 use notation_model::prelude::{Tab, TabChord};
@@ -87,7 +87,7 @@ impl TabChords {
     ) -> Entity {
         let view_bundle = ViewBundle::from(TabChords::new(tab.clone(), chords.clone()));
         let view = view_bundle.view.clone();
-        let chords_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
+        let chords_entity = entity::spawn_child_bundle(commands, entity, view_bundle);
         for chord_view in view.chords.iter() {
             ChordView::spawn(commands, assets, theme, chords_entity, chord_view);
         }

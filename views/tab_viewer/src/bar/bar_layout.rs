@@ -1,6 +1,6 @@
 use std::fmt::Display;
 use std::sync::Arc;
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use notation_model::prelude::TabBarProps;
 

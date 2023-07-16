@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use super::egui_font_loader::EguiFontAssetLoader;
 

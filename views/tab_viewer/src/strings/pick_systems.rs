@@ -1,6 +1,6 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{BevyUtil, ShapeOp};
+use edger_bevy_app::prelude::{text, ShapeOp};
 use notation_model::prelude::LaneEntry;
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme, ToneBundle, ToneMode};
@@ -32,7 +32,7 @@ pub fn on_entry_playing_changed(
                 data.update(&mut commands, &theme, entity);
                 for child in note_children.iter() {
                     if let Ok(mut text) = font_query.get_mut(*child) {
-                        BevyUtil::set_text_color(&mut text, data.calc_fret_color(&theme));
+                        text::set_color(&mut text, data.calc_fret_color(&theme));
                     }
                 }
             } else if let Ok((entity, mut data)) = note_query.p1().get_mut(*child) {

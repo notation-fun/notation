@@ -1,6 +1,6 @@
-use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutData, ShapeOp, StrokeRectangle};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy_prototype_lyon::prelude::*;
+use edger_bevy_app::prelude::{offscreen, LayoutData, ShapeOp, StrokeRectangle};
 use notation_model::prelude::{Chord, Tab, TabBarProps, Units};
 use std::sync::Arc;
 
@@ -28,7 +28,7 @@ impl BarIndicatorData {
 impl ShapeOp<NotationTheme, StrokeRectangle> for BarIndicatorData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeRectangle {
         let offset = if self.bar_layout.size.width <= 0.0 {
-            BevyUtil::offscreen_offset()
+            offscreen::offset()
         } else {
             let x = self.bar_layout.offset.x - theme.sizes.bar.bar_separator_size;
             let y = self.bar_layout.offset.y + theme.sizes.bar.bar_separator_extra;

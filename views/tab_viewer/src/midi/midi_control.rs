@@ -1,11 +1,9 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::GridData;
-use notation_midi::prelude::{MidiSettings, MidiState};
-use notation_model::play::play_control::TickResult;
-use notation_model::prelude::{JumpToBarEvent, PlayControlEvent, BarPosition, Tab, Units};
-use notation_model::tab_bar::TabBar;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::GridData;
+use notation_model::prelude::{BarPosition, Tab, Units, TabBar};
+use notation_midi::prelude::{MidiSettings, MidiState, TickResult, JumpToBarEvent, PlayControlEvent};
 
 use crate::tab::tab_bars::TabBars;
 use crate::tab::tab_plugin::{TabPlugin};

@@ -1,8 +1,8 @@
-use notation_bevy_utils::prelude::{BevyUtil, LayoutData};
+use edger_bevy_app::prelude::{text, LayoutData};
 use notation_model::prelude::{Syllable, Scale, Key};
 use serde::{Deserialize, Serialize};
 
-use bevy::{prelude::*, sprite::Anchor};
+use edger_bevy_app::bevy::{prelude::*, sprite::Anchor};
 
 use crate::prelude::{NotationAssets, NotationSettings, ThemeColors};
 
@@ -58,7 +58,7 @@ impl TabTexts {
         entity: Entity,
         text: &str,
     ) {
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text,
@@ -103,7 +103,7 @@ impl ChordTexts {
         text: &str,
         z: f32,
     ) {
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text,
@@ -146,7 +146,7 @@ impl RhythmTexts {
         entity: Entity,
         text: &str,
     ) {
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text,
@@ -189,7 +189,7 @@ impl LyricsTexts {
         assets: &NotationAssets,
         text: &str,
     ) {
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text,
@@ -258,7 +258,7 @@ impl NoteTexts {
         size_scale: f32,
     ) {
         let text = Self::calc_text(settings, scale, key, syllable);
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text.as_str(),
@@ -332,7 +332,7 @@ impl StringsTexts {
         fret: u8,
     ) {
         let text = format!("{}", fret);
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text.as_str(),
@@ -369,7 +369,7 @@ impl MiniMapTexts {
         entity: Entity,
         text: &str,
     ) {
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text,
@@ -390,7 +390,7 @@ impl MiniMapTexts {
         assets: &NotationAssets,
         text: &str,
     ) {
-        BevyUtil::spawn_text(
+        text::spawn(
             commands,
             entity,
             text,

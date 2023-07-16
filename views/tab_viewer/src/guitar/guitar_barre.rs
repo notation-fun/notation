@@ -1,6 +1,6 @@
-use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, FillRectangle, LayoutSize, ShapeOp};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy_prototype_lyon::prelude::*;
+use edger_bevy_app::prelude::{offscreen, FillRectangle, LayoutSize, ShapeOp};
 use notation_model::prelude::{HandShape6, Pick};
 
 use crate::prelude::NotationTheme;
@@ -52,7 +52,7 @@ impl ShapeOp<NotationTheme, FillRectangle> for GuitarBarreData {
         let height = self.guitar_size.height * theme.guitar.barre_height_factor;
         let color = theme.colors.strings.barre;
         let offset = if self.barre() == 0 || self.guitar_size.width <= 0.0 {
-            BevyUtil::offscreen_offset()
+            offscreen::offset()
         } else {
             let finger_radius = theme.guitar.string_x_factor * self.guitar_size.width / 2.0;
             let y = theme

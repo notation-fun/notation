@@ -1,9 +1,9 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{
-    BevyUtil, ColorBackground, DockPanel, DockSide, DockView, LayoutChangedQuery, LayoutConstraint,
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{
+    entity, ColorBackground, DockPanel, DockSide, DockView, LayoutChangedQuery, LayoutConstraint,
     LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };
 use notation_model::prelude::{Tab, TabChord, TrackKind};
@@ -62,7 +62,7 @@ impl TabHeader {
     ) -> Entity {
         let view_bundle = ViewBundle::from(TabHeader::new(tab.clone()));
         let view = view_bundle.view.clone();
-        let header_entity = BevyUtil::spawn_child_bundle(commands, entity, view_bundle);
+        let header_entity = entity::spawn_child_bundle(commands, entity, view_bundle);
         if settings.hide_chords_view {
             return header_entity;
         }

@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use crate::{prelude::{NotationTheme, NotationSettings}, tone::tone_mode::ToneMode};
 use notation_model::prelude::*;

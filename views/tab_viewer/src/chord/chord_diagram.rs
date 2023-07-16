@@ -1,9 +1,10 @@
 use std::fmt::Display;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{OutlineCircle, ShapeOp};
-use notation_model::prelude::{Chord, ModelEntryProps, PlayingState};
+use edger_bevy_app::prelude::{OutlineCircle, ShapeOp};
+use notation_model::prelude::{Chord, ModelEntryProps};
+use notation_midi::prelude::PlayingState;
 
 use crate::prelude::{ModelEntryData, NotationTheme};
 

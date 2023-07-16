@@ -1,7 +1,7 @@
 #[cfg(feature = "native")]
 use clap::Parser;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 #[derive(Debug, Resource)]
 #[cfg_attr(feature = "native", derive(Parser))]

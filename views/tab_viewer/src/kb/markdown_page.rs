@@ -1,11 +1,11 @@
 use std::path::PathBuf;
-use bevy::prelude::*;
-use crate::bevy_egui::egui::Ui;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::egui::Ui;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
 use super::kb_page::{KbPage};
-use notation_bevy_utils::prelude::{MarkDownAsset, easy_mark, EasyLinkEvent};
+use edger_bevy_app::prelude::{MarkDownAsset, easy_mark, EasyLinkEvent};
 
 #[derive(Clone, PartialEq, Eq, Debug, Default)]
 pub struct MarkDownPage {

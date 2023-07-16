@@ -1,5 +1,5 @@
-use bevy::ecs::system::EntityCommands;
-use bevy::prelude::*;
+use edger_bevy_app::bevy::ecs::system::EntityCommands;
+use edger_bevy_app::bevy_prelude::*;
 
 use super::pick_bundle::PickBundle;
 
@@ -11,11 +11,11 @@ pub struct StringsPlugin;
 
 impl Plugin for StringsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems((
+        app.add_systems(Update, (
             on_add_fretted_grid6,
             on_add_fretted_grid4,
             super::pick_systems::on_entry_playing_changed,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
 }
 

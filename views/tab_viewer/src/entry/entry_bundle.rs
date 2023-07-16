@@ -1,8 +1,9 @@
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::SingleData;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::SingleData;
 use std::sync::Arc;
 
 use notation_model::prelude::*;
+use notation_midi::prelude::*;
 
 use crate::prelude::EntryPlaying;
 

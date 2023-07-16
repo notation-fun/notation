@@ -1,6 +1,6 @@
 pub mod midi_control;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 use notation_midi::prelude::{MidiSettings, MidiState};
 
 use crate::prelude::{TabPlugin, NotationSettings, PlayControlEvent};

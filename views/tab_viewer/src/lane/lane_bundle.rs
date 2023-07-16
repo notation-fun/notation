@@ -1,8 +1,8 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use notation_model::prelude::BarLane;
 
-use notation_bevy_utils::prelude::{LayoutData, SingleData};
+use edger_bevy_app::prelude::{LayoutData, SingleData};
 
 use crate::prelude::LaneLayoutData;
 

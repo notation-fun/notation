@@ -1,6 +1,6 @@
-use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutData, OutlineRectangle, ShapeOp};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy_prototype_lyon::prelude::*;
+use edger_bevy_app::prelude::{offscreen, LayoutData, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{BarPosition, Position, TabBarProps, Units};
 
 use crate::prelude::NotationTheme;
@@ -46,7 +46,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for PosIndicatorData {
         let outline_color = theme.colors.bar.pos_indicator_color;
         let outline_width = theme.sizes.bar.pos_indicator_outline;
         let offset = if self.bar_layout.size.width <= 0.0 {
-            BevyUtil::offscreen_offset()
+            offscreen::offset()
         } else {
             let y = self.bar_layout.offset.y;
             Vec3::new(

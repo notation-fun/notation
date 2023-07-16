@@ -1,11 +1,12 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutSize, OutlineRectangle, ShapeOp};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy_prototype_lyon::prelude::*;
+use edger_bevy_app::prelude::{math, LayoutSize, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{
-    Duration, Fretboard6, HandShape6, Pick, PlaySpeed, PlayingState, Note, TabMeta, Units,
+    Duration, Fretboard6, HandShape6, Pick, Note, TabMeta, Units,
 };
+use notation_midi::prelude::{PlaySpeed, PlayingState};
 
 use crate::prelude::NotationTheme;
 
@@ -77,7 +78,7 @@ impl GuitarStringData {
         play_speed: PlaySpeed,
     ) -> f32 {
         let seconds = play_speed.calc_seconds(Units::from(hit_duration));
-        BevyUtil::in_range(seconds * 0.5, hit_string_seconds_range)
+        math::in_range(seconds * 0.5, hit_string_seconds_range)
     }
     pub fn set_hit(
         &mut self,

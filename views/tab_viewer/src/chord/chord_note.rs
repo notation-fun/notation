@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{FillCircle, ShapeOp};
+use edger_bevy_app::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::{Interval, Syllable};
 
 use crate::prelude::{ModelEntryData, NotationTheme};

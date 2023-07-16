@@ -1,8 +1,8 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use notation_bevy_utils::prelude::{BevyUtil, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
+use edger_bevy_app::prelude::{entity, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
 use notation_model::prelude::Tab;
 
 use crate::prelude::{
@@ -43,11 +43,11 @@ impl TabView {
     ) -> Entity {
         let tab_bundle = TabBundle::new(tab.clone());
         //let tab_view = tab_bundle.view.clone();
-        let tab_entity = BevyUtil::spawn_child_bundle(commands, entity, tab_bundle);
+        let tab_entity = entity::spawn_child_bundle(commands, entity, tab_bundle);
         TabControl::spawn(
             commands, assets, theme, settings, tab_entity, &tab,
         );
-        let content_entity = BevyUtil::spawn_child_bundle(
+        let content_entity = entity::spawn_child_bundle(
             commands,
             tab_entity,
             ViewBundle::from(TabContent::new(tab.clone())),

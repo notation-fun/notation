@@ -1,14 +1,14 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::ShapeOp;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::ShapeOp;
 use notation_model::lane_kind::LaneKind;
 
 use crate::chord::chord_view::ChordView;
 use crate::tone::tone_line::ToneLineData;
 use crate::lane::lane_layout::LaneLayoutData;
 use crate::prelude::{
-    BevyUtil, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates,
+    entity, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates,
     NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle,
 };
 use crate::shapes::shape_diagram::{ShapeDiagramData4, ShapeDiagramData6};
@@ -23,13 +23,13 @@ pub struct EntryPlugin;
 
 impl Plugin for EntryPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems((
+        app.add_systems(Update, (
             crate::tone::tone_systems::on_entry_playing_changed,
             crate::word::word_systems::on_entry_playing_changed,
             ChordView::on_layout_changed,
             ChordView::on_chord_playing_changed,
             on_tab_bars_resized,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
 }
 
@@ -43,7 +43,7 @@ pub fn create_entry(
     entry: &Arc<LaneEntry>,
 ) {
     let entry_bundle = EntryBundle::from(entry.clone());
-    let entry_entity = BevyUtil::spawn_child_bundle(commands, lane_entity, entry_bundle);
+    let entry_entity = entity::spawn_child_bundle(commands, lane_entity, entry_bundle);
     insert_entry_extra(commands, assets, theme, settings, lane_layout, entry_entity, entry);
 }
 

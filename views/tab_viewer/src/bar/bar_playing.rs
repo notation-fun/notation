@@ -1,6 +1,6 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_model::prelude::PlayingState;
+use notation_midi::prelude::PlayingState;
 
 use crate::prelude::{BarData, TabState};
 

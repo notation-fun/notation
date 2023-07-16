@@ -13,16 +13,12 @@ repository = { workspace = true }
 
 [features]
 default = [
-    "bevy/bevy_gltf",
-    "bevy/bevy_winit",
-    "bevy/bevy_render",
-    "bevy/png",
+    "edger_bevy_app/view_shape",
 ]
 
 native = [
     "clap",
-    "bevy/x11",
-    "bevy/wayland",
+    "edger_bevy_app/native",
 ]
 
 midi = [
@@ -34,11 +30,11 @@ dsl = [
 ]
 
 with_egui = [
-    "notation_bevy_utils/with_egui",
+    "edger_bevy_app/egui",
 ]
 
 [dependencies]
-notation_bevy_utils = { workspace = true }
+edger_bevy_app = { workspace = true }
 
 notation_model = { workspace = true }
 
@@ -52,12 +48,10 @@ thiserror = { workspace = true }
 ron = { workspace = true }
 float_eq = { workspace = true }
 
-bevy = { workspace = true }
-
 rand = { workspace = true }
 getrandom = { workspace = true }
 
-bevy_prototype_lyon = { workspace = true }
+bevy = { workspace = true }
 bevy_easings = { workspace = true }
 
 bevy_asset_loader = { workspace = true }

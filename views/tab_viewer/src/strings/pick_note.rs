@@ -1,7 +1,8 @@
-use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, OutlineRectangle, ShapeOp};
-use notation_model::prelude::{PickNote, PlayingState, Syllable};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy_prototype_lyon::prelude::*;
+use edger_bevy_app::prelude::{offscreen, OutlineRectangle, ShapeOp};
+use notation_model::prelude::{PickNote, Syllable};
+use notation_midi::prelude::PlayingState;
 
 use crate::prelude::{EntryData, NotationTheme};
 
@@ -67,7 +68,7 @@ impl ShapeOp<NotationTheme, OutlineRectangle> for PickNoteData {
         let outline_color = self.calc_outline_color(theme);
         let outline_width = self.calc_outline(theme);
         let offset = if self.value.bar_size <= 0.0 {
-            BevyUtil::offscreen_offset()
+            offscreen::offset()
         } else {
             let x =
                 self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.in_bar_pos.0;

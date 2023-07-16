@@ -1,6 +1,7 @@
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{GridData, LayoutData};
-use notation_model::prelude::{JumpToBarEvent, PlayControlEvent, TabBarProps};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{GridData, LayoutData};
+use notation_model::prelude::TabBarProps;
+use notation_midi::prelude::{JumpToBarEvent, PlayControlEvent};
 
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_view::ChordView;
@@ -54,7 +55,7 @@ impl Plugin for TabPlugin {
         app.init_asset_loader::<TabAssetLoader>();
         #[cfg(feature = "dsl")]
         app.init_asset_loader::<crate::dsl::get_tab_asset::GetTabAssetLoader>();
-        app.add_systems((
+        app.add_systems(Update, (
             TabView::do_layout,
             TabContent::do_layout,
             TabHeader::do_layout,
@@ -64,16 +65,16 @@ impl Plugin for TabPlugin {
             TabChords::do_layout,
             TabBars::on_resized_pre,
             TabBars::do_layout,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
 }
 
 impl TabPlugin {
     pub fn setup_mouse_input(app: &mut App) {
-        app.add_systems((
+        app.add_systems(Update, (
             Self::on_mouse_clicked,
             Self::on_mouse_dragged,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
     pub fn jump_to_bar(jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>, bar_props: TabBarProps) {
         jump_to_bar_evts.send(JumpToBarEvent::new(bar_props));

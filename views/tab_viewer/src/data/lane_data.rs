@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use notation_model::prelude::{BarLane, BarLaneProps, TabBarProps};
 

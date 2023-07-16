@@ -1,9 +1,9 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View,
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{
+    entity, DockPanel, DockSide, DockView, LayoutConstraint, LayoutQuery, LayoutSize, View,
     ViewBundle, ViewQuery,
 };
 use notation_model::prelude::Tab;
@@ -73,7 +73,7 @@ impl TabControl {
     ) -> Entity {
         let control = TabControl::new(tab.clone());
         let control_entity =
-            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(control));
+            entity::spawn_child_bundle(commands, entity, ViewBundle::from(control));
         if settings.hide_guitar_view {
             return control_entity;
         }

@@ -1,6 +1,6 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::ShapeOp;
+use edger_bevy_app::prelude::ShapeOp;
 use notation_model::prelude::LaneEntry;
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme};
@@ -51,7 +51,7 @@ pub fn on_entry_playing_changed_with_font(
                 for child in text_children.iter() {
                     if let Ok(mut text) = font_query.get_mut(*child) {
                         let font_size = theme.texts.lyrics.word_font_size.of_state(&text.value.playing_state);
-                        BevyUtil::set_text_size_color(&mut text, data.calc_text_font_size(&theme), data.calc_text_color(&theme));
+                        text::set_size_color(&mut text, data.calc_text_font_size(&theme), data.calc_text_color(&theme));
                     }
                 }
             } else if let Ok((entity, mut data)) = text_query.p1_mut().get_mut(*child) {

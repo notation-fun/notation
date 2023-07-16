@@ -1,5 +1,5 @@
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::ColorBackground;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::ColorBackground;
 use notation_model::prelude::Chord;
 
 use crate::prelude::NotationTheme;

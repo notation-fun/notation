@@ -12,11 +12,11 @@ pub struct NotationKnowledgeBase();
 impl NotationKnowledgeBase {
     fn extra(app: &mut App) {
         app.init_resource::<IndexPanel>();
-        app.add_startup_system(Self::setup_state);
+        app.add_systems(Startup, Self::setup_state);
         TabPlugin::setup_mouse_input(app);
         #[cfg(target_arch = "wasm32")]
         tab_viewer::prelude::StereoStream::init_streaming(app, true);
-        app.add_systems((
+        app.add_systems(Update, (
             IndexPanel::hack_settings,
             IndexPanel::check_reload,
             IndexPanel::index_ui,
@@ -27,7 +27,7 @@ impl NotationKnowledgeBase {
             NotationViewer::handle_touch_inputs,
             Self::load_tab,
             Self::on_window_resized,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
     pub fn run<A: ExtraAssets>(args: NotationArgs) {
         tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);

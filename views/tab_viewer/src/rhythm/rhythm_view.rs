@@ -1,10 +1,10 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{
-    BevyUtil, DockPanel, DockSide, LayoutConstraint, LayoutSize, View, ViewBundle,
+use edger_bevy_app::prelude::{
+    entity, DockPanel, DockSide, LayoutConstraint, LayoutSize, View, ViewBundle,
 };
 use notation_model::prelude::Tab;
 
@@ -47,7 +47,7 @@ impl RhythmView {
         tab: &Arc<Tab>,
     ) -> Entity {
         let view_entity =
-            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(RhythmView {}));
+            entity::spawn_child_bundle(commands, entity, ViewBundle::from(RhythmView {}));
         RhythmBarData::spawn(commands, assets, theme, view_entity, tab);
         view_entity
     }

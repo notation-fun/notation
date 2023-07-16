@@ -1,12 +1,13 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{
-    BevyUtil, FillPath, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, ShapeOp, View,
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{
+    entity, FillPath, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, ShapeOp, View,
     ViewBundle,
 };
-use notation_model::prelude::{PlayState, Tab};
+use notation_model::prelude::Tab;
+use notation_midi::prelude::PlayState;
 
 use crate::prelude::{NotationAssets, NotationSettings, NotationTheme};
 use crate::prelude::NotationLayout;
@@ -153,7 +154,7 @@ impl PlayButton {
         action: PlayButtonAction,
     ) -> Entity {
         let button_entity =
-            BevyUtil::spawn_child_bundle(commands, entity, ViewBundle::from(PlayButton { action }));
+            entity::spawn_child_bundle(commands, entity, ViewBundle::from(PlayButton { action }));
         let button_shape = PlayButtonShape {
             action,
             width: 32.0,

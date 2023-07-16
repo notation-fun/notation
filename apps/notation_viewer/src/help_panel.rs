@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use tab_viewer::bevy_egui::EguiContext;
+use tab_viewer::edger_bevy_app::bevy_egui::EguiContext;
 
 use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings, EguiContexts};
 use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme};

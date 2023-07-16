@@ -1,7 +1,8 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::SingleData;
-use notation_model::prelude::{Entry, LaneEntry, PlayingState, Position};
+use edger_bevy_app::prelude::SingleData;
+use notation_model::prelude::{Entry, LaneEntry, Position};
+use notation_midi::prelude::PlayingState;
 
 use crate::prelude::{EntryData, TabState};
 

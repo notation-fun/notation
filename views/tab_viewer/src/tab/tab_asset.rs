@@ -1,12 +1,13 @@
 use thiserror::Error;
 use notation_model::parse::ParseError;
-use bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
-use bevy::reflect::TypeUuid;
-use bevy::utils::BoxedFuture;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
+use edger_bevy_app::bevy::reflect::{TypeUuid, TypePath};
+use edger_bevy_app::bevy::utils::BoxedFuture;
 
 use notation_model::prelude::ProtoTab;
 
-#[derive(Clone, Debug, TypeUuid)]
+#[derive(Clone, Debug, TypeUuid, TypePath)]
 #[uuid = "52bcea66-eb44-4ad6-85bf-240b79494499"]
 pub struct TabAsset {
     pub tab: Result<ProtoTab, TabError>,

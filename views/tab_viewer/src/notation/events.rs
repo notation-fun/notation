@@ -1,8 +1,8 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use super::state::NotationState;
 
-#[derive(Clone, Debug)]
+#[derive(Event, Clone, Debug)]
 pub struct WindowResizedEvent{
     pub last_width: f32,
     pub last_height: f32,
@@ -14,12 +14,12 @@ impl WindowResizedEvent {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Event, Clone, Debug)]
 pub struct MouseClickedEvent {
     pub cursor_position: Vec2,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Event, Clone, Debug)]
 pub struct MouseDraggedEvent {
     pub cursor_position: Vec2,
     pub delta: Vec2,

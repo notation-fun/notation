@@ -1,5 +1,6 @@
 use std::path::PathBuf;
-use bevy::{prelude::*, asset::{AssetPath, HandleId, Asset}};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy::asset::{AssetPath, HandleId, Asset};
 use bevy_asset_loader::prelude::*;
 
 #[cfg(feature = "with_egui")]

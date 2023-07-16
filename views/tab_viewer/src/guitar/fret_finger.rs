@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutSize, ShapeOp};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{offscreen, LayoutSize, ShapeOp};
 use notation_model::prelude::{
     Chord, Finger, Fretboard6, HandShape6, Interval, ModelEntryProps, Note, Pick, Syllable, TabMeta, Semitones,
 };
@@ -204,7 +204,7 @@ impl ChordNoteExtra for FretFingerExtra {
     }
     fn offset(&self, theme: &NotationTheme) -> Vec2 {
         if !self.visible || self.guitar_size.width <= 0.0 {
-            return BevyUtil::offscreen_offset_2();
+            return offscreen::offset_2();
         }
         let x = theme
             .guitar

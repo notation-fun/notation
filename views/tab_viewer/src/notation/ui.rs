@@ -1,5 +1,5 @@
-//use bevy::app::StartupStage;
-use bevy::{prelude::*, window::PrimaryWindow};
+//use edger_bevy_app::bevy::app::StartupStage;
+use edger_bevy_app::bevy::{prelude::*, window::PrimaryWindow};
 //use crate::bevy_egui::{EguiSettings};
 
 use crate::prelude::{NotationState};
@@ -8,7 +8,7 @@ pub struct NotationUiPlugin;
 
 impl Plugin for NotationUiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(update_window_scale_factor);
+        app.add_systems(Update, update_window_scale_factor);
     }
 }
 

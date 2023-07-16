@@ -1,5 +1,5 @@
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{BevyUtil, LayoutSize, ShapeOp, StrokeLine};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{offscreen, LayoutSize, ShapeOp, StrokeLine};
 
 use crate::prelude::{BarData, NotationTheme};
 
@@ -22,7 +22,7 @@ impl BarSeparatorValue {
 impl ShapeOp<NotationTheme, StrokeLine> for BarSeparatorData {
     fn get_shape(&self, theme: &NotationTheme) -> StrokeLine {
         let offset = if self.value.bar_size.width <= 0.0 {
-            BevyUtil::offscreen_offset()
+            offscreen::offset()
         } else {
             let x = if self.value.is_begin {
                 0.0

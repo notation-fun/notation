@@ -1,8 +1,9 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_model::prelude::{Uuid, PlayControl, PlayState, Position, Tab};
+use notation_model::prelude::{Uuid, Position, Tab};
+use notation_midi::prelude::{PlayControl, PlayState};
 
 #[derive(Debug, Component)]
 pub struct TabPlayStateChanged();

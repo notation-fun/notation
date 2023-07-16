@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use crate::{prelude::*, tab::tab_asset::TabError};
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 use notation_model::prelude::*;
 
 #[derive(Resource)]

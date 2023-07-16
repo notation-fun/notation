@@ -1,6 +1,7 @@
-use bevy::{app::PluginGroupBuilder, window::PrimaryWindow};
-use bevy::prelude::*;
-use bevy::window::WindowResized;
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy::{self, app::PluginGroupBuilder, window::PrimaryWindow};
+use edger_bevy_app::bevy::window::WindowResized;
+use edger_bevy_app::bevy_prototype_lyon;
 
 use bevy_asset_loader::prelude::*;
 
@@ -69,9 +70,9 @@ impl NotationApp {
             ..default()
         }));
         app.insert_resource(ClearColor(UiColors::default().app_background));
-        app.add_plugin(bevy_easings::EasingsPlugin);
+        app.add_plugins(bevy_easings::EasingsPlugin);
 
-        app.add_plugin(UtilsPlugin);
+        app.add_plugins(UtilsPlugin);
 
         app.init_resource::<NotationTheme>();
         app.init_resource::<NotationSettings>();
@@ -88,16 +89,19 @@ impl NotationApp {
         super::events::add_notation_app_events(&mut app);
 
         //#[cfg(target_arch = "wasm32")]
-        //app.add_plugin(bevy_webgl2::WebGL2Plugin);
+        //app.add_plugins(bevy_webgl2::WebGL2Plugin);
 
         // When building for WASM, print panics to the browser console
         #[cfg(target_arch = "wasm32")]
         console_error_panic_hook::set_once();
 
         #[cfg(feature = "with_egui")]
-        app.add_plugin(crate::bevy_egui::EguiPlugin);
+        edger_bevy_app::prelude::EasyLinkEvent::setup(&mut app);
 
-        app.add_plugin(NotationUiPlugin);
+        #[cfg(feature = "with_egui")]
+        app.add_plugins(edger_bevy_app::bevy_egui::EguiPlugin);
+
+        app.add_plugins(NotationUiPlugin);
 
         #[cfg(feature = "dev")]
         app.add_plugins(crate::dev::NotationDevPlugins);
@@ -114,31 +118,31 @@ impl NotationApp {
 
         app.init_resource::<NotationState>();
 
-        app.add_startup_system(Self::setup_camera);
+        app.add_systems(Startup, Self::setup_camera);
 
-        app.add_system(NotationAssets::setup_keys::<A>
-            .in_set(OnUpdate(NotationAssetsStates::Init)));
+        app.add_systems(Update, NotationAssets::setup_keys::<A>
+            .run_if(in_state(NotationAssetsStates::Init)));
 
-        app.add_systems((
+        app.add_systems(OnEnter(NotationAssetsStates::Loaded), (
             NotationAssets::add_extra_assets::<A>,
             Self::setup_window_size,
-        ).in_schedule(OnEnter(NotationAssetsStates::Loaded)));
+        ));
         #[cfg(feature = "with_egui")]
-        app.add_system(
+        app.add_systems(OnEnter(NotationAssetsStates::Loaded),
             crate::egui::egui_fonts::setup_egui_fonts::<A>
-            .in_schedule(OnEnter(NotationAssetsStates::Loaded)));
-        app.add_systems((
+            );
+        app.add_systems(Update, (
             TabViewer::on_add_tab,
             TabViewer::on_window_resized,
             TabViewer::on_added,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
-        app.add_systems((
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        app.add_systems(Update, (
             Self::on_window_resized,
             Self::on_tab_asset,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
         #[cfg(feature = "with_egui")]
-        app.add_system(EguiControlPanel::control_ui
-            .in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        app.add_systems(Update, EguiControlPanel::control_ui
+            .run_if(in_state(NotationAssetsStates::Loaded)));
         extra(&mut app);
         app.run();
     }

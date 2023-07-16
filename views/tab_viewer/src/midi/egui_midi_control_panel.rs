@@ -1,6 +1,6 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 use notation_midi::prelude::{MidiSettings, MidiState};
-use crate::bevy_egui::egui::{CollapsingHeader, Slider, Ui};
+use edger_bevy_app::egui::{CollapsingHeader, Slider, Ui};
 use float_eq::float_ne;
 
 use crate::prelude::{NotationSettings, PlayControlEvent, Control, EguiControlPanel, NotationState, NotationTheme, Octave};

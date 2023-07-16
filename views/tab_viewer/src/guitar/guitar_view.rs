@@ -2,9 +2,9 @@ use float_eq::float_ne;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{
-    BevyUtil, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle, SingleData,
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{
+    entity, offscreen, LayoutAnchor, LayoutChangedQuery, LayoutSize, ShapeOp, View, ViewBundle, SingleData,
 };
 use notation_model::prelude::{
     Duration, Entry, HandShape6, Interval, LaneEntry, LaneKind, ModelEntryProps, Pick, Syllable,
@@ -53,7 +53,7 @@ impl GuitarView {
         entity: Entity,
         tab: &Arc<Tab>,
     ) -> Entity {
-        let guitar_entity = BevyUtil::spawn_child_bundle(
+        let guitar_entity = entity::spawn_child_bundle(
             commands,
             entity,
             ViewBundle::from(GuitarView::new(tab.clone())),
@@ -66,7 +66,7 @@ impl GuitarView {
                     )),
                 ..Default::default()
                 },
-            transform: BevyUtil::offscreen_transform(),
+            transform: offscreen::transform(),
             texture: assets.fretboard.clone(),
             ..Default::default()
         };
@@ -74,7 +74,7 @@ impl GuitarView {
             .get_track_of_kind(TrackKind::Guitar)
             .and_then(|x| x.get_fretboard6());
 
-        BevyUtil::spawn_child_bundle(commands, guitar_entity, sprite_bundle);
+        entity::spawn_child_bundle(commands, guitar_entity, sprite_bundle);
         for string in 1..=6 {
             for upper in [true, false] {
                 let string_data = GuitarStringData::new(string as u8, upper, fretboard);

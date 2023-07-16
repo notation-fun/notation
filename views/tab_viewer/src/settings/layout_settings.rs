@@ -1,7 +1,7 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 use bevy_easings::{Ease, EaseFunction, EasingComponent, EasingType};
 use float_eq::float_ne;
-use notation_bevy_utils::prelude::{GridData, LayoutData};
+use edger_bevy_app::prelude::{GridData, LayoutData};
 
 use notation_model::lane_kind::LaneKind;
 use notation_model::prelude::Position;

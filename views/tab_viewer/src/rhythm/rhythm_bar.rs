@@ -1,9 +1,9 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
-use notation_bevy_utils::prelude::{BevyUtil, OutlineCircle, ShapeOp};
+use edger_bevy_app::prelude::{text, OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, Signature, Tab};
 
 use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState, NotationSettings};
@@ -143,7 +143,7 @@ impl RhythmBarData {
                 for child in bar_children.iter() {
                     if let Ok(mut text) = font_query.get_mut(*child) {
                         let v = bar_props.bar_number.to_string();
-                        BevyUtil::set_text_value(&mut text, v);
+                        text::set_value(&mut text, v);
                     }
                 }
             }

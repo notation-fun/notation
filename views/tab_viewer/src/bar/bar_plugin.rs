@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use crate::prelude::NotationAssetsStates;
 use crate::tab::tab_events::BarViewDoLayoutEvent;
@@ -10,9 +10,9 @@ pub struct BarPlugin;
 impl Plugin for BarPlugin {
     fn build(&self, app: &mut App) {
         BarViewDoLayoutEvent::setup(app);
-        app.add_systems((
+        app.add_systems(Update, (
             BarView::do_layout,
             BarView::update_number_text,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
 }

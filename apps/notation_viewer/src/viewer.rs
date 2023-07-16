@@ -1,8 +1,8 @@
 use bevy::window::PrimaryWindow;
-use tab_viewer::bevy::prelude::*;
-use tab_viewer::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
+use tab_viewer::edger_bevy_app::bevy_prelude::*;
+use tab_viewer::edger_bevy_app::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
-use tab_viewer::bevy_egui::EguiContext;
+use tab_viewer::edger_bevy_app::bevy_egui::EguiContext;
 use tab_viewer::prelude::*;
 use tab_viewer::settings::layout_settings::LayoutMode;
 
@@ -14,14 +14,14 @@ impl NotationViewer {
     fn extra(app: &mut App) {
         app.init_resource::<HelpPanel>();
         TabPlugin::setup_mouse_input(app);
-        app.add_systems((
+        app.add_systems(Update, (
             Self::handle_keyboard_inputs,
             Self::handle_mouse_inputs,
             Self::handle_touch_inputs,
             Self::load_tab,
             HelpPanel::help_ui,
             HelpPanel::handle_link_evts,
-        ).in_set(OnUpdate(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(NotationAssetsStates::Loaded)));
     }
     pub fn run<A: ExtraAssets>(args: NotationArgs) {
         tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);

@@ -1,5 +1,5 @@
-use bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
-use bevy::utils::BoxedFuture;
+use edger_bevy_app::bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
+use edger_bevy_app::bevy::utils::BoxedFuture;
 
 use notation_dsl::prelude::parse_get_tab;
 

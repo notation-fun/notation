@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 use notation_model::prelude::{BarLaneProps, BarPosition, LaneEntry, LaneEntryProps, TabBarProps};
 
 #[derive(Clone, Debug, Component)]

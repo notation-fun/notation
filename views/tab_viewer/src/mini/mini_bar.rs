@@ -1,13 +1,14 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
-use notation_bevy_utils::prelude::{
-    BevyUtil, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View,
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::bevy_prototype_lyon::prelude::*;
+use edger_bevy_app::prelude::{
+    entity, GridCell, LayoutAnchor, LayoutChangedQuery, OutlineRectangle, ShapeOp, View,
     ViewBundle,
 };
-use notation_model::prelude::{PlayingState, Syllable, TabBar, SectionKind};
+use notation_model::prelude::{Syllable, TabBar, SectionKind};
+use notation_midi::prelude::PlayingState;
 
 use crate::prelude::{BarData, BarPlaying, NotationAssets, NotationTheme};
 use crate::prelude::NotationLayout;
@@ -93,7 +94,7 @@ impl MiniBar {
         entity: Entity,
         bar: &Arc<TabBar>,
     ) -> Entity {
-        let bar_entity = BevyUtil::spawn_child_bundle(
+        let bar_entity = entity::spawn_child_bundle(
             commands,
             entity,
             ViewBundle::from(MiniBar::new(bar, bar.clone())),

@@ -1,8 +1,8 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use bevy::prelude::*;
-use notation_bevy_utils::prelude::{DockView, LayoutChangedQuery, LayoutQuery, View, ViewQuery};
+use edger_bevy_app::bevy_prelude::*;
+use edger_bevy_app::prelude::{DockView, LayoutChangedQuery, LayoutQuery, View, ViewQuery};
 use notation_model::prelude::Tab;
 
 use crate::prelude::{NotationState, NotationSettings, NotationTheme, TabBars};

@@ -1,7 +1,7 @@
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use crate::prelude::{EntryData, NotationTheme};
-use notation_bevy_utils::prelude::{BevyUtil, ShapeOp, StrokePath};
+use edger_bevy_app::prelude::{offscreen, ShapeOp, StrokePath};
 use notation_model::prelude::{HandShape4, HandShape6, LaneEntry};
 
 macro_rules! impl_shape_diagram {
@@ -23,7 +23,7 @@ macro_rules! impl_shape_diagram {
         impl ShapeOp<NotationTheme, StrokePath> for $diagram_data {
             fn get_shape(&self, theme: &NotationTheme) -> StrokePath {
                 let x = if self.value.bar_size <= 0.0 {
-                    BevyUtil::offscreen_offset().x
+                    offscreen::offset().x
                 } else {
                     self.value.bar_size / self.bar_props.bar_units.0 * self.entry_props.in_bar_pos.0
                         + theme.shapes.shape_x

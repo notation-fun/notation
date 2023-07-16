@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use crate::lane::lane_view::LaneView;
 use crate::prelude::{
@@ -9,8 +9,8 @@ use crate::prelude::{
 };
 use crate::tab::tab_events::BarViewDoLayoutEvent;
 use crate::prelude::NotationLayout;
-use notation_bevy_utils::prelude::{
-    BevyUtil, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery,
+use edger_bevy_app::prelude::{
+    entity, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery,
 };
 use notation_model::prelude::TabBar;
 
@@ -108,7 +108,7 @@ impl BarView {
         bar_layout: &BarLayoutData,
     ) -> Entity {
         let bar_bundle = BarBundle::new(bar.clone(), bar_layout.clone());
-        let bar_entity = BevyUtil::spawn_child_bundle(commands, entity, bar_bundle);
+        let bar_entity = entity::spawn_child_bundle(commands, entity, bar_bundle);
         for lane_layout in bar_layout.lane_layouts.iter() {
             LaneView::spawn(
                 commands,

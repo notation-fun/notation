@@ -1,5 +1,7 @@
-use notation_bevy_utils::prelude::LayoutSize;
-use notation_model::prelude::{LaneKind, Note, PlayingState, Semitones, Tab, TrackKind};
+use edger_bevy_app::prelude::LayoutSize;
+use notation_model::prelude::{LaneKind, Note, Semitones, Tab, TrackKind};
+use notation_midi::prelude::PlayingState;
+
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::NotationSettings;

@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use bevy::prelude::*;
+use edger_bevy_app::bevy_prelude::*;
 
 use notation_model::prelude::*;
 
@@ -8,7 +8,7 @@ use crate::bar::bar_view::BarView;
 use crate::prelude::TabBars;
 use crate::rhythm::rhythm_view::RhythmView;
 use crate::prelude::NotationLayout;
-use notation_bevy_utils::prelude::{DoLayoutEvent, LayoutData};
+use edger_bevy_app::prelude::{DoLayoutEvent, LayoutData};
 
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;
@@ -16,9 +16,13 @@ use super::tab_control::TabControl;
 use super::tab_header::TabHeader;
 use super::tab_view::TabView;
 
-#[derive(Debug)]
+#[derive(Event, Debug)]
 pub struct AddTabEvent(pub Arc<Tab>);
+
+#[derive(Event, Debug)]
 pub struct TabBarsResizedPreEvent(pub Entity);
+
+#[derive(Event, Debug)]
 pub struct TabBarsResizedEvent(pub Arc<Vec<(BarView, LayoutData)>>);
 
 pub type TabViewDoLayoutEvent = DoLayoutEvent<NotationLayout<'static>, TabView>;
