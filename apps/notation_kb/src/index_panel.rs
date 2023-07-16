@@ -1,5 +1,5 @@
-use bevy::prelude::*;
-use tab_viewer::bevy_egui::{egui, EguiContext};
+use tab_viewer::edger_bevy_app::bevy_prelude::*;
+use tab_viewer::edger_bevy_app::bevy_egui::{egui, EguiContext};
 use tab_viewer::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl, EguiContexts};
 
 use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbContent, KbPanel, DockSide, EasyLinkEvent};

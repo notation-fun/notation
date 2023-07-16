@@ -1,12 +1,12 @@
 use std::f64::consts::{PI, FRAC_PI_2};
 
-use tab_viewer::bevy::prelude::*;
-use tab_viewer::bevy_egui::egui::{self, *};
-use tab_viewer::bevy_egui::egui::plot::*;
+use tab_viewer::edger_bevy_app::bevy_prelude::*;
+use tab_viewer::edger_bevy_app::egui::{self, *};
+use tab_viewer::edger_bevy_app::egui::plot::*;
 use tab_viewer::prelude::{AudioConsts, StereoStream};
 
 use tab_viewer::kb::markdown_page::MarkDownPage;
-use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, BevyUtil, Syllable, PageHelper};
+use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, Syllable, PageHelper, color_to_hsva};
 
 #[derive(Copy, Clone, Debug)]
 pub enum SoundSection {
@@ -174,7 +174,7 @@ impl SoundPage {
             move |x| {
                 size * (y_offset + Self::calc_harmonic_y(segments, strength, speed, time, x / size))
             }, -size..=size, 256,
-        )).color(BevyUtil::rgb_to_egui(&theme.colors.of_option_syllable(syllable)))
+        )).color(color_to_hsva(&theme.colors.of_option_syllable(syllable)))
         .name(format!("harmonic {}", segments))
     }
     fn tone_line(
@@ -194,7 +194,7 @@ impl SoundPage {
                 }
                 y
             }, -size..=size, 256,
-        )).color(BevyUtil::rgb_to_egui(&theme.colors.of_syllable(Syllable::Do)))
+        )).color(color_to_hsva(&theme.colors.of_syllable(Syllable::Do)))
         .name("tone")
     }
     pub fn single_string_ui(

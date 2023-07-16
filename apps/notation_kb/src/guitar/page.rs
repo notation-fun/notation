@@ -1,8 +1,8 @@
-use tab_viewer::bevy::prelude::*;
-use tab_viewer::bevy_egui::egui::*;
+use tab_viewer::edger_bevy_app::bevy_prelude::*;
+use tab_viewer::edger_bevy_app::egui::*;
 
 use tab_viewer::kb::markdown_page::MarkDownPage;
-use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, BevyUtil, Syllable};
+use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, Syllable};
 
 #[derive(Clone, Debug)]
 pub struct GuitarPage {
