@@ -13,7 +13,8 @@ repository = { workspace = true }
 
 [features]
 default = [
-    "edger_bevy_app/view_shape",
+    "edger_bevy_app/view",
+    "edger_bevy_app/shape",
 ]
 
 native = [
