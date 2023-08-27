@@ -176,7 +176,6 @@ impl NotationViewer {
         let Some(cursor_position) = window.cursor_position() else {
             return;
         };
-        app_state.debug_str = Some(format!("Clicked: {:?}, {:?} {:?}", cursor_position, window.physical_height(), window.scale_factor()));
         let cursor_position = fix_position(window, cursor_position);
         if mouse_input.just_released(MouseButton::Left) {
             mouse_clicked.send(MouseClickedEvent { cursor_position });
