@@ -22,6 +22,10 @@ native = [
     "edger_bevy_app/native",
 ]
 
+web = [
+    "edger_bevy_app/web",
+]
+
 midi = [
     "notation_midi",
 ]

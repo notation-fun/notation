@@ -24,6 +24,10 @@ native = [
     "tab_viewer/dsl",
 ]
 
+web = [
+    "tab_viewer/web",
+]
+
 [dependencies]
 tab_viewer = { path = "../../views/tab_viewer" }
 

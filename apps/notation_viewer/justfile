@@ -11,7 +11,7 @@ install-basic-http-server:
     cargo install basic-http-server
 
 build-web:
-    cargo build --target wasm32-unknown-unknown
+    cargo build --features web --target wasm32-unknown-unknown
     wasm-bindgen --out-dir dist --out-name notation_viewer --target web --no-typescript ../../target/wasm32-unknown-unknown/debug/notation_viewer.wasm
 
 run-web:

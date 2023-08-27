@@ -28,6 +28,21 @@ impl NotationViewer {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+fn fix_position(_window: &Window, pos: Vec2) -> Vec2 {
+    pos
+}
+
+#[cfg(target_arch = "wasm32")]
+fn fix_position(window: &Window, pos: Vec2) -> Vec2 {
+    let physical_height = window.physical_height() as f32;
+    let scale_factor = window.scale_factor() as f32;
+    Vec2{
+        x: pos.x,
+        y: physical_height / scale_factor - pos.y,
+    }
+}
+
 impl NotationViewer {
     fn load_tab(
         mut commands: Commands,
@@ -142,7 +157,7 @@ impl NotationViewer {
         window_query: Query<&Window, With<PrimaryWindow>>,
         mouse_input: Res<Input<MouseButton>>,
         mut egui_ctx: EguiContexts,
-        app_state: Res<NotationState>,
+        mut app_state: ResMut<NotationState>,
         settings: Res<NotationSettings>,
         mut mouse_motion_events: EventReader<MouseMotion>,
         mut mouse_wheel_input: EventReader<MouseWheel>,
@@ -161,6 +176,8 @@ impl NotationViewer {
         let Some(cursor_position) = window.cursor_position() else {
             return;
         };
+        app_state.debug_str = Some(format!("Clicked: {:?}, {:?} {:?}", cursor_position, window.physical_height(), window.scale_factor()));
+        let cursor_position = fix_position(window, cursor_position);
         if mouse_input.just_released(MouseButton::Left) {
             mouse_clicked.send(MouseClickedEvent { cursor_position });
         } else if mouse_input.just_pressed(MouseButton::Right) {
@@ -205,31 +222,16 @@ impl NotationViewer {
             return;
         }
         if egui_ctx.ctx_mut().wants_pointer_input() {
-            /* bevy_egui not supporting touch properly yet
-            app_state.debug_str = Some(format!(
-                "Touch: egui",
-            ));
             return;
-            */
         }
         let Ok(window) = window_query.get_single() else {
             return;
         };
         for (_index, finger) in touch_input.iter().enumerate() {
             if touch_input.just_pressed(finger.id()) {
-                let physical_width = window.physical_width() as f32;
-                let physical_height = window.physical_height() as f32;
-                /* bevy_egui not supporting touch properly yet */
                 app_state.show_kb = false;
-                /*
-                app_state.debug_str = Some(format!(
-                    "Touch: {} {:?}",
-                    _index,
-                    finger.position(),
-                ));
-                */
                 mouse_clicked.send(MouseClickedEvent {
-                    cursor_position: finger.position(),
+                    cursor_position: fix_position(window, finger.position()),
                 });
             } else if touch_input.just_released(finger.id()) {
                 app_state.debug_str = None;

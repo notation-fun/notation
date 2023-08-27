@@ -20,12 +20,13 @@ bevy = { workspace = true }
 bevy_kira_audio = { workspace = true }
 
 midir = "0.8"
-helgoboss-midi = "0.4"
-midi-msg = "0.4"
-dmsort = "1.0"
+helgoboss-midi = "0.4.0"
+midi-msg = "0.4.0"
+dmsort = "1.0.2"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 fluidlite = { version = "0.2" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = { workspace = true }
+instant = "0.1"

@@ -78,11 +78,11 @@ bevy_egui = { version = "0.21" }
 bevy_kira_audio = { version = "0.11", git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5_bevy-0.11" }
 
 # [target.'cfg(target_arch = "wasm32")'.workspace.dependencies]
-wasm-bindgen = "0.2.84"
-console_error_panic_hook = "0.1"
-gloo-events = "0.1"
-futures = "0.3"
-web-sys = { version = "0.3", features = [
+wasm-bindgen = "0.2.87"
+console_error_panic_hook = "0.1.7"
+gloo-events = "0.2.0"
+futures = "0.3.28"
+web-sys = { version = "0.3.64", features = [
     "Element", "Document", "Window", "Location", "Url", "UrlSearchParams", "console", "TouchEvent",
     #https://rustwasm.github.io/docs/wasm-bindgen/examples/web-audio.html
     "AudioContext", "AudioDestinationNode", "AudioNode", "AudioParam", "GainNode", "OscillatorNode", "OscillatorType",

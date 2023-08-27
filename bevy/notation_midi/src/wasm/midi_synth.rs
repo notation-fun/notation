@@ -2,7 +2,8 @@ use helgoboss_midi::StructuredShortMessage;
 use wasm_bindgen::prelude::*;
 
 use crate::prelude::{MidiMessage, MidiSettings, MidiState};
-use notation_model::prelude::{Entry, PlaySpeed};
+use notation_model::prelude::Entry;
+use crate::prelude::PlaySpeed;
 
 pub struct MidiSynth {}
 
