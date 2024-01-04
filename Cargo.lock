@@ -1751,6 +1751,7 @@ dependencies = [
 [[package]]
 name = "edger_bevy_app"
 version = "0.1.0"
+source = "git+https://github.com/edger-dev/crates?branch=main#a4f448eee313aa486914c287eab1106e8d4cf8e9"
 dependencies = [
  "bevy",
  "clap",
@@ -1768,6 +1769,7 @@ dependencies = [
 [[package]]
 name = "edger_bevy_egui"
 version = "0.1.0"
+source = "git+https://github.com/edger-dev/crates?branch=main#a4f448eee313aa486914c287eab1106e8d4cf8e9"
 dependencies = [
  "bevy",
  "bevy_egui",
@@ -1776,6 +1778,7 @@ dependencies = [
 [[package]]
 name = "edger_bevy_shape"
 version = "0.1.0"
+source = "git+https://github.com/edger-dev/crates?branch=main#a4f448eee313aa486914c287eab1106e8d4cf8e9"
 dependencies = [
  "bevy",
  "bevy_prototype_lyon",
@@ -1784,6 +1787,7 @@ dependencies = [
 [[package]]
 name = "edger_bevy_util"
 version = "0.1.0"
+source = "git+https://github.com/edger-dev/crates?branch=main#a4f448eee313aa486914c287eab1106e8d4cf8e9"
 dependencies = [
  "bevy",
 ]
@@ -1791,6 +1795,7 @@ dependencies = [
 [[package]]
 name = "edger_bevy_view"
 version = "0.1.0"
+source = "git+https://github.com/edger-dev/crates?branch=main#a4f448eee313aa486914c287eab1106e8d4cf8e9"
 dependencies = [
  "bevy",
  "edger_bevy_shape",
