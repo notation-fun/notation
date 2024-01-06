@@ -62,7 +62,7 @@ impl NotationState {
     pub fn convert_pos(&self, pos: Vec2) -> Vec2 {
         Vec2::new(
             pos.x - self.window_width / 2.0,
-            pos.y - self.window_height / 2.0,
+            self.window_height / 2.0 - pos.y,
         )
     }
     pub fn calc_bar_number(&self, add_ready_section: bool, bar_ordinal: usize) -> usize {
