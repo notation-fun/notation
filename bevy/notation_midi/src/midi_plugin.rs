@@ -13,7 +13,7 @@ pub struct MidiClock {
 
 pub struct MidiPlugin;
 
-const DO_TICK_TIMESTEP: f32 = 1.0 / 60.0;
+const DO_TICK_TIMESTEP: f64 = 1.0 / 60.0;
 
 impl Plugin for MidiPlugin {
     fn build(&self, app: &mut App) {
@@ -24,7 +24,7 @@ impl Plugin for MidiPlugin {
         app.add_systems(Update, on_switch_tab);
         app.add_systems(Update, on_jump_to_bar);
         app.add_systems(Update, on_play_control_evt);
-        app.insert_resource(FixedTime::new_from_secs(DO_TICK_TIMESTEP));
+        app.insert_resource(Time::<Fixed>::from_seconds(DO_TICK_TIMESTEP));
         app.add_systems(FixedUpdate, do_tick);
         #[cfg(not(target_arch = "wasm32"))]
         self.build_native(app);
@@ -38,7 +38,7 @@ fn on_switch_tab(
     mut hub: NonSendMut<MidiHub>,
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
-    for evt in evts.iter() {
+    for evt in evts.read() {
         hub.switch_tab(&settings, &mut state, evt.tab.clone());
         _do_tick(
             &settings,
@@ -59,7 +59,7 @@ fn on_jump_to_bar(
     mut play_control_evts: EventWriter<PlayControlEvent>,
 ) {
     let mut bar_props = None;
-    for evt in evts.iter() {
+    for evt in evts.read() {
         bar_props = Some(evt.bar_props);
     }
     if let Some(bar_props) = bar_props {
@@ -81,7 +81,7 @@ fn on_play_control_evt(
     mut hub: NonSendMut<MidiHub>,
     mut evts: EventReader<PlayControlEvent>,
 ) {
-    for evt in evts.iter() {
+    for evt in evts.read() {
         match evt {
             PlayControlEvent::OnPlayState(play_state) => {
                 state.seek_position = None;

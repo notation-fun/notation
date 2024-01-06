@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy::asset::{AssetPath, HandleId, Asset};
+use edger_bevy_app::bevy::asset::{AssetPath, Asset};
 use bevy_asset_loader::prelude::*;
 
 #[cfg(feature = "with_egui")]
@@ -27,11 +27,11 @@ pub struct NotationAssets {
 
     //Not using the folder way, which is not supported under wasm
     //#[asset(folder = "extra")]
-    pub extra: Vec<HandleUntyped>,
+    pub extra: Vec<UntypedHandle>,
 }
 
 pub trait ExtraAssets : AssetCollection {
-    fn get_assets(&self) -> Vec<HandleUntyped>;
+    fn get_assets(&self) -> Vec<UntypedHandle>;
     fn get_syllable_font(_settings: &NotationSettings) -> String {
         "fonts/Sofia_Handwritten.otf".to_owned()
     }
@@ -101,17 +101,17 @@ impl NotationAssets {
         state.set(NotationAssetsStates::Loading);
     }
     pub fn get_extra<A: Asset>(&self, path: PathBuf) -> Option<Handle<A>> {
-        let handle_id = HandleId::from(AssetPath::new(path, None));
+        let handle_path = AssetPath::from(path);
         let mut handle = None;
         for asset in self.extra.iter() {
-            if asset.id() == handle_id {
+            if asset.path() == Some(&handle_path) {
                 handle = Some(asset.clone().typed::<A>());
                 break;
             }
         }
         handle
     }
-    pub fn add_extra(&mut self, handle: HandleUntyped) {
+    pub fn add_extra(&mut self, handle: UntypedHandle) {
         self.extra.push(handle)
     }
     pub fn add_extra_assets<A: ExtraAssets>(
@@ -129,7 +129,7 @@ pub struct NoExtraAssets {
 }
 
 impl ExtraAssets for NoExtraAssets {
-    fn get_assets(&self) -> Vec<HandleUntyped> {
+    fn get_assets(&self) -> Vec<UntypedHandle> {
         Vec::new()
     }
     fn setup_extra_keys(_settings: &NotationSettings, _asset_keys: &mut DynamicAssets) {

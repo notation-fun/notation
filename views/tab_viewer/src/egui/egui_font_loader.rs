@@ -1,4 +1,4 @@
-use edger_bevy_app::bevy::asset::{AssetLoader, LoadContext, LoadedAsset};
+use edger_bevy_app::bevy::asset::{AssetLoader, AsyncReadExt, LoadContext, io::Reader};
 use edger_bevy_app::bevy_prelude::*;
 use edger_bevy_app::bevy::utils::BoxedFuture;
 
@@ -7,13 +7,25 @@ use super::egui_fonts::EguiFont;
 #[derive(Default)]
 pub struct EguiFontAssetLoader;
 
+pub type LoadError = anyhow::Error;
+pub type LoadResult = anyhow::Result<Font, LoadError>;
+
 impl AssetLoader for EguiFontAssetLoader {
+    type Asset = Font;
+    type Settings = ();
+    type Error = LoadError;
+
+
     fn load<'a>(
         &'a self,
-        bytes: &'a [u8],
+        reader: &'a mut Reader,
+        _settings: &'a Self::Settings,
         load_context: &'a mut LoadContext,
-    ) -> BoxedFuture<'a, Result<(), anyhow::Error>> {
+    ) -> BoxedFuture<'a, LoadResult> {
         Box::pin(async move {
+            let mut bytes = Vec::new();
+            reader.read_to_end(&mut bytes).await?;
+
             if !EguiFont::has_data() {
                 let filename = load_context.path().file_name()
                 .and_then(|x| x.to_str())
@@ -23,8 +35,7 @@ impl AssetLoader for EguiFontAssetLoader {
                 EguiFont::set_font(filename.to_owned(), data);
             }
             let font = Font::try_from_bytes(bytes.to_vec())?;
-            load_context.set_default_asset(LoadedAsset::new(font));
-            Ok(())
+            Ok(font)
         })
     }
     fn extensions(&self) -> &[&str] {

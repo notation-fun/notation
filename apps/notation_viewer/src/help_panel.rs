@@ -98,7 +98,7 @@ impl HelpPanel {
         mut index: ResMut<HelpPanel>,
         mut evts: EventReader<EasyLinkEvent>,
     ) {
-        for evt in evts.iter() {
+        for evt in evts.read() {
             (&mut index).handle_link_evt(evt);
         }
     }

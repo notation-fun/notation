@@ -50,7 +50,7 @@ impl NotationKnowledgeBase {
         index: Res<IndexPanel>,
     ) {
         settings.add_ready_section = false;
-        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
+        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |_commands: &mut Commands, tab_path| {
             Some(TabAsset::from(index.make_tab(tab_path)))
         })
     }
@@ -60,7 +60,7 @@ impl NotationKnowledgeBase {
         mut window_resized_evts: EventReader<WindowResizedEvent>,
     ) {
         let mut need_reload = false;
-        for evt in window_resized_evts.iter() {
+        for evt in window_resized_evts.read() {
             if state.window_width > state.window_height {
                 if evt.last_width <= evt.last_height {
                     need_reload = true;

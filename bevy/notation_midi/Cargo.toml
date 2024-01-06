@@ -11,13 +11,15 @@ repository = { workspace = true }
 [lib]
 
 [features]
+default = [
+    "bevy/bevy_audio",
+]
 
 [dependencies]
 notation_model = { workspace = true }
 notation_audio = { workspace = true }
 
 bevy = { workspace = true }
-bevy_kira_audio = { workspace = true }
 
 midir = "0.8"
 helgoboss-midi = "0.4.0"

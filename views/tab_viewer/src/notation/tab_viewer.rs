@@ -114,7 +114,7 @@ impl TabViewer {
         mut switch_tab_evts: EventWriter<SwitchTabEvent>,
     ) {
         let mut tab = None;
-        for evt in evts.iter() {
+        for evt in evts.read() {
             tab = Some(evt.0.clone());
         }
         if let Some(tab) = tab {
@@ -142,7 +142,7 @@ impl TabViewer {
         content_query: ViewQuery<TabView>,
     ) {
         let mut resized = false;
-        for _evt in evts.iter() {
+        for _evt in evts.read() {
             resized = true;
         }
         if resized {

@@ -34,7 +34,6 @@ opt-level = 's'
 opt-level = 1
 
 [patch.crates-io]
-# bevy_kira_audio = { git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5" }
 
 [workspace.dependencies]
 notation_core = { path = "model/notation_core", version = "0.6.0" }
@@ -48,8 +47,8 @@ notation_tab = { path = "dsl/notation_tab", version = "0.6.0" }
 notation_audio = { path = "bevy/notation_audio", version = "0.6.0" }
 notation_midi = { path = "bevy/notation_midi", version = "0.6.0" }
 
-# edger_bevy_app = { path = "../../edger-dev/crates/bevy/app" }
-edger_bevy_app = { git = "https://github.com/edger-dev/crates", branch = "main" }
+edger_bevy_app = { path = "../../edger-dev/crates/bevy/app" }
+# edger_bevy_app = { git = "https://github.com/edger-dev/crates", branch = "main" }
 
 fehler = "1.0"
 serde = { version = "1.0", features = ["derive", "alloc"] }
@@ -68,14 +67,13 @@ rfd = "0.11"
 unic-langid = { version = "0.9", features = [ "macros" ] }
 clap = { version = "4.0", features = [ "derive" ] }
 
-bevy = { version = "0.11", default-features = false }
-bevy_prototype_lyon = "0.9"
-bevy_easings = "0.11"
-bevy_asset_loader = { version = "0.17", features = [ "standard_dynamic_assets" ]}
+bevy = { version = "0.12.1", default-features = false }
+bevy_prototype_lyon = "0.10.0"
+bevy_easings = "0.12.2"
+bevy_asset_loader = { version = "0.19.1", features = [ "standard_dynamic_assets" ]}
 
-bevy_egui = { version = "0.21" }
-
-bevy_kira_audio = { version = "0.11", git = "https://github.com/yjpark/bevy_kira_audio", branch = "stream-kira-0.5_bevy-0.11" }
+bevy_egui = { version = "0.24.0" }
+egui_plot = { version = "0.24.0" }
 
 # [target.'cfg(target_arch = "wasm32")'.workspace.dependencies]
 wasm-bindgen = "0.2.87"

@@ -133,7 +133,7 @@ fn on_tab_resized(
         return;
     }
     let mut bars = None;
-    for evt in evts.iter() {
+    for evt in evts.read() {
         bars = Some(&evt.0);
     }
     if let Some(_bars) = bars {
@@ -356,7 +356,7 @@ fn on_play_control_evt(
     if theme._bypass_systems {
         return;
     }
-    for evt in evts.iter() {
+    for evt in evts.read() {
         for (state_entity, mut tab_state) in tab_state_query.iter_mut() {
             if !tab_state.under_control {
                 continue;

@@ -62,7 +62,7 @@ impl RhythmView {
         if theme._bypass_systems {
             return;
         }
-        for evt in evts.iter() {
+        for evt in evts.read() {
             if evt.layout.size.width > 0.0 && evt.layout.size.height > 0.0 {
                 for (parent, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
                     if parent.get() == evt.entity {

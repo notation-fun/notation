@@ -42,7 +42,7 @@ impl TabContent {
             return;
         }
         let engine = NotationLayout::new(&theme, &state, &settings);
-        for evt in evts.iter() {
+        for evt in evts.read() {
             evt.view.do_layout(
                 &engine,
                 &mut layout_query,

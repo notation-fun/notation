@@ -22,10 +22,10 @@ impl NotationViewerAssets {
 }
 
 impl ExtraAssets for NotationViewerAssets {
-    fn get_assets(&self) -> Vec<HandleUntyped> {
+    fn get_assets(&self) -> Vec<UntypedHandle> {
         vec![
-            self.kb_welcome.clone_untyped(),
-            self.kb_usage.clone_untyped(),
+            self.kb_welcome.clone().untyped(),
+            self.kb_usage.clone().untyped(),
         ]
     }
     fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets) {

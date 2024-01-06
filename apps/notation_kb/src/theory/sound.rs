@@ -2,7 +2,7 @@ use std::f64::consts::{PI, FRAC_PI_2};
 
 use tab_viewer::edger_bevy_app::bevy_prelude::*;
 use tab_viewer::edger_bevy_app::egui::{self, *};
-use tab_viewer::edger_bevy_app::egui::plot::*;
+use egui_plot::*;
 use tab_viewer::prelude::{AudioConsts, StereoStream};
 
 use tab_viewer::kb::markdown_page::MarkDownPage;
@@ -315,7 +315,7 @@ impl SoundPage {
         let step = AudioConsts::FRAME_STEP;
         let mut t = 0.0;
         loop {
-            if stream.buffer.remaining() < 2 {
+            if stream.remaining() < 2 {
                 break;
             }
             let mut total = 0.0;

@@ -34,4 +34,5 @@ notation_viewer = { path = "../notation_viewer" }
 
 bevy = { workspace = true }
 bevy_asset_loader = { workspace = true }
+egui_plot = { workspace = true }
 

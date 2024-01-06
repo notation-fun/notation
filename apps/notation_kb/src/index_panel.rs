@@ -69,12 +69,15 @@ impl KbPanel for IndexPanel {
     fn get_title(&self) -> &str {
         "Index (F1, H)"
     }
+
     fn get_current_page_id(&self) -> KbPageId {
         self.current_page_id.clone()
     }
+
     fn set_current_page_id(&mut self, page_id: KbPageId) {
         self.current_page_id = page_id;
     }
+
     fn get_page_tabs(&self) -> Vec<(KbPageId, &'static str)> {
         vec![
             (Self::WELCOME, "Welcome"),
@@ -83,6 +86,7 @@ impl KbPanel for IndexPanel {
             (Self::GUITAR, "Guitar"),
         ]
     }
+
     fn get_page_mut(&mut self, page_id: KbPageId) -> &mut dyn KbPage {
         match page_id {
             Self::SOUND => &mut self.sound as &mut dyn KbPage,
@@ -111,6 +115,7 @@ impl IndexPanel {
             }
         }
     }
+
     pub fn hack_settings(
         state: Res<NotationState>,
         mut theme: ResMut<NotationTheme>,
@@ -144,6 +149,7 @@ impl IndexPanel {
             }
         }
     }
+
     pub fn index_ui(
         mut egui_ctx: EguiContexts,
         texts: Res<Assets<MarkDownAsset>>,
@@ -166,6 +172,7 @@ impl IndexPanel {
         }
         (&mut index).content_ui(&mut egui_ctx, &texts, &assets, &state, &theme, &mut link_evts);
     }
+
     fn content_ui(
         &mut self,
         egui_ctx: &mut EguiContexts,
@@ -190,16 +197,18 @@ impl IndexPanel {
             });
         }
     }
+
     pub fn handle_link_evts(
         mut midi_state: ResMut<MidiState>,
         mut play_control_evts: EventWriter<PlayControlEvent>,
         mut index: ResMut<IndexPanel>,
         mut evts: EventReader<EasyLinkEvent>,
     ) {
-        for evt in evts.iter() {
+        for evt in evts.read() {
             (&mut index).handle_link_evt(&mut midi_state, &mut play_control_evts, evt);
         }
     }
+
     fn handle_link_evt(
         &mut self,
         midi_state: &mut MidiState,
@@ -227,6 +236,7 @@ impl IndexPanel {
             _ => (),
         }
     }
+
     fn _index_audio(
         &mut self,
         stream: &mut StereoStream,
@@ -238,12 +248,19 @@ impl IndexPanel {
             _ => {},
         }
     }
+
     pub fn index_audio(
         mut index: ResMut<IndexPanel>,
-        mut stream: ResMut<StereoStream>,
+        stream_handle_query: Query<&Handle<StereoStream>>,
+        mut assets: ResMut<Assets<StereoStream>>,
     ) {
-        (&mut index)._index_audio(&mut stream);
+        for stream_handle in stream_handle_query.iter() {
+            if let Some(stream) = assets.get_mut(stream_handle) {
+                (&mut index)._index_audio(stream);
+            }
+        }
     }
+
     pub fn make_tab(&self, _tab_path: String) -> ProtoTab {
         match self.current_page_id {
             Self::SCALE => {
@@ -252,6 +269,7 @@ impl IndexPanel {
             _ => Self::make_default_tab(),
         }
     }
+
     pub fn make_default_tab() -> ProtoTab {
         ProtoTab::new_empty()
     }

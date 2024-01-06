@@ -97,20 +97,12 @@ impl MidiSynth {
 
     }
     pub fn send_buffer(&mut self, stream: &mut StereoStream) {
-        if stream.buffer.remaining() < self.buffer_left.len() + 1 {
+        if stream.remaining() < self.buffer_left.len() + 1 {
             return;
         }
         let synth = &self.synth;
-        // let use_buffer_2 = self.buffer.use_buffer_2;
-        /*
-        println!("NativeMidiSynth writing buffer: {} [{}]",
-            if use_buffer_2 { 2 } else { 1 },
-            data.len());
-            */
         synth.write((&mut self.buffer_left as &mut [f32], &mut self.buffer_right as &mut [f32])).unwrap();
-        for i in 0..self.buffer_left.len() {
-            stream.push(self.buffer_left[i] * Self::VOLUME_FACTOR, self.buffer_right[i] * Self::VOLUME_FACTOR);
-        }
+        stream.push_batch(Self::VOLUME_FACTOR, &self.buffer_left, &self.buffer_right);
     }
     pub fn init_channels(&self, _settings: &MidiSettings, _state: &MidiState) {}
     pub fn send(&self, _speed: &PlaySpeed, msg: &MidiMessage, velocity: u8) -> Result<(), String> {

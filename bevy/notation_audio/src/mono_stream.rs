@@ -1,86 +1,141 @@
 use bevy::prelude::*;
-use bevy_kira_audio::{AudioStream, Frame, StreamedAudio, AudioPlugin, AudioStreamPlugin};
-use ringbuf::{RingBuffer, Consumer, Producer};
+use bevy::audio::{Source, AddAudioSource};
+use ringbuffer::{AllocRingBuffer, RingBuffer};
+use bevy::utils::syncunsafecell::SyncUnsafeCell;
+use std::sync::Arc;
 
-pub struct MonoStreamOutput {
-    buffer: Consumer<f32>,
+pub struct MonoStreamDecoder {
+    buffer: Arc<SyncUnsafeCell<AllocRingBuffer<f32>>>,
 }
 
-impl std::fmt::Debug for MonoStreamOutput {
+impl std::fmt::Debug for MonoStreamDecoder {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<MonoStreamOutput>({}/{})", self.buffer.len(), self.buffer.capacity())
+        let buffer = unsafe {
+            self.buffer.as_ref().get().as_mut().unwrap()
+        };
+        write!(f, "<MonoStreamDecoder>({}/{})", buffer.len(), buffer.capacity())
     }
 }
 
-impl AudioStream for MonoStreamOutput {
-    fn next(&mut self, _: f64) -> Frame {
-        if self.buffer.is_full() {
-            let capacity = self.buffer.capacity();
-            let dropped = self.buffer.discard(self.buffer.capacity() / 2);
-            println!("<MonoStreamOutput>[{}] buffer is full, dropped: {}", capacity, dropped);
+impl Iterator for MonoStreamDecoder {
+    type Item = f32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let buffer = unsafe {
+            self.buffer.as_ref().get().as_mut().unwrap()
+        };
+        if buffer.is_full() {
+            let capacity = buffer.capacity();
+            println!("<MonoStreamDecoder>[{}] buffer is full", capacity);
         }
-        let data = self.buffer.pop().unwrap_or(0.0);
-        Frame::from_mono(data)
+        let data = buffer.dequeue().unwrap_or(0.0);
+        Some(data)
     }
 }
 
-impl Default for MonoStreamOutput {
-    fn default() -> Self {
-        let buffer = RingBuffer::new(1024);
-        let (_producer, consumer) = buffer.split();
-        Self { buffer: consumer }
+impl Source for MonoStreamDecoder {
+    fn current_frame_len(&self) -> Option<usize> {
+        None
+    }
+
+    fn channels(&self) -> u16 {
+        1
+    }
+
+    fn sample_rate(&self) -> u32 {
+        44_100
+    }
+
+    fn total_duration(&self) -> Option<std::time::Duration> {
+        None
     }
 }
 
-#[derive(Resource)]
+#[derive(Asset, TypePath)]
 pub struct MonoStream {
-    pub buffer: Producer<f32>,
     pub volume: f32,
+    buffer: Arc<SyncUnsafeCell<AllocRingBuffer<f32>>>,
 }
 
 impl std::fmt::Debug for MonoStream {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "<MonoStream>({}/{}, v:{})", self.buffer.len(), self.buffer.capacity(), self.volume)
+        let buffer = unsafe {
+            self.buffer.as_ref().get().as_mut().unwrap()
+        };
+        write!(f, "<MonoStream>({}/{}, v:{})", buffer.len(), buffer.capacity(), self.volume)
+    }
+}
+
+impl Decodable for MonoStream {
+    type DecoderItem = <MonoStreamDecoder as Iterator>::Item;
+    type Decoder = MonoStreamDecoder;
+
+    fn decoder(&self) -> Self::Decoder {
+        MonoStreamDecoder {
+            buffer: self.buffer.clone(),
+        }
     }
 }
 
 impl MonoStream {
-    pub const FRAME_STEP: f64 = 1.0 / 44_000.0;
+    pub const FRAME_STEP: f64 = 1.0 / 44_100.0;
 
     pub const DEFAULT_CAPACITY: usize = 4096;
     pub const DEFAULT_VOLUME: f32 = 1.0;
+
+    pub fn remaining(&self) -> usize {
+        let buffer = unsafe {
+            self.buffer.as_ref().get().as_mut().unwrap()
+        };
+        buffer.capacity() - buffer.len()
+    }
+
     pub fn push(&mut self, data: f32) {
-        if let Err(err) = self.buffer.push(data * self.volume) {
-            println!("<MonoStream> push failed: {} -> {:?}", data, err);
+        let buffer = unsafe {
+            self.buffer.as_ref().get().as_mut().unwrap()
+        };
+        buffer.push(data * self.volume);
+    }
+
+    pub fn push_batch(&mut self, volume_factor: f32, data: &[f32]) {
+        let buffer = unsafe {
+            self.buffer.as_ref().get().as_mut().unwrap()
+        };
+        for i in 0..data.len() {
+            buffer.push(data[i] * self.volume * volume_factor);
         }
     }
+
     pub fn init_streaming(
         app: &mut App,
         setup_default_streaming: bool,
     ) {
-        app.add_plugins(AudioPlugin);
-        app.add_plugins(AudioStreamPlugin::<MonoStreamOutput>::default());
+        app.add_audio_source::<MonoStream>();
         if setup_default_streaming {
             app.add_systems(Startup, Self::setup_default_streaming);
         }
     }
     pub fn setup_streaming(
         commands: &mut Commands,
-        streamed_audio: &StreamedAudio<MonoStreamOutput>,
+        assets: &mut ResMut<Assets<MonoStream>>,
         capacity: usize,
         volume: f32,
     ) {
-        let buffer = RingBuffer::<f32>::new(capacity);
-        let (producer, consumer) = buffer.split();
-        let stream = MonoStreamOutput { buffer: consumer };
-        streamed_audio.stream(stream);
-        let buffer = MonoStream { buffer: producer, volume };
-        commands.insert_resource(buffer);
+        let buffer = AllocRingBuffer::<f32>::new(capacity);
+        let stream = MonoStream {
+            volume,
+            buffer: Arc::new(SyncUnsafeCell::new(buffer)),
+        };
+        let stream_handle = assets.add(stream);
+        commands.spawn(AudioSourceBundle {
+            source: stream_handle,
+            ..default()
+        });
     }
     pub fn setup_default_streaming(
         mut commands: Commands,
-        streamed_audio: Res<StreamedAudio<MonoStreamOutput>>,
+        mut assets: ResMut<Assets<MonoStream>>,
     ) {
-        Self::setup_streaming(&mut commands, &streamed_audio, Self::DEFAULT_CAPACITY, Self::DEFAULT_VOLUME);
+        Self::setup_streaming(&mut commands, &mut assets, Self::DEFAULT_CAPACITY, Self::DEFAULT_VOLUME);
     }
 }

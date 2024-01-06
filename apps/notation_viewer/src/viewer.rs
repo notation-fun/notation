@@ -57,8 +57,8 @@ impl NotationViewer {
         asset_server: Res<AssetServer>,
         assets: Res<Assets<TabAsset>>,
     ) {
-        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |tab_path| {
-            NotationApp::load_tab_from_assets(&asset_server, &assets, tab_path)
+        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |commands: &mut Commands, tab_path| {
+            NotationApp::load_tab_from_assets(commands, &asset_server, &assets, tab_path)
         })
     }
     pub fn handle_keyboard_inputs(
@@ -182,7 +182,7 @@ impl NotationViewer {
         } else if mouse_input.just_pressed(MouseButton::Right) {
         } else if mouse_input.just_released(MouseButton::Right) {
         } else if mouse_input.pressed(MouseButton::Right) {
-            for event in mouse_motion_events.iter() {
+            for event in mouse_motion_events.read() {
                 //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
                 mouse_dragged.send(MouseDraggedEvent {
                     cursor_position,
@@ -190,7 +190,7 @@ impl NotationViewer {
                 });
             }
         } else {
-            for event in mouse_wheel_input.iter() {
+            for event in mouse_wheel_input.read() {
                 let mut delta = match event.unit {
                     MouseScrollUnit::Line => Vec2::new(
                         event.x * settings.panning_line_size,

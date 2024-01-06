@@ -37,12 +37,12 @@ impl NotationKnowledgeBaseAssets {
 }
 
 impl ExtraAssets for NotationKnowledgeBaseAssets {
-    fn get_assets(&self) -> Vec<HandleUntyped> {
+    fn get_assets(&self) -> Vec<UntypedHandle> {
         vec![
-            self.kb_welcome.clone_untyped(),
-            self.kb_sound.clone_untyped(),
-            self.kb_scale.clone_untyped(),
-            self.kb_guitar.clone_untyped(),
+            self.kb_welcome.clone().untyped(),
+            self.kb_sound.clone().untyped(),
+            self.kb_scale.clone().untyped(),
+            self.kb_guitar.clone().untyped(),
         ]
     }
     fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets) {

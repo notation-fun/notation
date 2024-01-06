@@ -48,7 +48,7 @@ impl BarView {
         }
         let engine = NotationLayout::new(&theme, &state, &settings);
         let mut bars = Vec::new();
-        for evt in evts.iter() {
+        for evt in evts.read() {
             evt.view.do_layout(
                 &mut commands,
                 &engine,
@@ -86,7 +86,7 @@ impl BarView {
             return;
         }
         if !settings.hide_bar_number {
-            for evt in evts.iter() {
+            for evt in evts.read() {
                 for (parent, mut transform) in text_query.iter_mut() {
                     if parent.get() == evt.entity {
                         theme

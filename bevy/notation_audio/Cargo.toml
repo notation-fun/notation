@@ -11,9 +11,13 @@ repository = { workspace = true }
 [lib]
 
 [features]
+default = [
+    "bevy/bevy_audio",
+    "bevy/bevy_asset",
+]
 
 [dependencies]
 bevy = { workspace = true }
-bevy_kira_audio = { workspace = true }
 
-ringbuf = "0.2.8"
+ringbuffer = "0.15.0"
+ringbuf = "0.4.0-rc.2"

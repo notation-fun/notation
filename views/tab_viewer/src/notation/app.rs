@@ -1,5 +1,5 @@
 use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy::{self, app::PluginGroupBuilder, window::PrimaryWindow};
+use edger_bevy_app::bevy::{self, app::PluginGroupBuilder, window::PrimaryWindow, asset::AssetPath};
 use edger_bevy_app::bevy::window::WindowResized;
 use edger_bevy_app::bevy_prototype_lyon;
 
@@ -157,7 +157,7 @@ impl NotationApp {
     }
 
     fn on_tab_asset(mut evts: EventReader<AssetEvent<TabAsset>>) {
-        for evt in evts.iter() {
+        for evt in evts.read() {
             println!("AssetEvent<TabAsset> {:?}", evt);
         }
     }
@@ -189,7 +189,7 @@ impl NotationApp {
         let Ok((window_entity, window)) = window_query.get_single() else {
             return;
         };
-        for evt in evts.iter() {
+        for evt in evts.read() {
             if window_entity != evt.window { continue }
             if evt.width as usize != app_state.window_width as usize
                 || evt.height as usize != app_state.window_height as usize
@@ -206,7 +206,7 @@ impl NotationApp {
             }
         }
     }
-    pub fn load_tab<F: Fn(String) -> Option<TabAsset>>(
+    pub fn load_tab<F: Fn(&mut Commands, String) -> Option<TabAsset>>(
         commands: &mut Commands,
         time: &Time,
         window_query: &mut Query<&mut Window, With<PrimaryWindow>>,
@@ -265,7 +265,7 @@ impl NotationApp {
             }
             println!("\nload_tab(): Loading: {}", state.tab_path);
             if state.tab_error.is_none() {
-                if let Some(tab_asset) = load_tab(state.tab_path.clone()) {
+                if let Some(tab_asset) = load_tab(commands, state.tab_path.clone()) {
                     match tab_asset.tab {
                         Ok(tab) => {
                             match Tab::try_parse_arc(tab, settings.add_ready_section, state.bars_range) {
@@ -285,22 +285,28 @@ impl NotationApp {
                             }
                         },
                         Err(err) => {
+                            println!("\nload_tab(): Load Failed: {}", err);
                             state.tab_error = Some(err);
                         },
                     }
+                } else {
+                    println!("\nload_tab(): Not Found: {}", state.tab_path);
                 }
             }
         }
     }
+
     pub fn load_tab_from_assets(
+        commands: &mut Commands,
         asset_server: &AssetServer,
         assets: &Assets<TabAsset>,
         tab_path: String,
     ) -> Option<TabAsset> {
-        let tab_asset: Handle<TabAsset> = asset_server.load(tab_path.as_str());
+        let tab_asset: Handle<TabAsset> = asset_server.load(AssetPath::from(tab_path));
         if let Some(asset) = assets.get(&tab_asset) {
             Some(asset.clone())
         } else {
+            commands.insert_resource(TabAssetHandle(tab_asset));
             None
         }
     }

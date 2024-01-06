@@ -160,7 +160,7 @@ fn on_tab_bars_resized(
     if theme._bypass_systems {
         return;
     }
-    for evt in evts.iter() {
+    for evt in evts.read() {
         let bars = &evt.0;
         for (entity, mut data) in tone_note_query.iter_mut() {
             for (view, layout) in bars.iter() {

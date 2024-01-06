@@ -301,7 +301,7 @@ impl TabBars {
         if theme._bypass_systems {
             return;
         }
-        for evt in evts.iter() {
+        for evt in evts.read() {
             let mut bars = Vec::new();
             for (parent, bar_view, layout) in cell_query.iter() {
                 if parent.get() == evt.0 {
@@ -325,7 +325,7 @@ impl TabBars {
             return;
         }
         let engine = NotationLayout::new(&theme, &state, &settings);
-        for evt in evts.iter() {
+        for evt in evts.read() {
             evt.view.do_layout(
                 &mut commands,
                 &engine,

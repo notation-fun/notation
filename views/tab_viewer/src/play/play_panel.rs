@@ -120,7 +120,7 @@ impl PlayPanel {
             return;
         }
         let engine = NotationLayout::new(&theme, &state, &settings);
-        for evt in evts.iter() {
+        for evt in evts.read() {
             evt.view.do_layout(
                 &mut commands,
                 &engine,
@@ -140,7 +140,7 @@ impl PlayPanel {
         if theme._bypass_systems {
             return;
         }
-        for evt in evts.iter() {
+        for evt in evts.read() {
             match evt {
                 PlayControlEvent::OnTick {
                     position: _,

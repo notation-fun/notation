@@ -51,10 +51,10 @@ impl Plugin for TabPlugin {
         app.add_event::<AddTabEvent>();
         app.add_event::<TabBarsResizedEvent>();
         app.add_event::<TabBarsResizedPreEvent>();
-        app.add_asset::<TabAsset>();
-        app.init_asset_loader::<TabAssetLoader>();
+        app.register_asset_loader(TabAssetLoader)
+        .init_asset::<TabAsset>();
         #[cfg(feature = "dsl")]
-        app.init_asset_loader::<crate::dsl::get_tab_asset::GetTabAssetLoader>();
+        app.register_asset_loader(crate::dsl::get_tab_asset::GetTabAssetLoader);
         app.add_systems(Update, (
             TabView::do_layout,
             TabContent::do_layout,
@@ -102,7 +102,7 @@ impl TabPlugin {
             return;
         }
         let mut pos = None;
-        for evt in evts.iter() {
+        for evt in evts.read() {
             pos = Some(app_state.convert_pos(evt.cursor_position));
         }
         if let Some(pos) = pos {
@@ -180,7 +180,7 @@ impl TabPlugin {
         if theme._bypass_systems {
             return;
         }
-        for evt in evts.iter() {
+        for evt in evts.read() {
             let pos = app_state.convert_pos(evt.cursor_position);
             #[cfg(feature = "with_egui")]
             if app_state.show_control && EguiControlPanel::is_pos_inside(app_state.window_width, pos) {
