@@ -28,21 +28,6 @@ impl NotationViewer {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
-fn fix_position(_window: &Window, pos: Vec2) -> Vec2 {
-    pos
-}
-
-#[cfg(target_arch = "wasm32")]
-fn fix_position(window: &Window, pos: Vec2) -> Vec2 {
-    let physical_height = window.physical_height() as f32;
-    let scale_factor = window.scale_factor() as f32;
-    Vec2{
-        x: pos.x,
-        y: physical_height / scale_factor - pos.y,
-    }
-}
-
 impl NotationViewer {
     fn load_tab(
         mut commands: Commands,
@@ -176,7 +161,6 @@ impl NotationViewer {
         let Some(cursor_position) = window.cursor_position() else {
             return;
         };
-        let cursor_position = fix_position(window, cursor_position);
         if mouse_input.just_released(MouseButton::Left) {
             mouse_clicked.send(MouseClickedEvent { cursor_position });
         } else if mouse_input.just_pressed(MouseButton::Right) {
@@ -230,7 +214,7 @@ impl NotationViewer {
             if touch_input.just_pressed(finger.id()) {
                 app_state.show_kb = false;
                 mouse_clicked.send(MouseClickedEvent {
-                    cursor_position: fix_position(window, finger.position()),
+                    cursor_position: finger.position(),
                 });
             } else if touch_input.just_released(finger.id()) {
                 app_state.debug_str = None;
