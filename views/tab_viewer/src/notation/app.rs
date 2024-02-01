@@ -3,6 +3,9 @@ use edger_bevy_app::bevy::{self, app::PluginGroupBuilder, window::PrimaryWindow,
 use edger_bevy_app::bevy::window::WindowResized;
 use edger_bevy_app::bevy_prototype_lyon;
 
+#[cfg(target_arch = "wasm32")]
+use edger_bevy_app::bevy::asset::AssetMetaCheck;
+
 use bevy_asset_loader::prelude::*;
 
 use crate::theme::theme_colors::UiColors;
@@ -16,6 +19,7 @@ use super::egui_control_panel::EguiControlPanel;
 use notation_midi::prelude::{
     MidiPlugin,
 };
+
 
 pub struct NotationPlugins;
 impl PluginGroup for NotationPlugins {
@@ -59,7 +63,11 @@ impl NotationApp {
         app.insert_resource(args);
 
         app.insert_resource(Msaa::Sample4);
-        
+
+        //https://github.com/bevyengine/bevy/issues/10157
+        #[cfg(target_arch = "wasm32")]
+        app.insert_resource(AssetMetaCheck::Never);
+
         // https://github.com/ostwilkens/bevy_web_fullscreen/pull/9
         app.add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {

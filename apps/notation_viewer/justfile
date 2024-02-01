@@ -4,12 +4,6 @@ run-native:
 run-native-cn:
     cargo run --features native -- --lang zh-CN
 
-install-wasm-bindgen-cli:
-    cargo install --force wasm-bindgen-cli --version=0.2.87
-
-install-basic-http-server:
-    cargo install basic-http-server
-
 build-web:
     cargo build --features web --target wasm32-unknown-unknown
     wasm-bindgen --out-dir dist --out-name notation_viewer --target web --no-typescript ../../target/wasm32-unknown-unknown/debug/notation_viewer.wasm
@@ -20,13 +14,22 @@ run-web:
 
 release-web:
     #!/usr/bin/env bash
-    cargo build --target wasm32-unknown-unknown --release
+    set -eu
+    cargo build --features web --target wasm32-unknown-unknown --release
     wasm-bindgen --out-dir dist --out-name notation_viewer --target web --no-typescript ../../target/wasm32-unknown-unknown/release/notation_viewer.wasm
-    wasm-opt -Os -o /tmp/notation_viewer_bg.wasm ./dist/notation_viewer_bg.wasm
+    echo "# Before wasm-opt"
+    ls -l ./dist/notation_viewer_bg.wasm
+    # wasm-opt -Os -o ./dist/notation_viewer_bg.opt.wasm ./dist/notation_viewer_bg.wasm
+    wasm-opt -Oz -o ./dist/notation_viewer_bg.opt.wasm ./dist/notation_viewer_bg.wasm
+    echo "# After wasm-opt"
+    ls -l ./dist/notation_viewer_bg.opt.wasm
     DATE=$(date -u +%Y-%m-%d)
-    HASH=$(md5sum /tmp/notation_viewer_bg.wasm | cut -d ' ' -f1)
+    HASH=$(md5sum ./dist/notation_viewer_bg.opt.wasm | cut -d ' ' -f1)
     echo $HASH
-    mv -v /tmp/notation_viewer_bg.wasm ../../public/notation/notation_viewer_bg_${DATE}_${HASH}.wasm
+    rm ../../public/notation/*.wasm
+    mv -v ./dist/notation_viewer_bg.opt.wasm ../../public/notation/notation_viewer_bg_${DATE}_${HASH}.wasm
+    ls -l ../../public/notation/notation_viewer_bg_${DATE}_${HASH}.wasm
+    cat ./dist/notation_viewer.js | sed "s/notation_viewer_bg.wasm/notation_viewer_bg_${DATE}_${HASH}.wasm/g" > ../../public/notation/notation_viewer.js
 
 release-windows:
     cargo build --release --features native
