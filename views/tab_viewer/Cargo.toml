@@ -67,6 +67,9 @@ unic-langid = { workspace = true }
 
 clap = { workspace = true, optional = true }
 
+# https://github.com/bevyengine/bevy/issues/11964
+bitflags = { workspace = true }
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = { workspace = true }
 console_error_panic_hook = { workspace = true }

@@ -342,7 +342,7 @@ impl TabBars {
         mut evts: EventWriter<TabBarsDoLayoutEvent>,
     ) {
         for (entity, view, layout) in query.iter() {
-            evts.send(TabBarsDoLayoutEvent::new(entity, &view, layout))
+            evts.send(TabBarsDoLayoutEvent::new(entity, &view, layout));
         }
     }
 }

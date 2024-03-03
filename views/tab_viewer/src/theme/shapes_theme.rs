@@ -85,11 +85,11 @@ impl ShapesTheme {
             font_size: self.shape_font_size,
             color: self.shape_font_color,
         };
-        let alignment = TextAlignment::Left;
+        let justify = JustifyText::Left;
         let anchor = Anchor::Center;
         let shape_text = ProtoEntry::trim_comments(text);
         entity_commands.insert(Text2dBundle {
-            text: Text::from_section(shape_text.as_str(), style).with_alignment(alignment),
+            text: Text::from_section(shape_text.as_str(), style).with_justify(justify),
             text_anchor: anchor,
             transform: Transform::from_xyz(self.shape_text_x, self.shape_text_y, self.shape_text_z),
             ..Default::default()
@@ -111,10 +111,10 @@ impl ShapesTheme {
             font_size: self.barre_font_size,
             color: self.barre_font_color,
         };
-        let alignment = TextAlignment::Left;
+        let justify = JustifyText::Left;
         let anchor = Anchor::Center;
         entity_commands.insert(Text2dBundle {
-            text: Text::from_section(barre.to_string(), style).with_alignment(alignment),
+            text: Text::from_section(barre.to_string(), style).with_justify(justify),
             transform: Transform::from_xyz(self.barre_text_x, self.barre_text_y, self.barre_text_z),
             text_anchor: anchor,
             ..Default::default()

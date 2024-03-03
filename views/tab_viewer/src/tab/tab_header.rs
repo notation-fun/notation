@@ -106,7 +106,7 @@ impl TabHeader {
     ) {
         for (entity, view, layout) in query.iter() {
             println!("TabContent::on_layout_changed({})", layout);
-            evts.send(TabHeaderDoLayoutEvent::new(entity, view, layout))
+            evts.send(TabHeaderDoLayoutEvent::new(entity, view, layout));
         }
     }
 }

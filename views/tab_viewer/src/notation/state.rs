@@ -8,8 +8,8 @@ use notation_model::prelude::*;
 pub struct NotationState {
     pub window_width: f32,
     pub window_height: f32,
-    pub window_scale_factor: f64,
-    pub scale_factor_override: Option<f64>,
+    pub window_scale_factor: f32,
+    pub scale_factor_override: Option<f32>,
     pub tab_path: String,
     pub tab: Option<Arc<Tab>>,
     pub bars_range: Option<(usize, usize)>,

@@ -72,7 +72,8 @@ impl NotationApp {
         app.add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 present_mode: bevy::window::PresentMode::AutoNoVsync,
-                fit_canvas_to_parent: true,
+                // https://github.com/bevyengine/bevy/pull/11057
+                // fit_canvas_to_parent: true,
                 ..default()
             }),
             ..default()
@@ -86,7 +87,7 @@ impl NotationApp {
         app.init_resource::<NotationSettings>();
         app.add_plugins(NotationPlugins);
 
-        app.add_state::<NotationAssetsStates>();
+        app.init_state::<NotationAssetsStates>();
 
         app.add_loading_state(LoadingState::new(NotationAssetsStates::Loading)
             .continue_to_state(NotationAssetsStates::Loaded)

@@ -63,17 +63,20 @@ float_eq = "1.0"
 rand = "0.8"
 getrandom = { version = "0.2", features=["wasm-bindgen"] }
 lazy_static = "1.4"
-rfd = "0.11"
+rfd = "0.14.0"
 unic-langid = { version = "0.9", features = [ "macros" ] }
 clap = { version = "4.0", features = [ "derive" ] }
 
-bevy = { version = "0.12.1", default-features = false }
-bevy_prototype_lyon = "0.10.0"
-bevy_easings = "0.12.2"
-bevy_asset_loader = { version = "0.19.1", features = [ "standard_dynamic_assets" ]}
+bevy = { version = "0.13.0", default-features = false }
+bevy_prototype_lyon = "0.11.0"
+bevy_easings = "0.13.0"
+bevy_asset_loader = { version = "0.20.0", features = [ "standard_dynamic_assets" ]}
 
-bevy_egui = { version = "0.24.0" }
-egui_plot = { version = "0.24.0" }
+# https://github.com/bevyengine/bevy/issues/11964
+bitflags = { version = "2.3", features = ["serde"] }
+
+bevy_egui = { version = "0.25.0" }
+egui_plot = { version = "0.26.2" }
 
 # [target.'cfg(target_arch = "wasm32")'.workspace.dependencies]
 wasm-bindgen = "0.2.87"

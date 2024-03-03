@@ -1,3 +1,4 @@
+use bevy::input::keyboard::KeyboardInput;
 use bevy::window::PrimaryWindow;
 use tab_viewer::edger_bevy_app::bevy_prelude::*;
 use tab_viewer::edger_bevy_app::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
@@ -47,7 +48,7 @@ impl NotationViewer {
         })
     }
     pub fn handle_keyboard_inputs(
-        keyboard_input: Res<Input<KeyCode>>,
+        keyboard_input: Res<ButtonInput<KeyCode>>,
         mut egui_ctx: EguiContexts,
         mut app_state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
@@ -67,7 +68,7 @@ impl NotationViewer {
             if !EguiControlPanel::HUD_MODE {
                 window_resized_evts.send(WindowResizedEvent::new(&app_state));
             }
-        } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::H)
+        } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::KeyH)
         {
             app_state.show_kb = !app_state.show_kb;
         } else if keyboard_input.just_released(KeyCode::F2)
@@ -79,13 +80,13 @@ impl NotationViewer {
         } else if keyboard_input.just_released(KeyCode::F4)
         {
             Control::toggle_hide_mini_map(&mut app_state, &mut settings, &mut theme);
-        } else if keyboard_input.just_released(KeyCode::F5) || keyboard_input.just_released(KeyCode::R)
+        } else if keyboard_input.just_released(KeyCode::F5) || keyboard_input.just_released(KeyCode::KeyR)
         {
             app_state.bars_range = None;
             Control::reload_tab(&mut app_state, &mut theme);
         } else if keyboard_input.just_released(KeyCode::Space) {
             MidiControl::play_or_pause(&mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::Return) {
+        } else if keyboard_input.just_released(KeyCode::Enter) {
             MidiControl::stop(&mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::Home) {
             MidiControl::jump_to_section_start(&midi_state, &mut jump_to_bar_evts);
@@ -95,52 +96,52 @@ impl NotationViewer {
             MidiControl::jump_to_prev_section(&midi_state, &mut jump_to_bar_evts);
         } else if keyboard_input.just_released(KeyCode::PageDown) {
             MidiControl::jump_to_next_section(&midi_state, &mut jump_to_bar_evts);
-        } else if keyboard_input.just_released(KeyCode::Left) {
+        } else if keyboard_input.just_released(KeyCode::ArrowLeft) {
             MidiControl::jump_to_prev_bar(&midi_state, &mut jump_to_bar_evts);
-        } else if keyboard_input.just_released(KeyCode::Right) {
+        } else if keyboard_input.just_released(KeyCode::ArrowRight) {
             MidiControl::jump_to_next_bar(&midi_state, &mut jump_to_bar_evts);
-        } else if keyboard_input.just_released(KeyCode::Up) {
+        } else if keyboard_input.just_released(KeyCode::ArrowUp) {
             MidiControl::jump_to_prev_row(&midi_state, &mut jump_to_bar_evts, &tab_bars_query);
-        } else if keyboard_input.just_released(KeyCode::Down) {
+        } else if keyboard_input.just_released(KeyCode::ArrowDown) {
             MidiControl::jump_to_next_row(&midi_state, &mut jump_to_bar_evts, &tab_bars_query);
-        } else if keyboard_input.just_released(KeyCode::Grave) {
+        } else if keyboard_input.just_released(KeyCode::Backquote) {
             MidiControl::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::Minus) {
             Control::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
-        } else if keyboard_input.just_released(KeyCode::S) {
+        } else if keyboard_input.just_released(KeyCode::KeyS) {
             Control::toggle_show_note_syllable(&mut app_state, &mut settings, &mut theme);
-        } else if keyboard_input.just_released(KeyCode::P) {
+        } else if keyboard_input.just_released(KeyCode::KeyP) {
             Control::toggle_show_note_pitch(&mut app_state, &mut settings, &mut theme);
-        } else if keyboard_input.just_released(KeyCode::F) {
+        } else if keyboard_input.just_released(KeyCode::KeyF) {
             Control::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
-        } else if keyboard_input.just_released(KeyCode::L) {
+        } else if keyboard_input.just_released(KeyCode::KeyL) {
             settings.should_loop = !settings.should_loop;
             MidiControl::sync_should_loop(&settings, &mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::A) {
+        } else if keyboard_input.just_released(KeyCode::KeyA) {
             MidiControl::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::B) {
+        } else if keyboard_input.just_released(KeyCode::KeyB) {
             MidiControl::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::C) {
+        } else if keyboard_input.just_released(KeyCode::KeyC) {
             MidiControl::clear_begin_end(&mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::D) {
+        } else if keyboard_input.just_released(KeyCode::KeyD) {
             MidiControl::set_begin_bar_ordinal(&mut midi_state, &mut play_control_evts);
             MidiControl::set_end_bar_ordinal(&mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::E) {
+        } else if keyboard_input.just_released(KeyCode::KeyE) {
             MidiControl::set_begin_end_to_section(&mut midi_state, &mut play_control_evts);
-        } else if keyboard_input.just_released(KeyCode::Key1) {
+        } else if keyboard_input.just_released(KeyCode::Digit1) {
             MidiControl::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 0.25);
-        } else if keyboard_input.just_released(KeyCode::Key2) {
+        } else if keyboard_input.just_released(KeyCode::Digit2) {
             MidiControl::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 0.5);
-        } else if keyboard_input.just_released(KeyCode::Key3) {
+        } else if keyboard_input.just_released(KeyCode::Digit3) {
             MidiControl::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 0.75);
-        } else if keyboard_input.just_released(KeyCode::Key4) {
+        } else if keyboard_input.just_released(KeyCode::Digit4) {
             MidiControl::set_speed_factor(&mut settings, &mut midi_state, &mut play_control_evts, 1.0);
         }
     }
 
     pub fn handle_mouse_inputs(
         window_query: Query<&Window, With<PrimaryWindow>>,
-        mouse_input: Res<Input<MouseButton>>,
+        mouse_input: Res<ButtonInput<MouseButton>>,
         mut egui_ctx: EguiContexts,
         mut app_state: ResMut<NotationState>,
         settings: Res<NotationSettings>,

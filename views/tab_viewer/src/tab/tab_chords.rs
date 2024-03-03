@@ -123,7 +123,7 @@ impl TabChords {
     ) {
         for (entity, view, layout) in query.iter() {
             println!("TabContent::on_layout_changed({})", layout);
-            evts.send(TabChordsDoLayoutEvent::new(entity, view, layout))
+            evts.send(TabChordsDoLayoutEvent::new(entity, view, layout));
         }
     }
 }

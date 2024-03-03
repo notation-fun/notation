@@ -59,7 +59,7 @@ impl TabContent {
     ) {
         for (entity, view, layout) in query.iter() {
             println!("TabContent::on_layout_changed({})", layout);
-            evts.send(TabContentDoLayoutEvent::new(entity, view, layout))
+            evts.send(TabContentDoLayoutEvent::new(entity, view, layout));
         }
     }
 }
