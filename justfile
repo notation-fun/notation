@@ -5,7 +5,7 @@ run-kb:
     cd apps/notation_kb && cargo run --features native
 
 install-wasm-bindgen-cli:
-    cargo install --force wasm-bindgen-cli --version=0.2.87
+    cargo install --force wasm-bindgen-cli --version=0.2.91
 
 install-basic-http-server:
     cargo install basic-http-server
