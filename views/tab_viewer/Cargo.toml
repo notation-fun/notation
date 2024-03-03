@@ -13,17 +13,17 @@ repository = { workspace = true }
 
 [features]
 default = [
-    "edger_bevy_app/view",
-    "edger_bevy_app/shape",
+    "edger_bevy/view",
+    "edger_bevy/shape",
 ]
 
 native = [
     "clap",
-    "edger_bevy_app/native",
+    "edger_bevy/native",
 ]
 
 web = [
-    "edger_bevy_app/web",
+    "edger_bevy/web",
 ]
 
 midi = [
@@ -35,11 +35,11 @@ dsl = [
 ]
 
 with_egui = [
-    "edger_bevy_app/egui",
+    "edger_bevy/egui",
 ]
 
 [dependencies]
-edger_bevy_app = { workspace = true }
+edger_bevy = { workspace = true }
 
 notation_model = { workspace = true }
 

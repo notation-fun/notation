@@ -2,9 +2,9 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 use std::sync::{Arc, RwLock};
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::{
+use edger_bevy::prelude::{
     entity, GridData, GridView, LayoutAnchor, LayoutChangedQuery, LayoutData, LayoutQuery,
     LayoutSize, View, ViewBundle, ViewQuery,
 };

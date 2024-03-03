@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use super::guitar_theme::GuitarTheme;
 use super::shapes_theme::ShapesTheme;

@@ -1,8 +1,8 @@
 use std::sync::RwLock;
 use lazy_static::lazy_static;
 
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, FontId, Style, TextStyle}, EguiContexts};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy_egui::{egui::{FontDefinitions, FontData, FontFamily, FontId, Style, TextStyle}, EguiContexts};
 
 use crate::prelude::{ExtraAssets, NotationSettings};
 

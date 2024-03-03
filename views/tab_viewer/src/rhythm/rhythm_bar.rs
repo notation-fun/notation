@@ -1,9 +1,9 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::{text, OutlineCircle, ShapeOp};
+use edger_bevy::prelude::{text, OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, Signature, Tab};
 
 use crate::prelude::{BarData, NotationAssets, NotationTheme, TabState, NotationSettings};

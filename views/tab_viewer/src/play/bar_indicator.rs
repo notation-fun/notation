@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy_prototype_lyon::prelude::*;
-use edger_bevy_app::prelude::{offscreen, LayoutData, ShapeOp, StrokeRectangle};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy_prototype_lyon::prelude::*;
+use edger_bevy::prelude::{offscreen, LayoutData, ShapeOp, StrokeRectangle};
 use notation_model::prelude::{Chord, Tab, TabBarProps, Units};
 use std::sync::Arc;
 

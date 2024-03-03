@@ -1,5 +1,5 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::{offscreen, LayoutSize, ShapeOp, StrokeLine};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::{offscreen, LayoutSize, ShapeOp, StrokeLine};
 
 use crate::prelude::{BarData, NotationTheme};
 

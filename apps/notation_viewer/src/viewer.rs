@@ -1,9 +1,9 @@
 use bevy::input::keyboard::KeyboardInput;
 use bevy::window::PrimaryWindow;
-use tab_viewer::edger_bevy_app::bevy_prelude::*;
-use tab_viewer::edger_bevy_app::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
+use tab_viewer::edger_bevy::bevy_prelude::*;
+use tab_viewer::edger_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
-use tab_viewer::edger_bevy_app::bevy_egui::EguiContext;
+use tab_viewer::edger_bevy::bevy_egui::EguiContext;
 use tab_viewer::prelude::*;
 use tab_viewer::settings::layout_settings::LayoutMode;
 

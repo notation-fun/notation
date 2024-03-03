@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::SingleData;
+use edger_bevy::prelude::SingleData;
 use notation_model::prelude::{Entry, LaneEntry, Position};
 use notation_midi::prelude::PlayingState;
 

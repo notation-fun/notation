@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use crate::lane::lane_view::LaneView;
 use crate::prelude::{
@@ -9,7 +9,7 @@ use crate::prelude::{
 };
 use crate::tab::tab_events::BarViewDoLayoutEvent;
 use crate::prelude::NotationLayout;
-use edger_bevy_app::prelude::{
+use edger_bevy::prelude::{
     entity, GridCell, LayoutQuery, ShapeOp, VBoxView, View, ViewQuery,
 };
 use notation_model::prelude::TabBar;

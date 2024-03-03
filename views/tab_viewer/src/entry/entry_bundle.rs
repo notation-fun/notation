@@ -1,5 +1,5 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::SingleData;
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::SingleData;
 use std::sync::Arc;
 
 use notation_model::prelude::*;

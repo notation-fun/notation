@@ -1,7 +1,7 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::egui::{self, Ui};
-use edger_bevy_app::prelude::MarkDownAsset;
-use edger_bevy_app::prelude::{EasyLinkEvent, EguiContexts};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::egui::{self, Ui};
+use edger_bevy::prelude::MarkDownAsset;
+use edger_bevy::prelude::{EasyLinkEvent, EguiContexts};
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme, KbPage, DockSide};
 

@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::{offscreen, ShapeOp, StrokeLine};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::{offscreen, ShapeOp, StrokeLine};
 
 use crate::prelude::{BarData, NotationTheme};
 

@@ -47,8 +47,8 @@ notation_tab = { path = "dsl/notation_tab", version = "0.6.0" }
 notation_audio = { path = "bevy/notation_audio", version = "0.6.0" }
 notation_midi = { path = "bevy/notation_midi", version = "0.6.0" }
 
-edger_bevy_app = { path = "../../edger-dev/crates/bevy/app" }
-# edger_bevy_app = { git = "https://github.com/edger-dev/crates", branch = "main" }
+edger_bevy = "0.1.0"
+# edger_bevy = { path = "../../edger-dev/edger_bevy" }
 
 fehler = "1.0"
 serde = { version = "1.0", features = ["derive", "alloc"] }

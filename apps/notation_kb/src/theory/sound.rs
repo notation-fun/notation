@@ -1,7 +1,7 @@
 use std::f64::consts::{PI, FRAC_PI_2};
 
-use tab_viewer::edger_bevy_app::bevy_prelude::*;
-use tab_viewer::edger_bevy_app::egui::{self, *};
+use tab_viewer::edger_bevy::bevy_prelude::*;
+use tab_viewer::edger_bevy::egui::{self, *};
 use egui_plot::*;
 use tab_viewer::prelude::{AudioConsts, StereoStream};
 

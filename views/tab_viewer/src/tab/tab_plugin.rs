@@ -1,5 +1,5 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::{GridData, LayoutData};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::{GridData, LayoutData};
 use notation_model::prelude::TabBarProps;
 use notation_midi::prelude::{JumpToBarEvent, PlayControlEvent};
 

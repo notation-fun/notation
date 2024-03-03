@@ -9,7 +9,7 @@ pub use notation_dsl;
 #[cfg(feature = "midi")]
 pub use notation_midi;
 
-pub use edger_bevy_app;
+pub use edger_bevy;
 
 pub mod chord;
 pub mod entry;
@@ -57,7 +57,7 @@ pub mod prelude {
     #[doc(hidden)]
     pub use notation_model::prelude::*;
     #[doc(hidden)]
-    pub use edger_bevy_app::prelude::*;
+    pub use edger_bevy::prelude::*;
     #[doc(hidden)]
     pub use crate::bar::bar_bundle::BarBundle;
     #[doc(hidden)]

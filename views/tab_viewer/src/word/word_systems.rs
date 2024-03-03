@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::ShapeOp;
+use edger_bevy::prelude::ShapeOp;
 use notation_model::prelude::LaneEntry;
 
 use crate::prelude::{EntryPlaying, NotationAssets, NotationSettings, NotationTheme};

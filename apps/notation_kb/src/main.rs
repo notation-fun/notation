@@ -1,4 +1,4 @@
-use tab_viewer::edger_bevy_app::bevy_prelude::bevy_main;
+use tab_viewer::edger_bevy::bevy_prelude::bevy_main;
 use tab_viewer::prelude::NotationArgs;
 use notation_kb::assets::NotationKnowledgeBaseAssets;
 

@@ -1,8 +1,8 @@
 use std::fmt::Display;
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::{
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::{
     entity, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };

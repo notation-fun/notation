@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy_prototype_lyon::prelude::*;
-use edger_bevy_app::prelude::{math, LayoutSize, OutlineRectangle, ShapeOp};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy_prototype_lyon::prelude::*;
+use edger_bevy::prelude::{math, LayoutSize, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{
     Duration, Fretboard6, HandShape6, Pick, Note, TabMeta, Units,
 };

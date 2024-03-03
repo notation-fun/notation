@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy::asset::{AssetLoader, AsyncReadExt, LoadContext, io::Reader};
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy::utils::BoxedFuture;
+use edger_bevy::bevy::asset::{AssetLoader, AsyncReadExt, LoadContext, io::Reader};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy::utils::BoxedFuture;
 
 use super::egui_fonts::EguiFont;
 

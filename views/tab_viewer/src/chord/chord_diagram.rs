@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::{OutlineCircle, ShapeOp};
+use edger_bevy::prelude::{OutlineCircle, ShapeOp};
 use notation_model::prelude::{Chord, ModelEntryProps};
 use notation_midi::prelude::PlayingState;
 

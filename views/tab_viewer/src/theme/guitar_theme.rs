@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 use notation_model::prelude::GUITAR_STRING_NUM;
 
 use super::theme_texts::NoteTexts;

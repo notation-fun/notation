@@ -1,5 +1,5 @@
-use tab_viewer::edger_bevy_app::bevy_prelude::*;
-use tab_viewer::edger_bevy_app::egui::{self, *};
+use tab_viewer::edger_bevy::bevy_prelude::*;
+use tab_viewer::edger_bevy::egui::{self, *};
 
 use tab_viewer::kb::markdown_page::MarkDownPage;
 use tab_viewer::kb::notes_page::NotesPage;

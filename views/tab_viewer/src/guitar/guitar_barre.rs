@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy_prototype_lyon::prelude::*;
-use edger_bevy_app::prelude::{offscreen, FillRectangle, LayoutSize, ShapeOp};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy_prototype_lyon::prelude::*;
+use edger_bevy::prelude::{offscreen, FillRectangle, LayoutSize, ShapeOp};
 use notation_model::prelude::{HandShape6, Pick};
 
 use crate::prelude::NotationTheme;

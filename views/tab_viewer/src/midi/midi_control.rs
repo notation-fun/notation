@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::GridData;
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::GridData;
 use notation_model::prelude::{BarPosition, Tab, Units, TabBar};
 use notation_midi::prelude::{MidiSettings, MidiState, TickResult, JumpToBarEvent, PlayControlEvent};
 

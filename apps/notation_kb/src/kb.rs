@@ -1,5 +1,5 @@
 use bevy::window::PrimaryWindow;
-use tab_viewer::edger_bevy_app::bevy_prelude::*;
+use tab_viewer::edger_bevy::bevy_prelude::*;
 //use tab_viewer::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
 
 use tab_viewer::prelude::*;

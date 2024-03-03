@@ -1,7 +1,7 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy::window::PrimaryWindow;
-use edger_bevy_app::bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
-use edger_bevy_app::bevy_egui::EguiContexts;
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy::window::PrimaryWindow;
+use edger_bevy::bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
+use edger_bevy::bevy_egui::EguiContexts;
 use float_eq::float_ne;
 use notation_midi::prelude::{JumpToBarEvent, PlayControlEvent};
 

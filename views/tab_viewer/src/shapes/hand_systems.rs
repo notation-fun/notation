@@ -1,8 +1,8 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use notation_model::prelude::LaneEntry;
 
-use edger_bevy_app::prelude::ShapeOp;
+use edger_bevy::prelude::ShapeOp;
 
 use super::shape_barre::ShapeBarreData;
 use super::shape_diagram::{ShapeDiagramData4, ShapeDiagramData6};

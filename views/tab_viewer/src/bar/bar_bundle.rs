@@ -1,5 +1,5 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::LayoutData;
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::LayoutData;
 use std::sync::Arc;
 
 use notation_model::prelude::TabBar;

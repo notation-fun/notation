@@ -1,5 +1,5 @@
-//use edger_bevy_app::bevy::app::StartupStage;
-use edger_bevy_app::bevy::{prelude::*, window::PrimaryWindow};
+//use edger_bevy::bevy::app::StartupStage;
+use edger_bevy::bevy::{prelude::*, window::PrimaryWindow};
 //use crate::bevy_egui::{EguiSettings};
 
 use crate::prelude::{NotationState};

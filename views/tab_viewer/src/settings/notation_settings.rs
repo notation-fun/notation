@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 use unic_langid::LanguageIdentifier;
 use unic_langid::langid;
 

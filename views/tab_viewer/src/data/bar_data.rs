@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use notation_model::prelude::{TabBar, TabBarProps, TabPosition, Units};
 

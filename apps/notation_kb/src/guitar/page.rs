@@ -1,5 +1,5 @@
-use tab_viewer::edger_bevy_app::bevy_prelude::*;
-use tab_viewer::edger_bevy_app::egui::*;
+use tab_viewer::edger_bevy::bevy_prelude::*;
+use tab_viewer::edger_bevy::egui::*;
 
 use tab_viewer::kb::markdown_page::MarkDownPage;
 use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, Syllable};

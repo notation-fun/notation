@@ -1,4 +1,4 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use crate::entry::entry_plugin;
 use crate::harmony::harmony_plugin::HarmonyPlugin;
@@ -10,7 +10,7 @@ use crate::prelude::{
 use crate::shapes::shapes_plugin::ShapesPlugin;
 use crate::strings::strings_plugin::StringsPlugin;
 use crate::prelude::NotationLayout;
-use edger_bevy_app::prelude::{
+use edger_bevy::prelude::{
     ColorBackground, LayoutConstraint, LayoutSize, VBoxCell, View, ViewBundle,
 };
 use notation_model::prelude::{BarLane, LaneKind, TabBar};

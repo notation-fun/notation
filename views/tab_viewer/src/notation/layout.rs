@@ -1,4 +1,4 @@
-use edger_bevy_app::prelude::LayoutEnv;
+use edger_bevy::prelude::LayoutEnv;
 
 use crate::prelude::{NotationState, NotationSettings, NotationTheme};
 

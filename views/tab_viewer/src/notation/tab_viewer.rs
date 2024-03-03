@@ -1,10 +1,10 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 use notation_model::prelude::Tab;
 use notation_midi::prelude::SwitchTabEvent;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use edger_bevy_app::prelude::{
+use edger_bevy::prelude::{
     ColorBackground, DockView, LayoutQuery, View, ViewBundle, ViewQuery, LayoutConstraint, ViewRootQuery, ViewRootAddedQuery,
 };
 

@@ -1,4 +1,4 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 use notation_model::prelude::Tab;
 use std::fmt::Display;
 use std::sync::Arc;
@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::prelude::{
     NotationState, NotationAssets, NotationLayout, NotationSettings, NotationTheme,
 };
-use edger_bevy_app::prelude::{
+use edger_bevy::prelude::{
     entity, text, ColorBackground, DockPanel, DockSide, GridData, GridView, LayoutAnchor,
     LayoutConstraint, LayoutQuery, LayoutSize, View, ViewBundle, ViewQuery,
 };

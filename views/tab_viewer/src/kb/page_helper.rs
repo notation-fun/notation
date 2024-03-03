@@ -1,6 +1,6 @@
-use edger_bevy_app::egui::color_picker::show_color;
-use edger_bevy_app::egui::{Ui};
-use edger_bevy_app::prelude::{color_to_hsva, label_from_style, EasyMarkStyle};
+use edger_bevy::egui::color_picker::show_color;
+use edger_bevy::egui::{Ui};
+use edger_bevy::prelude::{color_to_hsva, label_from_style, EasyMarkStyle};
 use notation_model::prelude::{Interval, Key, Scale, Semitones, Syllable};
 
 use crate::prelude::NotationTheme;

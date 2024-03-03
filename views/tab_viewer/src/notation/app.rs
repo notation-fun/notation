@@ -1,10 +1,10 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy::{self, app::PluginGroupBuilder, window::PrimaryWindow, asset::AssetPath};
-use edger_bevy_app::bevy::window::WindowResized;
-use edger_bevy_app::bevy_prototype_lyon;
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy::{self, app::PluginGroupBuilder, window::PrimaryWindow, asset::AssetPath};
+use edger_bevy::bevy::window::WindowResized;
+use edger_bevy::bevy_prototype_lyon;
 
 #[cfg(target_arch = "wasm32")]
-use edger_bevy_app::bevy::asset::AssetMetaCheck;
+use edger_bevy::bevy::asset::AssetMetaCheck;
 
 use bevy_asset_loader::prelude::*;
 
@@ -105,10 +105,10 @@ impl NotationApp {
         console_error_panic_hook::set_once();
 
         #[cfg(feature = "with_egui")]
-        edger_bevy_app::prelude::EasyLinkEvent::setup(&mut app);
+        edger_bevy::prelude::EasyLinkEvent::setup(&mut app);
 
         #[cfg(feature = "with_egui")]
-        app.add_plugins(edger_bevy_app::bevy_egui::EguiPlugin);
+        app.add_plugins(edger_bevy::bevy_egui::EguiPlugin);
 
         app.add_plugins(NotationUiPlugin);
 

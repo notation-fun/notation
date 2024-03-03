@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::{DoLayoutEvent, ShapeOp};
+use edger_bevy::prelude::{DoLayoutEvent, ShapeOp};
 
 use crate::prelude::{BarPlaying, NotationAssetsStates, NotationTheme};
 use crate::prelude::NotationLayout;

@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy_prototype_lyon;
-use edger_bevy_app::prelude::{FillRectangle, ShapeOp};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy_prototype_lyon;
+use edger_bevy::prelude::{FillRectangle, ShapeOp};
 
 use crate::prelude::NotationTheme;
 

@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy_prototype_lyon::prelude::*;
-use edger_bevy_app::prelude::{offscreen, OutlineRectangle, ShapeOp};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy_prototype_lyon::prelude::*;
+use edger_bevy::prelude::{offscreen, OutlineRectangle, ShapeOp};
 use notation_model::prelude::{PickNote, Syllable};
 use notation_midi::prelude::PlayingState;
 

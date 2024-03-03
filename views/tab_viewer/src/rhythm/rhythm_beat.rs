@@ -1,9 +1,9 @@
 use std::f32::consts::PI;
 use std::fmt::Display;
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::{FillCircle, ShapeOp};
+use edger_bevy::prelude::{FillCircle, ShapeOp};
 use notation_model::prelude::{Signature, TabBarProps, Units};
 
 use crate::prelude::{BarData, NotationTheme};

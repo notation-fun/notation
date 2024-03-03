@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
-use edger_bevy_app::prelude::{
+use edger_bevy::prelude::{
     entity, GridCell, LayoutAnchor, LayoutChangedWithChildrenQuery, View, ViewBundle,
 };
 use notation_model::prelude::TabChord;

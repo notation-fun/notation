@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
-use edger_bevy_app::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp, SingleData};
+use edger_bevy::prelude::{ColorBackground, DoLayoutEvent, GridData, LayoutData, ShapeOp, SingleData};
 use notation_model::prelude::{LaneEntry, Position, Tab};
 use notation_midi::prelude::{PlayControlEvent, PlayState, PlayingState, SwitchTabEvent, JumpToBarEvent, TickResult};
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use crate::bar::bar_beat::BarBeatData;
 use crate::bar::bar_view::BarView;

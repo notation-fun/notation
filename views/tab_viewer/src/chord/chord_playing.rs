@@ -1,4 +1,4 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use notation_model::prelude::{Chord, ModelEntryProps, Position};
 use notation_midi::prelude::PlayingState;

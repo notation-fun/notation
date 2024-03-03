@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy::app::{PluginGroup, PluginGroupBuilder};
-use edger_bevy_app::bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
-use edger_bevy_app::prelude::ViewShapeDevPlugin;
+use edger_bevy::bevy::app::{PluginGroup, PluginGroupBuilder};
+use edger_bevy::bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
+use edger_bevy::prelude::ViewShapeDevPlugin;
 
 pub struct NotationDevPlugins;
 impl PluginGroup for NotationDevPlugins {

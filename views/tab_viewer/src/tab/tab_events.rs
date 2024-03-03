@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use notation_model::prelude::*;
 
@@ -8,7 +8,7 @@ use crate::bar::bar_view::BarView;
 use crate::prelude::TabBars;
 use crate::rhythm::rhythm_view::RhythmView;
 use crate::prelude::NotationLayout;
-use edger_bevy_app::prelude::{DoLayoutEvent, LayoutData};
+use edger_bevy::prelude::{DoLayoutEvent, LayoutData};
 
 use super::tab_chords::TabChords;
 use super::tab_content::TabContent;

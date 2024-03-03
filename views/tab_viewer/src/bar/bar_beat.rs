@@ -1,8 +1,8 @@
 use std::fmt::Display;
 
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::bevy_prototype_lyon::prelude::*;
-use edger_bevy_app::prelude::{FillRectangle, LayoutSize, ShapeOp};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::bevy_prototype_lyon::prelude::*;
+use edger_bevy::prelude::{FillRectangle, LayoutSize, ShapeOp};
 
 use crate::prelude::{BarData, NotationTheme, TabState};
 use notation_model::prelude::{Signature, TabBar};

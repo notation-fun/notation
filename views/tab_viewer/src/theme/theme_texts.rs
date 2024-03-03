@@ -1,8 +1,8 @@
-use edger_bevy_app::prelude::{text, LayoutData};
+use edger_bevy::prelude::{text, LayoutData};
 use notation_model::prelude::{Syllable, Scale, Key};
 use serde::{Deserialize, Serialize};
 
-use edger_bevy_app::bevy::{prelude::*, sprite::Anchor};
+use edger_bevy::bevy::{prelude::*, sprite::Anchor};
 
 use crate::prelude::{NotationAssets, NotationSettings, ThemeColors};
 

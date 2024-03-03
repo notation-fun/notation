@@ -1,6 +1,6 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::egui::Ui;
-use edger_bevy_app::prelude::{MarkDownAsset, EasyLinkEvent};
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::egui::Ui;
+use edger_bevy::prelude::{MarkDownAsset, EasyLinkEvent};
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 

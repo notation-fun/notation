@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::prelude::ShapeOp;
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::ShapeOp;
 use notation_model::lane_kind::LaneKind;
 
 use crate::chord::chord_view::ChordView;

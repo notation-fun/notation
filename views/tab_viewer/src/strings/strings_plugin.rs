@@ -1,5 +1,5 @@
-use edger_bevy_app::bevy::ecs::system::EntityCommands;
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy::ecs::system::EntityCommands;
+use edger_bevy::bevy_prelude::*;
 
 use super::pick_bundle::PickBundle;
 

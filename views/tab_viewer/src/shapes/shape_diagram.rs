@@ -1,7 +1,7 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use crate::prelude::{EntryData, NotationTheme};
-use edger_bevy_app::prelude::{offscreen, ShapeOp, StrokePath};
+use edger_bevy::prelude::{offscreen, ShapeOp, StrokePath};
 use notation_model::prelude::{HandShape4, HandShape6, LaneEntry};
 
 macro_rules! impl_shape_diagram {

@@ -1,8 +1,8 @@
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 use std::fmt::Display;
 use std::sync::Arc;
 
-use edger_bevy_app::prelude::{entity, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
+use edger_bevy::prelude::{entity, DockView, LayoutQuery, View, ViewBundle, ViewQuery};
 use notation_model::prelude::Tab;
 
 use crate::prelude::{

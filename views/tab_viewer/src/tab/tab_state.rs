@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use edger_bevy_app::bevy_prelude::*;
+use edger_bevy::bevy_prelude::*;
 
 use notation_model::prelude::{Uuid, Position, Tab};
 use notation_midi::prelude::{PlayControl, PlayState};

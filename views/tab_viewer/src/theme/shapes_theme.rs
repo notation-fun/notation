@@ -1,7 +1,7 @@
 use notation_model::prelude::ProtoEntry;
 use serde::{Deserialize, Serialize};
 
-use edger_bevy_app::bevy::{prelude::*, sprite::Anchor};
+use edger_bevy::bevy::{prelude::*, sprite::Anchor};
 
 use crate::prelude::NotationAssets;
 

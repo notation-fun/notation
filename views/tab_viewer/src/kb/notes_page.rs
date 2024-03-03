@@ -1,8 +1,8 @@
-use edger_bevy_app::bevy_prelude::*;
-use edger_bevy_app::egui::{self, Ui};
-use edger_bevy_app::prelude::MarkDownAsset;
-use edger_bevy_app::prelude::{label_from_style, EasyMarkStyle};
-use edger_bevy_app::prelude::EasyLinkEvent;
+use edger_bevy::bevy_prelude::*;
+use edger_bevy::egui::{self, Ui};
+use edger_bevy::prelude::MarkDownAsset;
+use edger_bevy::prelude::{label_from_style, EasyMarkStyle};
+use edger_bevy::prelude::EasyLinkEvent;
 use notation_model::prelude::{TrackKind, Scale, Key};
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
