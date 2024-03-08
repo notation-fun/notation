@@ -36,9 +36,6 @@ pub mod theme;
 pub mod notation;
 
 #[cfg(feature = "with_egui")]
-pub mod egui;
-
-#[cfg(feature = "with_egui")]
 pub mod kb;
 
 #[cfg(target_arch = "wasm32")]
@@ -54,6 +51,8 @@ pub mod midi;
 pub mod dsl;
 
 pub mod prelude {
+    #[doc(hidden)]
+    pub use unic_langid::LanguageIdentifier;
     #[doc(hidden)]
     pub use notation_model::prelude::*;
     #[doc(hidden)]
@@ -82,12 +81,6 @@ pub mod prelude {
     pub use crate::entry::entry_playing::EntryPlaying;
     #[doc(hidden)]
     pub use crate::entry::entry_plugin::EntryPlugin;
-    #[cfg(feature = "with_egui")]
-    #[doc(hidden)]
-    pub use crate::egui::egui_fonts::EguiFontSizes;
-    #[cfg(feature = "with_egui")]
-    #[doc(hidden)]
-    pub use crate::egui::egui_plugin::EguiPlugin;
     #[doc(hidden)]
     pub use crate::guitar::guitar_view::GuitarView;
     #[doc(hidden)]
@@ -145,19 +138,15 @@ pub mod prelude {
     #[doc(hidden)]
     pub use crate::notation::app::{NotationApp, NotationPlugins};
     #[doc(hidden)]
-    pub use crate::notation::args::{NotationArgs};
+    pub use crate::notation::args::NotationArgs;
     #[doc(hidden)]
-    pub use crate::notation::events::*;
+    pub use crate::notation::state::NotationState;
     #[doc(hidden)]
-    pub use crate::notation::state::{NotationState};
-    #[doc(hidden)]
-    pub use crate::notation::assets::{NotationAssets, NotationAssetsStates, ExtraAssets, NoExtraAssets};
+    pub use crate::notation::assets::NotationAssets;
     #[doc(hidden)]
     pub use crate::notation::layout::NotationLayout;
     #[doc(hidden)]
     pub use crate::notation::tab_viewer::TabViewer;
-    #[doc(hidden)]
-    pub use crate::notation::ui::NotationUiPlugin;
     #[doc(hidden)]
     pub use crate::notation::control::Control;
     #[cfg(feature = "with_egui")]

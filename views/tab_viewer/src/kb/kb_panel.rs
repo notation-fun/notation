@@ -1,7 +1,7 @@
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::egui::{self, Ui};
 use edger_bevy::prelude::MarkDownAsset;
-use edger_bevy::prelude::{EasyLinkEvent, EguiContexts};
+use edger_bevy::prelude::{EasyLinkEvent, EguiContexts, AppState};
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme, KbPage, DockSide};
 
@@ -38,7 +38,7 @@ pub trait KbPanel {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &mut NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
@@ -53,14 +53,14 @@ pub trait KbPanel {
         egui::ScrollArea::vertical().show(ui, |ui| {
             let page_id = self.get_current_page_id();
             self.get_page_mut(page_id)
-                .page_ui(ui, texts, assets, state, theme, link_evts);
+                .page_ui(ui, texts, app_state, state, theme, link_evts);
         });
     }
     fn window_ui(
         &mut self,
         egui_ctx: &mut EguiContexts,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &mut NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
@@ -74,7 +74,7 @@ pub trait KbPanel {
             .id(Self::window_id());
         window = window.open(&mut window_open);
         window.show(egui_ctx.ctx_mut(), |ui| {
-            self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
+            self.kb_panel_ui(ui, texts, app_state, state, theme, link_evts);
         });
         if !window_open {
             self.on_close();
@@ -85,7 +85,7 @@ pub trait KbPanel {
         &mut self,
         egui_ctx: &mut EguiContexts,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &mut NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
@@ -102,28 +102,28 @@ pub trait KbPanel {
                     .min_height(size.0)
                     .max_height(size.1)
                     .show(egui_ctx.ctx_mut(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
+                        self.kb_panel_ui(ui, texts, app_state, state, theme, link_evts);
                     }),
             DockSide::Bottom =>
                 egui::TopBottomPanel::bottom(title)
                     .min_height(size.0)
                     .max_height(size.1)
                     .show(egui_ctx.ctx_mut(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
+                        self.kb_panel_ui(ui, texts, app_state, state, theme, link_evts);
                     }),
             DockSide::Left =>
                 egui::SidePanel::left(title)
                     .min_width(size.0)
                     .max_width(size.1)
                     .show(egui_ctx.ctx_mut(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
+                        self.kb_panel_ui(ui, texts, app_state, state, theme, link_evts);
                     }),
             DockSide::Right =>
                 egui::SidePanel::right(title)
                     .min_width(size.0)
                     .max_width(size.1)
                     .show(egui_ctx.ctx_mut(), |ui|{
-                        self.kb_panel_ui(ui, texts, assets, state, theme, link_evts);
+                        self.kb_panel_ui(ui, texts, app_state, state, theme, link_evts);
                     }),
         };
     }

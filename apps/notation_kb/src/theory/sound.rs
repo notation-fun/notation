@@ -1,5 +1,6 @@
 use std::f64::consts::{PI, FRAC_PI_2};
 
+use tab_viewer::edger_bevy::app::state::AppState;
 use tab_viewer::edger_bevy::bevy_prelude::*;
 use tab_viewer::edger_bevy::egui::{self, *};
 use egui_plot::*;
@@ -71,12 +72,12 @@ impl KbPage for SoundPage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
+        MarkDownPage::markdown_ui(ui, texts, app_state, state, theme, link_evts, self.path.as_str());
         ui.separator();
         match self.section {
             SoundSection::SingleString(ref mut data) => {
@@ -91,14 +92,14 @@ impl KbContent for SoundPage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
         match self.section {
             SoundSection::SingleString(ref mut data) => {
-                Self::single_string_ui(ui, texts, assets, state, theme, link_evts, data);
+                Self::single_string_ui(ui, texts, app_state, state, theme, link_evts, data);
             },
         }
     }
@@ -200,7 +201,7 @@ impl SoundPage {
     pub fn single_string_ui(
         ui: &mut Ui,
         _texts: &Assets<MarkDownAsset>,
-        _assets: &NotationAssets,
+        _app_state: &AppState,
         _state: &NotationState,
         theme: &NotationTheme,
         _link_evts: &mut EventWriter<EasyLinkEvent>,

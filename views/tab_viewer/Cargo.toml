@@ -15,6 +15,7 @@ repository = { workspace = true }
 default = [
     "edger_bevy/view",
     "edger_bevy/shape",
+    "edger_bevy/assets",
 ]
 
 native = [

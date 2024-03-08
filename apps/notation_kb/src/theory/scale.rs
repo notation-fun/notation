@@ -20,12 +20,12 @@ impl KbPage for ScalePage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
+        MarkDownPage::markdown_ui(ui, texts, app_state, state, theme, link_evts, self.path.as_str());
         ui.separator();
         let scale = self.scale.clone();
         let key = self.key.clone();
@@ -55,7 +55,7 @@ impl KbPage for ScalePage {
             });
         });
         ui.separator();
-        NotesPage::notes_ui(ui, texts, assets, state, theme, link_evts, self.scale, self.key, self.transpose);
+        NotesPage::notes_ui(ui, texts, app_state, state, theme, link_evts, self.scale, self.key, self.transpose);
         ui.separator();
         ui.horizontal(|ui| {
             if ui.button("play").clicked() {
@@ -73,7 +73,7 @@ impl KbContent for ScalePage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,

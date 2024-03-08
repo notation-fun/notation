@@ -1,12 +1,11 @@
-use bevy::input::keyboard::KeyboardInput;
 use bevy::window::PrimaryWindow;
 use tab_viewer::edger_bevy::bevy_prelude::*;
 use tab_viewer::edger_bevy::bevy::input::mouse::{MouseMotion, MouseWheel, MouseScrollUnit};
-
-use tab_viewer::edger_bevy::bevy_egui::EguiContext;
+use tab_viewer::edger_bevy::prelude::AppState;
 use tab_viewer::prelude::*;
 use tab_viewer::settings::layout_settings::LayoutMode;
 
+use crate::assets::NotationViewerAssets;
 use crate::help_panel::HelpPanel;
 
 pub struct NotationViewer();
@@ -22,10 +21,10 @@ impl NotationViewer {
             Self::load_tab,
             HelpPanel::help_ui,
             HelpPanel::handle_link_evts,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
-    pub fn run<A: ExtraAssets>(args: NotationArgs) {
-        tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
+    pub fn run(args: NotationArgs) {
+        tab_viewer::prelude::NotationApp::run_with_extra::<NotationViewerAssets, _>(args, Self::extra);
     }
 }
 
@@ -34,6 +33,7 @@ impl NotationViewer {
         mut commands: Commands,
         time: Res<Time>,
         mut window_query: Query<&mut Window, With<PrimaryWindow>>,
+        app_state: Res<AppState>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
         settings: Res<NotationSettings>,
@@ -43,14 +43,15 @@ impl NotationViewer {
         asset_server: Res<AssetServer>,
         assets: Res<Assets<TabAsset>>,
     ) {
-        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |commands: &mut Commands, tab_path| {
+        NotationApp::load_tab(&mut commands, &time, &mut window_query, &app_state, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |commands: &mut Commands, tab_path| {
             NotationApp::load_tab_from_assets(commands, &asset_server, &assets, tab_path)
         })
     }
     pub fn handle_keyboard_inputs(
         keyboard_input: Res<ButtonInput<KeyCode>>,
         mut egui_ctx: EguiContexts,
-        mut app_state: ResMut<NotationState>,
+        app_state: Res<AppState>,
+        mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
         midi_settings: Res<MidiSettings>,
@@ -64,26 +65,26 @@ impl NotationViewer {
             return;
         }
         if keyboard_input.just_released(KeyCode::F10) || keyboard_input.just_released(KeyCode::Backslash) {
-            app_state.show_control = !app_state.show_control;
+            state.show_control = !state.show_control;
             if !EguiControlPanel::HUD_MODE {
                 window_resized_evts.send(WindowResizedEvent::new(&app_state));
             }
         } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::KeyH)
         {
-            app_state.show_kb = !app_state.show_kb;
+            state.show_kb = !state.show_kb;
         } else if keyboard_input.just_released(KeyCode::F2)
         {
-            Control::toggle_hide_guitar_view(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_hide_guitar_view(&mut state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F3)
         {
-            Control::toggle_hide_chords_view(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_hide_chords_view(&mut state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F4)
         {
-            Control::toggle_hide_mini_map(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_hide_mini_map(&mut state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::F5) || keyboard_input.just_released(KeyCode::KeyR)
         {
-            app_state.bars_range = None;
-            Control::reload_tab(&mut app_state, &mut theme);
+            state.bars_range = None;
+            Control::reload_tab(&mut state, &mut theme);
         } else if keyboard_input.just_released(KeyCode::Space) {
             MidiControl::play_or_pause(&mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::Enter) {
@@ -107,13 +108,13 @@ impl NotationViewer {
         } else if keyboard_input.just_released(KeyCode::Backquote) {
             MidiControl::seek_forward(&midi_settings, &mut midi_state, &mut play_control_evts);
         } else if keyboard_input.just_released(KeyCode::Minus) {
-            Control::toggle_layout_mode(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_layout_mode(&mut state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::KeyS) {
-            Control::toggle_show_note_syllable(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_show_note_syllable(&mut state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::KeyP) {
-            Control::toggle_show_note_pitch(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_show_note_pitch(&mut state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::KeyF) {
-            Control::toggle_always_show_fret(&mut app_state, &mut settings, &mut theme);
+            Control::toggle_always_show_fret(&mut state, &mut settings, &mut theme);
         } else if keyboard_input.just_released(KeyCode::KeyL) {
             settings.should_loop = !settings.should_loop;
             MidiControl::sync_should_loop(&settings, &mut midi_state, &mut play_control_evts);

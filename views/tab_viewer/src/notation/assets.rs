@@ -1,15 +1,14 @@
-use std::path::PathBuf;
 use edger_bevy::bevy_prelude::*;
-use edger_bevy::bevy::asset::{AssetPath, Asset};
 use bevy_asset_loader::prelude::*;
+use edger_bevy::prelude::*;
+use unic_langid::LanguageIdentifier;
 
-#[cfg(feature = "with_egui")]
-use crate::egui::egui_fonts::EguiFontSizes;
-
-use crate::settings::notation_settings::NotationSettings;
+use crate::prelude::{NotationArgs, NotationSettings};
 
 #[derive(AssetCollection, Resource)]
 pub struct NotationAssets {
+    pub lang: LanguageIdentifier,
+
     #[asset(key = "syllable_font")]
     pub syllable_font: Handle<Font>,
 
@@ -24,114 +23,73 @@ pub struct NotationAssets {
 
     #[asset(key = "fretboard_image")]
     pub fretboard: Handle<Image>,
-
-    //Not using the folder way, which is not supported under wasm
-    //#[asset(folder = "extra")]
-    pub extra: Vec<UntypedHandle>,
 }
 
-pub trait ExtraAssets : AssetCollection {
-    fn get_assets(&self) -> Vec<UntypedHandle>;
-    fn get_syllable_font(_settings: &NotationSettings) -> String {
+impl FromWorld for NotationAssets {
+    fn from_world(world: &mut World) -> Self {
+        let args = world.get_resource::<NotationArgs>().unwrap();
+        Self {
+            lang: NotationSettings::parse_lang(&args.lang),
+            syllable_font: default(),
+            fret_font: default(),
+            latin_font: default(),
+            lyrics_font: default(),
+            fretboard: default(),
+        }
+    }
+}
+
+impl NotationAssets {
+    fn get_syllable_font(&self) -> String {
         "fonts/Sofia_Handwritten.otf".to_owned()
     }
-    fn get_fret_font(_settings: &NotationSettings) -> String {
+    fn get_fret_font(&self) -> String {
         "fonts/Bitter-Bold.ttf".to_owned()
     }
-    fn get_latin_font(_settings: &NotationSettings) -> String {
+    fn get_latin_font(&self) -> String {
         "fonts/FiraMono-Medium.ttf".to_owned()
     }
-    fn get_lyrics_font(settings: &NotationSettings) -> String {
-        if settings.lang() == NotationSettings::ZH_CN {
+    fn get_lyrics_font(&self) -> String {
+        if self.lang == NotationSettings::ZH_CN {
             #[cfg(feature = "with_egui")]
             return "fonts/zh-CN/NotoSansSC-Medium.otf.egui".to_owned();
 
-            #[cfg(not(feature = "with_egui"))]
             return "fonts/zh-CN/NotoSansSC-Medium.otf".to_owned();
         }
+
         #[cfg(feature = "with_egui")]
         return "fonts/en-US/FiraMono-Medium.ttf.egui".to_owned();
 
-        #[cfg(not(feature = "with_egui"))]
         return "fonts/en-US/FiraMono-Medium.ttf".to_owned();
     }
-    fn get_fretboard_image(_settings: &NotationSettings) -> String {
+
+    fn get_fretboard_image(&self) -> String {
         "png/fretboard.png".to_owned()
     }
+
     #[cfg(feature = "with_egui")]
-    fn get_egui_font_sizes(&self, settings: &NotationSettings) -> EguiFontSizes {
-        if settings.lang() == NotationSettings::ZH_CN {
+    fn get_egui_font_sizes(&self) -> EguiFontSizes {
+        if self.lang == NotationSettings::ZH_CN {
             return EguiFontSizes::BIGGER;
         }
         EguiFontSizes::default()
     }
-    fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets);
-}
 
-#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
-pub enum NotationAssetsStates {
-    #[default]
-    Init,
-    Loading,
-    Loaded,
-}
-
-impl NotationAssets {
-    pub fn setup_keys<A: ExtraAssets>(
-        settings: Res<NotationSettings>,
-        mut asset_keys: ResMut<DynamicAssets>,
-        mut state: ResMut<NextState<NotationAssetsStates>>,
+    #[cfg(feature = "with_egui")]
+    pub fn setup_egui_context(
+        assets: Res<NotationAssets>,
+        mut egui_ctx: EguiContexts,
     ) {
-        asset_keys.register_asset("syllable_font", Box::new(StandardDynamicAsset::File {
-            path: A::get_syllable_font(&settings)
-        }));
-        asset_keys.register_asset("fret_font", Box::new(StandardDynamicAsset::File {
-            path: A::get_fret_font(&settings)
-        }));
-        asset_keys.register_asset("latin_font", Box::new(StandardDynamicAsset::File {
-            path: A::get_latin_font(&settings)
-        }));
-        asset_keys.register_asset("lyrics_font", Box::new(StandardDynamicAsset::File {
-            path: A::get_lyrics_font(&settings)
-        }));
-        asset_keys.register_asset("fretboard_image", Box::new(StandardDynamicAsset::File {
-            path: A::get_fretboard_image(&settings)
-        }));
-        A::setup_extra_keys(&settings, &mut asset_keys);
-        state.set(NotationAssetsStates::Loading);
-    }
-    pub fn get_extra<A: Asset>(&self, path: PathBuf) -> Option<Handle<A>> {
-        let handle_path = AssetPath::from(path);
-        let mut handle = None;
-        for asset in self.extra.iter() {
-            if asset.path() == Some(&handle_path) {
-                handle = Some(asset.clone().typed::<A>());
-                break;
-            }
-        }
-        handle
-    }
-    pub fn add_extra(&mut self, handle: UntypedHandle) {
-        self.extra.push(handle)
-    }
-    pub fn add_extra_assets<A: ExtraAssets>(
-        extra: Res<A>,
-        mut assets: ResMut<NotationAssets>,
-    ) {
-        for asset in extra.get_assets().iter() {
-            assets.add_extra(asset.clone());
-        }
+        assets.get_egui_font_sizes().apply_context(&mut egui_ctx);
     }
 }
 
-#[derive(AssetCollection, Resource)]
-pub struct NoExtraAssets {
-}
-
-impl ExtraAssets for NoExtraAssets {
-    fn get_assets(&self) -> Vec<UntypedHandle> {
-        Vec::new()
-    }
-    fn setup_extra_keys(_settings: &NotationSettings, _asset_keys: &mut DynamicAssets) {
+impl PreloadAssets for NotationAssets {
+    fn setup_keys(&self, asset_keys: &mut DynamicAssets) {
+        register_file_asset(asset_keys, "syllable_font", self.get_syllable_font());
+        register_file_asset(asset_keys, "fret_font", self.get_fret_font());
+        register_file_asset(asset_keys, "latin_font", self.get_latin_font());
+        register_file_asset(asset_keys, "lyrics_font", self.get_lyrics_font());
+        register_file_asset(asset_keys, "fretboard_image", self.get_fretboard_image());
     }
 }

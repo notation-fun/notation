@@ -2,13 +2,14 @@ use std::sync::Arc;
 
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::prelude::ShapeOp;
+use edger_bevy::prelude::AssetsStates;
 use notation_model::lane_kind::LaneKind;
 
 use crate::chord::chord_view::ChordView;
 use crate::tone::tone_line::ToneLineData;
 use crate::lane::lane_layout::LaneLayoutData;
 use crate::prelude::{
-    entity, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets, NotationAssetsStates,
+    entity, ChordBundle, EntryBundle, LyricsPlugin, NotationAssets,
     NotationSettings, NotationTheme, ShapesPlugin, StringsPlugin, ToneBundle,
 };
 use crate::shapes::shape_diagram::{ShapeDiagramData4, ShapeDiagramData6};
@@ -29,7 +30,7 @@ impl Plugin for EntryPlugin {
             ChordView::on_layout_changed,
             ChordView::on_chord_playing_changed,
             on_tab_bars_resized,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
 }
 

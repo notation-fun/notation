@@ -1,3 +1,4 @@
+use edger_bevy::app::state::AppState;
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::egui::{self, Ui};
 use edger_bevy::prelude::MarkDownAsset;
@@ -18,7 +19,7 @@ impl KbPage for NotesPage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
@@ -41,7 +42,7 @@ impl KbPage for NotesPage {
                 .and_then(|x| x.get_fretboard6())
         }).map(|x| x.capo).unwrap_or(0);
         let transpose = capo as i8;
-        Self::notes_ui(ui, texts, assets, state, theme, link_evts, scale, key, transpose);
+        Self::notes_ui(ui, texts, app_state, state, theme, link_evts, scale, key, transpose);
     }
 }
 
@@ -49,7 +50,7 @@ impl NotesPage {
     pub fn notes_ui(
         ui: &mut Ui,
         _texts: &Assets<MarkDownAsset>,
-        _assets: &NotationAssets,
+        _app_state: &AppState,
         _state: &NotationState,
         theme: &NotationTheme,
         _link_evts: &mut EventWriter<EasyLinkEvent>,

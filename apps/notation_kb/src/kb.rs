@@ -4,6 +4,7 @@ use tab_viewer::edger_bevy::bevy_prelude::*;
 
 use tab_viewer::prelude::*;
 
+use crate::assets::NotationKnowledgeBaseAssets;
 use crate::index_panel::IndexPanel;
 use notation_viewer::viewer::NotationViewer;
 
@@ -27,10 +28,10 @@ impl NotationKnowledgeBase {
             NotationViewer::handle_touch_inputs,
             Self::load_tab,
             Self::on_window_resized,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
-    pub fn run<A: ExtraAssets>(args: NotationArgs) {
-        tab_viewer::prelude::NotationApp::run_with_extra::<A, _>(args, Self::extra);
+    pub fn run(args: NotationArgs) {
+        tab_viewer::prelude::NotationApp::run_with_extra::<NotationKnowledgeBaseAssets, _>(args, Self::extra);
     }
     fn setup_state(
         mut state: ResMut<NotationState>,
@@ -41,6 +42,7 @@ impl NotationKnowledgeBase {
         mut commands: Commands,
         time: Res<Time>,
         mut window_query: Query<&mut Window, With<PrimaryWindow>>,
+        app_state: Res<AppState>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
         mut settings: ResMut<NotationSettings>,
@@ -50,18 +52,19 @@ impl NotationKnowledgeBase {
         index: Res<IndexPanel>,
     ) {
         settings.add_ready_section = false;
-        NotationApp::load_tab(&mut commands, &time, &mut window_query, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |_commands: &mut Commands, tab_path| {
+        NotationApp::load_tab(&mut commands, &time, &mut window_query, &app_state, &mut state, &mut theme, &settings, &mut evts, &entities, &viewer_query, |_commands: &mut Commands, tab_path| {
             Some(TabAsset::from(index.make_tab(tab_path)))
         })
     }
     fn on_window_resized(
+        app_state: Res<AppState>,
         mut state: ResMut<NotationState>,
         mut theme: ResMut<NotationTheme>,
         mut window_resized_evts: EventReader<WindowResizedEvent>,
     ) {
         let mut need_reload = false;
         for evt in window_resized_evts.read() {
-            if state.window_width > state.window_height {
+            if app_state.window_width > app_state.window_height {
                 if evt.last_width <= evt.last_height {
                     need_reload = true;
                 }

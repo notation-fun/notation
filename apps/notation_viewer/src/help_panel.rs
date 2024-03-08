@@ -1,6 +1,8 @@
 use bevy::prelude::*;
+use tab_viewer::edger_bevy::app::state::AppState;
 use tab_viewer::edger_bevy::bevy_egui::EguiContext;
 
+use tab_viewer::notation::args::NotationArgs;
 use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings, EguiContexts};
 use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme};
 
@@ -23,15 +25,15 @@ pub struct HelpPanel {
 
 impl FromWorld for HelpPanel {
     fn from_world(world: &mut World) -> Self {
-        let settings = world.get_resource::<NotationSettings>().unwrap();
+        let assets = world.get_resource::<NotationViewerAssets>().unwrap();
         Self {
             skip_frames: 2,
             open_times: 0,
             current_page_id: Self::WELCOME,
-            welcome: MarkDownPage::new(NotationViewerAssets::get_welcome_path(&settings)),
+            welcome: MarkDownPage::new(assets.get_welcome_path()),
             notes: Default::default(),
             chords: Default::default(),
-            usage: MarkDownPage::new(NotationViewerAssets::get_usage_path(&settings)),
+            usage: MarkDownPage::new(assets.get_usage_path()),
         }
     }
 }
@@ -82,7 +84,7 @@ impl HelpPanel {
     pub fn help_ui(
         mut egui_ctx: EguiContexts,
         texts: Res<Assets<MarkDownAsset>>,
-        assets: Res<NotationAssets>,
+        app_state: Res<AppState>,
         mut state: ResMut<NotationState>,
         theme: Res<NotationTheme>,
         mut link_evts: EventWriter<EasyLinkEvent>,
@@ -92,7 +94,7 @@ impl HelpPanel {
             help.skip_frames -= 1;
             return;
         }
-        (&mut help).window_ui(&mut egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts);
+        (&mut help).window_ui(&mut egui_ctx, &texts, &app_state, &mut state, &theme, &mut link_evts);
     }
     pub fn handle_link_evts(
         mut index: ResMut<HelpPanel>,

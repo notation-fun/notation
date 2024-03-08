@@ -5,5 +5,5 @@ use notation_viewer::assets::NotationViewerAssets;
 #[bevy_main]
 fn main() {
     let args = NotationArgs::parse_args();
-    notation_viewer::viewer::NotationViewer::run::<NotationViewerAssets>(args);
+    notation_viewer::viewer::NotationViewer::run(args);
 }

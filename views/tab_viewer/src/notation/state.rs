@@ -6,10 +6,6 @@ use notation_model::prelude::*;
 
 #[derive(Resource)]
 pub struct NotationState {
-    pub window_width: f32,
-    pub window_height: f32,
-    pub window_scale_factor: f32,
-    pub scale_factor_override: Option<f32>,
     pub tab_path: String,
     pub tab: Option<Arc<Tab>>,
     pub bars_range: Option<(usize, usize)>,
@@ -25,10 +21,6 @@ pub struct NotationState {
 impl NotationState {
     pub fn new(tab_path: String) -> Self {
         Self {
-            window_width: 0.0,
-            window_height: 0.0,
-            window_scale_factor: 1.0,
-            scale_factor_override: None,
             tab_path,
             tab: None,
             bars_range: None,
@@ -58,12 +50,6 @@ impl NotationState {
         self.tab_error = None;
         self._despawn_delay_seconds = 0.1;
         self._load_tab_delay_seconds = 0.2;
-    }
-    pub fn convert_pos(&self, pos: Vec2) -> Vec2 {
-        Vec2::new(
-            pos.x - self.window_width / 2.0,
-            self.window_height / 2.0 - pos.y,
-        )
     }
     pub fn calc_bar_number(&self, add_ready_section: bool, bar_ordinal: usize) -> usize {
         if let Some((begin, _end)) = self.bars_range {

@@ -1,6 +1,6 @@
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::egui::Ui;
-use edger_bevy::prelude::{MarkDownAsset, EasyLinkEvent};
+use edger_bevy::prelude::{MarkDownAsset, EasyLinkEvent, AppState};
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
@@ -22,7 +22,7 @@ pub trait KbPage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
@@ -34,7 +34,7 @@ pub trait KbContent {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,

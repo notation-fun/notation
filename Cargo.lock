@@ -2011,11 +2011,12 @@ dependencies = [
 
 [[package]]
 name = "edger_bevy"
-version = "0.1.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68380ec5d252a457c9fbc8078bd17780cb2695383d161eaa029395538ad80cb0"
+checksum = "6d1bf093c60f7369182cb42b4b936da57191ae2c85858f4fd783a3bd61f2615e"
 dependencies = [
  "bevy",
+ "bevy_asset_loader",
  "console_error_panic_hook",
  "edger_bevy_egui",
  "edger_bevy_shape",
@@ -2029,19 +2030,21 @@ dependencies = [
 
 [[package]]
 name = "edger_bevy_egui"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b40f7d82cec2f5eae40d0f479733d305404e4a22b3e61f276f3cd6f4705fcc81"
+checksum = "407039e35dc92b0e5bbea4dda20f5289b881daa2e4385b2053e6f1645fbb806a"
 dependencies = [
+ "anyhow",
  "bevy",
  "bevy_egui",
+ "lazy_static",
 ]
 
 [[package]]
 name = "edger_bevy_shape"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "055c8f65c5993f812d92745a601411103170a5cf7688cc8cbcd245224c62196b"
+checksum = "43825f6373af990c79e09c6b02d11eec82b9bc4338a1c83a6a9f3b9c57bffed6"
 dependencies = [
  "bevy",
  "bevy_prototype_lyon",
@@ -2059,9 +2062,9 @@ dependencies = [
 
 [[package]]
 name = "edger_bevy_view"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c6810d2a7b79de1e3a74c8569454b3297488fa3f03e1e2af5d5b040173dd0fd"
+checksum = "343bfd94b6d530db25412826dafccf9f1bff27fe976ce2b7db5b0543dac059e6"
 dependencies = [
  "bevy",
  "edger_bevy_shape",

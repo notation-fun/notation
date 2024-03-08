@@ -1,5 +1,5 @@
 use edger_bevy::bevy_prelude::*;
-use edger_bevy::prelude::{GridData, LayoutData};
+use edger_bevy::prelude::{GridData, LayoutData, AssetsStates, AppState};
 use notation_model::prelude::TabBarProps;
 use notation_midi::prelude::{JumpToBarEvent, PlayControlEvent};
 
@@ -12,7 +12,7 @@ use crate::notation::egui_control_panel::EguiControlPanel;
 
 use crate::play::play_button::PlayButton;
 use crate::prelude::{
-    AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationState, NotationAssetsStates,
+    AddTabEvent, MouseClickedEvent, MouseDraggedEvent, NotationState,
     NotationSettings, NotationTheme, TabAsset, TabBars, TabState,
 };
 use crate::rhythm::rhythm_bar::RhythmBarData;
@@ -65,7 +65,7 @@ impl Plugin for TabPlugin {
             TabChords::do_layout,
             TabBars::on_resized_pre,
             TabBars::do_layout,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
 }
 
@@ -74,7 +74,7 @@ impl TabPlugin {
         app.add_systems(Update, (
             Self::on_mouse_clicked,
             Self::on_mouse_dragged,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
     pub fn jump_to_bar(jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>, bar_props: TabBarProps) {
         jump_to_bar_evts.send(JumpToBarEvent::new(bar_props));
@@ -82,7 +82,8 @@ impl TabPlugin {
     fn on_mouse_clicked(
         mut evts: EventReader<MouseClickedEvent>,
         theme: Res<NotationTheme>,
-        mut app_state: ResMut<NotationState>,
+        mut app_state: Res<AppState>,
+        mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,
         mini_bar_query: Query<(&MiniBar, &LayoutData, &GlobalTransform)>,
@@ -106,12 +107,12 @@ impl TabPlugin {
             pos = Some(app_state.convert_pos(evt.cursor_position));
         }
         if let Some(pos) = pos {
-            if app_state.show_control {
+            if state.show_control {
                 #[cfg(feature = "with_egui")]
                 if !EguiControlPanel::is_pos_inside(app_state.window_width, pos) {
-                    app_state.show_control = false;
+                    state.show_control = false;
                 }
-            } else if app_state.show_kb {
+            } else if state.show_kb {
                 //TODO: after #125 done, can pass click event in case of not inside help panel
             } else {
                 println!("tab_plugin::on_mouse_clicked() -> {:?}", pos);
@@ -130,8 +131,8 @@ impl TabPlugin {
                 }
                 for (_rhythm_view, layout, global_transform) in rhythm_query.iter() {
                     if layout.is_pos_inside(pos, global_transform) {
-                        if !app_state.show_control {
-                            app_state.show_control = true;
+                        if !state.show_control {
+                            state.show_control = true;
                         }
                         return;
                     }
@@ -166,7 +167,8 @@ impl TabPlugin {
 
     fn on_mouse_dragged(
         mut evts: EventReader<MouseDraggedEvent>,
-        app_state: Res<NotationState>,
+        app_state: Res<AppState>,
+        state: Res<NotationState>,
         theme: Res<NotationTheme>,
         settings: Res<NotationSettings>,
         mut tab_bars_query: Query<(
@@ -183,10 +185,10 @@ impl TabPlugin {
         for evt in evts.read() {
             let pos = app_state.convert_pos(evt.cursor_position);
             #[cfg(feature = "with_egui")]
-            if app_state.show_control && EguiControlPanel::is_pos_inside(app_state.window_width, pos) {
+            if state.show_control && EguiControlPanel::is_pos_inside(app_state.window_width, pos) {
                 return;
             }
-            if app_state.show_kb {
+            if state.show_kb {
                 //TODO: after #125 done, can pass drag event in case of not inside help panel
                 return;
             }

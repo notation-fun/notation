@@ -1,4 +1,5 @@
 use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::{AssetsStates, AppState};
 use notation_model::prelude::Tab;
 use notation_midi::prelude::SwitchTabEvent;
 use std::fmt::Display;
@@ -10,13 +11,13 @@ use edger_bevy::prelude::{
 
 use crate::mini::mini_map::MiniMap;
 use crate::prelude::{
-    GuitarView, NotationState, NotationAssets, NotationAssetsStates, NotationSettings,
+    GuitarView, NotationState, NotationAssets, NotationSettings,
     NotationTheme, AddTabEvent,
 };
 use crate::tab::tab_view::TabView;
 use crate::prelude::NotationLayout;
 
-use super::events::WindowResizedEvent;
+use edger_bevy::prelude::WindowResizedEvent;
 
 #[derive(Clone, Debug, Component)]
 pub struct TabViewer {
@@ -54,7 +55,7 @@ impl Plugin for TabViewerPlugin {
                     .in_set(GuitarViewLabel::UpdateStringStates)
                     .after(GuitarViewLabel::UpdateHandShapes),
             GuitarView::adjust_y_by_barre,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
 }
 
@@ -80,6 +81,7 @@ impl TabViewer {
         viewer_entity
     }
     pub fn do_root_layout(
+        app_state: &AppState,
         engine: &NotationLayout,
         layout_query: &mut LayoutQuery,
         panel_query: &ViewQuery<MiniMap>,
@@ -91,7 +93,7 @@ impl TabViewer {
             return;
         }
         let constraint =
-            LayoutConstraint::from((engine.state.window_width, engine.state.window_height));
+            LayoutConstraint::from((app_state.window_width, app_state.window_height));
         let layout = view.calc_root_layout(&engine, constraint);
         view.do_layout(
             engine,
@@ -134,6 +136,7 @@ impl TabViewer {
     pub fn on_window_resized(
         mut evts: EventReader<WindowResizedEvent>,
         theme: Res<NotationTheme>,
+        app_state: Res<AppState>,
         state: Res<NotationState>,
         mut settings: ResMut<NotationSettings>,
         view_query: ViewRootQuery<TabViewer>,
@@ -150,6 +153,7 @@ impl TabViewer {
             let engine = NotationLayout::new(&theme, &state, &settings);
             for (entity, view) in view_query.iter() {
                 Self::do_root_layout(
+                    &app_state,
                     &engine,
                     &mut layout_query,
                     &panel_query,
@@ -162,6 +166,7 @@ impl TabViewer {
     }
     pub fn on_added(
         theme: Res<NotationTheme>,
+        app_state: Res<AppState>,
         state: Res<NotationState>,
         settings: Res<NotationSettings>,
         view_query: ViewRootAddedQuery<TabViewer>,
@@ -172,6 +177,7 @@ impl TabViewer {
         for (entity, view) in view_query.iter() {
             let engine = NotationLayout::new(&theme, &state, &settings);
             Self::do_root_layout(
+                &app_state,
                 &engine,
                 &mut layout_query,
                 &panel_query,

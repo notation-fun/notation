@@ -1,3 +1,4 @@
+use edger_bevy::app::state::AppState;
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::egui::{self, Ui};
 use edger_bevy::prelude::MarkDownAsset;
@@ -17,7 +18,7 @@ impl KbPage for ChordsPage {
         &mut self,
         ui: &mut Ui,
         _texts: &Assets<MarkDownAsset>,
-        _assets: &NotationAssets,
+        _app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         _link_evts: &mut EventWriter<EasyLinkEvent>,

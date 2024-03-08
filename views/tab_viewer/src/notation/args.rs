@@ -3,7 +3,7 @@ use clap::Parser;
 
 use edger_bevy::bevy_prelude::*;
 
-#[derive(Debug, Resource)]
+#[derive(Debug, Resource, Clone)]
 #[cfg_attr(feature = "native", derive(Parser))]
 #[cfg_attr(feature = "native", clap(author, version, about, long_about = None))]
 pub struct NotationArgs {

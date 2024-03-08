@@ -1,9 +1,12 @@
 use bevy::prelude::*;
+use tab_viewer::edger_bevy::prelude::PreloadAssets;
 use tab_viewer::bevy_asset_loader::prelude::*;
 use tab_viewer::prelude::*;
 
 #[derive(AssetCollection, Resource)]
 pub struct NotationKnowledgeBaseAssets {
+    pub lang: LanguageIdentifier,
+
     #[asset(key = "kb_welcome")]
     pub kb_welcome: Handle<MarkDownAsset>,
 
@@ -17,27 +20,36 @@ pub struct NotationKnowledgeBaseAssets {
     pub kb_guitar: Handle<MarkDownAsset>,
 }
 
-impl NotationKnowledgeBaseAssets {
-    pub fn get_welcome_path(settings: &NotationSettings) -> String {
-        let lang = settings.lang();
-        format!("kb/{}/welcome.md", lang)
-    }
-    pub fn get_sound_path(settings: &NotationSettings) -> String {
-        let lang = settings.lang();
-        format!("kb/{}/sound.md", lang)
-    }
-    pub fn get_scale_path(settings: &NotationSettings) -> String {
-        let lang = settings.lang();
-        format!("kb/{}/scale.md", lang)
-    }
-    pub fn get_guitar_path(settings: &NotationSettings) -> String {
-        let lang = settings.lang();
-        format!("kb/{}/guitar.md", lang)
+impl FromWorld for NotationKnowledgeBaseAssets {
+    fn from_world(world: &mut World) -> Self {
+        let args = world.get_resource::<NotationArgs>().unwrap();
+        Self {
+            lang: NotationSettings::parse_lang(&args.lang),
+            kb_welcome: default(),
+            kb_sound: default(),
+            kb_scale: default(),
+            kb_guitar: default(),
+        }
     }
 }
 
-impl ExtraAssets for NotationKnowledgeBaseAssets {
-    fn get_assets(&self) -> Vec<UntypedHandle> {
+impl NotationKnowledgeBaseAssets {
+    pub fn get_welcome_path(&self) -> String {
+        format!("kb/{}/welcome.md", self.lang)
+    }
+    pub fn get_sound_path(&self) -> String {
+        format!("kb/{}/sound.md", self.lang)
+    }
+    pub fn get_scale_path(&self) -> String {
+        format!("kb/{}/scale.md", self.lang)
+    }
+    pub fn get_guitar_path(&self) -> String {
+        format!("kb/{}/guitar.md", self.lang)
+    }
+}
+
+impl PreloadAssets for NotationKnowledgeBaseAssets {
+    fn app_assets(&self) -> Vec<UntypedHandle> {
         vec![
             self.kb_welcome.clone().untyped(),
             self.kb_sound.clone().untyped(),
@@ -45,18 +57,10 @@ impl ExtraAssets for NotationKnowledgeBaseAssets {
             self.kb_guitar.clone().untyped(),
         ]
     }
-    fn setup_extra_keys(settings: &NotationSettings, asset_keys: &mut DynamicAssets) {
-        asset_keys.register_asset("kb_welcome", Box::new(StandardDynamicAsset::File {
-            path: Self::get_welcome_path(settings)
-        }));
-        asset_keys.register_asset("kb_sound", Box::new(StandardDynamicAsset::File {
-            path: Self::get_sound_path(settings)
-        }));
-        asset_keys.register_asset("kb_scale", Box::new(StandardDynamicAsset::File {
-            path: Self::get_scale_path(settings)
-        }));
-        asset_keys.register_asset("kb_guitar", Box::new(StandardDynamicAsset::File {
-            path: Self::get_guitar_path(settings)
-        }));
+    fn setup_keys(&self, asset_keys: &mut DynamicAssets) {
+        register_file_asset(asset_keys, "kb_welcome", self.get_welcome_path());
+        register_file_asset(asset_keys, "kb_sound", self.get_sound_path());
+        register_file_asset(asset_keys, "kb_scale", self.get_scale_path());
+        register_file_asset(asset_keys, "kb_guitar", self.get_guitar_path());
     }
 }

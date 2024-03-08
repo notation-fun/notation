@@ -1,3 +1,4 @@
+use tab_viewer::edger_bevy::app::state::AppState;
 use tab_viewer::edger_bevy::bevy_prelude::*;
 use tab_viewer::edger_bevy::egui::*;
 
@@ -14,12 +15,12 @@ impl KbPage for GuitarPage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        MarkDownPage::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
+        MarkDownPage::markdown_ui(ui, texts, app_state, state, theme, link_evts, self.path.as_str());
     }
 }
 
@@ -28,7 +29,7 @@ impl KbContent for GuitarPage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,

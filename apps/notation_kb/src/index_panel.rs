@@ -1,3 +1,4 @@
+use tab_viewer::edger_bevy::app::state::AppState;
 use tab_viewer::edger_bevy::bevy_prelude::*;
 use tab_viewer::edger_bevy::bevy_egui::{egui, EguiContext};
 use tab_viewer::prelude::{StereoStream, ProtoTab, NotationSettings, Control, MidiState, PlayControlEvent, MidiControl, EguiContexts};
@@ -33,7 +34,7 @@ TODO: Check whether still needed after upgrade bevy and bevy_egui
     */
 impl FromWorld for IndexPanel {
     fn from_world(world: &mut World) -> Self {
-        let settings = world.get_resource::<NotationSettings>().unwrap();
+        let assets = world.get_resource::<NotationKnowledgeBaseAssets>().unwrap();
         Self {
             skip_frames: 2,
 
@@ -42,10 +43,10 @@ impl FromWorld for IndexPanel {
             #[cfg(not(debug_assertions))]
             current_page_id: Self::WELCOME,
 
-            welcome: MarkDownPage::new(NotationKnowledgeBaseAssets::get_welcome_path(&settings)),
-            sound: SoundPage::new(NotationKnowledgeBaseAssets::get_sound_path(&settings)),
-            scale: ScalePage::new(NotationKnowledgeBaseAssets::get_scale_path(&settings)),
-            guitar: GuitarPage::new(NotationKnowledgeBaseAssets::get_guitar_path(&settings)),
+            welcome: MarkDownPage::new(assets.get_welcome_path()),
+            sound: SoundPage::new(assets.get_sound_path()),
+            scale: ScalePage::new(assets.get_scale_path()),
+            guitar: GuitarPage::new(assets.get_guitar_path()),
         }
     }
 }
@@ -117,6 +118,7 @@ impl IndexPanel {
     }
 
     pub fn hack_settings(
+        app_state: Res<AppState>,
         state: Res<NotationState>,
         mut theme: ResMut<NotationTheme>,
         mut settings: ResMut<NotationSettings>,
@@ -133,9 +135,9 @@ impl IndexPanel {
         settings.layout.focus_bar_ease_ms = 0;
         settings.show_note_pitch = true;
         settings.show_note_syllable = true;
-        if state.window_width > 0.0 && state.window_height > 0.0 {
-            if state.window_width > state.window_height {
-                let width = state.window_width / 3.0 + theme.sizes.layout.page_margin;
+        if app_state.window_width > 0.0 && app_state.window_height > 0.0 {
+            if app_state.window_width > app_state.window_height {
+                let width = app_state.window_width / 3.0 + theme.sizes.layout.page_margin;
                 settings.hide_guitar_view = false;
                 settings.hide_chords_view = true;
                 settings.override_guitar_width = Some(width);
@@ -144,7 +146,7 @@ impl IndexPanel {
                 settings.hide_guitar_view = true;
                 settings.hide_chords_view = false;
                 settings.override_guitar_width = None;
-                let height = state.window_height / 3.0;
+                let height = app_state.window_height / 3.0;
                 settings.override_chord_size = Some(height);
             }
         }
@@ -153,7 +155,7 @@ impl IndexPanel {
     pub fn index_ui(
         mut egui_ctx: EguiContexts,
         texts: Res<Assets<MarkDownAsset>>,
-        assets: Res<NotationAssets>,
+        app_state: Res<AppState>,
         mut state: ResMut<NotationState>,
         theme: Res<NotationTheme>,
         mut link_evts: EventWriter<EasyLinkEvent>,
@@ -163,21 +165,21 @@ impl IndexPanel {
             index.skip_frames -= 1;
             return;
         }
-        if state.window_width > state.window_height {
-            let width = state.window_width / 3.0;
-            (&mut index).side_ui(&mut egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Left, (width, width));
+        if app_state.window_width > app_state.window_height {
+            let width = app_state.window_width / 3.0;
+            (&mut index).side_ui(&mut egui_ctx, &texts, &app_state, &mut state, &theme, &mut link_evts, DockSide::Left, (width, width));
         } else {
-            let height = state.window_height / 3.0;
-            (&mut index).side_ui(&mut egui_ctx, &texts, &assets, &mut state, &theme, &mut link_evts, DockSide::Top, (height, height));
+            let height = app_state.window_height / 3.0;
+            (&mut index).side_ui(&mut egui_ctx, &texts, &app_state, &mut state, &theme, &mut link_evts, DockSide::Top, (height, height));
         }
-        (&mut index).content_ui(&mut egui_ctx, &texts, &assets, &state, &theme, &mut link_evts);
+        (&mut index).content_ui(&mut egui_ctx, &texts, &app_state, &state, &theme, &mut link_evts);
     }
 
     fn content_ui(
         &mut self,
         egui_ctx: &mut EguiContexts,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
@@ -193,7 +195,7 @@ impl IndexPanel {
             _ => None,
         } {
             egui::CentralPanel::default().show(egui_ctx.ctx_mut(), |ui| {
-                content.content_ui(ui, texts, assets, state, theme, link_evts);
+                content.content_ui(ui, texts, app_state, state, theme, link_evts);
             });
         }
     }

@@ -1,6 +1,7 @@
 use edger_bevy::bevy_prelude::*;
 
-use crate::prelude::NotationAssetsStates;
+use edger_bevy::prelude::AssetsStates;
+
 use crate::tab::tab_events::BarViewDoLayoutEvent;
 
 use super::bar_view::BarView;
@@ -13,6 +14,6 @@ impl Plugin for BarPlugin {
         app.add_systems(Update, (
             BarView::do_layout,
             BarView::update_number_text,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
 }

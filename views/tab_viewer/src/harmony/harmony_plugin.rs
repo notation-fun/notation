@@ -1,8 +1,8 @@
 use edger_bevy::bevy::ecs::system::EntityCommands;
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::prelude::SingleData;
+use edger_bevy::prelude::AssetsStates;
 
-use crate::notation::assets::NotationAssetsStates;
 use crate::prelude::HarmonyGrid;
 use crate::settings::notation_settings::NotationSettings;
 use crate::theme::notation_theme::NotationTheme;
@@ -13,7 +13,7 @@ pub struct HarmonyPlugin;
 impl Plugin for HarmonyPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, HarmonyPlugin::on_add_harmony_grid
-            .run_if(in_state(NotationAssetsStates::Loaded))
+            .run_if(in_state(AssetsStates::Loaded))
         );
     }
 }

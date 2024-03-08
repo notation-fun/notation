@@ -5,7 +5,7 @@ use crate::settings::layout_settings::LayoutMode;
 
 use crate::prelude::{NotationState, NotationSettings, NotationTheme};
 
-use super::events::WindowResizedEvent;
+use edger_bevy::prelude::WindowResizedEvent;
 
 pub struct Control();
 

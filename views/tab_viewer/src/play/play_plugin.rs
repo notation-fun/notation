@@ -5,13 +5,14 @@ use notation_model::prelude::{LaneEntry, Position, Tab};
 use notation_midi::prelude::{PlayControlEvent, PlayState, PlayingState, SwitchTabEvent, JumpToBarEvent, TickResult};
 
 use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::AssetsStates;
 
 use crate::bar::bar_beat::BarBeatData;
 use crate::bar::bar_view::BarView;
 use crate::chord::chord_color_background::ChordColorBackground;
 use crate::chord::chord_playing::ChordPlaying;
 use crate::prelude::{
-    BarPlaying, EntryPlaying, NotationAssetsStates, NotationSettings, NotationTheme, TabBars,
+    BarPlaying, EntryPlaying, NotationSettings, NotationTheme, TabBars,
     TabState,
 };
 
@@ -43,7 +44,7 @@ impl Plugin for PlayPlugin {
             on_tab_play_state_changed,
             on_play_control_evt,
             on_tab_resized,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
 }
 

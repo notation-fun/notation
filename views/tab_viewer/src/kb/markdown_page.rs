@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::egui::Ui;
+use edger_bevy::prelude::AppState;
 
 use crate::prelude::{NotationState, NotationAssets, NotationTheme};
 
@@ -17,12 +18,12 @@ impl KbPage for MarkDownPage {
         &mut self,
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         state: &NotationState,
         theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
-        Self::markdown_ui(ui, texts, assets, state, theme, link_evts, self.path.as_str());
+        Self::markdown_ui(ui, texts, app_state, state, theme, link_evts, self.path.as_str());
     }
 }
 
@@ -33,7 +34,7 @@ impl MarkDownPage {
     pub fn markdown_ui(
         ui: &mut Ui,
         texts: &Assets<MarkDownAsset>,
-        assets: &NotationAssets,
+        app_state: &AppState,
         _state: &NotationState,
         _theme: &NotationTheme,
         link_evts: &mut EventWriter<EasyLinkEvent>,
@@ -41,7 +42,7 @@ impl MarkDownPage {
     ) {
         let mut path_buf = PathBuf::new();
         path_buf.push(path);
-        if let Some(handle) = assets.get_extra::<MarkDownAsset>(path_buf) {
+        if let Some(handle) = app_state.get_asset::<MarkDownAsset>(path_buf) {
             if let Some(text) = texts.get(&handle) {
                 easy_mark(ui, text.text.as_str(), link_evts);
                 return;

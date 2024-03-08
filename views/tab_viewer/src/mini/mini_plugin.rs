@@ -1,8 +1,8 @@
 use edger_bevy::bevy_prelude::*;
 
-use edger_bevy::prelude::{DoLayoutEvent, ShapeOp};
+use edger_bevy::prelude::{DoLayoutEvent, ShapeOp, AssetsStates};
 
-use crate::prelude::{BarPlaying, NotationAssetsStates, NotationTheme};
+use crate::prelude::{BarPlaying, NotationTheme};
 use crate::prelude::NotationLayout;
 
 use super::mini_bar::{MiniBar, MiniBarData};
@@ -20,7 +20,7 @@ impl Plugin for MiniPlugin {
             MiniMap::do_layout,
             MiniMap::update_debug_str,
             MiniBar::on_layout_changed,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
 }
 

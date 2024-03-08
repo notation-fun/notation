@@ -2,6 +2,7 @@ use edger_bevy::bevy_prelude::*;
 use edger_bevy::bevy::window::PrimaryWindow;
 use edger_bevy::bevy_egui::egui::{self, CollapsingHeader, Slider, Ui};
 use edger_bevy::bevy_egui::EguiContexts;
+use edger_bevy::prelude::AppState;
 use float_eq::float_ne;
 use notation_midi::prelude::{JumpToBarEvent, PlayControlEvent};
 
@@ -42,6 +43,7 @@ impl EguiControlPanel {
     }
     pub fn overrides_ui(
         ui: &mut Ui,
+        app_state: &AppState,
         state: &NotationState,
         settings: &mut NotationSettings,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
@@ -63,11 +65,11 @@ impl EguiControlPanel {
                         || float_ne!(tab_width, last_tab_width, abs <= 1.0)
                     {
                         settings.layout.override_tab_width = Some(tab_width);
-                        window_resized_evts.send(WindowResizedEvent::new(&state));
+                        window_resized_evts.send(WindowResizedEvent::new(&app_state));
                     }
                 } else if settings.layout.override_tab_width.is_some() {
                     settings.layout.override_tab_width = None;
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let mut override_beat_size = settings.override_beat_size.is_some();
                 ui.checkbox(&mut override_beat_size, "Override Beat Size");
@@ -79,11 +81,11 @@ impl EguiControlPanel {
                         || float_ne!(beat_size, last_beat_size, abs <= 1.0)
                     {
                         settings.override_beat_size = Some(beat_size);
-                        window_resized_evts.send(WindowResizedEvent::new(&state));
+                        window_resized_evts.send(WindowResizedEvent::new(&app_state));
                     }
                 } else if settings.override_beat_size.is_some() {
                     settings.override_beat_size = None;
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let mut override_chord_size = settings.override_chord_size.is_some();
                 ui.checkbox(&mut override_chord_size, "Override Chord Size");
@@ -95,11 +97,11 @@ impl EguiControlPanel {
                         || float_ne!(chord_size, last_chord_size, abs <= 1.0)
                     {
                         settings.override_chord_size = Some(chord_size);
-                        window_resized_evts.send(WindowResizedEvent::new(&state));
+                        window_resized_evts.send(WindowResizedEvent::new(&app_state));
                     }
                 } else if settings.override_chord_size.is_some() {
                     settings.override_chord_size = None;
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let mut override_guitar_width = settings.override_guitar_width.is_some();
                 ui.checkbox(&mut override_guitar_width, "Override Guitar Width");
@@ -111,11 +113,11 @@ impl EguiControlPanel {
                         || float_ne!(guitar_width, last_guitar_width, abs <= 1.0)
                     {
                         settings.override_guitar_width = Some(guitar_width);
-                        window_resized_evts.send(WindowResizedEvent::new(&state));
+                        window_resized_evts.send(WindowResizedEvent::new(&app_state));
                     }
                 } else if settings.override_guitar_width.is_some() {
                     settings.override_guitar_width = None;
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let mut override_focus_offset_y = settings.layout.override_focus_offset_y.is_some();
                 ui.checkbox(&mut override_focus_offset_y, "Override Focus Offset Y");
@@ -149,7 +151,7 @@ impl EguiControlPanel {
                     }
                 } else if settings.override_guitar_y.is_some() {
                     settings.override_guitar_y = None;
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
             });
     }
@@ -319,6 +321,7 @@ impl EguiControlPanel {
     pub fn tab_ui(
         ui: &mut Ui,
         args: &mut NotationArgs,
+        app_state: &AppState,
         state: &mut NotationState,
         _settings: &mut NotationSettings,
         theme: &mut NotationTheme,
@@ -366,7 +369,7 @@ impl EguiControlPanel {
             });
         });
         if args.tab.len() > 1 {
-            let width = Self::calc_width(state.window_width);
+            let width = Self::calc_width(app_state.window_width);
             egui::ComboBox::from_id_source("tab")
                 .selected_text(state.tab_path.clone())
                 .width(width - 24.0)
@@ -381,6 +384,7 @@ impl EguiControlPanel {
     }
     pub fn guitar_tab_display_ui(
         ui: &mut Ui,
+        app_state: &AppState,
         state: &mut NotationState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
@@ -398,7 +402,7 @@ impl EguiControlPanel {
                     last_string_space,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let last_note_height = theme.sizes.strings.note_height;
                 ui.add(
@@ -410,7 +414,7 @@ impl EguiControlPanel {
                     last_note_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let mut changed = false;
                 let last_word_font_size = theme.texts.strings.fret_font_size;
@@ -448,6 +452,7 @@ impl EguiControlPanel {
     }
     pub fn lyrics_display_ui(
         ui: &mut Ui,
+        app_state: &AppState,
         state: &mut NotationState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
@@ -465,7 +470,7 @@ impl EguiControlPanel {
                     last_line_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let last_line_height = theme.sizes.lyrics.line_height.current;
                 ui.add(
@@ -477,7 +482,7 @@ impl EguiControlPanel {
                     last_line_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let last_line_height = theme.sizes.lyrics.line_height.played;
                 ui.add(
@@ -489,12 +494,12 @@ impl EguiControlPanel {
                     last_line_height,
                     abs <= 0.5
                 ) {
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let last_word_gap = theme.sizes.lyrics.word_gap;
                 ui.add(Slider::new(&mut theme.sizes.lyrics.word_gap, 0.0..=8.0).text("Word Gap"));
                 if float_ne!(theme.sizes.lyrics.word_gap, last_word_gap, abs <= 0.5) {
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let mut changed = false;
                 let last_word_font_size = theme.texts.lyrics.word_font_size;
@@ -530,6 +535,7 @@ impl EguiControlPanel {
     }
     pub fn melody_display_ui(
         ui: &mut Ui,
+        app_state: &mut AppState,
         state: &mut NotationState,
         theme: &mut NotationTheme,
         window_resized_evts: &mut EventWriter<WindowResizedEvent>,
@@ -543,7 +549,7 @@ impl EguiControlPanel {
                         .text("Note Height"),
                 );
                 if float_ne!(theme.sizes.melody.note_height, last_note_height, abs <= 0.5) {
-                    window_resized_evts.send(WindowResizedEvent::new(&state));
+                    window_resized_evts.send(WindowResizedEvent::new(&app_state));
                 }
                 let mut changed = false;
                 let last_syllable_font_size = theme.texts.melody.syllable_font_size;
@@ -641,6 +647,7 @@ impl EguiControlPanel {
         mut egui_ctx: EguiContexts,
         mut window_query: Query<&mut Window, With<PrimaryWindow>>,
         mut args: ResMut<NotationArgs>,
+        mut app_state: ResMut<AppState>,
         mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         mut theme: ResMut<NotationTheme>,
@@ -656,7 +663,7 @@ impl EguiControlPanel {
         if !state.show_control {
             return;
         }
-        let width = Self::calc_width(state.window_width);
+        let width = Self::calc_width(app_state.window_width);
         egui::SidePanel::right("control")
             .min_width(width)
             .max_width(width)
@@ -669,7 +676,7 @@ impl EguiControlPanel {
                     }
                     ui.separator();
                      */
-                    Self::tab_ui(ui, &mut args, &mut state, &mut settings, &mut theme);
+                    Self::tab_ui(ui, &mut args, &app_state, &mut state, &mut settings, &mut theme);
                     ui.separator();
                     #[cfg(feature = "midi")]
                     {
@@ -699,6 +706,7 @@ impl EguiControlPanel {
                             Self::layout_ui(ui, &mut state, &mut settings, &mut theme);
                             Self::overrides_ui(
                                 ui,
+                                &app_state,
                                 &state,
                                 &mut settings,
                                 &mut window_resized_evts,
@@ -713,18 +721,21 @@ impl EguiControlPanel {
                             ui.label("Override Theme");
                             Self::guitar_tab_display_ui(
                                 ui,
+                                &app_state,
                                 &mut state,
                                 &mut theme,
                                 &mut window_resized_evts,
                             );
                             Self::lyrics_display_ui(
                                 ui,
+                                &app_state,
                                 &mut state,
                                 &mut theme,
                                 &mut window_resized_evts,
                             );
                             Self::melody_display_ui(
                                 ui,
+                                &mut app_state,
                                 &mut state,
                                 &mut theme,
                                 &mut window_resized_evts,

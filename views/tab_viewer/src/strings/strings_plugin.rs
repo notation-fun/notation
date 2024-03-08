@@ -1,10 +1,11 @@
 use edger_bevy::bevy::ecs::system::EntityCommands;
 use edger_bevy::bevy_prelude::*;
+use edger_bevy::prelude::AssetsStates;
 
 use super::pick_bundle::PickBundle;
 
 use super::strings_grid::{StringsGrid4, StringsGrid6};
-use crate::prelude::{NotationAssets, NotationAssetsStates, NotationSettings, NotationTheme, SingleData};
+use crate::prelude::{NotationAssets, NotationSettings, NotationTheme, SingleData};
 use notation_model::prelude::{LaneKind, BarLane, FrettedEntry4, FrettedEntry6, LaneEntry, TrackKind};
 
 pub struct StringsPlugin;
@@ -15,7 +16,7 @@ impl Plugin for StringsPlugin {
             on_add_fretted_grid6,
             on_add_fretted_grid4,
             super::pick_systems::on_entry_playing_changed,
-        ).run_if(in_state(NotationAssetsStates::Loaded)));
+        ).run_if(in_state(AssetsStates::Loaded)));
     }
 }
 
