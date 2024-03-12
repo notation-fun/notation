@@ -77,9 +77,6 @@ impl NotationApp {
             add_assets_loaded_systems(app, NotationAssets::setup_egui_context);
 
             app.add_systems(Update, (
-                TabViewer::on_add_tab,
-                TabViewer::on_window_resized,
-                TabViewer::on_added,
                 Self::on_tab_asset,
             ).run_if(in_state(AssetsStates::Loaded)));
             #[cfg(feature = "with_egui")]

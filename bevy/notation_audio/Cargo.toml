@@ -20,4 +20,4 @@ default = [
 bevy = { workspace = true }
 
 ringbuffer = "0.15.0"
-ringbuf = "0.4.0-rc.2"
+#ringbuf = "0.4.0-rc.2"

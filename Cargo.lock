@@ -2011,9 +2011,7 @@ dependencies = [
 
 [[package]]
 name = "edger_bevy"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d1bf093c60f7369182cb42b4b936da57191ae2c85858f4fd783a3bd61f2615e"
+version = "0.4.0"
 dependencies = [
  "bevy",
  "bevy_asset_loader",
@@ -2031,8 +2029,6 @@ dependencies = [
 [[package]]
 name = "edger_bevy_egui"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "407039e35dc92b0e5bbea4dda20f5289b881daa2e4385b2053e6f1645fbb806a"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2043,8 +2039,6 @@ dependencies = [
 [[package]]
 name = "edger_bevy_shape"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43825f6373af990c79e09c6b02d11eec82b9bc4338a1c83a6a9f3b9c57bffed6"
 dependencies = [
  "bevy",
  "bevy_prototype_lyon",
@@ -2053,8 +2047,6 @@ dependencies = [
 [[package]]
 name = "edger_bevy_util"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d53586f8f1e264103b8c2a4e8064c9544af0d203af938c16e11c34651e29124e"
 dependencies = [
  "anyhow",
  "bevy",
@@ -2062,9 +2054,7 @@ dependencies = [
 
 [[package]]
 name = "edger_bevy_view"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "343bfd94b6d530db25412826dafccf9f1bff27fe976ce2b7db5b0543dac059e6"
+version = "0.3.0"
 dependencies = [
  "bevy",
  "edger_bevy_shape",
@@ -3412,7 +3402,6 @@ name = "notation_audio"
 version = "0.6.0"
 dependencies = [
  "bevy",
- "ringbuf",
  "ringbuffer",
 ]
 
@@ -4136,15 +4125,6 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "windows-sys 0.48.0",
-]
-
-[[package]]
-name = "ringbuf"
-version = "0.4.0-rc.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b8f7d58e4f67752d63318605656be063e333154aa35b70126075e9d05552979"
-dependencies = [
- "crossbeam-utils",
 ]
 
 [[package]]
