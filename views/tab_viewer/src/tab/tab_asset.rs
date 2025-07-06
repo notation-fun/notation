@@ -3,7 +3,7 @@ use notation_model::parse::ParseError;
 use edger_bevy::bevy_prelude::*;
 use edger_bevy::bevy::asset::{Asset, AssetLoader, AsyncReadExt, LoadContext, io::Reader};
 use edger_bevy::bevy::reflect::TypePath;
-use edger_bevy::bevy::utils::BoxedFuture;
+use edger_bevy::bevy::tasks::BoxedFuture;
 
 use notation_model::prelude::ProtoTab;
 

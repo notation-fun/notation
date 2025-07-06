@@ -1,5 +1,5 @@
 use edger_bevy::bevy::asset::{AssetLoader, AsyncReadExt, LoadContext, io::Reader};
-use edger_bevy::bevy::utils::BoxedFuture;
+use edger_bevy::bevy::tasks::BoxedFuture;
 
 use notation_dsl::prelude::parse_get_tab;
 
