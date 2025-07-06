@@ -82,7 +82,7 @@ impl TabPlugin {
     fn on_mouse_clicked(
         mut evts: EventReader<MouseClickedEvent>,
         theme: Res<NotationTheme>,
-        mut app_state: Res<AppState>,
+        app_state: Res<AppState>,
         mut state: ResMut<NotationState>,
         mut settings: ResMut<NotationSettings>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,

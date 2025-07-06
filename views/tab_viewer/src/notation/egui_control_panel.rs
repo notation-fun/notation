@@ -337,7 +337,7 @@ impl EguiControlPanel {
             ui.separator();
         }
         ui.horizontal(|ui| {
-            if ui.button("Reload Tab").clicked() {
+            if ui.button("Reload Tab").on_hover_text("AAAAAAAAAAAAAAAA").clicked() {
                 state.bars_range = None;
                 Control::reload_tab(state, theme);
             }

@@ -157,20 +157,20 @@ impl NotationViewer {
         if egui_ctx.ctx_mut().unwrap().is_pointer_over_area() {
             return;
         }
-        let Ok(window) = window_query.get_single() else {
+        let Ok(window) = window_query.single() else {
             return;
         };
         let Some(cursor_position) = window.cursor_position() else {
             return;
         };
         if mouse_input.just_released(MouseButton::Left) {
-            mouse_clicked.send(MouseClickedEvent { cursor_position });
+            mouse_clicked.write(MouseClickedEvent { cursor_position });
         } else if mouse_input.just_pressed(MouseButton::Right) {
         } else if mouse_input.just_released(MouseButton::Right) {
         } else if mouse_input.pressed(MouseButton::Right) {
             for event in mouse_motion_events.read() {
                 //println!("handle_inputs() -> MouseDraggedEvent({:?})", event.delta);
-                mouse_dragged.send(MouseDraggedEvent {
+                mouse_dragged.write(MouseDraggedEvent {
                     cursor_position,
                     delta: event.delta,
                 });
@@ -187,7 +187,7 @@ impl NotationViewer {
                 if settings.layout.mode == LayoutMode::Line {
                     delta = Vec2::new(delta.y, delta.x);
                 }
-                mouse_dragged.send(MouseDraggedEvent {
+                mouse_dragged.write(MouseDraggedEvent {
                     cursor_position,
                     delta: delta,
                 });
@@ -209,13 +209,13 @@ impl NotationViewer {
         if egui_ctx.ctx_mut().unwrap().wants_pointer_input() {
             return;
         }
-        let Ok(window) = window_query.get_single() else {
+        let Ok(window) = window_query.single() else {
             return;
         };
         for (_index, finger) in touch_input.iter().enumerate() {
             if touch_input.just_pressed(finger.id()) {
                 app_state.show_kb = false;
-                mouse_clicked.send(MouseClickedEvent {
+                mouse_clicked.write(MouseClickedEvent {
                     cursor_position: finger.position(),
                 });
             } else if touch_input.just_released(finger.id()) {
@@ -225,7 +225,7 @@ impl NotationViewer {
                 app_state.debug_str = Some(format!("Touch: {} - {:?}", _index, finger.position()));
                 let delta = finger.position() - finger.previous_position();
                 app_state.debug_str = Some(format!("Dragged: {}, {:?}", _index, delta));
-                mouse_dragged.send(MouseDraggedEvent { delta: delta });
+                mouse_dragged.write(MouseDraggedEvent { delta: delta });
                 */
             }
         }

@@ -50,6 +50,7 @@ impl NotationState {
         self.tab_error = None;
         self._despawn_delay_seconds = 0.1;
         self._load_tab_delay_seconds = 0.2;
+        self.show_control = true;
     }
     pub fn calc_bar_number(&self, add_ready_section: bool, bar_ordinal: usize) -> usize {
         if let Some((begin, _end)) = self.bars_range {
