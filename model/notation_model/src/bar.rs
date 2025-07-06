@@ -68,7 +68,7 @@ impl Bar {
             layers.push(BarLayer::try_new(layer_index, layer, tracks).map(Arc::new)?);
         }
         Self {
-            index: index,
+            index,
             layers,
         }
     }

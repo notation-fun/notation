@@ -34,13 +34,10 @@ impl Slice {
     }
     pub fn not_in_round(&self, round: usize) -> bool {
         self.rounds.is_some()
-            && self
+            && !self
                 .rounds
                 .clone()
-                .unwrap()
-                .iter()
-                .find(|&x| *x == round)
-                .is_none()
+                .unwrap().contains(&round)
     }
     pub fn in_round(&self, round: usize) -> bool {
         !self.not_in_round(round)

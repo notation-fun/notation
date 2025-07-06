@@ -64,7 +64,7 @@ impl DurationTweakDsl {
     }
     pub fn tweak(&self, base: &Duration) -> Duration {
         if let Some(base_unit) = base.as_simple() {
-            let mut unit = base_unit.clone();
+            let mut unit = *base_unit;
             if self.half_num > 0 {
                 for _ in 0..self.half_num {
                     unit = unit.halfed();
@@ -82,7 +82,7 @@ impl DurationTweakDsl {
             }
         } else {
             println!("Can only tweak simple duration: {} - {:?}", base, self);
-            return base.clone();
+            *base
         }
     }
 }

@@ -80,7 +80,7 @@ impl MidiChannel {
         end_passed: bool,
         jumped: bool,
     ) -> usize {
-        if self.messages.len() == 0 {
+        if self.messages.is_empty() {
             return 0;
         }
         if end_passed || jumped {
@@ -150,17 +150,13 @@ impl MidiChannel {
                 {
                     self.next_index += 1;
                     count += 1;
-                    if !bypass {
-                        if !is_seeking || next.should_send_in_seeking() {
-                            hub.send(settings, speed, next, velocity);
-                        }
+                    if !bypass && (!is_seeking || next.should_send_in_seeking()) {
+                        hub.send(settings, speed, next, velocity);
                     }
+                } else if next.effect_position().bar_ordinal < play_control.begin_bar_ordinal {
+                    self.next_index += 1;
                 } else {
-                    if next.effect_position().bar_ordinal < play_control.begin_bar_ordinal {
-                        self.next_index += 1;
-                    } else {
-                        break;
-                    }
+                    break;
                 }
             } else {
                 break;
@@ -169,7 +165,7 @@ impl MidiChannel {
         count
     }
     fn init_channel(&mut self, settings: &MidiSettings, hub: &mut MidiHub, speed: &PlaySpeed) {
-        if let Some(first_msg) = self.messages.get(0) {
+        if let Some(first_msg) = self.messages.first() {
             let msg = StructuredShortMessage::ProgramChange {
                 channel: self.channel,
                 program_number: self.program,
@@ -367,7 +363,7 @@ impl MidiState {
             for ((_k, _i), lane) in bar.lanes.iter() {
                 if let Some(channel) = self.get_channel_mut(&lane.track.id, &lane.track.kind) {
                     for entry in lane.entries.iter() {
-                        if let Some(msgs) = MidiUtil::get_midi_msgs(channel, bar, &entry) {
+                        if let Some(msgs) = MidiUtil::get_midi_msgs(channel, bar, entry) {
                             for msg in msgs {
                                 channel.add_message(MidiMessage::of_entry(entry, msg.0, msg.1));
                             }
@@ -408,10 +404,8 @@ impl MidiState {
         let old_position = self.play_control.position;
         if self.seek_position.is_some() {
             let pos = self.play_control.position.bar;
-            if Units::from(pos) >= Units::from(self.seek_position.unwrap()) {
-                if !self.seek_passed(settings) {
-                    self.seek_position = None;
-                }
+            if Units::from(pos) >= Units::from(self.seek_position.unwrap()) && !self.seek_passed(settings) {
+                self.seek_position = None;
             }
         }
         let tick_result = match self.seek_position {
@@ -443,7 +437,7 @@ impl MidiState {
     }
     pub fn init_channels(&mut self, settings: &MidiSettings, hub: &mut MidiHub) {
         for channel in self.channels.iter_mut() {
-            if channel.messages.len() > 0 {
+            if !channel.messages.is_empty() {
                 channel.init_channel(settings, hub, &self.play_control.play_speed);
                 channel.calc_next_index(&self.play_control.position.bar);
             }

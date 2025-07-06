@@ -101,7 +101,7 @@ impl BarLane {
         })
     }
     pub fn bar(&self) -> Option<Arc<TabBar>> {
-        self.bar.upgrade().map(|x| x.clone())
+        self.bar.upgrade()
     }
     pub fn tab(&self) -> Option<Arc<Tab>> {
         self.bar().and_then(|x| x.tab())
@@ -117,11 +117,9 @@ impl BarLane {
         for entry in self.entries.iter() {
             if in_bar_pos < entry.props.in_bar_pos {
                 break;
-            } else {
-                if in_bar_pos < entry.props.in_bar_pos + entry.model().props.tied_units {
-                    if let Some(result) = predicate(entry.as_ref()) {
-                        return Some(result);
-                    }
+            } else if in_bar_pos < entry.props.in_bar_pos + entry.model().props.tied_units {
+                if let Some(result) = predicate(entry.as_ref()) {
+                    return Some(result);
                 }
             }
         }

@@ -51,7 +51,7 @@ impl Entry for ModelEntry {
 }
 impl ModelEntry {
     pub fn track(&self) -> Option<Arc<Track>> {
-        self.track.upgrade().map(|x| x.clone())
+        self.track.upgrade()
     }
     pub fn tab(&self) -> Option<Arc<Tab>> {
         self.track().and_then(|x| x.tab())
@@ -66,21 +66,21 @@ impl ModelEntry {
         if self.props.index == 0 {
             None
         } else if let Some(track) = self.track.upgrade() {
-            track.entries.get(self.props.index - 1).map(|x| x.clone())
+            track.entries.get(self.props.index - 1).cloned()
         } else {
             None
         }
     }
     pub fn next(&self) -> Option<Arc<ModelEntry>> {
         if let Some(track) = self.track.upgrade() {
-            track.entries.get(self.props.index + 1).map(|x| x.clone())
+            track.entries.get(self.props.index + 1).cloned()
         } else {
             None
         }
     }
     pub fn prev_as_mark(&self) -> Option<String> {
         if let Some(entry) = self.prev() {
-            entry.proto.as_mark().map(|x| x.clone())
+            entry.proto.as_mark().cloned()
         } else {
             None
         }
@@ -127,17 +127,13 @@ impl ModelEntry {
     }
     pub fn track_kind(&self) -> TrackKind {
         if let Some(track) = self.track.upgrade() {
-            track.kind.clone()
+            track.kind
         } else {
             TrackKind::Unsupported
         }
     }
     pub fn track_index(&self) -> Option<usize> {
-        if let Some(track) = self.track.upgrade() {
-            Some(track.props.index)
-        } else {
-            None
-        }
+        self.track.upgrade().map(|track| track.props.index)
     }
     pub fn get_track_entry<T, F: Fn(&ModelEntry) -> Option<T>>(&self, predicate: &F) -> Option<T> {
         if let Some(track) = self.track.upgrade() {

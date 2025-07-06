@@ -123,7 +123,7 @@ impl ChordDsl {
                 .iter()
                 .map(|x| x.to_proto())
                 .collect::<Vec<Interval>>();
-            let bass = bass.as_ref().map(|x| x.to_proto().clone());
+            let bass = bass.as_ref().map(|x| x.to_proto());
             ProtoEntry::from(CoreEntry::from((
                 Chord::new(root.to_proto(), intervals.into(), bass),
                 duration,

@@ -94,7 +94,7 @@ impl ShapeDsl {
             4 => {
                 let mut frets = [None; 4];
                 for i in 0..4 {
-                    frets[i] = self.frets.get(i).unwrap().clone();
+                    frets[i] = *self.frets.get(i).unwrap();
                 }
                 let fingers = [None; 4];
                 ProtoEntry::from(FrettedEntry4::from((
@@ -105,7 +105,7 @@ impl ShapeDsl {
             _ => {
                 let mut frets = [None; 6];
                 for i in 0..6 {
-                    frets[i] = self.frets.get(i).unwrap().clone();
+                    frets[i] = *self.frets.get(i).unwrap();
                 }
                 let fingers = [None; 6];
                 ProtoEntry::from(FrettedEntry6::from((

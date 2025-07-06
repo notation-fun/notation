@@ -63,7 +63,7 @@ impl MidiUtil {
             .map(|x| (true, x))
             .collect();
         play_msgs.append(&mut stop_msgs);
-        if play_msgs.len() > 0 {
+        if !play_msgs.is_empty() {
             Some(play_msgs)
         } else {
             None

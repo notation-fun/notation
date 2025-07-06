@@ -58,7 +58,7 @@ impl Track {
 }
 impl Track {
     pub fn tab(&self) -> Option<Arc<Tab>> {
-        self.tab.upgrade().map(|x| x.clone())
+        self.tab.upgrade()
     }
     pub fn index_of_mark(&self, begin: usize, mark: &String) -> Option<usize> {
         for i in begin..self.entries.len() {
@@ -109,9 +109,7 @@ impl Track {
                 .and_then(|x| x.as_chord())
                 .map(|z| z.to_owned())
             {
-                if !chord_entries.contains_key(&chord) {
-                    chord_entries.insert(chord, Vec::new());
-                }
+                chord_entries.entry(chord).or_insert_with(Vec::new);
                 chord_entries.get_mut(&chord).unwrap().push(entry.clone());
             }
         }

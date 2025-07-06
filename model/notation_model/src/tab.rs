@@ -61,7 +61,7 @@ impl Tab {
         None
     }
     pub fn get_bar_of_ordinal(&self, bar_ordinal: usize) -> Option<Arc<TabBar>> {
-        self.bars.get(bar_ordinal).map(|x| x.clone())
+        self.bars.get(bar_ordinal).cloned()
     }
     pub fn get_bar(&self, pos: BarPosition) -> Option<Arc<TabBar>> {
         self.get_bar_of_ordinal(pos.bar_ordinal)

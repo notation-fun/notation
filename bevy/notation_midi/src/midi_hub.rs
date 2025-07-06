@@ -5,19 +5,12 @@ use std::sync::{Arc, Mutex};
 
 use crate::prelude::{MidiMessage, MidiSettings, MidiState, MidiSynth};
 
+#[derive(Default)]
 pub struct MidiHub {
     pub output_conn: Option<Mutex<MidiOutputConnection>>,
     pub output_synth: Option<MidiSynth>,
 }
 
-impl Default for MidiHub {
-    fn default() -> Self {
-        Self {
-            output_conn: None,
-            output_synth: None,
-        }
-    }
-}
 
 impl MidiHub {
     pub const PRINT_SYNTH_ERROR: bool = false;
@@ -67,7 +60,7 @@ impl MidiHub {
         }
     }
     pub fn switch_tab(&mut self, settings: &MidiSettings, state: &mut MidiState, tab: Arc<Tab>) {
-        state.switch_tab(&settings, self, tab.clone());
+        state.switch_tab(settings, self, tab.clone());
         self.init_channels(settings, state);
     }
     pub fn init_channels(&mut self, settings: &MidiSettings, state: &MidiState) {

@@ -78,7 +78,7 @@ impl LaneEntry {
 }
 impl LaneEntry {
     pub fn lane(&self) -> Option<Arc<BarLane>> {
-        self.lane.upgrade().map(|x| x.clone())
+        self.lane.upgrade()
     }
     pub fn track(&self) -> Option<Arc<Track>> {
         self.lane().map(|x| x.track.clone())
@@ -107,21 +107,21 @@ impl LaneEntry {
         if self.props.index == 0 {
             None
         } else if let Some(lane) = self.lane.upgrade() {
-            lane.entries.get(self.props.index - 1).map(|x| x.clone())
+            lane.entries.get(self.props.index - 1).cloned()
         } else {
             None
         }
     }
     pub fn next(&self) -> Option<Arc<LaneEntry>> {
         if let Some(lane) = self.lane.upgrade() {
-            lane.entries.get(self.props.index + 1).map(|x| x.clone())
+            lane.entries.get(self.props.index + 1).cloned()
         } else {
             None
         }
     }
     pub fn prev_as_mark(&self) -> Option<String> {
         if let Some(entry) = self.prev() {
-            entry.model.proto.as_mark().map(|x| x.clone())
+            entry.model.proto.as_mark().cloned()
         } else {
             None
         }

@@ -82,14 +82,11 @@ fn on_play_control_evt(
     mut evts: EventReader<PlayControlEvent>,
 ) {
     for evt in evts.read() {
-        match evt {
-            PlayControlEvent::OnPlayState(play_state) => {
-                state.seek_position = None;
-                if !play_state.is_playing() {
-                    state.init_channels(&settings, &mut hub);
-                }
+        if let PlayControlEvent::OnPlayState(play_state) = evt {
+            state.seek_position = None;
+            if !play_state.is_playing() {
+                state.init_channels(&settings, &mut hub);
             }
-            _ => (),
         }
     }
 }

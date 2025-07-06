@@ -29,7 +29,7 @@ impl TabChord {
         self.entries.first().and_then(|x| x.tab())
     }
     pub fn first_entry(&self) -> Option<Arc<ModelEntry>> {
-        self.entries.first().map(|x| x.clone())
+        self.entries.first().cloned()
     }
     pub fn calc_bars(tab: Option<Arc<Tab>>, chord: Chord) -> Vec<Arc<TabBar>> {
         let mut bars = Vec::new();

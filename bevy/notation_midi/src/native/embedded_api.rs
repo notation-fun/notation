@@ -48,7 +48,7 @@ impl FileApi for EmbeddedApi {
             std::io::SeekFrom::Current(offset) => {
                 if offset >= 0 {
                     if (file.pos + offset as usize) <= file.bytes.len() {
-                        file.pos = file.pos + offset as usize;
+                        file.pos += offset as usize;
                         //println!("EmbeddedApi::seek {:?} -> {}/{}", pos, file.pos, file.bytes.len());
                         return true;
                     }

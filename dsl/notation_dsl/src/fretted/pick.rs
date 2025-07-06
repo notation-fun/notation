@@ -45,7 +45,7 @@ impl ToTokens for PickDsl {
             duration_tweak,
         } = self;
         let duration_quote = Context::duration_quote(duration_tweak);
-        if notes.len() == 0 {
+        if notes.is_empty() {
             tokens.extend(quote! {
                 ProtoEntry::from(CoreEntry::from(#duration_quote))
             });
@@ -71,7 +71,7 @@ impl PickDsl {
             duration_tweak,
         } = self;
         let duration = Context::tweaked_duration(duration_tweak);
-        if notes.len() == 0 {
+        if notes.is_empty() {
             ProtoEntry::from(CoreEntry::from(duration))
         } else {
             let _string_num = Context::fretted().string_num;

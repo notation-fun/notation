@@ -58,6 +58,7 @@ impl FrettedContext {
 }
 
 #[derive(Debug)]
+#[derive(Default)]
 pub struct Context {
     pub key: Key,
     pub scale: Scale,
@@ -66,17 +67,6 @@ pub struct Context {
     pub fretted: FrettedContext,
 }
 
-impl Default for Context {
-    fn default() -> Self {
-        Self {
-            key: Key::default(),
-            scale: Scale::default(),
-            duration: Duration::default(),
-            octave: Octave::default(),
-            fretted: FrettedContext::default(),
-        }
-    }
-}
 
 impl Context {
     pub fn key() -> Key {

@@ -70,13 +70,9 @@ impl ToTokens for FretboardDsl {
         let tuning_quote = match tuning {
             Some(tuning) => {
                 let tuning_quote = tuning.to_string();
-                match string_num {
-                    _ => quote! { GuitarTuning::from_ident(#tuning_quote)},
-                }
+                quote! { GuitarTuning::from_ident(#tuning_quote)}
             }
-            None => match string_num {
-                _ => quote! { GuitarTuning::Standard },
-            },
+            None => quote! { GuitarTuning::Standard },
         };
         let fretted_entry_quote = Context::fretted().fretted_entry_quote();
         let fretboard_quote = Context::fretted().fretboard_quote();

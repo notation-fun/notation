@@ -110,8 +110,8 @@ impl TabBar {
                 bar_units,
             };
             Self {
-                tab: tab,
-                section: section,
+                tab,
+                section,
                 proto: bar,
                 lanes,
                 props,
@@ -151,7 +151,7 @@ impl TabBar {
 }
 impl TabBar {
     pub fn tab(&self) -> Option<Arc<Tab>> {
-        self.tab.upgrade().map(|x| x.clone())
+        self.tab.upgrade()
     }
     pub fn get_lane_of_kind(
         &self,
@@ -160,7 +160,7 @@ impl TabBar {
     ) -> Option<Arc<BarLane>> {
         match track_index {
             Some(track_index) => {
-                self.lanes.get(&(kind, track_index)).map(|x| x.clone())
+                self.lanes.get(&(kind, track_index)).cloned()
             },
             None => {
                 for ((k, _i), lane) in self.lanes.iter() {
@@ -203,11 +203,7 @@ impl TabBar {
                 if result_in_bar_pos < x.props.in_bar_pos {
                     None
                 } else if x.props.in_bar_pos.is_bigger_than(&in_bar_pos) {
-                    if let Some(t) = predicate(x) {
-                        Some((x.props.in_bar_pos, t))
-                    } else {
-                        None
-                    }
+                    predicate(x).map(|t| (x.props.in_bar_pos, t))
                 } else {
                     None
                 }
@@ -239,7 +235,7 @@ impl TabBar {
         if let Some(lane) = self.get_lane_of_kind(LaneKind::Chord, None) {
             for entry in lane.entries.iter() {
                 if let Some(chord) = entry.proto().as_core().and_then(|x| x.as_chord()) {
-                    chords.push(chord.clone());
+                    chords.push(*chord);
                 }
             }
         }
