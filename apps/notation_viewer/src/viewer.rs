@@ -144,7 +144,7 @@ impl NotationViewer {
         window_query: Query<&Window, With<PrimaryWindow>>,
         mouse_input: Res<ButtonInput<MouseButton>>,
         mut egui_ctx: EguiContexts,
-        mut app_state: ResMut<NotationState>,
+        app_state: ResMut<NotationState>,
         settings: Res<NotationSettings>,
         mut mouse_motion_events: EventReader<MouseMotion>,
         mut mouse_wheel_input: EventReader<MouseWheel>,
