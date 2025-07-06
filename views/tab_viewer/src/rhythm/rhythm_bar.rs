@@ -59,10 +59,10 @@ impl RhythmBarData {
         self.value.offset = offset;
         self.update(commands, theme, entity);
         for child in children.iter() {
-            if let Ok((beat_entity, mut beat_data)) = beat_query.get_mut(*child) {
+            if let Ok((beat_entity, mut beat_data)) = beat_query.get_mut(child) {
                 beat_data.update_size(commands, theme, beat_entity, radius);
             } else if let Ok((indicator_entity, mut indicator_data)) =
-                indicator_query.get_mut(*child)
+                indicator_query.get_mut(child)
             {
                 indicator_data.update_size(commands, theme, indicator_entity, radius);
             }
@@ -141,7 +141,7 @@ impl RhythmBarData {
                     bar_data.update(&mut commands, &theme, bar_entity);
                 }
                 for child in bar_children.iter() {
-                    if let Ok(mut text) = text_query.get_mut(*child) {
+                    if let Ok(mut text) = text_query.get_mut(child) {
                         let v = bar_props.bar_number.to_string();
                         text.0 = v;
                     }

@@ -295,7 +295,7 @@ impl TabBars {
     pub fn on_resized_pre(
         mut evts: EventReader<TabBarsResizedPreEvent>,
         theme: Res<NotationTheme>,
-        cell_query: Query<(&Parent, &BarView, &LayoutData)>,
+        cell_query: Query<(&ChildOf, &BarView, &LayoutData)>,
         mut tab_resized_evts: EventWriter<TabBarsResizedEvent>,
     ) {
         if theme._bypass_systems {
@@ -303,8 +303,8 @@ impl TabBars {
         }
         for evt in evts.read() {
             let mut bars = Vec::new();
-            for (parent, bar_view, layout) in cell_query.iter() {
-                if parent.get() == evt.0 {
+            for (child_of, bar_view, layout) in cell_query.iter() {
+                if child_of.parent() == evt.0 {
                     bars.push((bar_view.clone(), layout.clone()));
                 }
             }

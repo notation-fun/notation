@@ -55,7 +55,7 @@ impl RhythmView {
         mut evts: EventReader<RhythmViewDoLayoutEvent>,
         mut commands: Commands,
         theme: Res<NotationTheme>,
-        mut bar_query: Query<(&Parent, Entity, &mut RhythmBarData, &Children), With<RhythmBarData>>,
+        mut bar_query: Query<(&ChildOf, Entity, &mut RhythmBarData, &Children), With<RhythmBarData>>,
         mut beat_query: Query<(Entity, &mut RhythmBeatData)>,
         mut indicator_query: Query<(Entity, &mut RhythmIndicatorData)>,
     ) {
@@ -64,8 +64,8 @@ impl RhythmView {
         }
         for evt in evts.read() {
             if evt.layout.size.width > 0.0 && evt.layout.size.height > 0.0 {
-                for (parent, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
-                    if parent.get() == evt.entity {
+                for (child_of, bar_entity, mut bar_data, bar_children) in bar_query.iter_mut() {
+                    if child_of.parent() == evt.entity {
                         let layout = evt.layout;
                         let height = layout.size.height;
                         let radius = height * theme.sizes.tab_control.rhythm_bar_radius_factor

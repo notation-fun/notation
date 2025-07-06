@@ -61,7 +61,7 @@ pub fn on_entry_playing_changed(
     }
     for (_entity, playing, children) in query.iter() {
         for child in children.iter() {
-            if let Ok((entity, mut data)) = note_query.get_mut(*child) {
+            if let Ok((entity, mut data)) = note_query.get_mut(child) {
                 //println!("{:?} -> {:?} -> {:?}", name, data, playing)
                 data.value.playing_state = playing.value;
                 data.update(&mut commands, &theme, entity);

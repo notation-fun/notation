@@ -194,7 +194,7 @@ impl IndexPanel {
             },
             _ => None,
         } {
-            egui::CentralPanel::default().show(egui_ctx.ctx_mut(), |ui| {
+            egui::CentralPanel::default().show(egui_ctx.ctx_mut().unwrap(), |ui| {
                 content.content_ui(ui, texts, app_state, state, theme, link_evts);
             });
         }

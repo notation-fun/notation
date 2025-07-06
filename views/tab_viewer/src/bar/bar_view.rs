@@ -80,15 +80,15 @@ impl BarView {
         theme: Res<NotationTheme>,
         settings: Res<NotationSettings>,
         mut evts: EventReader<BarViewDoLayoutEvent>,
-        mut text_query: Query<(&Parent, &mut Transform), With<Text>>,
+        mut text_query: Query<(&ChildOf, &mut Transform), With<Text>>,
     ) {
         if theme._bypass_systems {
             return;
         }
         if !settings.hide_bar_number {
             for evt in evts.read() {
-                for (parent, mut transform) in text_query.iter_mut() {
-                    if parent.get() == evt.entity {
+                for (child_of, mut transform) in text_query.iter_mut() {
+                    if child_of.parent() == evt.entity {
                         theme
                             .texts
                             .tab

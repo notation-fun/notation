@@ -121,10 +121,10 @@ impl MiniMap {
     pub fn update_debug_str(
         app_state: Res<NotationState>,
         background_query: Query<&ColorBackground>,
-        mut font_query: Query<(&Parent, &mut Text2d)>,
+        mut font_query: Query<(&ChildOf, &mut Text2d)>,
     ) {
-        for (parent, mut text) in font_query.iter_mut() {
-            if let Ok(_) = background_query.get(parent.get()) {
+        for (child_of, mut text) in font_query.iter_mut() {
+            if let Ok(_) = background_query.get(child_of.parent()) {
                 let str = if let Some(debug_str) = &app_state.debug_str {
                     debug_str.to_string()
                 } else {

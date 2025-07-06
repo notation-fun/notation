@@ -130,11 +130,11 @@ impl GuitarView {
         mut commands: Commands,
         theme: Res<NotationTheme>,
         query: LayoutChangedQuery<GuitarView>,
-        mut sprite_query: Query<(&Parent, &mut Transform), With<Sprite>>,
-        mut string_query: Query<(&Parent, Entity, &mut GuitarStringData), With<GuitarStringData>>,
-        mut capo_query: Query<(&Parent, Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
-        mut barre_query: Query<(&Parent, Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
-        mut finger_query: Query<(&Parent, Entity, &mut FretFingerData), With<FretFingerData>>,
+        mut sprite_query: Query<(&ChildOf, &mut Transform), With<Sprite>>,
+        mut string_query: Query<(&ChildOf, Entity, &mut GuitarStringData), With<GuitarStringData>>,
+        mut capo_query: Query<(&ChildOf, Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
+        mut barre_query: Query<(&ChildOf, Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
+        mut finger_query: Query<(&ChildOf, Entity, &mut FretFingerData), With<FretFingerData>>,
     ) {
         if theme._bypass_systems {
             return;
@@ -143,34 +143,34 @@ impl GuitarView {
             let guitar_height =
                 layout.size.width * theme.guitar.image_size.1 / theme.guitar.image_size.0;
             let guitar_size = LayoutSize::new(layout.size.width, guitar_height);
-            for (parent, mut transform) in sprite_query.iter_mut() {
-                if parent.get() == entity {
+            for (child_of, mut transform) in sprite_query.iter_mut() {
+                if child_of.parent() == entity {
                     let scale = layout.size.width / theme.guitar.image_size.0;
                     transform.translation = Vec3::new(0.0, 0.0, theme.z.guitar_view);
                     transform.scale = Vec3::new(scale, scale, 1.0);
                 }
             }
-            for (parent, string_entity, mut string_data) in string_query.iter_mut() {
-                if parent.get() == entity {
+            for (child_of, string_entity, mut string_data) in string_query.iter_mut() {
+                if child_of.parent() == entity {
                     string_data.guitar_size = guitar_size;
                     string_data.update(&mut commands, &theme, string_entity);
                 }
             }
-            for (parent, finger_entity, mut finger_data) in finger_query.iter_mut() {
-                if parent.get() == entity {
+            for (child_of, finger_entity, mut finger_data) in finger_query.iter_mut() {
+                if child_of.parent() == entity {
                     finger_data.value.extra.guitar_size = guitar_size;
                     finger_data.update(&mut commands, &theme, finger_entity);
                 }
             }
-            for (parent, capo_entity, mut capo_data) in capo_query.iter_mut() {
-                if parent.get() == entity {
+            for (child_of, capo_entity, mut capo_data) in capo_query.iter_mut() {
+                if child_of.parent() == entity {
                     capo_data.view_size = layout.size;
                     capo_data.guitar_size = guitar_size;
                     capo_data.update(&mut commands, &theme, capo_entity);
                 }
             }
-            for (parent, barre_entity, mut barre_data) in barre_query.iter_mut() {
-                if parent.get() == entity {
+            for (child_of, barre_entity, mut barre_data) in barre_query.iter_mut() {
+                if child_of.parent() == entity {
                     barre_data.view_size = layout.size;
                     barre_data.guitar_size = guitar_size;
                     barre_data.update(&mut commands, &theme, barre_entity);
@@ -191,7 +191,7 @@ impl GuitarView {
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut dot_query: DotQuery,
-        text_query: Query<(&Parent, Entity), With<Text>>,
+        text_query: Query<(&ChildOf, Entity), With<Text>>,
     ) {
         if Self::CHECKING_FRETS {
             return;
@@ -281,7 +281,7 @@ impl GuitarView {
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut dot_query: DotQuery,
-        text_query: Query<(&Parent, Entity), With<Text>>,
+        text_query: Query<(&ChildOf, Entity), With<Text>>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     ) {
         if Self::CHECKING_FRETS {

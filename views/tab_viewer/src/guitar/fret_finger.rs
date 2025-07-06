@@ -166,7 +166,7 @@ impl FretFingerData {
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
-        text_query: &Query<(&Parent, Entity), With<Text>>,
+        text_query: &Query<(&ChildOf, Entity), With<Text>>,
         entity: Entity,
         meta: &TabMeta,
     ) {
@@ -177,8 +177,8 @@ impl FretFingerData {
         } else {
             meta.key.transpose(Semitones(self.value.extra.capo as i8))
         };
-        for (parent, text_entity) in text_query.iter() {
-            if parent.get() == entity {
+        for (child_of, text_entity) in text_query.iter() {
+            if child_of.parent() == entity {
                 commands.entity(text_entity).despawn();
             }
         }

@@ -90,7 +90,7 @@ impl<T: ChordNoteExtra + 'static> ChordNoteData<T> {
         let note_radius = self.value.extra.radius(theme);
         self.update(commands, theme, entity);
         for child in children.iter() {
-            if let Ok((dot_entity, mut dot_data)) = dot_query.get_mut(*child) {
+            if let Ok((dot_entity, mut dot_data)) = dot_query.get_mut(child) {
                 dot_data.note_radius = note_radius;
                 dot_data.update(commands, theme, dot_entity)
             }
@@ -109,8 +109,8 @@ impl<T: ChordNoteExtra + 'static> ChordNoteData<T> {
         note_entity: Entity,
     ) {
         if let Some(dot_query) = dot_query {
-            for (parent, entity, mut dot_data) in dot_query.iter_mut() {
-                if !dot_data.is_orphan && parent.get() == note_entity {
+            for (child_of, entity, mut dot_data) in dot_query.iter_mut() {
+                if !dot_data.is_orphan && child_of.parent() == note_entity {
                     dot_data.is_orphan = true;
                     commands.entity(entity).despawn();
                 }

@@ -183,7 +183,7 @@ impl PlayButton {
         }
         for (_entity, _view, layout, children) in query.iter() {
             for child in children.iter() {
-                if let Ok((entity, mut data)) = shape_query.get_mut(*child) {
+                if let Ok((entity, mut data)) = shape_query.get_mut(child) {
                     data.width = layout.size.width;
                     data.height = layout.size.height;
                     data.update(&mut commands, &theme, entity);

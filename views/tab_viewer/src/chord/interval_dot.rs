@@ -15,7 +15,7 @@ pub struct IntervalDotData {
     pub is_orphan: bool,
 }
 
-pub type DotQuery<'w, 's, 'p, 'd> = Query<'w, 's, (&'p Parent, Entity, &'d mut IntervalDotData)>;
+pub type DotQuery<'w, 's, 'p, 'd> = Query<'w, 's, (&'p ChildOf, Entity, &'d mut IntervalDotData)>;
 
 impl IntervalDotData {
     pub fn new(quality: IntervalQuality, total: usize, index: usize, note_radius: f32) -> Self {

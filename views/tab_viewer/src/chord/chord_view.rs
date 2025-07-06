@@ -52,7 +52,7 @@ impl ChordView {
             let radius = layout.size.width * theme.sizes.chord.diagram_factor;
             for child in children.iter() {
                 if let Ok((diagram_entity, mut diagram_data, diagram_children)) =
-                    diagram_query.get_mut(*child)
+                    diagram_query.get_mut(child)
                 {
                     diagram_data.update_size(
                         &mut commands,
@@ -65,7 +65,7 @@ impl ChordView {
                         radius,
                     );
                 }
-                if let Ok(mut transform) = text_query.get_mut(*child) {
+                if let Ok(mut transform) = text_query.get_mut(child) {
                     theme.texts.chord.update_bars_xy(&mut transform, layout);
                 }
             }
@@ -124,7 +124,7 @@ impl ChordView {
         }
         for (_entity, playing, _view, children) in query.iter_mut() {
             for child in children.iter() {
-                if let Ok((diagram_entity, mut diagram_data)) = diagram_query.get_mut(*child) {
+                if let Ok((diagram_entity, mut diagram_data)) = diagram_query.get_mut(child) {
                     diagram_data.update_playing_state(
                         &mut commands,
                         &theme,

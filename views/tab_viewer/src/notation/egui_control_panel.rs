@@ -667,7 +667,7 @@ impl EguiControlPanel {
         egui::SidePanel::right("control")
             .min_width(width)
             .max_width(width)
-            .show(egui_ctx.ctx_mut(), |ui| {
+            .show(egui_ctx.ctx_mut().unwrap(), |ui| {
                 ui.vertical(|ui| {
                     /*
                     if ui.button("Hide Control\n(Press Tab to Show)").clicked() {
