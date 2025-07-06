@@ -191,7 +191,7 @@ impl GuitarView {
         mut finger_query: Query<(Entity, &mut FretFingerData), With<FretFingerData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut dot_query: DotQuery,
-        text_query: Query<(&ChildOf, Entity), With<Text>>,
+        text_query: Query<(&ChildOf, Entity), With<Text2d>>,
     ) {
         if Self::CHECKING_FRETS {
             return;
@@ -281,7 +281,7 @@ impl GuitarView {
         mut capo_query: Query<(Entity, &mut GuitarCapoData), With<GuitarCapoData>>,
         mut barre_query: Query<(Entity, &mut GuitarBarreData), With<GuitarBarreData>>,
         mut dot_query: DotQuery,
-        text_query: Query<(&ChildOf, Entity), With<Text>>,
+        text_query: Query<(&ChildOf, Entity), With<Text2d>>,
         tab_state_query: Query<(Entity, &TabState), With<TabState>>,
     ) {
         if Self::CHECKING_FRETS {
@@ -371,7 +371,7 @@ impl GuitarView {
         }
     }
     pub fn update_y(guitar_view_query: &mut Query<&mut Transform, With<GuitarView>>, y: f32) {
-        if let Ok(mut transform) = guitar_view_query.get_single_mut() {
+        if let Ok(mut transform) = guitar_view_query.single_mut() {
             let trans = transform.translation;
             if float_ne!(trans.y, y, abs <= 0.01) {
                 println!("GuitarView::update_y {} -> {}", trans.y, y);

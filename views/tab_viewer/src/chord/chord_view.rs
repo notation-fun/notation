@@ -43,7 +43,7 @@ impl ChordView {
         mut interval_query: Query<(Entity, &mut ChordIntervalData, &Children)>,
         mut base_query: Query<(Entity, &mut ChordBaseData, &Children)>,
         mut dot_query: Query<(Entity, &mut IntervalDotData)>,
-        mut text_query: Query<&mut Transform, With<Text>>,
+        mut text_query: Query<&mut Transform, With<Text2d>>,
     ) {
         if theme._bypass_systems {
             return;

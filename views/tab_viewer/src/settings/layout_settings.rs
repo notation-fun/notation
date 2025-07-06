@@ -87,7 +87,7 @@ impl LayoutSettings {
         delta_x: f32,
         delta_y: f32,
     ) {
-        if let Ok((_, mut camera_transform, _bars, layout, grid_data)) = tab_bars_query.get_single_mut()
+        if let Ok((_, mut camera_transform, _bars, layout, grid_data)) = tab_bars_query.single_mut()
         {
             let trans = camera_transform.translation;
             let (x, y) = match self.mode {
@@ -278,7 +278,7 @@ impl LayoutSettings {
             return;
         }
         if let Ok((bars_entity, mut bars_transform, bars, layout, grid_data)) =
-            tab_bars_query.get_single_mut()
+            tab_bars_query.single_mut()
         {
             self.focusing_bar_ordinal = pos_data.bar_props.bar_ordinal;
             match self.mode {

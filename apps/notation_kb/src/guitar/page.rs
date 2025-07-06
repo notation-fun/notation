@@ -3,7 +3,7 @@ use tab_viewer::edger_bevy::bevy_prelude::*;
 use tab_viewer::edger_bevy::egui::*;
 
 use tab_viewer::kb::markdown_page::MarkDownPage;
-use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent, Syllable};
+use tab_viewer::prelude::{NotationState, NotationTheme, MarkDownAsset, KbPage, KbContent, EasyLinkEvent};
 
 #[derive(Clone, Debug)]
 pub struct GuitarPage {
@@ -28,11 +28,11 @@ impl KbContent for GuitarPage {
     fn content_ui(
         &mut self,
         ui: &mut Ui,
-        texts: &Assets<MarkDownAsset>,
-        app_state: &AppState,
-        state: &NotationState,
-        theme: &NotationTheme,
-        link_evts: &mut EventWriter<EasyLinkEvent>,
+        _texts: &Assets<MarkDownAsset>,
+        _app_state: &AppState,
+        _state: &NotationState,
+        _theme: &NotationTheme,
+        _link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
         ui.label("TODO");
     }

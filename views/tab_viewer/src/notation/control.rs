@@ -97,7 +97,7 @@ impl Control {
         window_query: &mut Query<&mut Window, With<PrimaryWindow>>,
         width: usize, height: usize
     ) {
-        if let Ok(mut window) = window_query.get_single_mut() {
+        if let Ok(mut window) = window_query.single_mut() {
             Self::set_window_size(&mut window, width, height);
         }
     }

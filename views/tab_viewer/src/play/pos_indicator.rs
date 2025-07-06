@@ -74,7 +74,7 @@ impl PosIndicatorData {
         pos_indicator_query: &mut Query<(Entity, &mut PosIndicatorData), With<PosIndicatorData>>,
         pos: Position,
     ) -> Option<PosIndicatorData> {
-        if let Ok((entity, mut data)) = pos_indicator_query.get_single_mut() {
+        if let Ok((entity, mut data)) = pos_indicator_query.single_mut() {
             data.bar_position = pos.bar;
             data.update(commands, theme, entity);
             Some(data.clone())

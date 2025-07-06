@@ -161,7 +161,7 @@ impl NotationApp {
                             match Tab::try_parse_arc(tab, settings.add_ready_section, state.bars_range) {
                                 Ok(tab) => {
                                     state.tab = Some(tab.clone());
-                                    if let Ok(mut window) = window_query.get_single_mut() {
+                                    if let Ok(mut window) = window_query.single_mut() {
                                         let title = format!("{} - {}", NotationApp::TITLE, state.tab_path);
                                         window.title = title;
                                     }

@@ -31,7 +31,7 @@ impl KbPage for ScalePage {
         let key = self.key.clone();
         ui.horizontal(|ui| {
             ui.label("Scale:");
-            egui::ComboBox::from_id_source("scale")
+            egui::ComboBox::id_salt("scale")
             .width(128.0)
             .selected_text(scale.to_ident())
             .show_ui(ui, |ui| {
@@ -43,7 +43,7 @@ impl KbPage for ScalePage {
                 }
             });
             ui.label("Key:");
-            egui::ComboBox::from_id_source("key")
+            egui::ComboBox::id_salt("key")
             .width(64.0)
             .selected_text(key.to_string())
             .show_ui(ui, |ui| {
@@ -71,12 +71,12 @@ impl KbPage for ScalePage {
 impl KbContent for ScalePage {
     fn content_ui(
         &mut self,
-        ui: &mut Ui,
-        texts: &Assets<MarkDownAsset>,
-        app_state: &AppState,
-        state: &NotationState,
-        theme: &NotationTheme,
-        link_evts: &mut EventWriter<EasyLinkEvent>,
+        _ui: &mut Ui,
+        _texts: &Assets<MarkDownAsset>,
+        _app_state: &AppState,
+        _state: &NotationState,
+        _theme: &NotationTheme,
+        _link_evts: &mut EventWriter<EasyLinkEvent>,
     ) {
     }
 }

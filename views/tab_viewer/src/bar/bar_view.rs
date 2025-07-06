@@ -80,7 +80,7 @@ impl BarView {
         theme: Res<NotationTheme>,
         settings: Res<NotationSettings>,
         mut evts: EventReader<BarViewDoLayoutEvent>,
-        mut text_query: Query<(&ChildOf, &mut Transform), With<Text>>,
+        mut text_query: Query<(&ChildOf, &mut Transform), With<Text2d>>,
     ) {
         if theme._bypass_systems {
             return;

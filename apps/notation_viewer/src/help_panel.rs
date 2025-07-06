@@ -1,10 +1,8 @@
 use bevy::prelude::*;
 use tab_viewer::edger_bevy::app::state::AppState;
-use tab_viewer::edger_bevy::bevy_egui::EguiContext;
 
-use tab_viewer::notation::args::NotationArgs;
-use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, NotationSettings, EguiContexts};
-use tab_viewer::prelude::{NotationState, NotationAssets, NotationTheme};
+use tab_viewer::prelude::{MarkDownAsset, KbPageId, KbPage, KbPanel, EasyLinkEvent, EguiContexts};
+use tab_viewer::prelude::{NotationState, NotationTheme};
 
 use tab_viewer::kb::chords_page::ChordsPage;
 use tab_viewer::kb::notes_page::NotesPage;

@@ -166,7 +166,7 @@ impl FretFingerData {
         assets: &NotationAssets,
         theme: &NotationTheme,
         settings: &NotationSettings,
-        text_query: &Query<(&ChildOf, Entity), With<Text>>,
+        text_query: &Query<(&ChildOf, Entity), With<Text2d>>,
         entity: Entity,
         meta: &TabMeta,
     ) {

@@ -370,7 +370,7 @@ impl EguiControlPanel {
         });
         if args.tab.len() > 1 {
             let width = Self::calc_width(app_state.window_width);
-            egui::ComboBox::from_id_source("tab")
+            egui::ComboBox::from_id_salt("tab")
                 .selected_text(state.tab_path.clone())
                 .width(width - 24.0)
                 .show_ui(ui, |ui| {
@@ -586,7 +586,7 @@ impl EguiControlPanel {
             });
     }
     pub fn window_size_ui(ui: &mut Ui, window_query: &mut Query<&mut Window, With<PrimaryWindow>>) {
-        let Ok(mut window) = window_query.get_single_mut() else {
+        let Ok(mut window) = window_query.single_mut() else {
             return;
         };
         CollapsingHeader::new(format!(
