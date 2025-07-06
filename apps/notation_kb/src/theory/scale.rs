@@ -59,10 +59,10 @@ impl KbPage for ScalePage {
         ui.separator();
         ui.horizontal(|ui| {
             if ui.button("play").clicked() {
-                link_evts.send(EasyLinkEvent::from(IndexPanel::LINK_MIDI_PLAY));
+                link_evts.write(EasyLinkEvent::from(IndexPanel::LINK_MIDI_PLAY));
             }
             if ui.button("stop").clicked() {
-                link_evts.send(EasyLinkEvent::from(IndexPanel::LINK_MIDI_STOP));
+                link_evts.write(EasyLinkEvent::from(IndexPanel::LINK_MIDI_STOP));
             }
         });
     }

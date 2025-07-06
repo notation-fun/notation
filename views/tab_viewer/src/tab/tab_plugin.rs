@@ -77,7 +77,7 @@ impl TabPlugin {
         ).run_if(in_state(AssetsStates::Loaded)));
     }
     pub fn jump_to_bar(jump_to_bar_evts: &mut EventWriter<JumpToBarEvent>, bar_props: TabBarProps) {
-        jump_to_bar_evts.send(JumpToBarEvent::new(bar_props));
+        jump_to_bar_evts.write(JumpToBarEvent::new(bar_props));
     }
     fn on_mouse_clicked(
         mut evts: EventReader<MouseClickedEvent>,

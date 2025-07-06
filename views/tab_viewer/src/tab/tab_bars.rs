@@ -308,7 +308,7 @@ impl TabBars {
                     bars.push((bar_view.clone(), layout.clone()));
                 }
             }
-            tab_resized_evts.send(TabBarsResizedEvent(Arc::new(bars)));
+            tab_resized_evts.write(TabBarsResizedEvent(Arc::new(bars)));
         }
     }
     pub fn do_layout(
@@ -334,7 +334,7 @@ impl TabBars {
                 evt.entity,
                 evt.layout,
             );
-            tab_resized_evts.send(TabBarsResizedPreEvent(evt.entity));
+            tab_resized_evts.write(TabBarsResizedPreEvent(evt.entity));
         }
     }
     pub fn on_layout_changed(
@@ -342,7 +342,7 @@ impl TabBars {
         mut evts: EventWriter<TabBarsDoLayoutEvent>,
     ) {
         for (entity, view, layout) in query.iter() {
-            evts.send(TabBarsDoLayoutEvent::new(entity, &view, layout));
+            evts.write(TabBarsDoLayoutEvent::new(entity, &view, layout));
         }
     }
 }

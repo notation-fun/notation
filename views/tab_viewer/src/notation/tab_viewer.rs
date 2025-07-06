@@ -132,7 +132,7 @@ impl TabViewer {
                 &tab,
             );
             settings.layout.focusing_bar_ordinal = usize::MAX;
-            switch_tab_evts.send(SwitchTabEvent::new(tab));
+            switch_tab_evts.write(SwitchTabEvent::new(tab));
         }
     }
 }

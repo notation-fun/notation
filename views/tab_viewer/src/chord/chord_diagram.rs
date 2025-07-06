@@ -70,7 +70,7 @@ impl ChordDiagramData {
         self.update(commands, theme, entity);
         for child in children.iter() {
             if let Ok((interval_entity, mut interval_data, interval_children)) =
-                interval_query.get_mut(*child)
+                interval_query.get_mut(child)
             {
                 interval_data.update_size(
                     commands,
@@ -81,7 +81,7 @@ impl ChordDiagramData {
                     radius,
                 );
             } else if let Ok((base_entity, mut base_data, base_chidren)) =
-                base_query.get_mut(*child)
+                base_query.get_mut(child)
             {
                 base_data.update_size(
                     commands,

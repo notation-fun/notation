@@ -67,7 +67,7 @@ impl NotationViewer {
         if keyboard_input.just_released(KeyCode::F10) || keyboard_input.just_released(KeyCode::Backslash) {
             state.show_control = !state.show_control;
             if !EguiControlPanel::HUD_MODE {
-                window_resized_evts.send(WindowResizedEvent::new(&app_state));
+                window_resized_evts.write(WindowResizedEvent::new(&app_state));
             }
         } else if keyboard_input.just_released(KeyCode::F1) || keyboard_input.just_released(KeyCode::KeyH)
         {

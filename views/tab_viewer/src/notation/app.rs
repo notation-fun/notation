@@ -166,7 +166,7 @@ impl NotationApp {
                                         window.title = title;
                                     }
                                     theme._bypass_systems = false;
-                                    evts.send(AddTabEvent(tab));
+                                    evts.write(AddTabEvent(tab));
                                 }
                                 Err(err) => {
                                     println!("nload_tab(): Parse Tab Failed: {:?}", err);

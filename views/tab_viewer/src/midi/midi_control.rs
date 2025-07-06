@@ -22,7 +22,7 @@ impl MidiControl {
             .play_control
             .play_speed
             .set_factor(settings.speed_factor);
-        play_control_evts.send(PlayControlEvent::on_speed_factor(
+        play_control_evts.write(PlayControlEvent::on_speed_factor(
             midi_state.play_control.play_speed.factor(),
         ));
     }
@@ -32,7 +32,7 @@ impl MidiControl {
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
         midi_state.play_control.should_loop = settings.should_loop;
-        play_control_evts.send(PlayControlEvent::on_should_loop(
+        play_control_evts.write(PlayControlEvent::on_should_loop(
             midi_state.play_control.should_loop,
         ));
     }
@@ -40,7 +40,7 @@ impl MidiControl {
         midi_state: &MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
-        play_control_evts.send(PlayControlEvent::on_play_state(
+        play_control_evts.write(PlayControlEvent::on_play_state(
             midi_state.play_control.play_state,
         ));
         let tick_result = TickResult {
@@ -49,7 +49,7 @@ impl MidiControl {
             stopped: midi_state.play_control.play_state.is_stopped(),
             jumped: false,
         };
-        play_control_evts.send(PlayControlEvent::on_tick(
+        play_control_evts.write(PlayControlEvent::on_tick(
             midi_state.play_control.position,
             tick_result,
         ));
@@ -261,7 +261,7 @@ impl MidiControl {
         midi_state: &mut MidiState,
         play_control_evts: &mut EventWriter<PlayControlEvent>,
     ) {
-        play_control_evts.send(PlayControlEvent::on_begin_end(
+        play_control_evts.write(PlayControlEvent::on_begin_end(
             midi_state.play_control.begin_bar_ordinal,
             midi_state.play_control.end_bar_ordinal,
         ));

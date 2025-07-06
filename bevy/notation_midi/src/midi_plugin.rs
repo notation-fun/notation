@@ -104,7 +104,7 @@ fn _do_tick(
 ) {
     let tick_result = state.tick(settings, hub, jumped, delta_seconds);
     if jumped || tick_result.changed {
-        play_control_evts.send(PlayControlEvent::on_tick(
+        play_control_evts.write(PlayControlEvent::on_tick(
             state.play_control.position,
             tick_result,
         ));
